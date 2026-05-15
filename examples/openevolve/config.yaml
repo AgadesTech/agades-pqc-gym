@@ -1,0 +1,9 @@
+program_type: json_attack_plan
+evaluator: examples/openevolve/evaluator.py
+primary_metric: combined_score
+candidate_roots:
+  - examples/attack_plans
+notes:
+  - JSON AttackPlans are supported in the MVP.
+  - Python candidates are intentionally not executed without sandboxing.
+

@@ -1,0 +1,41 @@
+[project]
+name = "agades-lwe-gym"
+version = "0.1.0"
+description = "Evaluator-driven evolutionary search workbench for LWE/MLWE attack strategies"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "Apache-2.0"}
+authors = [{name = "Agades Technologies"}]
+dependencies = [
+    "pydantic>=2.7,<3",
+    "pyyaml>=6.0.1,<7",
+    "rich>=13.7,<15",
+    "typer>=0.12,<1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8,<9",
+    "ruff>=0.15,<1",
+]
+
+[project.scripts]
+agades-lwe = "agades_lwe_gym.cli:app"
+
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "C4", "SIM"]

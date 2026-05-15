@@ -1,0 +1,36 @@
+{
+  "attack_plan_id": "invalid_module_hypothesis_on_lwe_v1",
+  "target": {
+    "family": "LWE",
+    "name": "toy_lwe_n64_q257",
+    "n": 64,
+    "q": 257,
+    "m": 128,
+    "secret_distribution": {"type": "binary", "hamming_weight": null},
+    "error_distribution": {"type": "discrete_gaussian", "sigma": 2.8},
+    "claimed_security_bits": 80.0
+  },
+  "operators": [
+    {
+      "type": "module_lattice_reduction_hypothesis",
+      "params": {"model": "module_bkz_cost_adjustment_v0"},
+      "assumptions": ["requires_expert_review"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": 80.0,
+    "max_time_bits": 128.0,
+    "require_reproducibility_on_downscaled_instances": false
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Invalid by design: module hypothesis cannot target plain LWE."
+  }
+}
+

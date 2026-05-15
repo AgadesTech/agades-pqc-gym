@@ -1,0 +1,11 @@
+{
+  "family": "LWE",
+  "name": "toy_lwe_n96_q769",
+  "n": 96,
+  "q": 769,
+  "m": 192,
+  "secret_distribution": {"type": "binary", "hamming_weight": null},
+  "error_distribution": {"type": "discrete_gaussian", "sigma": 3.2},
+  "claimed_security_bits": 96.0
+}
+

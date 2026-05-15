@@ -1,0 +1,16 @@
+title: "SALSA-style LWE attack benchmarking note"
+authors:
+  - "Public literature placeholder"
+year: 2022
+url: "https://github.com/facebookresearch/LWE-benchmarking"
+family: "LWE"
+relevance: "Future work should compare evolved strategy parameters against public LWE attack baselines."
+key_ideas:
+  - "Use public, reproducible attack baselines."
+  - "Do not use evaluator score alone as proof."
+operators_suggested:
+  - "dual_attack"
+  - "bkw"
+implementation_status: "note_only"
+risk: "Needs cryptographer review before implementation."
+

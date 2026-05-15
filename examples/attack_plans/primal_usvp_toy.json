@@ -1,0 +1,36 @@
+{
+  "attack_plan_id": "primal_usvp_toy_v1",
+  "target": {
+    "family": "LWE",
+    "name": "toy_lwe_n64_q257",
+    "n": 64,
+    "q": 257,
+    "m": 128,
+    "secret_distribution": {"type": "binary", "hamming_weight": null},
+    "error_distribution": {"type": "discrete_gaussian", "sigma": 2.8},
+    "claimed_security_bits": 80.0
+  },
+  "operators": [
+    {
+      "type": "primal_usvp",
+      "params": {"beta": 48, "svp_cost_model": "ADPS16"},
+      "assumptions": ["lattice_estimator_default_cost_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": 80.0,
+    "max_time_bits": 128.0,
+    "require_reproducibility_on_downscaled_instances": false
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Toy plan for evaluator integration. Not a security claim."
+  }
+}
+
