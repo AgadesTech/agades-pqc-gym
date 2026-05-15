@@ -1,0 +1,12 @@
+{
+  "family": "MLWE",
+  "name": "mlkem768_like_downscaled",
+  "n": 256,
+  "k": 3,
+  "q": 3329,
+  "m": 768,
+  "secret_distribution": {"type": "centered_binomial", "eta": 2},
+  "error_distribution": {"type": "centered_binomial", "eta": 2},
+  "claimed_security_bits": 128.0
+}
+

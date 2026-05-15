@@ -1,0 +1,17 @@
+title: "Predicting Module-Lattice Reduction"
+authors:
+  - "Leo Ducas"
+  - "Lynn Engelberts"
+  - "Paola de Perthuis"
+year: 2025
+url: "https://arxiv.org/abs/2510.10540"
+family: "MLWE"
+relevance: "Potential operator/hypothesis for module-lattice reduction cost models."
+key_ideas:
+  - "Module-lattice reduction modeling may differ from plain lattice heuristics."
+  - "Any estimator impact should remain review-gated."
+operators_suggested:
+  - "module_lattice_reduction_hypothesis"
+implementation_status: "note_only"
+risk: "Estimator integration requires expert review."
+

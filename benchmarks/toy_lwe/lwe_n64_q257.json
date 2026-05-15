@@ -1,0 +1,11 @@
+{
+  "family": "LWE",
+  "name": "toy_lwe_n64_q257",
+  "n": 64,
+  "q": 257,
+  "m": 128,
+  "secret_distribution": {"type": "binary", "hamming_weight": null},
+  "error_distribution": {"type": "discrete_gaussian", "sigma": 2.8},
+  "claimed_security_bits": 80.0
+}
+

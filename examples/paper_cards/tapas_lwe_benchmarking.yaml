@@ -1,0 +1,15 @@
+title: "TAPAS / LWE Benchmarking"
+authors:
+  - "Facebook Research"
+year: 2023
+url: "https://huggingface.co/datasets/facebook/TAPAS"
+family: "LWE"
+relevance: "Public LWE benchmark data can inform future reproduction ladders."
+key_ideas:
+  - "Use public benchmark instances rather than private or live targets."
+  - "Separate benchmark reproduction from estimator-only scoring."
+operators_suggested:
+  - "bkz_parameter_sweep"
+implementation_status: "note_only"
+risk: "Dataset mapping requires careful review before benchmark claims."
+

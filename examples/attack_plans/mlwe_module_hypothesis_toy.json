@@ -1,0 +1,42 @@
+{
+  "attack_plan_id": "mlwe_module_hypothesis_toy_v1",
+  "target": {
+    "family": "MLWE",
+    "name": "mlkem768_like_downscaled",
+    "n": 256,
+    "k": 3,
+    "q": 3329,
+    "m": 768,
+    "secret_distribution": {"type": "centered_binomial", "eta": 2},
+    "error_distribution": {"type": "centered_binomial", "eta": 2},
+    "claimed_security_bits": 128.0
+  },
+  "operators": [
+    {
+      "type": "module_lattice_reduction_hypothesis",
+      "params": {"model": "module_bkz_cost_adjustment_v0"},
+      "assumptions": ["requires_expert_review"]
+    },
+    {
+      "type": "bkz_parameter_sweep",
+      "params": {"beta_min": 48, "beta_max": 72},
+      "assumptions": ["lattice_estimator_default_cost_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": 128.0,
+    "max_time_bits": 192.0,
+    "require_reproducibility_on_downscaled_instances": false
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Demonstrates an expert-review-only MLWE hypothesis operator. Not a security claim."
+  }
+}
+
