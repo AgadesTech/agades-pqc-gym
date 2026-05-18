@@ -1,0 +1,183 @@
+{
+  "accepted": true,
+  "failures": [],
+  "project": {
+    "cli": "agades-pqc",
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "safety": {
+    "arbitrary_code_execution": false,
+    "external_publication_performed": false,
+    "external_publication_requires_review": true,
+    "live_targeting": false,
+    "publishes_private_candidates": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.ecosystem_smoke.v1",
+  "summary": {
+    "credentialed_surface_count": 4,
+    "external_publication_ready": false,
+    "failure_count": 0,
+    "families_with_future_reviewed_adapters": 8,
+    "family_count": 9,
+    "future_reviewed_adapter_sources_by_family": 21,
+    "hf_space_examples": 79,
+    "hf_valid_attack_plan_rows": 79,
+    "local_artifacts_ready": true,
+    "nvidia_current_gpu_required_workloads": 0,
+    "nvidia_current_workloads": 26,
+    "platform_family_support_family_counts_match": true,
+    "platform_family_support_surfaces": 3,
+    "platform_public_private_boundary_surfaces": 3,
+    "platform_report_redaction_records_match": true,
+    "platforms_with_family_claim_review_gate": 3,
+    "platforms_with_raw_mapping_redaction_gate": 3,
+    "platforms_with_typed_trace_redaction_gate": 3,
+    "prime_tasks": 79,
+    "public_run_bundles": 18,
+    "review_required_surface_count": 6,
+    "reviewer_summary_synced": true,
+    "runbook_core_symbol_import_count": 14,
+    "runbook_family_plugin_manifest_digests_match": true,
+    "runbook_family_plugin_module_count": 55,
+    "runbook_family_plugin_module_digest_count": 55,
+    "runbook_family_plugin_module_import_count": 55,
+    "runbook_family_registry_family_count_matches_plugin_manifest": true,
+    "runbook_family_registry_plugin_count_matches_plugin_manifest": true,
+    "runbook_family_registry_plugin_manifest_module_digest_count": 55,
+    "runbook_family_registry_plugin_manifest_synced": true,
+    "runbook_family_registry_runtime_adapter_entries_match_plugin_manifest": true
+  },
+  "surfaces": {
+    "hugging_face": {
+      "accepted": true,
+      "collection": {
+        "accepted": true,
+        "entry_count": 7,
+        "external_publication_requires_review": true,
+        "family_support": {
+          "families_with_future_reviewed_adapters": 8,
+          "family_count": 9,
+          "review_required_before_claims": true
+        },
+        "public_private_boundary": {
+          "raw_mapping_redaction_covered": true,
+          "report_redaction_records": 2,
+          "typed_trace_redaction_covered": true
+        },
+        "public_push_requires_review": true
+      },
+      "dataset": {
+        "accepted": true,
+        "attack_plan_count": 80,
+        "public_run_bundle_count": 18,
+        "task_metadata_rows": 79,
+        "valid_attack_plan_count": 79
+      },
+      "space": {
+        "accepted": true,
+        "example_count": 79,
+        "public_push_requires_review": true,
+        "uses_shared_verifier": true
+      }
+    },
+    "nvidia": {
+      "accepted": true,
+      "all_current_workloads_cpu": true,
+      "current_gpu_required_workload_count": 0,
+      "current_workload_count": 26,
+      "family_support": {
+        "families_with_future_reviewed_adapters": 8,
+        "family_count": 9,
+        "review_required_before_claims": true
+      },
+      "public_private_boundary": {
+        "raw_mapping_redaction_covered": true,
+        "report_redaction_records": 2,
+        "typed_trace_redaction_covered": true
+      },
+      "public_run_bundle_count": 18,
+      "reserved_future_gpu_required_workload_count": 1,
+      "total_workload_count": 27
+    },
+    "prime_intellect": {
+      "accepted": true,
+      "environment": {
+        "accepted": true,
+        "family_count": 9,
+        "family_support": {
+          "families_with_future_reviewed_adapters": 8,
+          "family_count": 9,
+          "review_required_before_claims": true
+        },
+        "mirrors_public_examples": true,
+        "public_private_boundary": {
+          "raw_mapping_redaction_covered": true,
+          "report_redaction_records": 2,
+          "typed_trace_redaction_covered": true
+        },
+        "public_push_requires_review": true,
+        "task_count": 79
+      },
+      "schemas": {
+        "accepted": true,
+        "release_gate_count": 7,
+        "schema_files": [
+          "attack_plan.schema.json",
+          "schema_manifest.json",
+          "task_metadata.schema.json",
+          "verifier_result.schema.json"
+        ],
+        "task_metadata_schema_version": "agades.pqc.task_metadata.v4"
+      }
+    },
+    "publication": {
+      "accepted": true,
+      "external_review_packet": {
+        "accepted": true,
+        "blockers": 2,
+        "credentialed_surface_count": 4,
+        "families_with_future_reviewed_adapters": 8,
+        "family_count": 9,
+        "future_reviewed_adapter_sources_by_family": 21,
+        "ready_for_external_publication": false,
+        "review_required_before_claims": true,
+        "review_required_surface_count": 6,
+        "reviewer_summary_synced": true,
+        "runbook_core_symbol_import_count": 14,
+        "runbook_family_plugin_manifest_digests_match": true,
+        "runbook_family_plugin_module_count": 55,
+        "runbook_family_plugin_module_digest_count": 55,
+        "runbook_family_plugin_module_import_count": 55,
+        "runbook_family_registry_family_count_matches_plugin_manifest": true,
+        "runbook_family_registry_plugin_count_matches_plugin_manifest": true,
+        "runbook_family_registry_plugin_manifest_module_digest_count": 55,
+        "runbook_family_registry_plugin_manifest_synced": true,
+        "runbook_family_registry_runtime_adapter_entries_match_plugin_manifest": true,
+        "surface_count": 6,
+        "warnings": 1
+      },
+      "manifest": {
+        "accepted": true,
+        "credentialed_surfaces": [
+          "huggingface-collection",
+          "huggingface-dataset",
+          "huggingface-space",
+          "prime-verifiers-environment"
+        ],
+        "public_run_bundles": 18,
+        "review_required_surfaces": 6,
+        "surfaces": 6
+      },
+      "preflight": {
+        "accepted": true,
+        "blockers": 2,
+        "local_artifacts_ready": true,
+        "ready_for_external_publication": false,
+        "warnings": 1
+      }
+    }
+  }
+}

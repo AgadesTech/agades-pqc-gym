@@ -1,0 +1,38 @@
+name: Evaluator bug
+description: Report an issue with validation, routing, estimation, or reporting.
+title: "[evaluator] "
+labels: ["evaluator", "bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened, and which family adapter was involved?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Include the AttackPlan, command, and output.
+    validations:
+      required: true
+  - type: dropdown
+    id: family
+    attributes:
+      label: Family
+      options:
+        - LWE
+        - MLWE
+        - NTRU
+        - SIS
+        - CODE_BASED
+        - MULTIVARIATE
+        - HASH_BASED
+        - ISOGENY_HISTORICAL
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true

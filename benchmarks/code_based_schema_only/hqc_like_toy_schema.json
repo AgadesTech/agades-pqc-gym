@@ -1,0 +1,9 @@
+{
+  "family": "CODE_BASED",
+  "name": "hqc_like_toy_schema",
+  "n": 17669,
+  "k": 16,
+  "w": 66,
+  "claimed_security_bits": 128.0,
+  "support_level": "schema_only"
+}

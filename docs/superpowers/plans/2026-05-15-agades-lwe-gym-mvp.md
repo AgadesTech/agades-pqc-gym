@@ -1,4 +1,4 @@
-# Agades LWE Strategy Gym MVP Implementation Plan
+# Agades PQC Gym MVP Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -27,9 +27,9 @@
 
 ```python
 def test_package_imports():
-    import agades_lwe_gym
+    import agades_pqc_gym
 
-    assert agades_lwe_gym.__version__ == "0.1.0"
+    assert agades_pqc_gym.__version__ == "0.1.0"
 ```
 
 - [ ] **Step 2: Run the smoke test to verify it fails**
@@ -40,7 +40,7 @@ Expected: FAIL because the package does not exist yet.
 
 - [ ] **Step 3: Add package metadata and the minimal package**
 
-Create `pyproject.toml` with project metadata, runtime dependencies, pytest config, and ruff config. Create `src/agades_lwe_gym/__init__.py` exporting `__version__`.
+Create `pyproject.toml` with project metadata, runtime dependencies, pytest config, and ruff config. Create `src/agades_pqc_gym/__init__.py` exporting `__version__`.
 
 - [ ] **Step 4: Run the smoke test to verify it passes**
 
@@ -51,12 +51,12 @@ Expected: PASS.
 ### Task 2: DSL And Validators
 
 **Files:**
-- Create: `src/agades_lwe_gym/dsl/schema.py`
-- Create: `src/agades_lwe_gym/dsl/operators.py`
-- Create: `src/agades_lwe_gym/dsl/examples.py`
-- Create: `src/agades_lwe_gym/validators/static.py`
-- Create: `src/agades_lwe_gym/validators/assumptions.py`
-- Create: `src/agades_lwe_gym/validators/consistency.py`
+- Create: `src/agades_pqc_gym/dsl/schema.py`
+- Create: `src/agades_pqc_gym/dsl/operators.py`
+- Create: `src/agades_pqc_gym/dsl/examples.py`
+- Create: `src/agades_pqc_gym/validators/static.py`
+- Create: `src/agades_pqc_gym/validators/assumptions.py`
+- Create: `src/agades_pqc_gym/validators/consistency.py`
 - Create: `examples/attack_plans/*.json`
 - Create: `tests/test_schema.py`
 - Create: `tests/test_validators.py`
@@ -65,8 +65,8 @@ Expected: PASS.
 
 ```python
 def test_valid_primal_plan_loads():
-    plan = AttackPlan.model_validate_json(Path("examples/attack_plans/primal_usvp_toy.json").read_text())
-    assert plan.attack_plan_id == "primal_usvp_toy_v1"
+    plan = AttackPlan.model_validate_json(Path("examples/attack_plans/lattice_primal_usvp_toy.json").read_text())
+    assert plan.attack_plan_id == "lattice_primal_usvp_toy_v1"
 ```
 
 - [ ] **Step 2: Run the tests to verify missing schema failure**
@@ -88,12 +88,12 @@ Expected: PASS.
 ### Task 3: Evaluator Suite
 
 **Files:**
-- Create: `src/agades_lwe_gym/evaluators/base.py`
-- Create: `src/agades_lwe_gym/evaluators/mock_estimator.py`
-- Create: `src/agades_lwe_gym/evaluators/lattice_estimator.py`
-- Create: `src/agades_lwe_gym/evaluators/cache.py`
-- Create: `src/agades_lwe_gym/evaluators/fitness.py`
-- Create: `src/agades_lwe_gym/evaluators/cascade.py`
+- Create: `src/agades_pqc_gym/evaluators/base.py`
+- Create: `src/agades_pqc_gym/evaluators/mock_estimator.py`
+- Create: `src/agades_pqc_gym/evaluators/lattice_estimator.py`
+- Create: `src/agades_pqc_gym/evaluators/cache.py`
+- Create: `src/agades_pqc_gym/evaluators/fitness.py`
+- Create: `src/agades_pqc_gym/evaluators/cascade.py`
 - Create: `tests/test_mock_estimator.py`
 - Create: `tests/test_fitness.py`
 - Create: `tests/test_cascade.py`
@@ -106,11 +106,11 @@ Expected: PASS.
 ### Task 4: Traces, Redaction, Reporting
 
 **Files:**
-- Create: `src/agades_lwe_gym/traces/schema.py`
-- Create: `src/agades_lwe_gym/traces/writer.py`
-- Create: `src/agades_lwe_gym/traces/redaction.py`
-- Create: `src/agades_lwe_gym/reporting/markdown.py`
-- Create: `src/agades_lwe_gym/reporting/report.py`
+- Create: `src/agades_pqc_gym/traces/schema.py`
+- Create: `src/agades_pqc_gym/traces/writer.py`
+- Create: `src/agades_pqc_gym/traces/redaction.py`
+- Create: `src/agades_pqc_gym/reporting/markdown.py`
+- Create: `src/agades_pqc_gym/reporting/report.py`
 - Create: `tests/test_trace_redaction.py`
 - Create: `tests/test_reporting.py`
 
@@ -122,7 +122,7 @@ Expected: PASS.
 ### Task 5: CLI, Scripts, OpenEvolve Adapter, And Artifacts
 
 **Files:**
-- Create: `src/agades_lwe_gym/cli.py`
+- Create: `src/agades_pqc_gym/cli.py`
 - Create: `scripts/run_eval.py`
 - Create: `scripts/run_benchmark.py`
 - Create: `scripts/generate_report.py`
@@ -146,6 +146,6 @@ Expected: PASS.
 - Modify: repository metadata only
 
 - [ ] **Step 1: Confirm GitHub organization access with `gh api orgs/AgadesTech`**
-- [ ] **Step 2: Create `AgadesTech/agades-lwe-gym` only if it does not already exist**
+- [ ] **Step 2: Create `AgadesTech/agades-pqc-gym` only if it does not already exist**
 - [ ] **Step 3: Add `origin`, push `main`, and document any permission failure in `docs/STATUS.md`**
 

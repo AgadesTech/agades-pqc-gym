@@ -1,0 +1,33 @@
+{
+  "attack_plan_id": "hash_based_preimage_toy_v1",
+  "target": {
+    "family": "HASH_BASED",
+    "name": "toy_hash_preimage_32",
+    "n": 32,
+    "hash_function": "SHAKE256",
+    "claimed_security_bits": 32.0,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "security_bound_check",
+      "params": {"bound_model": "toy_preimage_bound"},
+      "assumptions": ["toy_hash_preimage_bound_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": false
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Toy hash preimage-bound baseline for public plumbing only. Not a security claim."
+  }
+}

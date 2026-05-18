@@ -4,6 +4,9 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -14,3 +17,73 @@ jobs:
         run: uv run --extra dev pytest -q
       - name: Run lint
         run: uv run --extra dev ruff check .
+      - name: Check whitespace
+        run: git diff --check
+      - name: Regenerate public release artifacts
+        run: |
+          uv run agades-pqc deepevolve-manifest --out docs/deepevolve_research_hooks_manifest.json
+          uv run agades-pqc deepevolve-manifest-verify --manifest docs/deepevolve_research_hooks_manifest.json
+          uv run agades-pqc benchmark-source-contracts --out docs/benchmark_source_contracts.json
+          uv run agades-pqc benchmark-source-verify --contracts docs/benchmark_source_contracts.json
+          uv run agades-pqc family-registry-manifest --out docs/family_registry_manifest.json
+          uv run agades-pqc family-registry-manifest-verify --manifest docs/family_registry_manifest.json
+          uv run agades-pqc family-plugin-manifest --out docs/family_plugin_manifest.json
+          uv run agades-pqc family-plugin-manifest-verify --manifest docs/family_plugin_manifest.json
+          uv run agades-pqc source-catalog --out docs/source_catalog.json
+          uv run agades-pqc source-catalog-verify --catalog docs/source_catalog.json
+          uv run agades-pqc family-support --out docs/family_support_matrix.json
+          uv run agades-pqc family-support-verify --matrix docs/family_support_matrix.json
+          uv run agades-pqc ecosystem-source-graph --out docs/ecosystem_source_graph.json
+          uv run agades-pqc ecosystem-source-graph-verify --graph docs/ecosystem_source_graph.json
+          uv run agades-pqc family-operator-catalog --out docs/family_operator_catalog.json
+          uv run agades-pqc family-operator-catalog-verify --catalog docs/family_operator_catalog.json
+          uv run agades-pqc hf-dataset --out hf/dataset
+          uv run agades-pqc hf-dataset-verify --dataset hf/dataset
+          uv run agades-pqc lattice-estimator-manifest --out docs/lattice_estimator_manifest.json
+          uv run agades-pqc lattice-estimator-manifest-verify --manifest docs/lattice_estimator_manifest.json
+          uv run agades-pqc lattice-estimator-baseline-contracts --out docs/lattice_estimator_baseline_contracts.json
+          uv run agades-pqc lattice-estimator-baseline-contracts-verify --contracts docs/lattice_estimator_baseline_contracts.json
+          uv run agades-pqc hf-space-manifest --out hf/space_manifest.json
+          uv run agades-pqc hf-space-manifest-verify --manifest hf/space_manifest.json
+          uv run agades-pqc hf-space-smoke --out reports/hf_space_smoke.json
+          uv run agades-pqc hf-space-smoke-verify --report reports/hf_space_smoke.json
+          uv run agades-pqc hf-collection-manifest --out hf/collection_manifest.json
+          uv run agades-pqc hf-collection-manifest-verify --manifest hf/collection_manifest.json
+          uv run agades-pqc hf-publication-handoff --out docs/huggingface_publication_handoff.json
+          uv run agades-pqc hf-publication-handoff-verify --handoff docs/huggingface_publication_handoff.json
+          uv run agades-pqc nvidia-manifest --out nvidia/accelerator_manifest.json
+          uv run agades-pqc nvidia-manifest-verify --manifest nvidia/accelerator_manifest.json
+          uv run agades-pqc nvidia-manifest-safety --out reports/nvidia_manifest_safety.json
+          uv run agades-pqc nvidia-manifest-safety-verify --report reports/nvidia_manifest_safety.json
+          uv run agades-pqc nvidia-publication-handoff --out docs/nvidia_publication_handoff.json
+          uv run agades-pqc nvidia-publication-handoff-verify --handoff docs/nvidia_publication_handoff.json
+          uv run agades-pqc openevolve-config --out examples/openevolve/config.yaml
+          uv run agades-pqc openevolve-config-verify --config examples/openevolve/config.yaml
+          uv run agades-pqc openevolve-smoke --out reports/openevolve_smoke.json
+          uv run agades-pqc openevolve-smoke-verify --report reports/openevolve_smoke.json
+          uv run agades-pqc prime-manifest --out prime_intellect/verifiers_environment/prime_manifest.json
+          uv run agades-pqc prime-manifest-verify --manifest prime_intellect/verifiers_environment/prime_manifest.json
+          uv run agades-pqc prime-environment-smoke --out reports/prime_environment_smoke.json
+          uv run agades-pqc prime-environment-smoke-verify --report reports/prime_environment_smoke.json
+          uv run agades-pqc prime-schemas --out prime_intellect/schemas
+          uv run agades-pqc prime-schemas-verify --schemas prime_intellect/schemas
+          uv run agades-pqc prime-publication-handoff --out docs/prime_publication_handoff.json
+          uv run agades-pqc prime-publication-handoff-verify --handoff docs/prime_publication_handoff.json
+          uv run agades-pqc prime-speedrun-handoff --out docs/prime_speedrun_handoff.json
+          uv run agades-pqc prime-speedrun-handoff-verify --handoff docs/prime_speedrun_handoff.json
+          uv run agades-pqc public-benchmark-manifest --out docs/public_benchmark_manifest.json
+          uv run agades-pqc public-benchmark-verify --manifest docs/public_benchmark_manifest.json
+          uv run agades-pqc public-run-export --out public/run_export
+          uv run agades-pqc public-run-export-verify --export public/run_export
+          uv run agades-pqc private-run-policy --out docs/private_run_policy.json
+          uv run agades-pqc private-run-policy-verify --policy docs/private_run_policy.json
+          uv run agades-pqc runbook-input-manifest-verify --manifest docs/runbook_input_manifest.json
+          uv run agades-pqc publication-manifest --out docs/publication_manifest.json
+          uv run agades-pqc publication-manifest-verify --manifest docs/publication_manifest.json
+          uv run agades-pqc release-artifacts --max-passes 6
+      - name: Check public release artifacts are committed
+        run: git diff --exit-code -- docs/benchmark_source_contracts.json docs/source_catalog.json docs/deepevolve_research_hooks_manifest.json docs/family_registry_manifest.json docs/family_plugin_manifest.json docs/family_support_matrix.json docs/ecosystem_source_graph.json docs/family_operator_catalog.json docs/lattice_estimator_manifest.json docs/lattice_estimator_baseline_contracts.json docs/runbook_input_manifest.json docs/public_benchmark_manifest.json public/run_export hf/dataset hf/space_manifest.json hf/collection_manifest.json docs/huggingface_publication_handoff.json nvidia/accelerator_manifest.json docs/nvidia_publication_handoff.json docs/publication_manifest.json docs/external_publication_review_packet.json docs/private_run_policy.json docs/prime_publication_handoff.json docs/prime_speedrun_handoff.json prime_intellect/verifiers_environment/prime_manifest.json prime_intellect/schemas/attack_plan.schema.json prime_intellect/schemas/verifier_result.schema.json prime_intellect/schemas/schema_manifest.json prime_intellect/schemas/task_metadata.schema.json public/runbook_audit.json public/release_audit.json docs/release_status.json public/publication_preflight.json reports/ecosystem_smoke.json reports/hf_space_smoke.json reports/openevolve_smoke.json reports/prime_environment_smoke.json reports/nvidia_manifest_safety.json
+      - name: Build package
+        run: uv build
+      - name: Build Prime verifier environment
+        run: uv build prime_intellect/verifiers_environment

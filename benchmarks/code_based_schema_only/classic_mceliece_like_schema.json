@@ -1,0 +1,9 @@
+{
+  "family": "CODE_BASED",
+  "name": "classic_mceliece_like_schema",
+  "n": 3488,
+  "k": 2720,
+  "w": 64,
+  "claimed_security_bits": 128.0,
+  "support_level": "schema_only"
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": "agades.pqc.implementation_security_toy_dudect_summary.v1",
+  "family": "IMPLEMENTATION_SECURITY",
+  "target_name": "toy_dudect_mlkem_summary",
+  "tool": "toy_dudect_summary_check",
+  "model": "toy_dudect_summary_threshold_check",
+  "dudect_version": "dudect-toy-summary-v0",
+  "fixed_cycles": [210, 211, 209, 210, 212, 208, 211, 209],
+  "random_cycles": [211, 210, 210, 212, 209, 211, 210, 212],
+  "max_abs_t": 1.2,
+  "artifact_execution": false,
+  "dudect_execution": false,
+  "public": true,
+  "constant_time_claim": false,
+  "security_claim": false
+}

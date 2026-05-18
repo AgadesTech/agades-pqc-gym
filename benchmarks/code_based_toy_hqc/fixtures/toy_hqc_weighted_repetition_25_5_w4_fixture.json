@@ -1,0 +1,27 @@
+{
+  "schema_version": "agades.pqc.code_based_toy_hqc_weighted_repetition.v1",
+  "family": "CODE_BASED",
+  "target_name": "toy_hqc_weighted_repetition_25_5_w4",
+  "n": 25,
+  "k": 5,
+  "w": 4,
+  "repetition_factor": 5,
+  "received_bits": [
+    1, 0, 1, 1, 1,
+    0, 1, 0, 0, 0,
+    1, 1, 0, 1, 1,
+    1, 1, 0, 1, 1,
+    0, 0, 0, 0, 0
+  ],
+  "reliability_weights": [
+    3, 1, 3, 3, 2,
+    2, 1, 3, 2, 3,
+    3, 2, 1, 3, 2,
+    2, 2, 1, 3, 2,
+    2, 1, 3, 2, 3
+  ],
+  "expected_message_bits": [1, 0, 1, 1, 0],
+  "expected_error_positions": [1, 6, 12, 17],
+  "public": true,
+  "security_claim": false
+}

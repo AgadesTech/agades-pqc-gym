@@ -1,0 +1,39 @@
+{
+  "attack_plan_id": "code_based_qc_rotation_toy_v1",
+  "target": {
+    "family": "CODE_BASED",
+    "name": "toy_qc_syndrome_21_12_w2",
+    "n": 21,
+    "k": 12,
+    "w": 2,
+    "claimed_security_bits": 18.0,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "information_set_decoding",
+      "params": {
+        "variant": "qc_rotation_toy",
+        "block_size": 7,
+        "block_count": 3
+      },
+      "assumptions": ["toy_qc_syndrome_rotation_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/code_based_toy_isd/fixtures/toy_qc_syndrome_21_12_w2_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Toy quasi-cyclic syndrome rotation baseline for public plumbing only. Not an HQC result and not a security claim."
+  }
+}

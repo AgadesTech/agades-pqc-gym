@@ -1,0 +1,24 @@
+{
+  "A": [
+    [1, 2, 3, 4],
+    [2, 1, 0, 1],
+    [0, 1, 1, 2],
+    [3, 0, 2, 1],
+    [1, 1, 1, 1],
+    [4, 2, 1, 0],
+    [0, 3, 2, 2],
+    [2, 2, 2, 2]
+  ],
+  "b": [8, 4, 2, 6, 4, 4, 4, 7],
+  "error_bound": 1,
+  "expected_secret": [1, 0, 1, 1],
+  "family": "LWE",
+  "m": 8,
+  "n": 4,
+  "public": true,
+  "q": 17,
+  "schema_version": "agades.pqc.downscaled_lwe_instance.v1",
+  "secret_domain": [0, 1],
+  "security_claim": false,
+  "target_name": "toy_lwe_n4_q17_instance"
+}

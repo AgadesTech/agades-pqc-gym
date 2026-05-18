@@ -1,8 +1,8 @@
-# Agades LWE Strategy Gym MVP Report
+# Agades PQC Gym MVP Report
 
 ## 1. Summary
 
-Agades LWE Strategy Gym is a Python MVP for evaluator-driven search over typed LWE/MLWE attack strategies. It demonstrates the infrastructure on toy and downscaled settings only.
+Agades PQC Gym is a Python MVP for evaluator-driven search over typed LWE/MLWE attack strategies. It demonstrates the infrastructure on toy and downscaled settings only.
 
 The MVP does not claim any deployed post-quantum cryptographic standard is broken.
 
@@ -30,9 +30,9 @@ The real Lattice Estimator integration is intentionally separated from the mock 
 
 Example public plans:
 
-- `examples/attack_plans/primal_usvp_toy.json`
-- `examples/attack_plans/dual_hybrid_toy.json`
-- `examples/attack_plans/mlwe_module_hypothesis_toy.json`
+- `examples/attack_plans/lattice_primal_usvp_toy.json`
+- `examples/attack_plans/lattice_dual_hybrid_toy.json`
+- `examples/attack_plans/lattice_mlwe_module_hypothesis_toy.json`
 - `examples/attack_plans/invalid_plan_should_fail.json`
 
 The invalid example verifies that `module_lattice_reduction_hypothesis` cannot target plain LWE.
@@ -53,7 +53,7 @@ Stages implemented:
 Smoke command:
 
 ```bash
-uv run agades-lwe benchmark benchmarks/toy_lwe --out runs/toy_benchmark.jsonl
+uv run agades-pqc benchmark benchmarks/lattice_toy_lwe --out runs/toy_benchmark.jsonl
 ```
 
 Observed mock-estimator results:
@@ -69,13 +69,13 @@ These numbers validate plumbing only.
 
 The mock estimator is deterministic and clearly labels its warnings. It is suitable for tests, CI, and toy smoke runs.
 
-The real Lattice Estimator adapter currently checks module availability and refuses unsupported mappings. A production integration must pin a specific estimator commit, map each operator through reviewed calls, and add baseline reproduction tests.
+The optional Lattice Estimator adapter maps reviewed LWE-family operators to explicit estimator algorithm keys, checks module availability, supports JSON caching, and refuses unsupported mappings. The current upstream pin is recorded in `docs/lattice_estimator_manifest.json`; production claims still require expert review and baseline reproduction tests.
 
 ## 8. Trace Logging And Moat Separation
 
 Every CLI evaluation can write a TraceRecord containing candidate metadata, the AttackPlan, metrics, acceptance status, and public/private release flags.
 
-`agades-lwe export-public` redacts private mutation summaries and full private AttackPlans before writing public JSONL.
+`agades-pqc export-public` redacts private mutation summaries and full private AttackPlans before writing public JSONL.
 
 Public: schemas, examples, mock outputs, report templates, sanitized traces.
 
@@ -94,7 +94,7 @@ The MVP supports JSON AttackPlan candidates. It does not execute arbitrary Pytho
 
 ## 10. DeepEvolve Hooks
 
-The MVP includes PaperCard and HypothesisProposal models plus example paper cards. These hooks produce review-gated hypotheses rather than truth claims.
+The MVP includes PaperCard and HypothesisProposal models plus YAML example paper cards. The hooks can ingest research notes for LWE, MLWE, code-based, multivariate, hash-based, implementation-security, and historical-isogeny directions, then produce review-gated hypotheses rather than truth claims.
 
 The `module_lattice_reduction_hypothesis` operator is restricted to MLWE targets and should remain expert-review-gated.
 
@@ -110,6 +110,7 @@ Prime Intellect artifacts:
 
 - `prime_intellect/environment_card.md`
 - `prime_intellect/verifier_spec.md`
+- `prime_intellect/verifier.py`
 
 ## 12. Collaboration Plan
 
@@ -123,7 +124,7 @@ No outreach was sent automatically.
 
 ## 13. Limitations
 
-- Real Lattice Estimator calls are not implemented yet.
+- Optional real Lattice Estimator calls exist for reviewed LWE-family mappings; MLWE flattening remains warning-gated for expert review.
 - Mock-estimator scores are not cryptanalytic evidence.
 - Downscaled reproduction is represented as a future interface, not a proof layer.
 - The benchmark ladder currently covers schema, mock-estimator, CLI, trace, and reporting smoke tests.
@@ -131,9 +132,8 @@ No outreach was sent automatically.
 
 ## 14. Next 30/60/90-Day Roadmap
 
-30 days: pin and wire the real Lattice Estimator, reproduce known toy baselines, publish the GitHub repository, and prepare a Hugging Face toy dataset/Space.
+30 days: complete external review of the pinned Lattice Estimator boundary, reproduce known toy baselines, publish the GitHub repository, and prepare a Hugging Face toy dataset/Space.
 
 60 days: add TAPAS/LWE-benchmarking adapters, downscaled reproduction experiments, held-out rescoring, and public benchmark v0.
 
 90 days: add a DeepEvolve paper-card research loop, collect private evolution traces, add independent sanity checks, and prepare a reviewed public Agades technical report.
-

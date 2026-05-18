@@ -1,0 +1,25 @@
+{
+  "A": [
+    [3, 5, 2, 7, 1, 4],
+    [6, 1, 8, 2, 5, 3],
+    [4, 9, 1, 6, 2, 8],
+    [10, 3, 5, 1, 7, 2],
+    [2, 6, 4, 8, 3, 5],
+    [7, 2, 9, 4, 6, 1],
+    [5, 8, 3, 9, 4, 7],
+    [8, 4, 6, 3, 9, 5]
+  ],
+  "b": [6, 7, 12, 14, 7, 4, 13, 0],
+  "error_bound": 1,
+  "expected_secret": [[1, 0, -1], [0, 1, 1]],
+  "family": "MLWE",
+  "k": 2,
+  "m": 8,
+  "n": 3,
+  "public": true,
+  "q": 17,
+  "schema_version": "agades.pqc.downscaled_mlwe_instance.v1",
+  "secret_domain": [-1, 0, 1],
+  "security_claim": false,
+  "target_name": "toy_mlwe_k2_n3_q17_instance"
+}

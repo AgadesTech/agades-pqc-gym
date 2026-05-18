@@ -1,0 +1,7 @@
+{
+  "family": "ISOGENY_HISTORICAL",
+  "name": "sidh_toy_schema",
+  "n": 64,
+  "claimed_security_bits": 64.0,
+  "support_level": "schema_only"
+}

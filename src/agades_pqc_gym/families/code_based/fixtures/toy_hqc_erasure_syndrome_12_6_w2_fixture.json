@@ -1,0 +1,23 @@
+{
+  "schema_version": "agades.pqc.code_based_toy_hqc_erasure_syndrome.v1",
+  "family": "CODE_BASED",
+  "target_name": "toy_hqc_erasure_syndrome_12_6_w2",
+  "n": 12,
+  "k": 6,
+  "w": 2,
+  "parity_check_matrix": [
+    [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0],
+    [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+  ],
+  "syndrome": [1, 0, 1, 0, 0, 0],
+  "received_bits": [0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+  "expected_codeword_bits": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  "erasure_positions": [1, 4, 8, 10],
+  "expected_error_positions": [1, 8],
+  "public": true,
+  "security_claim": false
+}

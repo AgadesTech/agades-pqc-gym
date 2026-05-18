@@ -1,0 +1,13 @@
+{
+  "schema_version": "agades.pqc.implementation_security_toy_timing.v1",
+  "family": "IMPLEMENTATION_SECURITY",
+  "target_name": "toy_timing_welch_mlkem",
+  "tool": "toy_welch_timing_check",
+  "model": "toy_timing_welch_t_check",
+  "fixed_cycles": [100, 101, 99, 100, 102, 98],
+  "random_cycles": [101, 100, 100, 102, 99, 101],
+  "max_abs_t": 1.0,
+  "artifact_execution": false,
+  "public": true,
+  "security_claim": false
+}

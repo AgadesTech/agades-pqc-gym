@@ -1,0 +1,35 @@
+{
+  "attack_plan_id": "toy_syndrome_31_16_w3_dumer_seed",
+  "target": {
+    "family": "CODE_BASED",
+    "name": "toy_syndrome_31_16_w3",
+    "n": 31,
+    "k": 16,
+    "w": 3,
+    "claimed_security_bits": 32.0,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "information_set_decoding",
+      "params": {"variant": "dumer_toy", "p": 1, "ell": 2},
+      "assumptions": ["dumer_isd_list_merging_cost_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/code_based_toy_isd/fixtures/toy_syndrome_31_16_w3_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated toy Dumer-style ISD benchmark seed with a public syndrome-decoding reproduction fixture. Not a security claim."
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "attack_plan_id": "toy_sidh_path_fixture_verify_seed",
+  "target": {
+    "family": "ISOGENY_HISTORICAL",
+    "name": "toy_sidh_path_reconstruction",
+    "n": 64,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "historical_isogeny_reconstruction",
+      "params": {
+        "case": "toy_sidh_path_search",
+        "walk_length": 8,
+        "branching_factor": 4
+      },
+      "assumptions": [
+        "historical_not_current_standard",
+        "historical_toy_isogeny_path_model"
+      ]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/isogeny_historical_toy_path/fixtures/toy_sidh_path_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated historical toy SIDH/SIKE path benchmark seed with a public reproduction fixture. Not a current-standard or security claim."
+  }
+}

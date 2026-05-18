@@ -1,0 +1,101 @@
+{
+  "entries": [
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_hash_collision_32_bound_seed",
+      "attack_type": "security_bound_check",
+      "candidate_id": "toy_hash_collision_32_bound_seed-0",
+      "combined_score": -22.6,
+      "estimated_memory_bits": 16.0,
+      "estimated_time_bits": 16.0,
+      "estimator_name": "toy-hash-bound-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "hash_based_toy_bound",
+      "target_family": "HASH_BASED",
+      "trace_id": "99af8c3d73cddfc5005ddb254ab90b06d869fe12b73af2e98c8db77b2de48722",
+      "warnings": [
+        "Toy hash collision-bound output is for public evaluator plumbing only; it is not a security claim.",
+        "Verified a public toy SHAKE256 truncated-collision fixture; this is reproducibility plumbing, not collision-finding evidence and not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_hash_preimage_24_solve_seed",
+      "attack_type": "security_bound_check",
+      "candidate_id": "toy_hash_preimage_24_solve_seed-1",
+      "combined_score": -26.85,
+      "estimated_memory_bits": 1.0,
+      "estimated_time_bits": 24.0,
+      "estimator_name": "toy-hash-bound-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "hash_based_toy_bound",
+      "target_family": "HASH_BASED",
+      "trace_id": "9f786475150bcf3764dae1490062cd40cd631408aaec37dd18f661aee8b20b5e",
+      "warnings": [
+        "Toy hash-bound output is for public evaluator plumbing only; it is not a security claim.",
+        "Solved a public toy SHAKE256 preimage fixture with bounded exhaustive search; this is reproducibility plumbing, not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_hash_preimage_32_bound_seed",
+      "attack_type": "security_bound_check",
+      "candidate_id": "toy_hash_preimage_32_bound_seed-2",
+      "combined_score": -36.85,
+      "estimated_memory_bits": 1.0,
+      "estimated_time_bits": 32.0,
+      "estimator_name": "toy-hash-bound-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "hash_based_toy_bound",
+      "target_family": "HASH_BASED",
+      "trace_id": "1c2830ac3413182d11c98e721b265d50657cb0a9276cbf2e7798000531aaf01e",
+      "warnings": [
+        "Toy hash-bound output is for public evaluator plumbing only; it is not a security claim."
+      ]
+    }
+  ],
+  "ledger_version": "0.1.0",
+  "safety": {
+    "arbitrary_code_execution": false,
+    "live_targeting": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.public_run_ledger.v1",
+  "source_trace": {
+    "artifact": "trace_public.jsonl",
+    "public_sha256": "ba7220414941b28a30c2a033a9f89d25665923a9505c29829fa647702fdc56ed",
+    "record_count": 3
+  },
+  "summary": {
+    "accepted_records": 3,
+    "by_estimator": {
+      "toy-hash-bound-estimator": 3
+    },
+    "by_evaluation_status": {
+      "ok": 3
+    },
+    "by_family": {
+      "HASH_BASED": 3
+    },
+    "redacted_records": 0,
+    "total_records": 3
+  }
+}

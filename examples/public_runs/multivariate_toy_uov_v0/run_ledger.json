@@ -1,0 +1,54 @@
+{
+  "entries": [
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_uov_public_map_gf2_v5_e3_seed",
+      "attack_type": "signature_fixture_check",
+      "candidate_id": "toy_uov_public_map_gf2_v5_e3_seed-0",
+      "combined_score": -10.8492,
+      "estimated_memory_bits": 5.0875,
+      "estimated_time_bits": 6.9773,
+      "estimator_name": "toy-multivariate-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "multivariate_toy_uov",
+      "target_family": "MULTIVARIATE",
+      "trace_id": "9d87b4c6e9e69e0520aea9a67a6f914f0ad10b9f292aa120b6937d5fce9be23e",
+      "warnings": [
+        "Toy UOV-inspired public-map verification output is for public evaluator plumbing only; it is not a UOV, MAYO, or Rainbow result and not a security claim.",
+        "Verified a public toy UOV-inspired public-map fixture; this is reproducibility plumbing, not a UOV, MAYO, or Rainbow result and not a security claim."
+      ]
+    }
+  ],
+  "ledger_version": "0.1.0",
+  "safety": {
+    "arbitrary_code_execution": false,
+    "live_targeting": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.public_run_ledger.v1",
+  "source_trace": {
+    "artifact": "trace_public.jsonl",
+    "public_sha256": "6680c7d3f42d004082353abc359a2b0ef656e5c82f642b93cf4b24266699f03b",
+    "record_count": 1
+  },
+  "summary": {
+    "accepted_records": 1,
+    "by_estimator": {
+      "toy-multivariate-estimator": 1
+    },
+    "by_evaluation_status": {
+      "ok": 1
+    },
+    "by_family": {
+      "MULTIVARIATE": 1
+    },
+    "redacted_records": 0,
+    "total_records": 1
+  }
+}

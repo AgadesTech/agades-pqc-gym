@@ -2,8 +2,87 @@ program_type: json_attack_plan
 evaluator: examples/openevolve/evaluator.py
 primary_metric: combined_score
 candidate_roots:
-  - examples/attack_plans
+- benchmarks/lattice_toy_lwe/lwe_n64_q257.json
+- benchmarks/code_based_toy_isd
+- benchmarks/multivariate_toy_mq
+- benchmarks/hash_based_toy_bound
+- benchmarks/implementation_security_toy_kat
+- benchmarks/isogeny_historical_toy_path
+mutation_batch_schema: agades.pqc.candidate_mutation_batch.v1
+paper_card_injection_schema: agades.pqc.paper_card_injection_batch.v1
+paper_card_injection_command: agades-pqc deepevolve-injections --out private/candidates/paper_card_injections.json
+  --policy docs/private_run_policy.json --paper-card-dir examples/paper_cards --run-id
+  paper-card-injection
+local_mutation_command: agades-pqc mutate-candidates <seed-plan-or-benchmark> --out
+  runs/candidate_mutations --generation 1 --max-mutations-per-plan 4
+local_batch_command: agades-pqc evolve-batch runs/candidate_mutations/plans --trace-out
+  runs/evolution_trace.jsonl --archive-out runs/evolution_archive.json
+archive_schema: agades.pqc.evolution_archive.v1
+archive_snapshot_schema: agades.pqc.private_archive_snapshot.v1
+private_campaign_plan_schema: agades.pqc.private_evolution_campaign_plan.v1
+private_campaign_plan_command: agades-pqc private-evolution-campaign-plan <seed-plan-or-benchmark>
+  <heldout-target-or-benchmark> --out private/runs/private_evolution_campaign/campaign_plan.json
+  --policy docs/private_run_policy.json --review-log private/runs/heldout_review_log.json
+  --run-id private-evolution-campaign
+archive_snapshot_command: agades-pqc archive-snapshot runs/evolution_archive.json
+  runs/evolution_trace.jsonl --out private/runs/archive_snapshot.json --review-log
+  private/runs/heldout_review_log.json --policy docs/private_run_policy.json --run-id
+  evolution-archive-snapshot
+archive_mutation_command: agades-pqc mutate-archive runs/evolution_archive.json runs/evolution_trace.jsonl
+  --out runs/archive_mutations --max-mutations-per-elite 4
+next_generation_batch_command: agades-pqc evolve-batch runs/archive_mutations/plans
+  --trace-out runs/archive_mutation_trace.jsonl --archive-out runs/archive_mutation_archive.json
+heldout_review_log_schema: agades.pqc.heldout_review_log.v1
+heldout_review_log_command: agades-pqc heldout-review-log --out private/runs/heldout_review_log.json
+  --approval private-run-policy-review --approval heldout-target-review --approval
+  retention-owner-review --approval publication-export-review --reviewed-by <reviewer>
+  --review-id <review-id>
+heldout_schedule_schema: agades.pqc.heldout_schedule.v1
+heldout_schedule_command: agades-pqc heldout-schedule runs/evolution_archive.json
+  runs/evolution_trace.jsonl <heldout-target-or-benchmark> --out private/runs/heldout_schedule.json
+  --trace-out private/traces/heldout_trace.jsonl --rescore-out private/reports/heldout_rescore.json
+  --review-log private/runs/heldout_review_log.json --trigger local_cron_after_review
+  --approval private-run-policy-review --approval heldout-target-review --approval
+  retention-owner-review --approval publication-export-review
+heldout_schedule_run_schema: agades.pqc.heldout_schedule_run.v1
+heldout_run_schedule_command: agades-pqc heldout-run-schedule private/runs/heldout_schedule.json
+  --policy docs/private_run_policy.json
+heldout_cron_plan_schema: agades.pqc.heldout_cron_plan.v1
+heldout_cron_plan_command: agades-pqc heldout-cron-plan private/runs/heldout_schedule.json
+  --out private/runs/heldout_cron_plan.json --policy docs/private_run_policy.json
+  --minute 17 --every-hours 6 --log-path private/runs/heldout_cron.log
+heldout_batch_command: agades-pqc heldout-batch runs/evolution_archive.json runs/evolution_trace.jsonl
+  <heldout-target-or-benchmark> --trace-out runs/heldout_trace.jsonl --rescore-out
+  runs/heldout_rescore.json
+heldout_rescore_schema: agades.pqc.heldout_rescore.v1
+heldout_rescore_command: agades-pqc rescore-archive runs/evolution_archive.json runs/heldout_trace.jsonl
+  --out runs/heldout_rescore.json
+safety:
+  arbitrary_code_execution: false
+  publishes_private_candidates: false
+  security_claim: false
 notes:
-  - JSON AttackPlans are supported in the MVP.
-  - Python candidates are intentionally not executed without sandboxing.
-
+- JSON AttackPlans are supported in the MVP.
+- deepevolve-injections writes a private paper-card injection queue for review-gated
+  literature hypotheses; it does not write AttackPlans, execute code, or change estimator
+  scores.
+- mutate-candidates generates private JSON-only candidate plans from reviewed lattice,
+  code-based, multivariate, hash-based, implementation-security, and historical-isogeny
+  toy rules.
+- evolve-batch keeps the best accepted candidate per MAP-Elites feature cell.
+- mutate-archive generates next-generation private candidates from archive elites
+  and source trace links.
+- archive-snapshot writes a private archive snapshot manifest with digests, retention
+  metadata, and trace-link integrity only.
+- private-evolution-campaign-plan records the reviewed long-running campaign argv
+  sequence without executing commands or embedding private traces, scores, or candidate
+  sources.
+- heldout-batch creates private same-family re-evaluation traces from archive elites.
+- heldout-schedule writes a reviewed private schedule manifest with a private review-log
+  digest before any automated held-out run.
+- heldout-run-schedule consumes that manifest through typed Python APIs without executing
+  shell command strings.
+- heldout-cron-plan writes a private crontab fragment for manual local installation
+  and never edits the system crontab.
+- held-out rescore aggregates explicit TraceRecord parent links only.
+- Python candidates are intentionally not executed without sandboxing.

@@ -1,0 +1,15 @@
+{
+  "schema_version": "agades.pqc.hash_based_toy_merkle_auth_path.v1",
+  "family": "HASH_BASED",
+  "target_name": "toy_hash_merkle_auth_path_24",
+  "digest_bits": 24,
+  "hash_function": "SHAKE256",
+  "signature_model": "toy_merkle_auth_path_verify",
+  "tree_height": 3,
+  "leaf_index": 5,
+  "leaf_hex": "058bbf",
+  "auth_path_hex": ["e43fb3", "19f444", "156826"],
+  "root_hex": "6716a2",
+  "public": true,
+  "security_claim": false
+}

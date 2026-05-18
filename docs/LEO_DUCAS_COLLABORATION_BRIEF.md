@@ -11,7 +11,7 @@ Agades is exploring whether DeepEvolve-style hypothesis generation can propose u
 ## Materials To Share
 
 - `examples/paper_cards/predicting_module_lattice_reduction.yaml`
-- `examples/attack_plans/mlwe_module_hypothesis_toy.json`
+- `examples/attack_plans/lattice_mlwe_module_hypothesis_toy.json`
 - A design note showing that the operator is assumption-tagged and not treated as truth.
 
 ## Ask

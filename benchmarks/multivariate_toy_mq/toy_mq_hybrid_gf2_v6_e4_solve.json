@@ -1,0 +1,38 @@
+{
+  "attack_plan_id": "toy_mq_hybrid_gf2_v6_e4_seed",
+  "target": {
+    "family": "MULTIVARIATE",
+    "name": "toy_mq_gf2_v6_e4",
+    "variables": 6,
+    "equations": 4,
+    "field": "GF(2)",
+    "claimed_security_bits": 16.0,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "groebner_basis",
+      "params": {
+        "model": "toy_mq_hybrid_search",
+        "guessed_variables": 2
+      },
+      "assumptions": ["toy_mq_hybrid_linearization_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/multivariate_toy_mq/fixtures/toy_mq_gf2_v6_e4_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated toy binary MQ hybrid-search benchmark seed with a public reproduction fixture. Not a UOV, MAYO, Rainbow, or security claim."
+  }
+}

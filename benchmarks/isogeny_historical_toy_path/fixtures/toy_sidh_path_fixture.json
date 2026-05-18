@@ -1,0 +1,26 @@
+{
+  "schema_version": "agades.pqc.isogeny_historical_toy_path.v1",
+  "family": "ISOGENY_HISTORICAL",
+  "target_name": "toy_sidh_path_reconstruction",
+  "n": 64,
+  "case": "toy_sidh_path_search",
+  "walk_length": 8,
+  "branching_factor": 4,
+  "start_node": "toy_curve_start",
+  "end_node": "toy_curve_end",
+  "path": [
+    "toy_curve_start",
+    "toy_kernel_a",
+    "toy_kernel_b",
+    "toy_kernel_c",
+    "toy_kernel_d",
+    "toy_kernel_e",
+    "toy_kernel_f",
+    "toy_kernel_g",
+    "toy_curve_end"
+  ],
+  "historical_not_current": true,
+  "current_standard_claim": false,
+  "public": true,
+  "security_claim": false
+}

@@ -1,0 +1,38 @@
+{
+  "attack_plan_id": "toy_hqc_parity_check_15_7_w2_decode_seed",
+  "target": {
+    "family": "CODE_BASED",
+    "name": "toy_hqc_parity_check_15_7_w2",
+    "n": 15,
+    "k": 7,
+    "w": 2,
+    "claimed_security_bits": 10.0,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "decoding_fixture_check",
+      "params": {
+        "variant": "hqc_parity_check_toy",
+        "max_error_weight": 2
+      },
+      "assumptions": ["toy_hqc_parity_check_decoder_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/code_based_toy_hqc/fixtures/toy_hqc_parity_check_15_7_w2_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated toy HQC-inspired parity-check decoder benchmark seed with a public fixture. Not an HQC result and not a security claim."
+  }
+}

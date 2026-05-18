@@ -1,0 +1,122 @@
+{
+  "$id": "https://agades.tech/schemas/agades-pqc-gym/task_metadata.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Versioned task constraints shared by Prime Verifiers and Hugging Face dataset rows. Reward environments use these fields to keep candidate AttackPlan mutations on the intended family, target, support level, and operator sequence without requiring an exact attack_plan_id copy. Seed AttackPlan digest, estimator, reproduction, status, and reward fields make unsupported schema-only tasks explicit zero-reward safety checks while keeping reproducible fixture tasks inspectable.",
+  "properties": {
+    "attack_plan_id": {
+      "title": "Attack Plan Id",
+      "type": "string"
+    },
+    "operator_types": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Operator Types",
+      "type": "array"
+    },
+    "public": {
+      "title": "Public",
+      "type": "boolean"
+    },
+    "requires_reproducibility": {
+      "title": "Requires Reproducibility",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "seed_accepted": {
+      "title": "Seed Accepted",
+      "type": "boolean"
+    },
+    "seed_attack_plan_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Seed Attack Plan Sha256",
+      "type": "string"
+    },
+    "seed_estimator_name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Seed Estimator Name"
+    },
+    "seed_evaluation_status": {
+      "title": "Seed Evaluation Status",
+      "type": "string"
+    },
+    "seed_reproduction_attempted": {
+      "title": "Seed Reproduction Attempted",
+      "type": "boolean"
+    },
+    "seed_reproduction_status": {
+      "title": "Seed Reproduction Status",
+      "type": "string"
+    },
+    "seed_reproduction_success": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Seed Reproduction Success"
+    },
+    "seed_reward": {
+      "title": "Seed Reward",
+      "type": "number"
+    },
+    "source_path": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Source Path"
+    },
+    "support_level": {
+      "title": "Support Level",
+      "type": "string"
+    },
+    "target_family": {
+      "title": "Target Family",
+      "type": "string"
+    },
+    "target_name": {
+      "title": "Target Name",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "source_path",
+    "seed_attack_plan_sha256",
+    "attack_plan_id",
+    "target_family",
+    "target_name",
+    "support_level",
+    "operator_types",
+    "requires_reproducibility",
+    "public",
+    "seed_accepted",
+    "seed_evaluation_status",
+    "seed_estimator_name",
+    "seed_reproduction_attempted",
+    "seed_reproduction_status",
+    "seed_reproduction_success",
+    "seed_reward"
+  ],
+  "title": "Agades PQC Gym Task Metadata",
+  "type": "object"
+}

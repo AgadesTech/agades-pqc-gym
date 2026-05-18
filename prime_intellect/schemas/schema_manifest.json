@@ -1,0 +1,46 @@
+{
+  "contract": {
+    "compatible_surfaces": [
+      "prime-verifiers-environment",
+      "huggingface-space",
+      "agades-pqc-cli"
+    ],
+    "evaluator_result_schema_version": "agades.pqc.evaluator_result.v1",
+    "result_schema_version": "agades.pqc.verifier.v1",
+    "reward_surface": "Prime scoring uses schema_valid, accepted, and task metadata matching fields.",
+    "submission_shape": "single_attack_plan_json_object",
+    "task_metadata_schema_version": "agades.pqc.task_metadata.v4"
+  },
+  "project": {
+    "cli": "agades-pqc",
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "release": {
+    "audit_gate": "prime-verifier-schemas",
+    "generator_command": "uv run agades-pqc prime-schemas --out prime_intellect/schemas",
+    "review_required_before_publish": true
+  },
+  "release_gates": [
+    "uv run pytest tests/test_prime_verifier_schemas.py -q",
+    "uv run agades-pqc prime-schemas --out prime_intellect/schemas",
+    "uv run agades-pqc prime-schemas-verify --schemas prime_intellect/schemas",
+    "uv run agades-pqc prime-manifest-verify --manifest prime_intellect/verifiers_environment/prime_manifest.json",
+    "uv run agades-pqc publication-manifest-verify --manifest docs/publication_manifest.json",
+    "uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json",
+    "uv run agades-pqc release-audit --out public/release_audit.json"
+  ],
+  "safety": {
+    "accepts_arbitrary_code": false,
+    "accepts_live_targets": false,
+    "publishes_private_candidates": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.prime_verifier_schemas.v1",
+  "schemas": {
+    "result": "verifier_result.schema.json",
+    "submission": "attack_plan.schema.json",
+    "task_metadata": "task_metadata.schema.json"
+  }
+}
