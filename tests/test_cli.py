@@ -34,6 +34,45 @@ def test_validate_command_accepts_valid_plan() -> None:
     assert "valid" in result.output.lower()
 
 
+def test_help_prioritizes_core_gym_commands() -> None:
+    result = CliRunner().invoke(app, ["--help"])
+
+    assert result.exit_code == 0
+    assert "quickstart" in result.output
+    assert "validate" in result.output
+    assert "evaluate" in result.output
+    assert "benchmark" in result.output
+    assert "report" in result.output
+    assert "publication-manifest" not in result.output
+    assert "lattice-estimator-baseline-review-packet-verify" not in result.output
+
+
+def test_quickstart_command_runs_guided_gym_demo(tmp_path: Path) -> None:
+    out_dir = tmp_path / "quickstart"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "quickstart",
+            "--out-dir",
+            str(out_dir),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "quickstart complete" in result.output.lower()
+    assert "lattice_primal_usvp_toy_v1" in result.output
+    assert "unsupported example" in result.output.lower()
+    assert (out_dir / "lattice_trace.jsonl").exists()
+    assert (out_dir / "lattice_report.md").exists()
+    assert (out_dir / "lattice_benchmark.jsonl").exists()
+    assert (out_dir / "code_based_prange_trace.jsonl").exists()
+    assert (out_dir / "unsupported_placeholder_trace.jsonl").exists()
+    assert "Mock Vs Real Estimator Status" in (
+        out_dir / "lattice_report.md"
+    ).read_text(encoding="utf-8")
+
+
 def test_evaluate_export_and_report_commands(tmp_path: Path) -> None:
     trace_path = tmp_path / "trace.jsonl"
     public_path = tmp_path / "public.jsonl"
@@ -64,6 +103,26 @@ def test_evaluate_export_and_report_commands(tmp_path: Path) -> None:
     assert trace_path.exists()
     assert public_path.exists()
     assert "Mock Vs Real Estimator Status" in report_path.read_text()
+
+
+def test_evaluate_command_explains_unsupported_results(tmp_path: Path) -> None:
+    trace_path = tmp_path / "unsupported.jsonl"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "evaluate",
+            "examples/attack_plans/code_based_isd_placeholder.json",
+            "--out",
+            str(trace_path),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "status=unsupported" in result.output
+    assert "valid=False" in result.output
+    assert "CODE_BASED evaluator is not implemented" in result.output
+    assert trace_path.exists()
 
 
 def test_verify_command_outputs_public_verifier_json() -> None:
