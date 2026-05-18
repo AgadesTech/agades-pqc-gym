@@ -1,0 +1,41 @@
+{
+  "attack_plan_id": "toy_classic_mceliece_support_syndrome_19_10_w2_decode_seed",
+  "target": {
+    "family": "CODE_BASED",
+    "name": "toy_classic_mceliece_support_syndrome_19_10_w2",
+    "n": 19,
+    "k": 10,
+    "w": 2,
+    "claimed_security_bits": 10.0,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "decoding_fixture_check",
+      "params": {
+        "variant": "classic_mceliece_support_syndrome_toy",
+        "max_error_weight": 2,
+        "support_size": 5
+      },
+      "assumptions": [
+        "toy_classic_mceliece_support_syndrome_decoder_model"
+      ]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/code_based_toy_classic_mceliece/fixtures/toy_classic_mceliece_support_syndrome_19_10_w2_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated toy Classic-McEliece-inspired public support-set syndrome benchmark seed with a public fixture. Not a Classic McEliece result and not a security claim."
+  }
+}

@@ -9,5 +9,10 @@ dist/
 build/
 *.egg-info/
 runs/
-public/
+public/*
+!public/run_export/
+!public/run_export/**
+!public/runbook_audit.json
+!public/publication_preflight.json
+!public/release_audit.json
 private/

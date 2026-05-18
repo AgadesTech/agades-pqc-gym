@@ -1,0 +1,37 @@
+{
+  "attack_plan_id": "toy_mlkem_kat_digest_fixture_verify_seed",
+  "target": {
+    "family": "IMPLEMENTATION_SECURITY",
+    "name": "toy_mlkem_kat_digest",
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "kat_conformance",
+      "params": {
+        "suite": "toy_mlkem_kat",
+        "model": "toy_kat_digest_match",
+        "payload": "toy ML-KEM KAT vector\nseed=00010203\nciphertext=abcdef\nshared_secret=012345\n",
+        "expected_sha256": "42b4b222b2c3dee6b453babe2ea401606b24032174d9ed734d2de31c0097cba8",
+        "vector_count": 2
+      },
+      "assumptions": ["toy_kat_digest_manifest_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/implementation_security_toy_kat/fixtures/toy_mlkem_kat_digest_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated JSON-only toy KAT digest benchmark seed with a public reproduction fixture. Not a conformance, side-channel, or security claim."
+  }
+}

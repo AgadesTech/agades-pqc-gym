@@ -1,12 +1,12 @@
 from pathlib import Path
 
-from agades_lwe_gym.dsl.schema import AttackPlan
-from agades_lwe_gym.evaluators.mock_estimator import MockEstimatorAdapter
+from agades_pqc_gym.core.attack_plan import AttackPlan
+from agades_pqc_gym.evaluators.mock_estimator import MockEstimatorAdapter
 
 
 def test_mock_estimator_is_deterministic() -> None:
     plan = AttackPlan.model_validate_json(
-        Path("examples/attack_plans/dual_hybrid_toy.json").read_text()
+        Path("examples/attack_plans/lattice_dual_hybrid_toy.json").read_text()
     )
     adapter = MockEstimatorAdapter()
 

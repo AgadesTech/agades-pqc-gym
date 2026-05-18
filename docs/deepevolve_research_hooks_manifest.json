@@ -1,0 +1,353 @@
+{
+  "hypothesis_proposals": [
+    {
+      "claim": "Future code-based adapters should model ISD-style cost estimates and memory/time tradeoffs without borrowing lattice assumptions.",
+      "hypothesis_id": "information_set_decoding_from_2008",
+      "implementation_plan": "Represent as an assumption-tagged operator until expert review and independent validation are complete.",
+      "operator": "information_set_decoding",
+      "review_required": true,
+      "source_papers": [
+        "https://eprint.iacr.org/2008/318"
+      ],
+      "target_family": "CODE_BASED"
+    },
+    {
+      "claim": "Future hash-based adapters should separate toy WOTS-chain plumbing from reviewed SLH-DSA parameter, vector, and conformance boundaries.",
+      "hypothesis_id": "hash_signature_verification_from_2024",
+      "implementation_plan": "Represent as an assumption-tagged operator until expert review and independent validation are complete.",
+      "operator": "hash_signature_verification",
+      "review_required": true,
+      "source_papers": [
+        "https://csrc.nist.gov/pubs/fips/205/final"
+      ],
+      "target_family": "HASH_BASED"
+    },
+    {
+      "claim": "Future hash-based adapters should separate toy WOTS-chain plumbing from reviewed SLH-DSA parameter, vector, and conformance boundaries.",
+      "hypothesis_id": "security_bound_check_from_2024",
+      "implementation_plan": "Represent as an assumption-tagged operator until expert review and independent validation are complete.",
+      "operator": "security_bound_check",
+      "review_required": true,
+      "source_papers": [
+        "https://csrc.nist.gov/pubs/fips/205/final"
+      ],
+      "target_family": "HASH_BASED"
+    },
+    {
+      "claim": "Future implementation-security hooks should propose KAT, timing, and benchmark-harness work only through pinned public artifacts and explicit no-execution review gates.",
+      "hypothesis_id": "kat_conformance_from_2025",
+      "implementation_plan": "Represent as an assumption-tagged operator until expert review and independent validation are complete.",
+      "operator": "kat_conformance",
+      "review_required": true,
+      "source_papers": [
+        "docs/benchmark_source_contracts.json"
+      ],
+      "target_family": "IMPLEMENTATION_SECURITY"
+    },
+    {
+      "claim": "Future implementation-security hooks should propose KAT, timing, and benchmark-harness work only through pinned public artifacts and explicit no-execution review gates.",
+      "hypothesis_id": "constant_time_check_from_2025",
+      "implementation_plan": "Represent as an assumption-tagged operator until expert review and independent validation are complete.",
+      "operator": "constant_time_check",
+      "review_required": true,
+      "source_papers": [
+        "docs/benchmark_source_contracts.json"
+      ],
+      "target_family": "IMPLEMENTATION_SECURITY"
+    },
+    {
+      "claim": "Future implementation-security hooks should propose KAT, timing, and benchmark-harness work only through pinned public artifacts and explicit no-execution review gates.",
+      "hypothesis_id": "benchmark_harness_from_2025",
+      "implementation_plan": "Represent as an assumption-tagged operator until expert review and independent validation are complete.",
+      "operator": "benchmark_harness",
+      "review_required": true,
+      "source_papers": [
+        "docs/benchmark_source_contracts.json"
+      ],
+      "target_family": "IMPLEMENTATION_SECURITY"
+    },
+    {
+      "claim": "Future historical-isogeny adapters should represent SIDH/SIKE lessons as bounded historical reconstruction fixtures, not as current PQC security claims.",
+      "hypothesis_id": "historical_isogeny_reconstruction_from_2022",
+      "implementation_plan": "Represent as an assumption-tagged operator until expert review and independent validation are complete.",
+      "operator": "historical_isogeny_reconstruction",
+      "review_required": true,
+      "source_papers": [
+        "https://eprint.iacr.org/2022/975"
+      ],
+      "target_family": "ISOGENY_HISTORICAL"
+    },
+    {
+      "claim": "Future multivariate adapters should represent MinRank and algebraic-solver hypotheses as review-gated operators.",
+      "hypothesis_id": "minrank_attack_from_2022",
+      "implementation_plan": "Represent as an assumption-tagged operator until expert review and independent validation are complete.",
+      "operator": "minrank_attack",
+      "review_required": true,
+      "source_papers": [
+        "https://eprint.iacr.org/2022/214"
+      ],
+      "target_family": "MULTIVARIATE"
+    },
+    {
+      "claim": "Future multivariate adapters should represent MinRank and algebraic-solver hypotheses as review-gated operators.",
+      "hypothesis_id": "groebner_basis_from_2022",
+      "implementation_plan": "Represent as an assumption-tagged operator until expert review and independent validation are complete.",
+      "operator": "groebner_basis",
+      "review_required": true,
+      "source_papers": [
+        "https://eprint.iacr.org/2022/214"
+      ],
+      "target_family": "MULTIVARIATE"
+    },
+    {
+      "claim": "Potential operator/hypothesis for module-lattice reduction cost models.",
+      "hypothesis_id": "module_lattice_reduction_hypothesis_from_2025",
+      "implementation_plan": "Represent as an assumption-tagged operator until expert review and independent validation are complete.",
+      "operator": "module_lattice_reduction_hypothesis",
+      "review_required": true,
+      "source_papers": [
+        "https://arxiv.org/abs/2510.10540"
+      ],
+      "target_family": "MLWE"
+    },
+    {
+      "claim": "Future work should compare evolved strategy parameters against public LWE attack baselines.",
+      "hypothesis_id": "dual_attack_from_2022",
+      "implementation_plan": "Represent as an assumption-tagged operator until expert review and independent validation are complete.",
+      "operator": "dual_attack",
+      "review_required": true,
+      "source_papers": [
+        "https://eprint.iacr.org/2022/935"
+      ],
+      "target_family": "LWE"
+    },
+    {
+      "claim": "Future work should compare evolved strategy parameters against public LWE attack baselines.",
+      "hypothesis_id": "bkw_from_2022",
+      "implementation_plan": "Represent as an assumption-tagged operator until expert review and independent validation are complete.",
+      "operator": "bkw",
+      "review_required": true,
+      "source_papers": [
+        "https://eprint.iacr.org/2022/935"
+      ],
+      "target_family": "LWE"
+    },
+    {
+      "claim": "Public LWE benchmark data can inform future reproduction ladders.",
+      "hypothesis_id": "bkz_parameter_sweep_from_2023",
+      "implementation_plan": "Represent as an assumption-tagged operator until expert review and independent validation are complete.",
+      "operator": "bkz_parameter_sweep",
+      "review_required": true,
+      "source_papers": [
+        "https://huggingface.co/datasets/facebook/TAPAS"
+      ],
+      "target_family": "LWE"
+    }
+  ],
+  "paper_cards": [
+    {
+      "authors": [
+        "Daniel J. Bernstein",
+        "Tanja Lange",
+        "Christiane Peters"
+      ],
+      "family": "CODE_BASED",
+      "implementation_status": "note_only",
+      "key_ideas": [
+        "Information set decoding is central to code-based cryptanalysis and parameter selection.",
+        "Applicability validators must distinguish code parameters and decoding assumptions from lattice targets."
+      ],
+      "operators_suggested": [
+        "information_set_decoding"
+      ],
+      "relevance": "Future code-based adapters should model ISD-style cost estimates and memory/time tradeoffs without borrowing lattice assumptions.",
+      "risk": "Estimator and parameter mappings require code-based cryptanalysis review before any score is produced.",
+      "title": "Attacking and Defending the McEliece Cryptosystem",
+      "url": "https://eprint.iacr.org/2008/318",
+      "year": 2008
+    },
+    {
+      "authors": [
+        "National Institute of Standards and Technology"
+      ],
+      "family": "HASH_BASED",
+      "implementation_status": "note_only",
+      "key_ideas": [
+        "SLH-DSA is a stateless hash-based signature standard based on SPHINCS+.",
+        "Toy hash-bound or chain-verification fixtures must not be generalized to SLH-DSA security claims.",
+        "Applicability validators need algorithm revision, parameter-set, and vector provenance gates before any public benchmark result."
+      ],
+      "operators_suggested": [
+        "hash_signature_verification",
+        "security_bound_check"
+      ],
+      "relevance": "Future hash-based adapters should separate toy WOTS-chain plumbing from reviewed SLH-DSA parameter, vector, and conformance boundaries.",
+      "risk": "Requires hash-based signature expert review before any adapter, vector bundle, or conformance claim is implemented.",
+      "title": "NIST FIPS 205 Stateless Hash-Based Digital Signature Standard",
+      "url": "https://csrc.nist.gov/pubs/fips/205/final",
+      "year": 2024
+    },
+    {
+      "authors": [
+        "Open Quantum Safe",
+        "mupq",
+        "National Institute of Standards and Technology"
+      ],
+      "family": "IMPLEMENTATION_SECURITY",
+      "implementation_status": "note_only",
+      "key_ideas": [
+        "KAT and ACVP-style vector checks are correctness evidence, not cryptanalytic evidence.",
+        "Timing and benchmark summaries are environment-specific unless device, toolchain, runner, and provenance are pinned.",
+        "The public verifier must stay JSON-only until an isolated runner and redaction protocol exist."
+      ],
+      "operators_suggested": [
+        "kat_conformance",
+        "constant_time_check",
+        "benchmark_harness"
+      ],
+      "relevance": "Future implementation-security hooks should propose KAT, timing, and benchmark-harness work only through pinned public artifacts and explicit no-execution review gates.",
+      "risk": "Requires implementation-security expert review before any live artifact, device, ACVP, timing, or benchmark adapter is implemented.",
+      "title": "Public PQC Implementation Harness Boundaries",
+      "url": "docs/benchmark_source_contracts.json",
+      "year": 2025
+    },
+    {
+      "authors": [
+        "Wouter Castryck",
+        "Thomas Decru"
+      ],
+      "family": "ISOGENY_HISTORICAL",
+      "implementation_status": "note_only",
+      "key_ideas": [
+        "Historical isogeny attacks belong in a separate plugin with explicit non-current-standard boundaries.",
+        "Toy path reconstruction fixtures can test routing and reporting without solving real isogeny problems.",
+        "Reports must prevent historical break narratives from being projected onto unrelated current standards."
+      ],
+      "operators_suggested": [
+        "historical_isogeny_reconstruction"
+      ],
+      "relevance": "Future historical-isogeny adapters should represent SIDH/SIKE lessons as bounded historical reconstruction fixtures, not as current PQC security claims.",
+      "risk": "Requires isogeny expert review before any historical reconstruction adapter is expanded beyond bounded public toy fixtures.",
+      "title": "An efficient key recovery attack on SIDH",
+      "url": "https://eprint.iacr.org/2022/975",
+      "year": 2022
+    },
+    {
+      "authors": [
+        "Ward Beullens"
+      ],
+      "family": "MULTIVARIATE",
+      "implementation_status": "note_only",
+      "key_ideas": [
+        "Multivariate schemes need applicability validators for variables, equations, fields, and algebraic attack models.",
+        "Historical Rainbow-style lessons should be represented as benchmarks, not generalized to unrelated schemes."
+      ],
+      "operators_suggested": [
+        "minrank_attack",
+        "groebner_basis"
+      ],
+      "relevance": "Future multivariate adapters should represent MinRank and algebraic-solver hypotheses as review-gated operators.",
+      "risk": "Algebraic cost models are family-specific and require review; schema-only placeholders must not emit fake estimates.",
+      "title": "Breaking Rainbow Takes a Weekend on a Laptop",
+      "url": "https://eprint.iacr.org/2022/214",
+      "year": 2022
+    },
+    {
+      "authors": [
+        "Leo Ducas",
+        "Lynn Engelberts",
+        "Paola de Perthuis"
+      ],
+      "family": "MLWE",
+      "implementation_status": "note_only",
+      "key_ideas": [
+        "Module-lattice reduction modeling may differ from plain lattice heuristics.",
+        "Any estimator impact should remain review-gated."
+      ],
+      "operators_suggested": [
+        "module_lattice_reduction_hypothesis"
+      ],
+      "relevance": "Potential operator/hypothesis for module-lattice reduction cost models.",
+      "risk": "Estimator integration requires expert review.",
+      "title": "Predicting Module-Lattice Reduction",
+      "url": "https://arxiv.org/abs/2510.10540",
+      "year": 2025
+    },
+    {
+      "authors": [
+        "Emily Wenger",
+        "Mingjie Chen",
+        "Francois Charton",
+        "Kristin Lauter"
+      ],
+      "family": "LWE",
+      "implementation_status": "note_only",
+      "key_ideas": [
+        "Use public, reproducible attack baselines.",
+        "Do not use evaluator score alone as proof."
+      ],
+      "operators_suggested": [
+        "dual_attack",
+        "bkw"
+      ],
+      "relevance": "Future work should compare evolved strategy parameters against public LWE attack baselines.",
+      "risk": "Needs cryptographer review before implementation.",
+      "title": "SALSA: Attacking Lattice Cryptography with Transformers",
+      "url": "https://eprint.iacr.org/2022/935",
+      "year": 2022
+    },
+    {
+      "authors": [
+        "Facebook Research"
+      ],
+      "family": "LWE",
+      "implementation_status": "note_only",
+      "key_ideas": [
+        "Use public benchmark instances rather than private or live targets.",
+        "Separate benchmark reproduction from estimator-only scoring."
+      ],
+      "operators_suggested": [
+        "bkz_parameter_sweep"
+      ],
+      "relevance": "Public LWE benchmark data can inform future reproduction ladders.",
+      "risk": "Dataset mapping requires careful review before benchmark claims.",
+      "title": "TAPAS / LWE Benchmarking",
+      "url": "https://huggingface.co/datasets/facebook/TAPAS",
+      "year": 2023
+    }
+  ],
+  "project": {
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "safety": {
+    "arbitrary_code_execution": false,
+    "contains_private_traces": false,
+    "modifies_estimator_scores": false,
+    "publishes_private_candidates": false,
+    "research_claim": false,
+    "review_required_before_implementation": true
+  },
+  "schema_version": "agades.pqc.deepevolve_research_hooks.v1",
+  "source": {
+    "input_format": "yaml_paper_cards",
+    "paper_card_directory": "examples/paper_cards"
+  },
+  "summary": {
+    "all_cards_note_only": true,
+    "all_proposals_review_required": true,
+    "card_count": 8,
+    "families": [
+      "CODE_BASED",
+      "HASH_BASED",
+      "IMPLEMENTATION_SECURITY",
+      "ISOGENY_HISTORICAL",
+      "LWE",
+      "MLWE",
+      "MULTIVARIATE"
+    ],
+    "operator_count": 13,
+    "proposal_count": 13
+  }
+}

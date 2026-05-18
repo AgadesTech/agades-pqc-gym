@@ -1,0 +1,6 @@
+{
+  "family": "ISOGENY_HISTORICAL",
+  "name": "toy_sidh_path_reconstruction",
+  "n": 64,
+  "support_level": "implemented"
+}

@@ -1,0 +1,34 @@
+{
+  "attack_plan_id": "multivariate_minrank_placeholder_v1",
+  "target": {
+    "family": "MULTIVARIATE",
+    "name": "uov_like_toy_schema",
+    "variables": 112,
+    "equations": 44,
+    "field": "GF(16)",
+    "claimed_security_bits": 128.0,
+    "support_level": "schema_only"
+  },
+  "operators": [
+    {
+      "type": "minrank_attack",
+      "params": {"model": "minrank_schema_placeholder"},
+      "assumptions": ["schema_only_no_estimator"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": false
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Schema-only multivariate placeholder. No estimator is implemented."
+  }
+}

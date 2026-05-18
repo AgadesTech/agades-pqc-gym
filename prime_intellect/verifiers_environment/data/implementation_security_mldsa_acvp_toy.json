@@ -1,0 +1,65 @@
+{
+  "attack_plan_id": "implementation_security_mldsa_acvp_toy_v1",
+  "target": {
+    "family": "IMPLEMENTATION_SECURITY",
+    "name": "toy_acvp_mldsa_vector_set",
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "kat_conformance",
+      "params": {
+        "suite": "toy_acvp_mldsa_signature",
+        "model": "toy_acvp_vector_set_match",
+        "algorithm": "ML-DSA",
+        "mode": "signature-verification",
+        "vector_set": {
+          "algorithm": "ML-DSA",
+          "mode": "signature-verification",
+          "revision": "FIPS204-toy",
+          "testGroups": [
+            {
+              "parameterSet": "ML-DSA-44",
+              "tests": [
+                {
+                  "message": "616761646573",
+                  "publicKey": "01020304",
+                  "seed": "10111213",
+                  "signature": "deadbeefcafebabe",
+                  "tcId": 1
+                },
+                {
+                  "message": "706f73742d7175616e74756d",
+                  "publicKey": "05060708",
+                  "seed": "14151617",
+                  "signature": "0011223344556677",
+                  "tcId": 2
+                }
+              ],
+              "tgId": 1
+            }
+          ]
+        },
+        "expected_vector_set_sha256": "386acb47462b759b4790907b4703e390b6caefe862a0573bfe8621e4e5b6143c",
+        "test_count": 2
+      },
+      "assumptions": ["toy_acvp_json_vector_set_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/implementation_security_toy_kat/fixtures/toy_acvp_mldsa_vector_set_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Toy implementation-security ML-DSA ACVP-like vector-set check for public JSON-only plumbing. Not an ACVP certificate, conformance, side-channel, or security claim."
+  }
+}

@@ -1,0 +1,458 @@
+{
+  "$defs": {
+    "VerifierEstimator": {
+      "additionalProperties": false,
+      "properties": {
+        "attack_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Attack Type"
+        },
+        "commit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Commit"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Name"
+        },
+        "schema_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Schema Version"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Version"
+        }
+      },
+      "required": [
+        "schema_version",
+        "name",
+        "version",
+        "commit",
+        "attack_type"
+      ],
+      "title": "VerifierEstimator",
+      "type": "object"
+    },
+    "VerifierFeatures": {
+      "additionalProperties": false,
+      "properties": {
+        "assumption_bucket": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Assumption Bucket"
+        },
+        "assumption_count": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Assumption Count"
+        },
+        "assumption_fingerprint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Assumption Fingerprint"
+        },
+        "attack_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Attack Type"
+        },
+        "estimator_model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Estimator Model"
+        },
+        "family": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Family"
+        },
+        "memory_bucket": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Memory Bucket"
+        },
+        "operator_count": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Operator Count"
+        },
+        "risky_assumption_count": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Risky Assumption Count"
+        },
+        "unique_assumption_count": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unique Assumption Count"
+        }
+      },
+      "required": [
+        "family",
+        "attack_type",
+        "operator_count",
+        "memory_bucket",
+        "assumption_bucket",
+        "assumption_count",
+        "unique_assumption_count",
+        "risky_assumption_count",
+        "assumption_fingerprint",
+        "estimator_model"
+      ],
+      "title": "VerifierFeatures",
+      "type": "object"
+    },
+    "VerifierReproduction": {
+      "additionalProperties": false,
+      "properties": {
+        "attempted": {
+          "title": "Attempted",
+          "type": "boolean"
+        },
+        "score": {
+          "title": "Score",
+          "type": "number"
+        },
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "success": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Success"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "attempted",
+        "status",
+        "success",
+        "score",
+        "warnings"
+      ],
+      "title": "VerifierReproduction",
+      "type": "object"
+    },
+    "VerifierSafety": {
+      "additionalProperties": false,
+      "properties": {
+        "arbitrary_code_execution": {
+          "title": "Arbitrary Code Execution",
+          "type": "boolean"
+        },
+        "live_targeting": {
+          "title": "Live Targeting",
+          "type": "boolean"
+        },
+        "security_claim": {
+          "title": "Security Claim",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "arbitrary_code_execution",
+        "live_targeting",
+        "security_claim"
+      ],
+      "title": "VerifierSafety",
+      "type": "object"
+    }
+  },
+  "$id": "https://agades.tech/schemas/agades-pqc-gym/verifier_result.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Deterministic public verifier result emitted by agades-pqc verify, Prime verifier wrappers, and Hugging Face demo adapters.",
+  "properties": {
+    "accepted": {
+      "title": "Accepted",
+      "type": "boolean"
+    },
+    "assumption_penalty": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Assumption Penalty"
+    },
+    "attack_plan_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Attack Plan Id"
+    },
+    "combined_score": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Combined Score"
+    },
+    "estimated_memory_bits": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Estimated Memory Bits"
+    },
+    "estimated_time_bits": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Estimated Time Bits"
+    },
+    "estimator": {
+      "$ref": "#/$defs/VerifierEstimator"
+    },
+    "evaluation_status": {
+      "title": "Evaluation Status",
+      "type": "string"
+    },
+    "features": {
+      "$ref": "#/$defs/VerifierFeatures"
+    },
+    "instability_penalty": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Instability Penalty"
+    },
+    "novelty_score": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Novelty Score"
+    },
+    "reproducibility_score": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Reproducibility Score"
+    },
+    "reproduction": {
+      "$ref": "#/$defs/VerifierReproduction"
+    },
+    "safety": {
+      "$ref": "#/$defs/VerifierSafety"
+    },
+    "schema_valid": {
+      "title": "Schema Valid",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "agades.pqc.verifier.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "target_family": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Target Family"
+    },
+    "validation_errors": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Validation Errors",
+      "type": "array"
+    },
+    "validity_score": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Validity Score"
+    },
+    "verifier_version": {
+      "title": "Verifier Version",
+      "type": "string"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "verifier_version",
+    "attack_plan_id",
+    "target_family",
+    "schema_valid",
+    "accepted",
+    "evaluation_status",
+    "combined_score",
+    "estimated_time_bits",
+    "estimated_memory_bits",
+    "validity_score",
+    "reproducibility_score",
+    "novelty_score",
+    "assumption_penalty",
+    "instability_penalty",
+    "features",
+    "estimator",
+    "reproduction",
+    "warnings",
+    "validation_errors",
+    "safety"
+  ],
+  "title": "Agades PQC Gym Verifier Result",
+  "type": "object"
+}

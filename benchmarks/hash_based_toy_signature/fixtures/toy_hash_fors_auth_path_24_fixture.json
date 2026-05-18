@@ -1,0 +1,34 @@
+{
+  "auth_paths_hex": [
+    [
+      "dcd4f5",
+      "cb7409"
+    ],
+    [
+      "127489",
+      "16be58"
+    ]
+  ],
+  "digest_bits": 24,
+  "family": "HASH_BASED",
+  "hash_function": "SHAKE256",
+  "leaves_hex": [
+    "590679",
+    "6ab8f8"
+  ],
+  "public": true,
+  "roots_hex": [
+    "80e23b",
+    "b5ff18"
+  ],
+  "schema_version": "agades.pqc.hash_based_toy_fors_auth_path.v1",
+  "security_claim": false,
+  "selected_indices": [
+    1,
+    2
+  ],
+  "signature_model": "toy_fors_auth_path_verify",
+  "target_name": "toy_hash_fors_auth_path_24",
+  "tree_count": 2,
+  "tree_height": 2
+}

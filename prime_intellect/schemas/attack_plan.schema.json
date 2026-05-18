@@ -1,0 +1,460 @@
+{
+  "$defs": {
+    "AttackOperator": {
+      "additionalProperties": false,
+      "properties": {
+        "assumptions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "params": {
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
+        },
+        "type": {
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "AttackOperator",
+      "type": "object"
+    },
+    "Claims": {
+      "additionalProperties": false,
+      "properties": {
+        "estimated_memory_bits": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Estimated Memory Bits"
+        },
+        "estimated_time_bits": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Estimated Time Bits"
+        },
+        "external_claim": {
+          "default": false,
+          "title": "External Claim",
+          "type": "boolean"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source"
+        },
+        "success_probability": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Success Probability"
+        }
+      },
+      "title": "Claims",
+      "type": "object"
+    },
+    "Constraints": {
+      "additionalProperties": false,
+      "properties": {
+        "downscaled_reproduction_fixture": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Downscaled Reproduction Fixture"
+        },
+        "max_memory_bits": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Memory Bits"
+        },
+        "max_time_bits": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Time Bits"
+        },
+        "require_reproducibility_on_downscaled_instances": {
+          "default": false,
+          "title": "Require Reproducibility On Downscaled Instances",
+          "type": "boolean"
+        }
+      },
+      "title": "Constraints",
+      "type": "object"
+    },
+    "Distribution": {
+      "additionalProperties": false,
+      "properties": {
+        "eta": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Eta"
+        },
+        "hamming_weight": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Hamming Weight"
+        },
+        "sigma": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sigma"
+        },
+        "type": {
+          "minLength": 1,
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "Distribution",
+      "type": "object"
+    },
+    "Metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "created_by": {
+          "minLength": 1,
+          "title": "Created By",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "title": "Notes",
+          "type": "string"
+        },
+        "public": {
+          "default": true,
+          "title": "Public",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "created_by"
+      ],
+      "title": "Metadata",
+      "type": "object"
+    },
+    "SupportLevel": {
+      "enum": [
+        "implemented",
+        "schema_only",
+        "placeholder"
+      ],
+      "title": "SupportLevel",
+      "type": "string"
+    },
+    "TargetFamily": {
+      "enum": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS",
+        "CODE_BASED",
+        "MULTIVARIATE",
+        "HASH_BASED",
+        "ISOGENY_HISTORICAL",
+        "IMPLEMENTATION_SECURITY"
+      ],
+      "title": "TargetFamily",
+      "type": "string"
+    },
+    "TargetSpec": {
+      "additionalProperties": false,
+      "description": "Family-agnostic target schema with reviewed family-specific fields.",
+      "properties": {
+        "claimed_security_bits": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Claimed Security Bits"
+        },
+        "equations": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Equations"
+        },
+        "error_distribution": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Distribution"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "family": {
+          "$ref": "#/$defs/TargetFamily"
+        },
+        "field": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Field"
+        },
+        "hash_function": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Hash Function"
+        },
+        "k": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "K"
+        },
+        "m": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "M"
+        },
+        "n": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "N"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "q": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Q"
+        },
+        "secret_distribution": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Distribution"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "support_level": {
+          "$ref": "#/$defs/SupportLevel",
+          "default": "implemented"
+        },
+        "variables": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Variables"
+        },
+        "w": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "W"
+        }
+      },
+      "required": [
+        "family",
+        "name"
+      ],
+      "title": "TargetSpec",
+      "type": "object"
+    }
+  },
+  "$id": "https://agades.tech/schemas/agades-pqc-gym/attack_plan.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Single JSON AttackPlan object accepted by Agades PQC Gym public verifier surfaces, including Prime Verifiers tasks and Hugging Face demos. This schema does not permit executable code.",
+  "properties": {
+    "attack_plan_id": {
+      "minLength": 1,
+      "title": "Attack Plan Id",
+      "type": "string"
+    },
+    "claims": {
+      "$ref": "#/$defs/Claims"
+    },
+    "constraints": {
+      "$ref": "#/$defs/Constraints"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "operators": {
+      "items": {
+        "$ref": "#/$defs/AttackOperator"
+      },
+      "minItems": 1,
+      "title": "Operators",
+      "type": "array"
+    },
+    "target": {
+      "$ref": "#/$defs/TargetSpec"
+    }
+  },
+  "required": [
+    "attack_plan_id",
+    "target",
+    "operators",
+    "metadata"
+  ],
+  "title": "Agades PQC Gym AttackPlan Submission",
+  "type": "object"
+}

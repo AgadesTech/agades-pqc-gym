@@ -1,0 +1,40 @@
+{
+  "attack_plan_id": "toy_volcano_walk_fixture_verify_seed",
+  "target": {
+    "family": "ISOGENY_HISTORICAL",
+    "name": "toy_volcano_walk_reconstruction",
+    "n": 83,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "historical_isogeny_reconstruction",
+      "params": {
+        "case": "toy_volcano_walk_search",
+        "walk_length": 5,
+        "branching_factor": 4,
+        "volcano_height": 3
+      },
+      "assumptions": [
+        "historical_not_current_standard",
+        "historical_toy_volcano_walk_model"
+      ]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/isogeny_historical_toy_path/fixtures/toy_volcano_walk_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated historical toy volcano-style isogeny-walk benchmark seed with a public graph/path fixture. Not a CSIDH, SIDH, current-standard, or security claim."
+  }
+}

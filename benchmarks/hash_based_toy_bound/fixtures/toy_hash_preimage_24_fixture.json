@@ -1,0 +1,15 @@
+{
+  "schema_version": "agades.pqc.hash_based_toy_preimage.v1",
+  "family": "HASH_BASED",
+  "target_name": "toy_hash_preimage_24",
+  "digest_bits": 24,
+  "hash_function": "SHAKE256",
+  "message_prefix": "agades-pqc-hash-toy-v1:",
+  "candidate_encoding": "uint_be_fixed_width",
+  "candidate_byte_length": 2,
+  "max_candidate_exclusive": 65536,
+  "digest_hex": "59c55a",
+  "expected_candidate": 4242,
+  "public": true,
+  "security_claim": false
+}

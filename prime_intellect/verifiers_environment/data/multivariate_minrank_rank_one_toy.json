@@ -1,0 +1,40 @@
+{
+  "attack_plan_id": "multivariate_minrank_rank_one_toy_v1",
+  "target": {
+    "family": "MULTIVARIATE",
+    "name": "toy_minrank_gf2_m3_r1",
+    "variables": 4,
+    "equations": 9,
+    "field": "GF(2)",
+    "claimed_security_bits": 12.0,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "minrank_attack",
+      "params": {
+        "model": "toy_minrank_search",
+        "matrix_rows": 3,
+        "matrix_cols": 3,
+        "target_rank": 1
+      },
+      "assumptions": ["toy_minrank_exhaustive_search_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/multivariate_toy_minrank/fixtures/toy_minrank_gf2_m3_r1_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Toy multivariate MinRank rank-one fixture for public plumbing only. Not a UOV/MAYO/Rainbow or security claim."
+  }
+}

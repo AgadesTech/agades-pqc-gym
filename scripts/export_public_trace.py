@@ -4,7 +4,7 @@ from pathlib import Path
 
 import typer
 
-from agades_lwe_gym.cli import export_public
+from agades_pqc_gym.cli import export_public
 
 
 def main(trace_path: Path, out: Path = Path("public/trace_public.jsonl")) -> None:

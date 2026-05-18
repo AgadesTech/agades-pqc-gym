@@ -1,0 +1,974 @@
+{
+  "contracts": [
+    {
+      "adapter_status": "future_reviewed_adapter",
+      "allowed_surfaces": [
+        "private_reproduction_workspace",
+        "future_reviewed_huggingface_dataset_mirror",
+        "future_nvidia_gpu_reproduction_plan"
+      ],
+      "blocked_surfaces": [
+        "current_public_verifier",
+        "prime_json_only_reward_environment",
+        "public_benchmark_v0_claim_surface"
+      ],
+      "claim_boundaries": [
+        "Dataset ingestion is not implemented in the public MVP.",
+        "No result from this source may be reported as a deployed standard break without expert review.",
+        "Large public data must not be downloaded by the JSON-only public verifier."
+      ],
+      "current_runtime_enabled": false,
+      "public_verifier_allowed": false,
+      "required_review_gates": [
+        "reviewed_parameter_mapping",
+        "storage_and_checksum_plan",
+        "private_trace_redaction_plan",
+        "expert_review_before_claims"
+      ],
+      "requires_gpu": false,
+      "requires_large_storage": true,
+      "source_catalog_id": "facebook-tapas",
+      "source_facts": {
+        "license": "cc-by-4.0",
+        "settings": [
+          {
+            "log_q": 20,
+            "n": 256,
+            "omega": 10,
+            "rho": 0.4284,
+            "samples": "400M"
+          },
+          {
+            "log_q": 12,
+            "n": 512,
+            "omega": 10,
+            "rho": 0.9036,
+            "samples": "40M"
+          },
+          {
+            "log_q": 28,
+            "n": 512,
+            "omega": 10,
+            "rho": 0.674,
+            "samples": "40M"
+          },
+          {
+            "log_q": 41,
+            "n": 512,
+            "omega": 10,
+            "rho": 0.3992,
+            "samples": "40M"
+          },
+          {
+            "log_q": 26,
+            "n": 1024,
+            "omega": 10,
+            "rho": 0.86,
+            "samples": "40M"
+          }
+        ],
+        "total_file_size_gb": 364
+      },
+      "source_id": "facebook-tapas",
+      "source_url": "https://huggingface.co/datasets/facebook/TAPAS",
+      "target_family": "lattice",
+      "title": "TAPAS: Datasets for Learning the Learning with Errors Problem"
+    },
+    {
+      "adapter_status": "future_reviewed_adapter",
+      "allowed_surfaces": [
+        "private_reproduction_workspace",
+        "future_nvidia_gpu_reproduction_plan",
+        "future_reviewed_public_reproduction_bundle"
+      ],
+      "blocked_surfaces": [
+        "current_public_verifier",
+        "prime_json_only_reward_environment",
+        "public_benchmark_v0_claim_surface"
+      ],
+      "claim_boundaries": [
+        "Repository workflows require heavyweight dependencies and must stay outside the JSON-only verifier.",
+        "Results must be labeled benchmark reproduction evidence, not a deployed PQC security claim.",
+        "GPU/Sage execution requires a separately reviewed runner."
+      ],
+      "current_runtime_enabled": false,
+      "public_verifier_allowed": false,
+      "required_review_gates": [
+        "gpu_isolated_runner",
+        "external_toolchain_pin",
+        "reviewed_attack_mapping",
+        "private_trace_redaction_plan",
+        "expert_review_before_claims"
+      ],
+      "requires_gpu": true,
+      "requires_large_storage": true,
+      "source_catalog_id": "facebook-lwe-benchmarking",
+      "source_facts": {
+        "attacks": [
+          "uSVP",
+          "SALSA",
+          "Cool&Cruel",
+          "Dual Hybrid MitM"
+        ],
+        "external_tools": [
+          "flatter"
+        ],
+        "min_python": "3.10.12",
+        "requires_nvidia_gpu": true,
+        "separate_environments": [
+          "non_sage_conda",
+          "sage"
+        ],
+        "toy_dataset": {
+          "compressed_size_mb": 140,
+          "log_q": 7,
+          "n": 80,
+          "uncompressed_size_gb": 1
+        }
+      },
+      "source_id": "facebook-lwe-benchmarking",
+      "source_url": "https://github.com/facebookresearch/LWE-benchmarking",
+      "target_family": "lattice",
+      "title": "Benchmarking Attacks on Learning with Errors"
+    },
+    {
+      "adapter_status": "future_reviewed_adapter",
+      "allowed_surfaces": [
+        "future_reviewed_instruction_eval_seed",
+        "future_huggingface_dataset_card_context",
+        "private_pqc_qa_validation_workspace"
+      ],
+      "blocked_surfaces": [
+        "current_public_verifier",
+        "prime_json_only_reward_environment",
+        "public_benchmark_v0_claim_surface"
+      ],
+      "claim_boundaries": [
+        "This source is a future reviewed instruction or QA seed, not a complete PQC cryptanalysis corpus.",
+        "Rows must not be used for supervised training, evaluator claims, or migration advice without source grounding and license review.",
+        "No item from this dataset is accepted by the current JSON-only public verifier."
+      ],
+      "current_runtime_enabled": false,
+      "public_verifier_allowed": false,
+      "required_review_gates": [
+        "source_fact_verification",
+        "license_review",
+        "answer_source_grounding_review",
+        "dataset_bias_and_staleness_review",
+        "expert_review_before_claims"
+      ],
+      "requires_gpu": false,
+      "requires_large_storage": false,
+      "source_catalog_id": "hf-post-quantum-crypto-fr",
+      "source_facts": {
+        "language": "fr",
+        "license": "apache-2.0",
+        "row_count": 122,
+        "schema_fields": [
+          "id",
+          "question",
+          "answer",
+          "category",
+          "source_url"
+        ],
+        "tasks": [
+          "question_answering",
+          "text_classification"
+        ]
+      },
+      "source_id": "hf-post-quantum-crypto-fr-instruction-seed",
+      "source_url": "https://huggingface.co/datasets/AYI-NEDJIMI/post-quantum-crypto-fr",
+      "target_family": "all",
+      "title": "AYI-NEDJIMI French post-quantum cryptography instruction seed"
+    },
+    {
+      "adapter_status": "future_reviewed_adapter",
+      "allowed_surfaces": [
+        "future_reviewed_instruction_eval_seed",
+        "future_huggingface_dataset_card_context",
+        "private_pqc_qa_validation_workspace"
+      ],
+      "blocked_surfaces": [
+        "current_public_verifier",
+        "prime_json_only_reward_environment",
+        "public_benchmark_v0_claim_surface"
+      ],
+      "claim_boundaries": [
+        "This source is a future reviewed instruction or QA seed, not a complete PQC cryptanalysis corpus.",
+        "Rows must not be used for supervised training, evaluator claims, or migration advice without source grounding and license review.",
+        "No item from this dataset is accepted by the current JSON-only public verifier."
+      ],
+      "current_runtime_enabled": false,
+      "public_verifier_allowed": false,
+      "required_review_gates": [
+        "source_fact_verification",
+        "license_review",
+        "answer_source_grounding_review",
+        "dataset_bias_and_staleness_review",
+        "expert_review_before_claims"
+      ],
+      "requires_gpu": false,
+      "requires_large_storage": false,
+      "source_catalog_id": "hf-post-quantum-crypto-en",
+      "source_facts": {
+        "language": "en",
+        "license": "apache-2.0",
+        "row_count": 122,
+        "schema_fields": [
+          "id",
+          "question",
+          "answer",
+          "category",
+          "source_url"
+        ],
+        "tasks": [
+          "question_answering",
+          "text_classification"
+        ]
+      },
+      "source_id": "hf-post-quantum-crypto-en-instruction-seed",
+      "source_url": "https://huggingface.co/datasets/AYI-NEDJIMI/post-quantum-crypto-en",
+      "target_family": "all",
+      "title": "AYI-NEDJIMI English post-quantum cryptography instruction seed"
+    },
+    {
+      "adapter_status": "future_reviewed_adapter",
+      "allowed_surfaces": [
+        "future_reviewed_migration_scoring_eval",
+        "future_huggingface_dataset_card_context",
+        "private_pqc_migration_analysis_workspace"
+      ],
+      "blocked_surfaces": [
+        "current_public_verifier",
+        "prime_json_only_reward_environment",
+        "public_benchmark_v0_claim_surface"
+      ],
+      "claim_boundaries": [
+        "This source may only seed future migration-readiness analysis after sampling, staleness, and methodology review.",
+        "A small public scan dataset is not a representative industry-wide PQC deployment survey.",
+        "No endpoint or score from this dataset is accepted by the current JSON-only public verifier."
+      ],
+      "current_runtime_enabled": false,
+      "public_verifier_allowed": false,
+      "required_review_gates": [
+        "source_fact_verification",
+        "license_review",
+        "domain_sampling_review",
+        "migration_scoring_methodology_review",
+        "staleness_review",
+        "expert_review_before_claims"
+      ],
+      "requires_gpu": false,
+      "requires_large_storage": false,
+      "source_catalog_id": "hf-pqc-ssl-scans",
+      "source_facts": {
+        "domains": [
+          "finance",
+          "government",
+          "healthcare"
+        ],
+        "observations": [
+          "ssl_scan_metadata",
+          "pqc_support_indicators"
+        ],
+        "row_count": 45,
+        "tasks": [
+          "tls_pqc_readiness_review",
+          "migration_scoring"
+        ]
+      },
+      "source_id": "hf-pqc-ssl-scans-migration-scoring",
+      "source_url": "https://huggingface.co/datasets/Q-GRID/pqc-ssl-scans",
+      "target_family": "all",
+      "title": "Q-GRID PQC SSL scan dataset migration-scoring anchor"
+    },
+    {
+      "adapter_status": "future_reviewed_adapter",
+      "allowed_surfaces": [
+        "private_side_channel_research_workspace",
+        "future_reviewed_side_channel_reproduction_plan",
+        "future_nvidia_gpu_reproduction_plan"
+      ],
+      "blocked_surfaces": [
+        "current_public_verifier",
+        "prime_json_only_reward_environment",
+        "public_benchmark_v0_claim_surface"
+      ],
+      "claim_boundaries": [
+        "This source is side-channel research infrastructure, not a current Agades public verifier input.",
+        "Any reproduction plan must pin trace provenance, hardware scope, leakage model, and disclosure boundaries first.",
+        "No result from this dataset may be reported as a general PQC side-channel resistance claim."
+      ],
+      "current_runtime_enabled": false,
+      "public_verifier_allowed": false,
+      "required_review_gates": [
+        "trace_provenance_review",
+        "hardware_scope_review",
+        "leakage_model_review",
+        "responsible_disclosure_review",
+        "expert_review_before_claims"
+      ],
+      "requires_gpu": true,
+      "requires_large_storage": false,
+      "source_catalog_id": "hf-sc2026-side-channel",
+      "source_facts": {
+        "algorithms": [
+          "AES",
+          "SM4",
+          "CRYSTALS-Kyber"
+        ],
+        "contains_kyber": true,
+        "file_formats": [
+          "parquet_preview",
+          "npy_full_dataset"
+        ],
+        "modalities": [
+          "far_field_em",
+          "time_series"
+        ],
+        "preview_row_count": 1000,
+        "research_tasks": [
+          "cpa",
+          "template_attack",
+          "cnn",
+          "mlp",
+          "transformer",
+          "domain_adaptation"
+        ],
+        "total_file_size_mb": 342
+      },
+      "source_id": "hf-sc2026-side-channel-research",
+      "source_url": "https://huggingface.co/datasets/SCA-HNUST/SC2026",
+      "target_family": "implementation_security",
+      "title": "SC2026 far-field EM side-channel research anchor"
+    },
+    {
+      "adapter_status": "future_reviewed_adapter",
+      "allowed_surfaces": [
+        "private_code_based_review_workspace",
+        "future_reviewed_public_hqc_schema_benchmark",
+        "future_nvidia_cpu_benchmark_plan"
+      ],
+      "blocked_surfaces": [
+        "current_public_verifier",
+        "prime_json_only_reward_environment",
+        "public_benchmark_v0_claim_surface"
+      ],
+      "claim_boundaries": [
+        "The current code-based toy ISD and quasi-cyclic rotation surfaces are not HQC security estimators.",
+        "Future HQC work must pin NIST status, parameters, test-vector provenance, and decoder-failure assumptions.",
+        "No HQC result may be reported from the JSON-only public verifier without expert review."
+      ],
+      "current_runtime_enabled": false,
+      "public_verifier_allowed": false,
+      "required_review_gates": [
+        "reviewed_hqc_parameter_mapping",
+        "decoder_failure_model_review",
+        "test_vector_provenance_pin",
+        "nist_status_pin",
+        "private_trace_redaction_plan",
+        "expert_review_before_claims"
+      ],
+      "requires_gpu": false,
+      "requires_large_storage": false,
+      "source_catalog_id": "nist-hqc-selection",
+      "source_facts": {
+        "nist_report": "NIST IR 8545",
+        "not_selected": [
+          "BIKE",
+          "Classic McEliece"
+        ],
+        "selected_algorithm": "HQC",
+        "selected_as": "second PQC KEM following ML-KEM",
+        "selection_date": "2025-03-11",
+        "selection_round": "NIST PQC fourth round",
+        "standard_status": "draft_standard_expected_before_final"
+      },
+      "source_id": "nist-hqc-standardization-track",
+      "source_url": "https://csrc.nist.gov/News/2025/hqc-announced-as-a-4th-round-selection",
+      "target_family": "code_based",
+      "title": "NIST HQC standardization track"
+    },
+    {
+      "adapter_status": "future_reviewed_adapter",
+      "allowed_surfaces": [
+        "private_code_based_review_workspace",
+        "future_reviewed_public_bike_schema_benchmark",
+        "future_nvidia_cpu_benchmark_plan"
+      ],
+      "blocked_surfaces": [
+        "current_public_verifier",
+        "prime_json_only_reward_environment",
+        "public_benchmark_v0_claim_surface"
+      ],
+      "claim_boundaries": [
+        "The current BIKE-like schema-only AttackPlan validates routing only and is not a BIKE security estimator.",
+        "Future BIKE work must pin NIST status, parameters, decoder-failure assumptions, and claim boundaries.",
+        "No BIKE result may be reported from the JSON-only public verifier without expert review."
+      ],
+      "current_runtime_enabled": false,
+      "public_verifier_allowed": false,
+      "required_review_gates": [
+        "reviewed_bike_parameter_mapping",
+        "decoder_failure_model_review",
+        "nist_status_pin",
+        "private_trace_redaction_plan",
+        "expert_review_before_claims"
+      ],
+      "requires_gpu": false,
+      "requires_large_storage": false,
+      "source_catalog_id": "nist-bike-round4-status",
+      "source_facts": {
+        "nist_report": "NIST IR 8545",
+        "round4_outcome": "not_selected",
+        "selected_algorithm": "HQC",
+        "selection_date": "2025-03-11",
+        "selection_round": "NIST PQC fourth round"
+      },
+      "source_id": "nist-bike-round4-status",
+      "source_url": "https://csrc.nist.gov/pubs/ir/8545/final",
+      "target_family": "code_based",
+      "title": "NIST BIKE fourth-round status"
+    },
+    {
+      "adapter_status": "future_reviewed_adapter",
+      "allowed_surfaces": [
+        "private_code_based_review_workspace",
+        "future_reviewed_public_classic_mceliece_schema_benchmark",
+        "future_nvidia_cpu_benchmark_plan"
+      ],
+      "blocked_surfaces": [
+        "current_public_verifier",
+        "prime_json_only_reward_environment",
+        "public_benchmark_v0_claim_surface"
+      ],
+      "claim_boundaries": [
+        "The current Classic McEliece-like schema-only AttackPlan validates routing only and is not a Classic McEliece security estimator.",
+        "Future Classic McEliece work must pin NIST status, parameters, KAT provenance, decoding-workfactor model, and claim boundaries.",
+        "No Classic McEliece result may be reported from the JSON-only public verifier without expert review."
+      ],
+      "current_runtime_enabled": false,
+      "public_verifier_allowed": false,
+      "required_review_gates": [
+        "reviewed_classic_mceliece_parameter_mapping",
+        "decoding_workfactor_model_review",
+        "kat_vector_provenance_pin",
+        "nist_status_pin",
+        "private_trace_redaction_plan",
+        "expert_review_before_claims"
+      ],
+      "requires_gpu": false,
+      "requires_large_storage": false,
+      "source_catalog_id": "nist-classic-mceliece-round4-status",
+      "source_facts": {
+        "nist_report": "NIST IR 8545",
+        "round4_outcome": "not_selected",
+        "selected_algorithm": "HQC",
+        "selection_date": "2025-03-11",
+        "selection_round": "NIST PQC fourth round"
+      },
+      "source_id": "nist-classic-mceliece-round4-status",
+      "source_url": "https://csrc.nist.gov/pubs/ir/8545/final",
+      "target_family": "code_based",
+      "title": "NIST Classic McEliece fourth-round status"
+    },
+    {
+      "adapter_status": "future_reviewed_adapter",
+      "allowed_surfaces": [
+        "private_hash_based_review_workspace",
+        "future_reviewed_public_slh_dsa_vector_bundle",
+        "future_huggingface_slh_dsa_metadata_dataset"
+      ],
+      "blocked_surfaces": [
+        "current_public_verifier",
+        "prime_json_only_reward_environment",
+        "public_benchmark_v0_claim_surface"
+      ],
+      "claim_boundaries": [
+        "The current hash-based WOTS-chain fixture is toy plumbing, not an SLH-DSA implementation or proof.",
+        "Future SLH-DSA test bundles must pin parameter sets, revision status, and vector provenance before publication.",
+        "Passing a future vector fixture would be conformance evidence only, not a hash-function or signature-security claim."
+      ],
+      "current_runtime_enabled": false,
+      "public_verifier_allowed": false,
+      "required_review_gates": [
+        "algorithm_revision_mapping",
+        "parameter_set_mapping",
+        "test_vector_provenance_pin",
+        "signature_trace_redaction_plan",
+        "expert_review_before_claims"
+      ],
+      "requires_gpu": false,
+      "requires_large_storage": false,
+      "source_catalog_id": "nist-fips-205",
+      "source_facts": {
+        "algorithm": "SLH-DSA",
+        "based_on": "SPHINCS+",
+        "publication_date": "2024-08-13",
+        "scheme_type": "stateless_hash_based_signature",
+        "standard": "FIPS 205"
+      },
+      "source_id": "nist-fips-205-slh-dsa-reference",
+      "source_url": "https://csrc.nist.gov/pubs/fips/205/final",
+      "target_family": "hash_based",
+      "title": "NIST FIPS 205 SLH-DSA standard reference"
+    },
+    {
+      "adapter_status": "future_reviewed_adapter",
+      "allowed_surfaces": [
+        "private_multivariate_review_workspace",
+        "future_reviewed_public_multivariate_schema_benchmark",
+        "future_prime_environment_after_expert_review"
+      ],
+      "blocked_surfaces": [
+        "current_public_verifier",
+        "prime_json_only_reward_environment",
+        "public_benchmark_v0_claim_surface"
+      ],
+      "claim_boundaries": [
+        "The current MQ and MinRank toy evaluators are not MAYO, QR-UOV, UOV, or candidate-security estimators.",
+        "Future candidate adapters must pin NIST status, public parameters, implementation sources, and attack-model scope before publication.",
+        "No NIST additional-signature security claim may be made from current public toy results."
+      ],
+      "current_runtime_enabled": false,
+      "public_verifier_allowed": false,
+      "required_review_gates": [
+        "selected_candidate_status_pin",
+        "public_parameter_mapping",
+        "algebraic_attack_model_review",
+        "implementation_source_pin",
+        "private_trace_redaction_plan",
+        "expert_review_before_claims"
+      ],
+      "requires_gpu": false,
+      "requires_large_storage": false,
+      "source_catalog_id": "nist-additional-signatures-round3",
+      "source_facts": {
+        "announcement_date": "2026-05-14",
+        "expected_review_duration_years": 2,
+        "multivariate_candidates": [
+          "MAYO",
+          "QR-UOV",
+          "UOV"
+        ],
+        "nist_report": "NIST IR 8610",
+        "phase": "third_round_additional_digital_signatures"
+      },
+      "source_id": "nist-additional-signatures-round3-multivariate",
+      "source_url": "https://csrc.nist.gov/News/2026/nist-advances-9-candidates-to-the-3rd-round-of-pqc",
+      "target_family": "multivariate",
+      "title": "NIST additional PQC digital signatures round-three multivariate candidates"
+    },
+    {
+      "adapter_status": "future_reviewed_adapter",
+      "allowed_surfaces": [
+        "private_implementation_security_workspace",
+        "future_reviewed_public_kat_bundle",
+        "future_prime_environment_with_isolated_runner",
+        "future_nvidia_cpu_benchmark_plan"
+      ],
+      "blocked_surfaces": [
+        "current_public_verifier",
+        "prime_json_only_reward_environment",
+        "public_benchmark_v0_claim_surface"
+      ],
+      "claim_boundaries": [
+        "liboqs workflows are not executed by the current public verifier.",
+        "Future KAT, memory, and speed results require pinned toolchains, reviewed algorithm mappings, and explicit hardware/software environment records.",
+        "Passing liboqs tests is implementation evidence only, not a cryptanalytic or production-security claim."
+      ],
+      "current_runtime_enabled": false,
+      "public_verifier_allowed": false,
+      "required_review_gates": [
+        "external_toolchain_pin",
+        "kat_conformance_mapping",
+        "memory_benchmark_mapping",
+        "constant_time_tool_interpretation",
+        "private_trace_redaction_plan",
+        "expert_review_before_claims"
+      ],
+      "requires_gpu": false,
+      "requires_large_storage": false,
+      "source_catalog_id": "liboqs",
+      "source_facts": {
+        "benchmark_programs": [
+          "speed_kem",
+          "speed_sig",
+          "speed_sig_stfl"
+        ],
+        "build_system": "cmake+ninja",
+        "kat_programs": [
+          "kat_kem",
+          "kat_sig",
+          "kat_sig_stfl"
+        ],
+        "test_programs": [
+          "test_kem",
+          "test_sig",
+          "test_sig_stfl",
+          "test_kem_mem",
+          "test_sig_mem",
+          "test_portability"
+        ],
+        "upstream_warning": "liboqs is for research/prototyping and is not recommended by upstream for protecting sensitive data"
+      },
+      "source_id": "liboqs-implementation-harness",
+      "source_url": "https://github.com/open-quantum-safe/liboqs",
+      "target_family": "implementation_security",
+      "title": "Open Quantum Safe liboqs test and benchmark harness"
+    },
+    {
+      "adapter_status": "future_reviewed_adapter",
+      "allowed_surfaces": [
+        "private_implementation_security_workspace",
+        "future_reviewed_public_acvp_kat_bundle",
+        "future_prime_environment_with_isolated_runner",
+        "future_nvidia_cpu_benchmark_plan"
+      ],
+      "blocked_surfaces": [
+        "current_public_verifier",
+        "prime_json_only_reward_environment",
+        "public_benchmark_v0_claim_surface"
+      ],
+      "claim_boundaries": [
+        "PQ Code Package workflows are not executed by the current JSON-only public verifier.",
+        "Future KAT, constant-time, and benchmark outputs require pinned source revisions, ACVP vector releases, toolchains, and hardware/software environment records.",
+        "Passing future native implementation tests would be correctness or implementation evidence only, not a cryptanalytic or production-security claim."
+      ],
+      "current_runtime_enabled": false,
+      "public_verifier_allowed": false,
+      "required_review_gates": [
+        "high_assurance_source_pin",
+        "acvp_vector_release_pin",
+        "external_toolchain_pin",
+        "static_model_checking_scope_review",
+        "constant_time_tool_interpretation",
+        "benchmark_environment_record",
+        "private_trace_redaction_plan",
+        "expert_review_before_claims"
+      ],
+      "requires_gpu": false,
+      "requires_large_storage": false,
+      "source_catalog_id": "pq-code-package",
+      "source_facts": {
+        "benchmark_surfaces": [
+          "speed",
+          "stack_usage",
+          "binary_size"
+        ],
+        "implementation_style": "portable C90 frontends with native backend options",
+        "repositories": [
+          "mlkem-native",
+          "mldsa-native"
+        ],
+        "review_signals": [
+          "ACVP test vectors",
+          "CBMC undefined-behaviour checks",
+          "valgrind secret-dependent branch/access checks"
+        ],
+        "standards_scope": [
+          "FIPS 203",
+          "FIPS 204"
+        ]
+      },
+      "source_id": "pq-code-package-native-implementations",
+      "source_url": "https://github.com/pq-code-package",
+      "target_family": "implementation_security",
+      "title": "PQ Code Package native ML-KEM/ML-DSA implementation contracts"
+    },
+    {
+      "adapter_status": "future_reviewed_adapter",
+      "allowed_surfaces": [
+        "private_embedded_benchmark_workspace",
+        "future_reviewed_public_embedded_benchmark_bundle",
+        "future_nvidia_embedded_workload_plan"
+      ],
+      "blocked_surfaces": [
+        "current_public_verifier",
+        "prime_json_only_reward_environment",
+        "public_benchmark_v0_claim_surface"
+      ],
+      "claim_boundaries": [
+        "pqm4 requires reviewed device, simulator, firmware, and serial-output handling before any public benchmark result.",
+        "Embedded speed, stack, and code-size measurements are environment-specific and must not be compared without a pinned board/simulator protocol.",
+        "The current MVP records this as future infrastructure only."
+      ],
+      "current_runtime_enabled": false,
+      "public_verifier_allowed": false,
+      "required_review_gates": [
+        "device_or_simulator_isolation",
+        "board_firmware_pin",
+        "kat_reference_mapping",
+        "serial_io_redaction_plan",
+        "timing_measurement_protocol",
+        "expert_review_before_claims"
+      ],
+      "requires_gpu": false,
+      "requires_large_storage": false,
+      "source_catalog_id": "pqm4",
+      "source_facts": {
+        "implementation_sources": [
+          "PQClean",
+          "NIST submissions"
+        ],
+        "metrics": [
+          "speed",
+          "stack_usage",
+          "code_size",
+          "symmetric_primitive_cycles"
+        ],
+        "target": "ARM Cortex-M4",
+        "testing_features": [
+          "functional_testing",
+          "test_vector_generation",
+          "reference_output_comparison"
+        ]
+      },
+      "source_id": "pqm4-cortexm4-benchmarking",
+      "source_url": "https://github.com/mupq/pqm4",
+      "target_family": "implementation_security",
+      "title": "pqm4 ARM Cortex-M4 testing and benchmarking framework"
+    },
+    {
+      "adapter_status": "future_reviewed_adapter",
+      "allowed_surfaces": [
+        "private_kat_validation_workspace",
+        "future_reviewed_public_kat_bundle",
+        "future_huggingface_kat_metadata_dataset"
+      ],
+      "blocked_surfaces": [
+        "current_public_verifier",
+        "prime_json_only_reward_environment",
+        "public_benchmark_v0_claim_surface"
+      ],
+      "claim_boundaries": [
+        "ACVP/CAVP vectors are correctness or validation inputs, not cryptanalytic attack evidence.",
+        "Future public KAT bundles must pin vector provenance and algorithm revision before publication.",
+        "No ACVP server interaction is performed by the current JSON-only public verifier."
+      ],
+      "current_runtime_enabled": false,
+      "public_verifier_allowed": false,
+      "required_review_gates": [
+        "vector_provenance_pin",
+        "algorithm_revision_mapping",
+        "validation_scope_mapping",
+        "generated_vector_redaction_plan",
+        "expert_review_before_claims"
+      ],
+      "requires_gpu": false,
+      "requires_large_storage": false,
+      "source_catalog_id": "nist-acvp",
+      "source_facts": {
+        "nist_project": "ACVP",
+        "pqc_algorithm_groups": [
+          "ML-KEM",
+          "ML-DSA",
+          "SLH-DSA"
+        ],
+        "protocol": "Automated Cryptographic Validation Protocol",
+        "server_repository": "https://github.com/usnistgov/ACVP-Server"
+      },
+      "source_id": "nist-acvp-pqc-vectors",
+      "source_url": "https://github.com/usnistgov/ACVP",
+      "target_family": "implementation_security",
+      "title": "NIST ACVP PQC validation protocol and vector sources"
+    },
+    {
+      "adapter_status": "future_reviewed_adapter",
+      "allowed_surfaces": [
+        "private_constant_time_review_workspace",
+        "future_reviewed_public_timing_leakage_bundle",
+        "future_nvidia_cpu_benchmark_plan"
+      ],
+      "blocked_surfaces": [
+        "current_public_verifier",
+        "prime_json_only_reward_environment",
+        "public_benchmark_v0_claim_surface"
+      ],
+      "claim_boundaries": [
+        "dudect is not executed by the current JSON-only public verifier.",
+        "A passing timing experiment is not a constant-time proof and must not be reported as a production-security claim.",
+        "Future outputs require pinned source, compiler, CPU, input classes, thresholds, and expert review."
+      ],
+      "current_runtime_enabled": false,
+      "public_verifier_allowed": false,
+      "required_review_gates": [
+        "source_revision_pin",
+        "compiler_and_flags_pin",
+        "measurement_protocol_review",
+        "statistical_threshold_review",
+        "hardware_noise_model_record",
+        "private_trace_redaction_plan",
+        "expert_review_before_claims"
+      ],
+      "requires_gpu": false,
+      "requires_large_storage": false,
+      "source_catalog_id": "dudect",
+      "source_facts": {
+        "method": "two-class timing measurement",
+        "requires": [
+          "c_compiler",
+          "pinned_cpu_environment",
+          "reviewed_input_classification"
+        ],
+        "statistical_method": [
+          "welch_t_test",
+          "t_value_threshold_review_required"
+        ],
+        "typical_outputs": [
+          "measurement_count",
+          "max_t_statistic",
+          "timing_leakage_classification"
+        ]
+      },
+      "source_id": "dudect-statistical-timing-leakage",
+      "source_url": "https://github.com/oreparaz/dudect",
+      "target_family": "implementation_security",
+      "title": "dudect statistical timing-leakage test harness"
+    },
+    {
+      "adapter_status": "future_reviewed_adapter",
+      "allowed_surfaces": [
+        "private_constant_time_review_workspace",
+        "future_reviewed_public_secret_taint_bundle",
+        "future_nvidia_cpu_benchmark_plan"
+      ],
+      "blocked_surfaces": [
+        "current_public_verifier",
+        "prime_json_only_reward_environment",
+        "public_benchmark_v0_claim_surface"
+      ],
+      "claim_boundaries": [
+        "ctgrind workflows are not executed by the current JSON-only public verifier.",
+        "Dynamic secret-taint checks are implementation evidence only and do not prove absence of all side channels.",
+        "Future outputs require reviewed annotations, toolchain, Valgrind behavior, and expert interpretation."
+      ],
+      "current_runtime_enabled": false,
+      "public_verifier_allowed": false,
+      "required_review_gates": [
+        "source_revision_pin",
+        "valgrind_environment_pin",
+        "secret_annotation_scope_review",
+        "compiler_and_flags_pin",
+        "tool_limitation_review",
+        "private_trace_redaction_plan",
+        "expert_review_before_claims"
+      ],
+      "requires_gpu": false,
+      "requires_large_storage": false,
+      "source_catalog_id": "ctgrind",
+      "source_facts": {
+        "base_tool": "Valgrind memcheck",
+        "checks": [
+          "secret_dependent_branch",
+          "secret_dependent_memory_access"
+        ],
+        "inputs_required": [
+          "secret_annotation_policy",
+          "public_input_policy",
+          "pinned_binary_under_test"
+        ],
+        "status_note": "historical patch-based approach; modern review must pin usable Valgrind support or successor tooling"
+      },
+      "source_id": "ctgrind-secret-taint-analysis",
+      "source_url": "https://github.com/agl/ctgrind",
+      "target_family": "implementation_security",
+      "title": "ctgrind Valgrind secret-taint analysis contract"
+    },
+    {
+      "adapter_status": "future_reviewed_adapter",
+      "allowed_surfaces": [
+        "private_supercop_review_workspace",
+        "future_reviewed_public_timecop_bundle",
+        "future_nvidia_cpu_benchmark_plan"
+      ],
+      "blocked_surfaces": [
+        "current_public_verifier",
+        "prime_json_only_reward_environment",
+        "public_benchmark_v0_claim_surface"
+      ],
+      "claim_boundaries": [
+        "TIMECOP/SUPERCOP workflows are not executed by the current JSON-only public verifier.",
+        "Future TIMECOP outputs are implementation-testing evidence only, not a general constant-time or security claim.",
+        "Publication requires pinned SUPERCOP source, policy scope, CPU/toolchain metadata, and expert review."
+      ],
+      "current_runtime_enabled": false,
+      "public_verifier_allowed": false,
+      "required_review_gates": [
+        "supercop_source_pin",
+        "timecop_policy_scope_review",
+        "cpu_and_toolchain_record",
+        "implementation_opt_goal_mapping",
+        "result_database_provenance_pin",
+        "private_trace_redaction_plan",
+        "expert_review_before_claims"
+      ],
+      "requires_gpu": false,
+      "requires_large_storage": false,
+      "source_catalog_id": "timecop-supercop",
+      "source_facts": {
+        "framework": "SUPERCOP",
+        "policy_surfaces": [
+          "secret_dependent_branch",
+          "secret_dependent_memory_access",
+          "public_input_declassification"
+        ],
+        "result_scope": [
+          "implementation_specific",
+          "cpu_specific",
+          "toolchain_specific"
+        ],
+        "tool_versions": [
+          "original TIMECOP",
+          "TIMECOP 2"
+        ]
+      },
+      "source_id": "timecop-supercop-policy-checks",
+      "source_url": "https://bench.cr.yp.to/supercop.html",
+      "target_family": "implementation_security",
+      "title": "TIMECOP/SUPERCOP constant-time policy checks"
+    }
+  ],
+  "project": {
+    "cli": "agades-pqc",
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "release_gates": [
+    "uv run pytest tests/test_benchmark_source_contracts.py -q",
+    "uv run agades-pqc benchmark-source-contracts --out docs/benchmark_source_contracts.json",
+    "uv run agades-pqc benchmark-source-verify --contracts docs/benchmark_source_contracts.json",
+    "uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json",
+    "uv run agades-pqc release-audit --out public/release_audit.json"
+  ],
+  "safety": {
+    "arbitrary_code_execution": false,
+    "contains_private_traces": false,
+    "public_verifier_downloads_large_assets": false,
+    "publishes_private_candidates": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.benchmark_source_contracts.v1",
+  "summary": {
+    "blocked_prime_reward_contracts": 18,
+    "blocked_public_benchmark_claim_surface_contracts": 18,
+    "blocked_public_verifier_contracts": 18,
+    "contract_count": 18,
+    "current_runtime_enabled_contracts": 0,
+    "expert_review_gate_contracts": 18,
+    "future_reviewed_adapters": 18,
+    "heavy_storage_contracts": 2,
+    "public_verifier_allowed_contracts": 0,
+    "requires_gpu_contracts": 2,
+    "source_catalog_id_count": 18,
+    "target_family_counts": {
+      "all": 3,
+      "code_based": 3,
+      "hash_based": 1,
+      "implementation_security": 8,
+      "lattice": 2,
+      "multivariate": 1
+    }
+  }
+}

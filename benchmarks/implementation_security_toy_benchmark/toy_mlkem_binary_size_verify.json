@@ -1,0 +1,40 @@
+{
+  "attack_plan_id": "toy_mlkem_binary_size_verify_seed",
+  "target": {
+    "family": "IMPLEMENTATION_SECURITY",
+    "name": "toy_mlkem_binary_size",
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "benchmark_harness",
+      "params": {
+        "suite": "toy_mlkem_binary_size",
+        "metric": "toy_binary_size_bytes",
+        "model": "toy_binary_size_check",
+        "text_bytes": 16384,
+        "rodata_bytes": 4096,
+        "data_bytes": 1024,
+        "bss_bytes": 2048,
+        "max_total_bytes": 24576
+      },
+      "assumptions": ["toy_binary_size_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/implementation_security_toy_benchmark/fixtures/toy_mlkem_binary_size_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated toy implementation-security binary-size seed with a public JSON-only fixture. Not a binary-size, performance, conformance, side-channel, or security claim."
+  }
+}

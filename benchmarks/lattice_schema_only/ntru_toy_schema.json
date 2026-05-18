@@ -1,0 +1,40 @@
+{
+  "attack_plan_id": "lattice_ntru_schema_placeholder_seed",
+  "target": {
+    "family": "NTRU",
+    "name": "ntru_hps_like_toy_schema",
+    "n": 701,
+    "q": 8192,
+    "claimed_security_bits": 128.0,
+    "secret_distribution": {
+      "type": "ternary",
+      "hamming_weight": 64
+    },
+    "support_level": "schema_only"
+  },
+  "operators": [
+    {
+      "type": "normal_form_transform",
+      "params": {},
+      "assumptions": [
+        "schema_only_no_estimator",
+        "ntru_estimator_mapping_unreviewed"
+      ]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": false
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Schema-only NTRU lattice benchmark seed. No NTRU estimator mapping is implemented."
+  }
+}

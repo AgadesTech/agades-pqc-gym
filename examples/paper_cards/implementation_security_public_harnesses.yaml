@@ -1,0 +1,19 @@
+title: "Public PQC Implementation Harness Boundaries"
+authors:
+  - "Open Quantum Safe"
+  - "mupq"
+  - "National Institute of Standards and Technology"
+year: 2025
+url: "docs/benchmark_source_contracts.json"
+family: "IMPLEMENTATION_SECURITY"
+relevance: "Future implementation-security hooks should propose KAT, timing, and benchmark-harness work only through pinned public artifacts and explicit no-execution review gates."
+key_ideas:
+  - "KAT and ACVP-style vector checks are correctness evidence, not cryptanalytic evidence."
+  - "Timing and benchmark summaries are environment-specific unless device, toolchain, runner, and provenance are pinned."
+  - "The public verifier must stay JSON-only until an isolated runner and redaction protocol exist."
+operators_suggested:
+  - "kat_conformance"
+  - "constant_time_check"
+  - "benchmark_harness"
+implementation_status: "note_only"
+risk: "Requires implementation-security expert review before any live artifact, device, ACVP, timing, or benchmark adapter is implemented."

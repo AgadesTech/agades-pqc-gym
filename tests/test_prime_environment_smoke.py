@@ -1,0 +1,159 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from typer.testing import CliRunner
+
+from agades_pqc_gym.cli import app
+from agades_pqc_gym.integrations.prime_environment_smoke import (
+    build_prime_environment_smoke_report,
+    verify_prime_environment_smoke_report,
+    write_prime_environment_smoke_report,
+)
+
+
+def test_prime_environment_smoke_report_exercises_packaged_verifier(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "prime_environment_smoke.json"
+
+    report = write_prime_environment_smoke_report(out)
+
+    assert report == build_prime_environment_smoke_report()
+    assert json.loads(out.read_text(encoding="utf-8")) == report
+    assert report["schema_version"] == "agades.pqc.prime_environment_smoke.v1"
+    assert report["accepted"] is True
+    assert report["environment"] == {
+        "environment_dir": "prime_intellect/verifiers_environment",
+        "entrypoint": "agades_pqc_verifier_env:load_environment",
+        "imports_without_verifiers": True,
+        "module_path": (
+            "prime_intellect/verifiers_environment/agades_pqc_verifier_env.py"
+        ),
+    }
+    assert report["dataset"] == {
+        "data_file_count": 79,
+        "dataset_rows": 79,
+        "default_attack_plan_id": "lattice_primal_usvp_toy_v1",
+        "families": [
+            "CODE_BASED",
+            "HASH_BASED",
+            "IMPLEMENTATION_SECURITY",
+            "ISOGENY_HISTORICAL",
+            "LWE",
+            "MLWE",
+            "MULTIVARIATE",
+            "NTRU",
+            "SIS",
+        ],
+        "mirrors_packaged_data": True,
+    }
+    assert report["scoring"] == {
+        "accepted_score": 1.0,
+        "invalid_json_score": 0.0,
+        "prefixed_json_score": 0.0,
+        "requires_single_json_object": True,
+        "unsupported_score": 0.0,
+    }
+    assert report["optional_dependencies"] == {
+        "load_environment_boundary_ok": True,
+        "required_packages": ["datasets", "verifiers"],
+    }
+    assert report["safety"] == {
+        "arbitrary_code_execution": False,
+        "contains_private_traces": False,
+        "live_targeting": False,
+        "publishes_private_candidates": False,
+        "security_claim": False,
+    }
+    assert report["release_gates"] == [
+        "uv run pytest tests/test_prime_environment_smoke.py -q",
+        "uv run agades-pqc prime-environment-smoke --out "
+        "reports/prime_environment_smoke.json",
+        "uv run agades-pqc prime-environment-smoke-verify --report "
+        "reports/prime_environment_smoke.json",
+        "uv build prime_intellect/verifiers_environment",
+        "uv run agades-pqc ecosystem-smoke-verify --report "
+        "reports/ecosystem_smoke.json",
+        "uv run agades-pqc release-audit --out public/release_audit.json",
+    ]
+    assert report["failures"] == []
+
+
+def test_committed_prime_environment_smoke_report_is_in_sync(
+    tmp_path: Path,
+) -> None:
+    generated = tmp_path / "prime_environment_smoke.json"
+    committed = Path("reports/prime_environment_smoke.json")
+
+    write_prime_environment_smoke_report(generated)
+
+    assert committed.read_bytes() == generated.read_bytes()
+
+
+def test_prime_environment_smoke_verify_accepts_committed_report() -> None:
+    result = verify_prime_environment_smoke_report(
+        Path("reports/prime_environment_smoke.json")
+    )
+
+    assert result == {
+        "schema_version": "agades.pqc.prime_environment_smoke_verification.v1",
+        "report_path": "reports/prime_environment_smoke.json",
+        "accepted": True,
+        "summary": {
+            "accepted_score": 1.0,
+            "dataset_rows": 79,
+            "failure_count": 0,
+            "imports_without_verifiers": True,
+            "load_environment_boundary_ok": True,
+            "prefixed_json_score": 0.0,
+            "unsupported_score": 0.0,
+        },
+        "failures": [],
+    }
+
+
+def test_prime_environment_smoke_verify_rejects_stale_report(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "prime_environment_smoke.json"
+    report = build_prime_environment_smoke_report()
+    report["safety"]["security_claim"] = True
+    out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+
+    result = verify_prime_environment_smoke_report(out)
+
+    assert result["accepted"] is False
+    assert "Prime environment smoke report is not in sync." in result["failures"]
+    assert "Prime environment smoke report security_claim must be false." in result[
+        "failures"
+    ]
+
+
+def test_prime_environment_smoke_cli_writes_report(tmp_path: Path) -> None:
+    out = tmp_path / "prime_environment_smoke.json"
+
+    result = CliRunner().invoke(
+        app,
+        ["prime-environment-smoke", "--out", str(out)],
+    )
+
+    assert result.exit_code == 0
+    assert f"prime_environment_smoke={out}" in result.output
+    assert json.loads(out.read_text(encoding="utf-8"))["accepted"] is True
+
+
+def test_prime_environment_smoke_verify_cli_accepts_current_report() -> None:
+    result = CliRunner().invoke(
+        app,
+        [
+            "prime-environment-smoke-verify",
+            "--report",
+            "reports/prime_environment_smoke.json",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert "agades.pqc.prime_environment_smoke_verification.v1" in result.output
+    assert '"accepted": true' in result.output

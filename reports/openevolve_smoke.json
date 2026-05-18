@@ -1,0 +1,71 @@
+{
+  "accepted": true,
+  "attack_plan_path": "examples/attack_plans/lattice_primal_usvp_toy.json",
+  "evaluator_path": "examples/openevolve/evaluator.py",
+  "failures": [],
+  "metrics": {
+    "assumption_penalty": 0.0,
+    "combined_score": -80.9096,
+    "estimated_memory_bits": 25.04,
+    "estimated_time_bits": 75.0496,
+    "evaluation_status": "ok",
+    "feature_assumption_bucket": "some",
+    "feature_assumption_count": 1,
+    "feature_assumption_fingerprint": "c4e0027b74565f3bfa2bcb5718a57e5ee1ca8bc52dc68f7f456f4928ff3e9bf3",
+    "feature_attack_type": "primal_usvp",
+    "feature_estimator_model": "mock-lattice-estimator",
+    "feature_family": "LWE",
+    "feature_memory_bucket": "low",
+    "feature_operator_count": 1,
+    "feature_risky_assumption_count": 0,
+    "feature_unique_assumption_count": 1,
+    "fitness_schema_version": "agades.pqc.fitness_report.v1",
+    "instability_penalty": 0.0,
+    "novelty_score": 0.2,
+    "reproducibility_score": 0.0,
+    "reproduction_attempted": false,
+    "reproduction_status": "not_requested",
+    "reproduction_success": null,
+    "validity_score": 1.0
+  },
+  "primary_metric": "combined_score",
+  "release_gates": [
+    "uv run pytest tests/test_openevolve_adapter.py -q",
+    "uv run agades-pqc openevolve-smoke --out reports/openevolve_smoke.json",
+    "uv run agades-pqc openevolve-smoke-verify --report reports/openevolve_smoke.json",
+    "uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json",
+    "uv run agades-pqc release-audit --out public/release_audit.json"
+  ],
+  "required_metric_keys": [
+    "combined_score",
+    "fitness_schema_version",
+    "evaluation_status",
+    "feature_family",
+    "feature_attack_type",
+    "feature_operator_count",
+    "feature_memory_bucket",
+    "feature_assumption_bucket",
+    "feature_estimator_model",
+    "validity_score",
+    "reproducibility_score",
+    "assumption_penalty",
+    "instability_penalty"
+  ],
+  "safety": {
+    "arbitrary_code_execution": false,
+    "python_candidates_executed": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.openevolve_smoke.v1",
+  "summary": {
+    "combined_score": -80.9096,
+    "evaluation_status": "ok",
+    "failure_count": 0,
+    "feature_attack_type": "primal_usvp",
+    "feature_family": "LWE",
+    "feature_memory_bucket": "low",
+    "metric_count": 23,
+    "primary_metric": "combined_score",
+    "python_candidates_executed": false
+  }
+}

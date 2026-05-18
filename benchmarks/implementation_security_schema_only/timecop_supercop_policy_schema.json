@@ -1,0 +1,33 @@
+{
+  "attack_plan_id": "implementation_security_timecop_schema_v1",
+  "target": {
+    "family": "IMPLEMENTATION_SECURITY",
+    "name": "timecop_supercop_policy_schema",
+    "support_level": "schema_only"
+  },
+  "operators": [
+    {
+      "type": "constant_time_check",
+      "params": {
+        "tool": "timecop_supercop_schema_placeholder",
+        "source_contract": "timecop-supercop-policy-checks"
+      },
+      "assumptions": ["schema_only_no_estimator"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": false
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Schema-only TIMECOP/SUPERCOP policy placeholder for a future reviewed implementation-security adapter. No TIMECOP or SUPERCOP workflow is executed and no constant-time, side-channel, or security claim is made."
+  }
+}

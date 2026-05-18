@@ -1,0 +1,126 @@
+{
+  "entries": [
+    {
+      "accepted": true,
+      "attack_plan_id": "hash_based_fors_auth_path_toy_seed",
+      "attack_type": "hash_signature_verification",
+      "candidate_id": "hash_based_fors_auth_path_toy_seed-0",
+      "combined_score": -6.2275,
+      "estimated_memory_bits": 4.1699,
+      "estimated_time_bits": 2.585,
+      "estimator_name": "toy-hash-bound-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "hash_based_toy_signature",
+      "target_family": "HASH_BASED",
+      "trace_id": "5fbfba051edec3b5eb6bfce4e1aa6f35b963077d967f722ad99f72211254ce34",
+      "warnings": [
+        "Toy FORS auth-path output is for public evaluator plumbing only; it is not an SLH-DSA result and not a security claim.",
+        "Verified a public toy SHAKE256 FORS auth-path fixture; this is reproducibility plumbing, not an SLH-DSA result and not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_hash_merkle_auth_path_24_verify_seed",
+      "attack_type": "hash_signature_verification",
+      "candidate_id": "toy_hash_merkle_auth_path_24_verify_seed-1",
+      "combined_score": -5.4962,
+      "estimated_memory_bits": 3.585,
+      "estimated_time_bits": 2.0,
+      "estimator_name": "toy-hash-bound-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "hash_based_toy_signature",
+      "target_family": "HASH_BASED",
+      "trace_id": "3904a0d48d6dc2ba16ecaaf99edac590ccd37bc2874dd32b743d055b639dcf25",
+      "warnings": [
+        "Toy Merkle auth-path output is for public evaluator plumbing only; it is not a signature security claim and not a security claim.",
+        "Verified a public toy SHAKE256 Merkle auth-path fixture; this is reproducibility plumbing, not a signature security claim and not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_hash_signature_chain_24_verify_seed",
+      "attack_type": "hash_signature_verification",
+      "candidate_id": "toy_hash_signature_chain_24_verify_seed-2",
+      "combined_score": -8.4962,
+      "estimated_memory_bits": 3.585,
+      "estimated_time_bits": 5.0,
+      "estimator_name": "toy-hash-bound-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "hash_based_toy_signature",
+      "target_family": "HASH_BASED",
+      "trace_id": "88f3f9f5803b2bbbf941e44c1e98335e6462c613f737c06d6c640106234d5199",
+      "warnings": [
+        "Toy hash-signature chain output is for public evaluator plumbing only; it is not a security claim.",
+        "Verified a public toy SHAKE256 hash-signature chain fixture; this is reproducibility plumbing, not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "hash_based_slh_dsa_hypertree_toy_seed",
+      "attack_type": "hash_signature_verification",
+      "candidate_id": "hash_based_slh_dsa_hypertree_toy_seed-3",
+      "combined_score": -9.7791,
+      "estimated_memory_bits": 7.0112,
+      "estimated_time_bits": 5.4263,
+      "estimator_name": "toy-hash-bound-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "hash_based_toy_signature",
+      "target_family": "HASH_BASED",
+      "trace_id": "4ed70274b32d3457c311f7438ceeedb70da9356167b207e4ef49546863c08980",
+      "warnings": [
+        "Toy SLH-DSA-like hypertree output is for public evaluator plumbing only; it is not an SLH-DSA result and not a security claim.",
+        "Verified a public toy SHAKE256 SLH-DSA-like hypertree fixture; this is reproducibility plumbing, not an SLH-DSA result and not a security claim."
+      ]
+    }
+  ],
+  "ledger_version": "0.1.0",
+  "safety": {
+    "arbitrary_code_execution": false,
+    "live_targeting": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.public_run_ledger.v1",
+  "source_trace": {
+    "artifact": "trace_public.jsonl",
+    "public_sha256": "31bbfb93c1c824e3d1ddbf39509b5b232a29dbb3698e937c3a4dcb59452a580d",
+    "record_count": 4
+  },
+  "summary": {
+    "accepted_records": 4,
+    "by_estimator": {
+      "toy-hash-bound-estimator": 4
+    },
+    "by_evaluation_status": {
+      "ok": 4
+    },
+    "by_family": {
+      "HASH_BASED": 4
+    },
+    "redacted_records": 0,
+    "total_records": 4
+  }
+}

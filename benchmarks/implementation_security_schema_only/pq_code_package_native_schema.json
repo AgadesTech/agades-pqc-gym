@@ -1,0 +1,32 @@
+{
+  "attack_plan_id": "implementation_security_pq_code_package_schema_v1",
+  "target": {
+    "family": "IMPLEMENTATION_SECURITY",
+    "name": "pq_code_package_native_mlkem_mldsa_schema",
+    "support_level": "schema_only"
+  },
+  "operators": [
+    {
+      "type": "kat_conformance",
+      "params": {
+        "suite": "pq_code_package_native_kat_schema_placeholder"
+      },
+      "assumptions": ["schema_only_no_estimator"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": false
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Schema-only PQ Code Package native ML-KEM/ML-DSA placeholder for future reviewed implementation-security adapters. No native workflow is executed and no KAT, ACVP, constant-time, conformance, or security claim is made."
+  }
+}

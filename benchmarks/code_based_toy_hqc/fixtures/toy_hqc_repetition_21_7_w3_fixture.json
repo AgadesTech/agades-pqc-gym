@@ -1,0 +1,48 @@
+{
+  "expected_error_positions": [
+    2,
+    7,
+    16
+  ],
+  "expected_message_bits": [
+    1,
+    0,
+    1,
+    1,
+    0,
+    0,
+    1
+  ],
+  "family": "CODE_BASED",
+  "k": 7,
+  "n": 21,
+  "public": true,
+  "received_bits": [
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    1,
+    1,
+    1
+  ],
+  "repetition_factor": 3,
+  "schema_version": "agades.pqc.code_based_toy_hqc_repetition.v1",
+  "security_claim": false,
+  "target_name": "toy_hqc_repetition_21_7_w3",
+  "w": 3
+}

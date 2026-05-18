@@ -1,0 +1,179 @@
+{
+  "entries": [
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_hqc_circulant_erasure_16_8_w3_decode_seed",
+      "attack_type": "decoding_fixture_check",
+      "candidate_id": "toy_hqc_circulant_erasure_16_8_w3_decode_seed-0",
+      "combined_score": -12.768,
+      "estimated_memory_bits": 5.0444,
+      "estimated_time_bits": 8.9069,
+      "estimator_name": "toy-code-based-circulant-erasure-decoder-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "code_based_toy_hqc",
+      "target_family": "CODE_BASED",
+      "trace_id": "c57f831d907cd3335606bf3a5cdd3bbce0cb810c23d655ddff6d809df2d59b68",
+      "warnings": [
+        "Toy HQC-inspired circulant-erasure decoder output is for public evaluator plumbing only; it is not an HQC result and not a security claim.",
+        "Decoded a public toy HQC-inspired circulant-erasure fixture with bounded erasure-constrained double-block syndrome search; this is reproducibility plumbing, not an HQC result and not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_hqc_circulant_syndrome_16_8_w2_decode_seed",
+      "attack_type": "decoding_fixture_check",
+      "candidate_id": "toy_hqc_circulant_syndrome_16_8_w2_decode_seed-1",
+      "combined_score": -14.682,
+      "estimated_memory_bits": 4.7004,
+      "estimated_time_bits": 10.9069,
+      "estimator_name": "toy-code-based-circulant-syndrome-decoder-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "code_based_toy_hqc",
+      "target_family": "CODE_BASED",
+      "trace_id": "5f2035b51afdf8e268f3c112d8acfa89bb5203c825e0b0eafce35c661106902a",
+      "warnings": [
+        "Toy HQC-inspired circulant syndrome decoder output is for public evaluator plumbing only; it is not an HQC result and not a security claim.",
+        "Decoded a public toy HQC-inspired circulant syndrome fixture with bounded double-block syndrome search; this is reproducibility plumbing, not an HQC result and not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_hqc_erasure_syndrome_12_6_w2_decode_seed",
+      "attack_type": "decoding_fixture_check",
+      "candidate_id": "toy_hqc_erasure_syndrome_12_6_w2_decode_seed-2",
+      "combined_score": -9.8124,
+      "estimated_memory_bits": 4.1699,
+      "estimated_time_bits": 6.1699,
+      "estimator_name": "toy-code-based-erasure-syndrome-decoder-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "code_based_toy_hqc",
+      "target_family": "CODE_BASED",
+      "trace_id": "836b7cf6f2cfc6b10b421a7b988b6056729d5efd6cddc936c01ef6c63b5480bc",
+      "warnings": [
+        "Toy HQC-inspired erasure-aided syndrome decoder output is for public evaluator plumbing only; it is not an HQC result and not a security claim.",
+        "Decoded a public toy HQC-inspired erasure-aided syndrome fixture with bounded erasure-set search; this is reproducibility plumbing, not an HQC result and not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_hqc_parity_check_15_7_w2_decode_seed",
+      "attack_type": "decoding_fixture_check",
+      "candidate_id": "toy_hqc_parity_check_15_7_w2_decode_seed-3",
+      "combined_score": -14.4752,
+      "estimated_memory_bits": 4.6439,
+      "estimated_time_bits": 10.7142,
+      "estimator_name": "toy-code-based-parity-check-decoder-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "code_based_toy_hqc",
+      "target_family": "CODE_BASED",
+      "trace_id": "2a820436e52deda781d8b0a26d1eae3c2aba4b81aa116407797eb3ce639d2692",
+      "warnings": [
+        "Toy HQC-inspired parity-check decoder output is for public evaluator plumbing only; it is not an HQC result and not a security claim.",
+        "Decoded a public toy HQC-inspired parity-check fixture with bounded exact-weight syndrome search; this is reproducibility plumbing, not an HQC result and not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_hqc_repetition_21_7_w3_decode_seed",
+      "attack_type": "decoding_fixture_check",
+      "candidate_id": "toy_hqc_repetition_21_7_w3_decode_seed-4",
+      "combined_score": -8.1942,
+      "estimated_memory_bits": 4.8074,
+      "estimated_time_bits": 4.3923,
+      "estimator_name": "toy-code-based-repetition-decoder-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "code_based_toy_hqc",
+      "target_family": "CODE_BASED",
+      "trace_id": "d43fd9eb8d3cbcf4f3702cadb7ec06fcea789f591ef308aa6e4d6d9636126782",
+      "warnings": [
+        "Toy HQC-inspired repetition-code decoder output is for public evaluator plumbing only; it is not an HQC result and not a security claim.",
+        "Decoded a public toy HQC-inspired repetition-code fixture with bounded majority voting; this is reproducibility plumbing, not an HQC result and not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_hqc_weighted_repetition_25_5_w4_decode_seed",
+      "attack_type": "decoding_fixture_check",
+      "candidate_id": "toy_hqc_weighted_repetition_25_5_w4_decode_seed-5",
+      "combined_score": -10.505,
+      "estimated_memory_bits": 5.0444,
+      "estimated_time_bits": 6.6439,
+      "estimator_name": "toy-code-based-weighted-repetition-decoder-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "code_based_toy_hqc",
+      "target_family": "CODE_BASED",
+      "trace_id": "eb3bf2a7574ee5b0803e349395d5274be0e1a6fd61f24b3fcd4c496f6130bdba",
+      "warnings": [
+        "Toy HQC-inspired weighted repetition-code decoder output is for public evaluator plumbing only; it is not an HQC result and not a security claim.",
+        "Decoded a public toy HQC-inspired weighted repetition-code fixture with bounded reliability-weighted voting; this is reproducibility plumbing, not an HQC result and not a security claim."
+      ]
+    }
+  ],
+  "ledger_version": "0.1.0",
+  "safety": {
+    "arbitrary_code_execution": false,
+    "live_targeting": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.public_run_ledger.v1",
+  "source_trace": {
+    "artifact": "trace_public.jsonl",
+    "public_sha256": "eda8755c52b8733b916bd907347c72502458b238986df5a54db09be6d7ed8020",
+    "record_count": 6
+  },
+  "summary": {
+    "accepted_records": 6,
+    "by_estimator": {
+      "toy-code-based-circulant-erasure-decoder-estimator": 1,
+      "toy-code-based-circulant-syndrome-decoder-estimator": 1,
+      "toy-code-based-erasure-syndrome-decoder-estimator": 1,
+      "toy-code-based-parity-check-decoder-estimator": 1,
+      "toy-code-based-repetition-decoder-estimator": 1,
+      "toy-code-based-weighted-repetition-decoder-estimator": 1
+    },
+    "by_evaluation_status": {
+      "ok": 6
+    },
+    "by_family": {
+      "CODE_BASED": 6
+    },
+    "redacted_records": 0,
+    "total_records": 6
+  }
+}

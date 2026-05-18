@@ -1,0 +1,32 @@
+{
+  "attack_plan_id": "implementation_security_pqm4_schema_v1",
+  "target": {
+    "family": "IMPLEMENTATION_SECURITY",
+    "name": "pqm4_mlkem_cortexm4_benchmark_schema",
+    "support_level": "schema_only"
+  },
+  "operators": [
+    {
+      "type": "benchmark_harness",
+      "params": {
+        "metric": "pqm4_cortexm4_benchmark_schema_placeholder"
+      },
+      "assumptions": ["schema_only_no_estimator"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": false
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Schema-only pqm4 Cortex-M4 benchmark placeholder for future reviewed implementation-security adapters. No firmware, simulator, device, or serial workflow is executed and no embedded-performance, side-channel, or security claim is made."
+  }
+}

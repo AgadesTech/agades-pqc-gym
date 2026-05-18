@@ -1,0 +1,17 @@
+{
+  "artifact_execution": false,
+  "code_bytes": 8192,
+  "family": "IMPLEMENTATION_SECURITY",
+  "heap_bytes": 1024,
+  "max_code_bytes": 16384,
+  "max_heap_bytes": 2048,
+  "max_stack_bytes": 4096,
+  "metric": "toy_memory_footprint_bytes",
+  "model": "toy_memory_footprint_check",
+  "public": true,
+  "schema_version": "agades.pqc.implementation_security_toy_benchmark.v1",
+  "security_claim": false,
+  "stack_bytes": 2048,
+  "suite": "toy_mlkem_memory",
+  "target_name": "toy_mlkem_memory_footprint"
+}

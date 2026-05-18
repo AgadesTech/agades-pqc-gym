@@ -1,0 +1,16 @@
+{
+  "artifact_execution": false,
+  "bss_bytes": 2048,
+  "data_bytes": 1024,
+  "family": "IMPLEMENTATION_SECURITY",
+  "max_total_bytes": 24576,
+  "metric": "toy_binary_size_bytes",
+  "model": "toy_binary_size_check",
+  "public": true,
+  "rodata_bytes": 4096,
+  "schema_version": "agades.pqc.implementation_security_toy_benchmark.v1",
+  "security_claim": false,
+  "suite": "toy_mlkem_binary_size",
+  "target_name": "toy_mlkem_binary_size",
+  "text_bytes": 16384
+}

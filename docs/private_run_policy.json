@@ -1,0 +1,98 @@
+{
+  "allowed_private_commands": [
+    "agades-pqc mutate-candidates",
+    "agades-pqc mutate-archive",
+    "agades-pqc deepevolve-injections",
+    "agades-pqc evolve-batch",
+    "agades-pqc private-evolution-campaign-plan",
+    "agades-pqc heldout-review-log",
+    "agades-pqc heldout-schedule",
+    "agades-pqc heldout-run-schedule",
+    "agades-pqc heldout-review-packet",
+    "agades-pqc heldout-cron-plan",
+    "agades-pqc heldout-batch",
+    "agades-pqc rescore-archive",
+    "agades-pqc archive-snapshot",
+    "agades-pqc lattice-estimator-baseline-run",
+    "agades-pqc lattice-estimator-baseline-review-packet",
+    "agades-pqc lattice-estimator-checkout-preflight"
+  ],
+  "allowed_private_roots": [
+    "private/candidates",
+    "private/reports",
+    "private/runs",
+    "private/traces"
+  ],
+  "export_policy": {
+    "external_publication_requires_preflight": true,
+    "public_bundle_exports_require_release_audit": true,
+    "public_trace_exports_require_redaction": true,
+    "publish_private_candidates": false,
+    "publish_private_trace_scores": false
+  },
+  "forbidden_public_roots": [
+    "docs",
+    "examples/public_runs",
+    "hf/dataset",
+    "prime_intellect/verifiers_environment/data",
+    "public"
+  ],
+  "private_holdback": [
+    "serious evolution traces",
+    "private prompts and prompt-ranking policies",
+    "evaluator weighting and anti-gaming heuristics",
+    "unreleased candidate strategies",
+    "responsible-disclosure material"
+  ],
+  "private_run_defaults": {
+    "arbitrary_python_candidates": false,
+    "candidate_public_release_ok_default": false,
+    "external_network_access": false,
+    "live_targeting": false,
+    "security_claims": false,
+    "trace_public_release_ok_default": false
+  },
+  "project": {
+    "cli": "agades-pqc",
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "release_gates": [
+    "uv run agades-pqc private-run-policy --out docs/private_run_policy.json",
+    "uv run agades-pqc private-run-policy-verify --policy docs/private_run_policy.json"
+  ],
+  "required_publication_controls": [
+    "redact_trace_record",
+    "public-bundle",
+    "public-ledger",
+    "publication-preflight",
+    "release-audit"
+  ],
+  "scheduler_policy": {
+    "allowed_triggers": [
+      "manual_reviewed",
+      "local_cron_after_review"
+    ],
+    "approval_gates": [
+      "private-run-policy-review",
+      "heldout-target-review",
+      "retention-owner-review",
+      "publication-export-review"
+    ],
+    "execution_safety": {
+      "arbitrary_code_execution": false,
+      "external_network_access": false,
+      "publishes_private_trace_outputs": false,
+      "writes_only_allowed_private_roots": true
+    },
+    "retention": {
+      "archive_snapshot_max_age_days": 90,
+      "delete_expired_private_runs": true,
+      "private_trace_max_age_days": 30,
+      "review_log_required": true
+    },
+    "scheduler_enabled_by_default": false
+  },
+  "schema_version": "agades.pqc.private_run_policy.v1"
+}
