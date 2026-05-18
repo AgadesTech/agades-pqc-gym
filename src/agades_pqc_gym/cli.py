@@ -212,13 +212,93 @@ from agades_pqc_gym.traces.writer import JsonlTraceWriter
 from agades_pqc_gym.validators.static import validate_attack_plan
 from agades_pqc_gym.verifier import EstimatorChoice, verify_attack_plan_path
 
-app = typer.Typer(no_args_is_help=True)
+app = typer.Typer(
+    no_args_is_help=True,
+    help=(
+        "Run Agades PQC Gym experiments. Start with `quickstart`, then use "
+        "`validate`, `evaluate`, `benchmark`, and `report` for the core loop. "
+        "Advanced release and ecosystem commands remain available by name but "
+        "are hidden from this first-screen help."
+    ),
+)
 console = Console()
 DEFAULT_EVAL_TRACE = Path("runs/eval_trace.jsonl")
 DEFAULT_BENCHMARK_TRACE = Path("runs/benchmark_trace.jsonl")
 DEFAULT_PUBLIC_TRACE = Path("public/trace_public.jsonl")
 DEFAULT_PUBLIC_LEDGER = Path("public/run_ledger.json")
 DEFAULT_REPORT = Path("reports/report.md")
+DEFAULT_QUICKSTART_DIR = Path("runs/quickstart")
+QUICKSTART_LATTICE_PLAN = Path("examples/attack_plans/lattice_primal_usvp_toy.json")
+QUICKSTART_CODE_TOY_PLAN = Path("examples/attack_plans/code_based_prange_toy.json")
+QUICKSTART_UNSUPPORTED_PLAN = Path(
+    "examples/attack_plans/code_based_isd_placeholder.json"
+)
+QUICKSTART_LATTICE_BENCHMARK = Path("benchmarks/lattice_toy_lwe")
+
+
+@app.command("quickstart")
+def quickstart(
+    out_dir: Annotated[
+        Path,
+        typer.Option(
+            "--out-dir",
+            help="Directory for quickstart traces and reports.",
+        ),
+    ] = DEFAULT_QUICKSTART_DIR,
+) -> None:
+    """Run the short guided gym demo: validate, evaluate, benchmark, report."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    lattice_trace = out_dir / "lattice_trace.jsonl"
+    lattice_report = out_dir / "lattice_report.md"
+    lattice_benchmark = out_dir / "lattice_benchmark.jsonl"
+    code_trace = out_dir / "code_based_prange_trace.jsonl"
+    unsupported_trace = out_dir / "unsupported_placeholder_trace.jsonl"
+
+    lattice_trace.write_text("", encoding="utf-8")
+    code_trace.write_text("", encoding="utf-8")
+    unsupported_trace.write_text("", encoding="utf-8")
+
+    lattice_plan = AttackPlan.model_validate_json(
+        QUICKSTART_LATTICE_PLAN.read_text(encoding="utf-8")
+    )
+    validation = validate_attack_plan(lattice_plan)
+    if not validation.valid:
+        console.print(
+            "[red]quickstart validation failed[/red]: "
+            f"{lattice_plan.attack_plan_id}"
+        )
+        for error in validation.errors:
+            console.print(f"- {error}")
+        raise typer.Exit(1)
+
+    lattice_result = evaluate_attack_plan(QUICKSTART_LATTICE_PLAN, lattice_trace)
+    lattice_report.write_text(
+        render_report_from_jsonl(lattice_trace, title="Agades PQC Gym Quickstart"),
+        encoding="utf-8",
+    )
+    benchmark_records = write_benchmark_trace(
+        QUICKSTART_LATTICE_BENCHMARK,
+        lattice_benchmark,
+    )
+    code_result = evaluate_attack_plan(QUICKSTART_CODE_TOY_PLAN, code_trace)
+    unsupported_result = evaluate_attack_plan(
+        QUICKSTART_UNSUPPORTED_PLAN,
+        unsupported_trace,
+    )
+
+    typer.echo("Quickstart complete")
+    typer.echo(f"validated={lattice_plan.attack_plan_id}")
+    typer.echo(format_evaluation_summary(lattice_result, lattice_trace))
+    typer.echo(f"report={lattice_report}")
+    typer.echo(f"benchmark={lattice_benchmark} records={len(benchmark_records)}")
+    typer.echo(
+        "code_based_toy=" + format_evaluation_summary(code_result, code_trace)
+    )
+    typer.echo(
+        "unsupported example="
+        + format_evaluation_summary(unsupported_result, unsupported_trace)
+    )
+    typer.echo("next=Read docs/QUICKSTART.md for the guided walkthrough.")
 
 
 @app.command()
@@ -267,9 +347,7 @@ def evaluate(
         estimator=estimator,
         estimator_cache=estimator_cache,
     )
-    console.print(
-        f"score={result.metrics['combined_score']} valid={result.valid} trace={out}"
-    )
+    typer.echo(format_evaluation_summary(result, out))
     if not result.validation.valid:
         raise typer.Exit(1)
 
@@ -321,33 +399,22 @@ def benchmark(
     ] = None,
 ) -> None:
     """Evaluate AttackPlan files or target configs in a benchmark directory."""
-    plans = load_benchmark_plans(benchmark_path)
-    if not plans:
-        console.print(f"[red]no benchmark inputs found[/red]: {benchmark_path}")
-        raise typer.Exit(1)
-
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text("", encoding="utf-8")
-    writer = JsonlTraceWriter(out)
-    evaluator = CascadeEvaluator(
-        estimator=build_lattice_estimator(
+    try:
+        records = write_benchmark_trace(
+            benchmark_path,
+            out,
             estimator=estimator,
             estimator_cache=estimator_cache,
         )
-    )
-    for index, plan in enumerate(plans):
-        result = evaluator.evaluate_plan(plan)
-        record = build_trace_record(
-            plan=plan,
-            result=result,
-            run_id=benchmark_path.name,
-            candidate_id=f"{plan.attack_plan_id}-{index}",
-        )
-        writer.append(record)
-        console.print(f"{plan.attack_plan_id}: {result.metrics['combined_score']}")
+    except ValueError as exc:
+        console.print(f"[red]benchmark failed[/red]: {exc}")
+        raise typer.Exit(1) from exc
+
+    for attack_plan_id, score in records:
+        console.print(f"{attack_plan_id}: {score}")
 
 
-@app.command("evolve-batch")
+@app.command("evolve-batch", hidden=True)
 def evolve_batch(
     candidates_path: Path,
     trace_out: Annotated[Path, typer.Option("--trace-out")] = Path(
@@ -416,7 +483,7 @@ def evolve_batch(
     )
 
 
-@app.command("mutate-candidates")
+@app.command("mutate-candidates", hidden=True)
 def mutate_candidates(
     candidates_path: Path,
     out: Annotated[Path, typer.Option("--out")] = Path("runs/candidate_mutations"),
@@ -470,7 +537,7 @@ def mutate_candidates(
     )
 
 
-@app.command("mutate-archive")
+@app.command("mutate-archive", hidden=True)
 def mutate_archive(
     archive_path: Path,
     source_trace_path: Path,
@@ -524,7 +591,7 @@ def mutate_archive(
     )
 
 
-@app.command("heldout-batch")
+@app.command("heldout-batch", hidden=True)
 def heldout_batch(
     archive_path: Path,
     source_trace_path: Path,
@@ -611,7 +678,7 @@ def heldout_batch(
     )
 
 
-@app.command("heldout-schedule")
+@app.command("heldout-schedule", hidden=True)
 def heldout_schedule(
     archive_path: Path,
     source_trace_path: Path,
@@ -683,7 +750,7 @@ def heldout_schedule(
     )
 
 
-@app.command("heldout-review-log")
+@app.command("heldout-review-log", hidden=True)
 def heldout_review_log(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "private/runs/heldout_review_log.json"
@@ -735,7 +802,7 @@ def heldout_review_log(
     typer.echo(f"review_log={out} approvals={len(review_log['entries'])}")
 
 
-@app.command("rescore-archive")
+@app.command("rescore-archive", hidden=True)
 def rescore_archive(
     archive_path: Path,
     heldout_trace_path: Path,
@@ -772,7 +839,7 @@ def rescore_archive(
         raise typer.Exit(1)
 
 
-@app.command("heldout-run-schedule")
+@app.command("heldout-run-schedule", hidden=True)
 def heldout_run_schedule(
     schedule_path: Path,
     policy: Annotated[Path, typer.Option("--policy")] = Path(
@@ -823,7 +890,7 @@ def heldout_run_schedule(
     )
 
 
-@app.command("heldout-review-packet")
+@app.command("heldout-review-packet", hidden=True)
 def heldout_review_packet(
     schedule_path: Path,
     out: Annotated[Path, typer.Option("--out")] = Path(
@@ -867,7 +934,7 @@ def heldout_review_packet(
     )
 
 
-@app.command("heldout-review-packet-verify")
+@app.command("heldout-review-packet-verify", hidden=True)
 def heldout_review_packet_verify(
     packet: Annotated[Path, typer.Option("--packet")] = Path(
         "private/reports/heldout_review_packet.json"
@@ -903,7 +970,7 @@ def heldout_review_packet_verify(
         raise typer.Exit(1)
 
 
-@app.command("private-evolution-campaign-plan")
+@app.command("private-evolution-campaign-plan", hidden=True)
 def private_evolution_campaign_plan(
     seed_candidates_path: Path,
     heldout_targets_path: Path,
@@ -952,7 +1019,7 @@ def private_evolution_campaign_plan(
     )
 
 
-@app.command("private-evolution-campaign-plan-verify")
+@app.command("private-evolution-campaign-plan-verify", hidden=True)
 def private_evolution_campaign_plan_verify(
     plan: Annotated[
         Path,
@@ -986,7 +1053,7 @@ def private_evolution_campaign_plan_verify(
         raise typer.Exit(1)
 
 
-@app.command("heldout-cron-plan")
+@app.command("heldout-cron-plan", hidden=True)
 def heldout_cron_plan(
     schedule_path: Path,
     out: Annotated[Path, typer.Option("--out")] = Path(
@@ -1036,7 +1103,7 @@ def heldout_cron_plan(
     )
 
 
-@app.command("archive-snapshot")
+@app.command("archive-snapshot", hidden=True)
 def archive_snapshot(
     archive_path: Path,
     source_trace_path: Path,
@@ -1087,7 +1154,7 @@ def archive_snapshot(
     )
 
 
-@app.command("export-public")
+@app.command("export-public", hidden=True)
 def export_public(
     trace_path: Path,
     out: Annotated[Path, typer.Option("--out")] = DEFAULT_PUBLIC_TRACE,
@@ -1101,7 +1168,7 @@ def export_public(
     console.print(f"exported={out}")
 
 
-@app.command("public-ledger")
+@app.command("public-ledger", hidden=True)
 def public_ledger(
     trace_path: Path,
     out: Annotated[Path, typer.Option("--out")] = DEFAULT_PUBLIC_LEDGER,
@@ -1116,7 +1183,7 @@ def public_ledger(
     console.print(f"ledger={out}")
 
 
-@app.command("public-bundle")
+@app.command("public-bundle", hidden=True)
 def public_bundle(
     trace_path: Path,
     out: Annotated[Path, typer.Option("--out")] = Path("public/run_bundle"),
@@ -1126,7 +1193,7 @@ def public_bundle(
     console.print(f"bundle={bundle['out_dir']}")
 
 
-@app.command("public-run-export")
+@app.command("public-run-export", hidden=True)
 def public_run_export(
     out: Annotated[Path, typer.Option("--out")] = Path("public/run_export"),
 ) -> None:
@@ -1135,7 +1202,7 @@ def public_run_export(
     typer.echo(f"public_run_export={out}")
 
 
-@app.command("public-run-export-verify")
+@app.command("public-run-export-verify", hidden=True)
 def public_run_export_verify(
     export: Annotated[Path, typer.Option("--export")] = Path("public/run_export"),
 ) -> None:
@@ -1146,7 +1213,7 @@ def public_run_export_verify(
         raise typer.Exit(1)
 
 
-@app.command("hf-dataset")
+@app.command("hf-dataset", hidden=True)
 def hf_dataset(
     out: Annotated[Path, typer.Option("--out")] = Path("public/hf_dataset"),
 ) -> None:
@@ -1155,7 +1222,7 @@ def hf_dataset(
     typer.echo(f"hf_dataset={bundle['out_dir']}")
 
 
-@app.command("hf-dataset-verify")
+@app.command("hf-dataset-verify", hidden=True)
 def hf_dataset_verify(
     dataset: Annotated[Path, typer.Option("--dataset")] = Path("hf/dataset"),
 ) -> None:
@@ -1166,7 +1233,7 @@ def hf_dataset_verify(
         raise typer.Exit(1)
 
 
-@app.command("hf-space-manifest")
+@app.command("hf-space-manifest", hidden=True)
 def hf_space_manifest(
     out: Annotated[Path, typer.Option("--out")] = Path("hf/space_manifest.json"),
 ) -> None:
@@ -1175,7 +1242,7 @@ def hf_space_manifest(
     typer.echo(f"hf_space_manifest={out}")
 
 
-@app.command("hf-space-manifest-verify")
+@app.command("hf-space-manifest-verify", hidden=True)
 def hf_space_manifest_verify(
     manifest: Annotated[Path, typer.Option("--manifest")] = Path(
         "hf/space_manifest.json"
@@ -1188,7 +1255,7 @@ def hf_space_manifest_verify(
         raise typer.Exit(1)
 
 
-@app.command("hf-space-smoke")
+@app.command("hf-space-smoke", hidden=True)
 def hf_space_smoke(
     out: Annotated[Path, typer.Option("--out")] = Path("reports/hf_space_smoke.json"),
 ) -> None:
@@ -1199,7 +1266,7 @@ def hf_space_smoke(
         raise typer.Exit(1)
 
 
-@app.command("hf-space-smoke-verify")
+@app.command("hf-space-smoke-verify", hidden=True)
 def hf_space_smoke_verify(
     report: Annotated[Path, typer.Option("--report")] = Path(
         "reports/hf_space_smoke.json"
@@ -1212,7 +1279,7 @@ def hf_space_smoke_verify(
         raise typer.Exit(1)
 
 
-@app.command("hf-collection-manifest")
+@app.command("hf-collection-manifest", hidden=True)
 def hf_collection_manifest(
     out: Annotated[Path, typer.Option("--out")] = Path("hf/collection_manifest.json"),
 ) -> None:
@@ -1221,7 +1288,7 @@ def hf_collection_manifest(
     typer.echo(f"hf_collection_manifest={out}")
 
 
-@app.command("hf-collection-manifest-verify")
+@app.command("hf-collection-manifest-verify", hidden=True)
 def hf_collection_manifest_verify(
     manifest: Annotated[Path, typer.Option("--manifest")] = Path(
         "hf/collection_manifest.json"
@@ -1234,7 +1301,7 @@ def hf_collection_manifest_verify(
         raise typer.Exit(1)
 
 
-@app.command("hf-publication-handoff")
+@app.command("hf-publication-handoff", hidden=True)
 def hf_publication_handoff(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "docs/huggingface_publication_handoff.json"
@@ -1245,7 +1312,7 @@ def hf_publication_handoff(
     typer.echo(f"huggingface_publication_handoff={out}")
 
 
-@app.command("hf-publication-handoff-verify")
+@app.command("hf-publication-handoff-verify", hidden=True)
 def hf_publication_handoff_verify(
     handoff: Annotated[Path, typer.Option("--handoff")] = Path(
         "docs/huggingface_publication_handoff.json"
@@ -1258,7 +1325,7 @@ def hf_publication_handoff_verify(
         raise typer.Exit(1)
 
 
-@app.command("nvidia-manifest")
+@app.command("nvidia-manifest", hidden=True)
 def nvidia_manifest(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "nvidia/accelerator_manifest.json"
@@ -1269,7 +1336,7 @@ def nvidia_manifest(
     typer.echo(f"nvidia_manifest={out}")
 
 
-@app.command("nvidia-manifest-verify")
+@app.command("nvidia-manifest-verify", hidden=True)
 def nvidia_manifest_verify(
     manifest: Annotated[Path, typer.Option("--manifest")] = Path(
         "nvidia/accelerator_manifest.json"
@@ -1282,7 +1349,7 @@ def nvidia_manifest_verify(
         raise typer.Exit(1)
 
 
-@app.command("nvidia-manifest-safety")
+@app.command("nvidia-manifest-safety", hidden=True)
 def nvidia_manifest_safety(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "reports/nvidia_manifest_safety.json"
@@ -1295,7 +1362,7 @@ def nvidia_manifest_safety(
         raise typer.Exit(1)
 
 
-@app.command("nvidia-manifest-safety-verify")
+@app.command("nvidia-manifest-safety-verify", hidden=True)
 def nvidia_manifest_safety_verify(
     report: Annotated[Path, typer.Option("--report")] = Path(
         "reports/nvidia_manifest_safety.json"
@@ -1308,7 +1375,7 @@ def nvidia_manifest_safety_verify(
         raise typer.Exit(1)
 
 
-@app.command("nvidia-publication-handoff")
+@app.command("nvidia-publication-handoff", hidden=True)
 def nvidia_publication_handoff(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "docs/nvidia_publication_handoff.json"
@@ -1319,7 +1386,7 @@ def nvidia_publication_handoff(
     typer.echo(f"nvidia_publication_handoff={out}")
 
 
-@app.command("nvidia-publication-handoff-verify")
+@app.command("nvidia-publication-handoff-verify", hidden=True)
 def nvidia_publication_handoff_verify(
     handoff: Annotated[Path, typer.Option("--handoff")] = Path(
         "docs/nvidia_publication_handoff.json"
@@ -1332,7 +1399,7 @@ def nvidia_publication_handoff_verify(
         raise typer.Exit(1)
 
 
-@app.command("openevolve-config")
+@app.command("openevolve-config", hidden=True)
 def openevolve_config(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "examples/openevolve/config.yaml"
@@ -1343,7 +1410,7 @@ def openevolve_config(
     typer.echo(f"openevolve_config={out}")
 
 
-@app.command("openevolve-config-verify")
+@app.command("openevolve-config-verify", hidden=True)
 def openevolve_config_verify(
     config: Annotated[Path, typer.Option("--config")] = Path(
         "examples/openevolve/config.yaml"
@@ -1356,7 +1423,7 @@ def openevolve_config_verify(
         raise typer.Exit(1)
 
 
-@app.command("openevolve-smoke")
+@app.command("openevolve-smoke", hidden=True)
 def openevolve_smoke(
     out: Annotated[Path, typer.Option("--out")] = Path("reports/openevolve_smoke.json"),
     plan: Annotated[Path, typer.Option("--plan")] = Path(
@@ -1377,7 +1444,7 @@ def openevolve_smoke(
         raise typer.Exit(1)
 
 
-@app.command("openevolve-smoke-verify")
+@app.command("openevolve-smoke-verify", hidden=True)
 def openevolve_smoke_verify(
     report: Annotated[Path, typer.Option("--report")] = Path(
         "reports/openevolve_smoke.json"
@@ -1390,7 +1457,7 @@ def openevolve_smoke_verify(
         raise typer.Exit(1)
 
 
-@app.command("ecosystem-smoke")
+@app.command("ecosystem-smoke", hidden=True)
 def ecosystem_smoke(
     out: Annotated[Path, typer.Option("--out")] = Path("reports/ecosystem_smoke.json"),
 ) -> None:
@@ -1401,7 +1468,7 @@ def ecosystem_smoke(
         raise typer.Exit(1)
 
 
-@app.command("ecosystem-smoke-verify")
+@app.command("ecosystem-smoke-verify", hidden=True)
 def ecosystem_smoke_verify(
     report: Annotated[Path, typer.Option("--report")] = Path(
         "reports/ecosystem_smoke.json"
@@ -1414,7 +1481,7 @@ def ecosystem_smoke_verify(
         raise typer.Exit(1)
 
 
-@app.command("publication-manifest")
+@app.command("publication-manifest", hidden=True)
 def publication_manifest(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "docs/publication_manifest.json"
@@ -1425,7 +1492,7 @@ def publication_manifest(
     typer.echo(f"publication_manifest={out}")
 
 
-@app.command("publication-manifest-verify")
+@app.command("publication-manifest-verify", hidden=True)
 def publication_manifest_verify(
     manifest: Annotated[Path, typer.Option("--manifest")] = Path(
         "docs/publication_manifest.json"
@@ -1438,7 +1505,7 @@ def publication_manifest_verify(
         raise typer.Exit(1)
 
 
-@app.command("publication-preflight")
+@app.command("publication-preflight", hidden=True)
 def publication_preflight(
     out: Annotated[
         Path,
@@ -1482,7 +1549,7 @@ def publication_preflight(
     typer.echo(f"publication_preflight={out}")
 
 
-@app.command("publication-preflight-verify")
+@app.command("publication-preflight-verify", hidden=True)
 def publication_preflight_verify(
     preflight: Annotated[
         Path,
@@ -1518,7 +1585,7 @@ def publication_preflight_verify(
         raise typer.Exit(1)
 
 
-@app.command("external-publication-review-packet")
+@app.command("external-publication-review-packet", hidden=True)
 def external_publication_review_packet(
     out: Annotated[
         Path,
@@ -1530,7 +1597,7 @@ def external_publication_review_packet(
     typer.echo(f"external_publication_review_packet={out}")
 
 
-@app.command("external-publication-review-packet-verify")
+@app.command("external-publication-review-packet-verify", hidden=True)
 def external_publication_review_packet_verify(
     packet: Annotated[
         Path,
@@ -1544,7 +1611,7 @@ def external_publication_review_packet_verify(
         raise typer.Exit(1)
 
 
-@app.command("private-run-policy")
+@app.command("private-run-policy", hidden=True)
 def private_run_policy(
     out: Annotated[
         Path,
@@ -1556,7 +1623,7 @@ def private_run_policy(
     typer.echo(f"private_run_policy={out}")
 
 
-@app.command("private-run-policy-verify")
+@app.command("private-run-policy-verify", hidden=True)
 def private_run_policy_verify(
     policy: Annotated[
         Path,
@@ -1570,7 +1637,7 @@ def private_run_policy_verify(
         raise typer.Exit(1)
 
 
-@app.command("public-benchmark-manifest")
+@app.command("public-benchmark-manifest", hidden=True)
 def public_benchmark_manifest(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "docs/public_benchmark_manifest.json"
@@ -1581,7 +1648,7 @@ def public_benchmark_manifest(
     typer.echo(f"public_benchmark_manifest={out}")
 
 
-@app.command("public-benchmark-verify")
+@app.command("public-benchmark-verify", hidden=True)
 def public_benchmark_verify(
     manifest: Annotated[Path, typer.Option("--manifest")] = Path(
         "docs/public_benchmark_manifest.json"
@@ -1594,7 +1661,7 @@ def public_benchmark_verify(
         raise typer.Exit(1)
 
 
-@app.command("prime-manifest")
+@app.command("prime-manifest", hidden=True)
 def prime_manifest(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "prime_intellect/verifiers_environment/prime_manifest.json"
@@ -1605,7 +1672,7 @@ def prime_manifest(
     typer.echo(f"prime_manifest={out}")
 
 
-@app.command("prime-manifest-verify")
+@app.command("prime-manifest-verify", hidden=True)
 def prime_manifest_verify(
     manifest: Annotated[Path, typer.Option("--manifest")] = Path(
         "prime_intellect/verifiers_environment/prime_manifest.json"
@@ -1618,7 +1685,7 @@ def prime_manifest_verify(
         raise typer.Exit(1)
 
 
-@app.command("prime-environment-smoke")
+@app.command("prime-environment-smoke", hidden=True)
 def prime_environment_smoke(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "reports/prime_environment_smoke.json"
@@ -1631,7 +1698,7 @@ def prime_environment_smoke(
         raise typer.Exit(1)
 
 
-@app.command("prime-environment-smoke-verify")
+@app.command("prime-environment-smoke-verify", hidden=True)
 def prime_environment_smoke_verify(
     report: Annotated[Path, typer.Option("--report")] = Path(
         "reports/prime_environment_smoke.json"
@@ -1644,7 +1711,7 @@ def prime_environment_smoke_verify(
         raise typer.Exit(1)
 
 
-@app.command("prime-publication-handoff")
+@app.command("prime-publication-handoff", hidden=True)
 def prime_publication_handoff(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "docs/prime_publication_handoff.json"
@@ -1655,7 +1722,7 @@ def prime_publication_handoff(
     typer.echo(f"prime_publication_handoff={out}")
 
 
-@app.command("prime-publication-handoff-verify")
+@app.command("prime-publication-handoff-verify", hidden=True)
 def prime_publication_handoff_verify(
     handoff: Annotated[Path, typer.Option("--handoff")] = Path(
         "docs/prime_publication_handoff.json"
@@ -1668,7 +1735,7 @@ def prime_publication_handoff_verify(
         raise typer.Exit(1)
 
 
-@app.command("prime-speedrun-handoff")
+@app.command("prime-speedrun-handoff", hidden=True)
 def prime_speedrun_handoff(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "docs/prime_speedrun_handoff.json"
@@ -1679,7 +1746,7 @@ def prime_speedrun_handoff(
     typer.echo(f"prime_speedrun_handoff={out}")
 
 
-@app.command("prime-speedrun-handoff-verify")
+@app.command("prime-speedrun-handoff-verify", hidden=True)
 def prime_speedrun_handoff_verify(
     handoff: Annotated[Path, typer.Option("--handoff")] = Path(
         "docs/prime_speedrun_handoff.json"
@@ -1692,7 +1759,7 @@ def prime_speedrun_handoff_verify(
         raise typer.Exit(1)
 
 
-@app.command("prime-schemas")
+@app.command("prime-schemas", hidden=True)
 def prime_schemas(
     out: Annotated[Path, typer.Option("--out")] = Path("prime_intellect/schemas"),
 ) -> None:
@@ -1701,7 +1768,7 @@ def prime_schemas(
     typer.echo(f"prime_schemas={out}")
 
 
-@app.command("prime-schemas-verify")
+@app.command("prime-schemas-verify", hidden=True)
 def prime_schemas_verify(
     schemas: Annotated[Path, typer.Option("--schemas")] = Path(
         "prime_intellect/schemas"
@@ -1714,7 +1781,7 @@ def prime_schemas_verify(
         raise typer.Exit(1)
 
 
-@app.command("source-catalog")
+@app.command("source-catalog", hidden=True)
 def source_catalog(
     out: Annotated[Path, typer.Option("--out")] = Path("docs/source_catalog.json"),
 ) -> None:
@@ -1723,7 +1790,7 @@ def source_catalog(
     typer.echo(f"source_catalog={out}")
 
 
-@app.command("source-catalog-verify")
+@app.command("source-catalog-verify", hidden=True)
 def source_catalog_verify(
     catalog: Annotated[Path, typer.Option("--catalog")] = Path(
         "docs/source_catalog.json"
@@ -1736,7 +1803,7 @@ def source_catalog_verify(
         raise typer.Exit(1)
 
 
-@app.command("deepevolve-injections")
+@app.command("deepevolve-injections", hidden=True)
 def deepevolve_injections(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "private/candidates/paper_card_injections.json"
@@ -1779,7 +1846,7 @@ def deepevolve_injections(
     )
 
 
-@app.command("deepevolve-manifest")
+@app.command("deepevolve-manifest", hidden=True)
 def deepevolve_manifest(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "docs/deepevolve_research_hooks_manifest.json"
@@ -1790,7 +1857,7 @@ def deepevolve_manifest(
     typer.echo(f"deepevolve_manifest={out}")
 
 
-@app.command("deepevolve-manifest-verify")
+@app.command("deepevolve-manifest-verify", hidden=True)
 def deepevolve_manifest_verify(
     manifest: Annotated[Path, typer.Option("--manifest")] = Path(
         "docs/deepevolve_research_hooks_manifest.json"
@@ -1803,7 +1870,7 @@ def deepevolve_manifest_verify(
         raise typer.Exit(1)
 
 
-@app.command("benchmark-source-contracts")
+@app.command("benchmark-source-contracts", hidden=True)
 def benchmark_source_contracts(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "docs/benchmark_source_contracts.json"
@@ -1814,7 +1881,7 @@ def benchmark_source_contracts(
     typer.echo(f"benchmark_source_contracts={out}")
 
 
-@app.command("benchmark-source-verify")
+@app.command("benchmark-source-verify", hidden=True)
 def benchmark_source_verify(
     contracts: Annotated[Path, typer.Option("--contracts")] = Path(
         "docs/benchmark_source_contracts.json"
@@ -1827,7 +1894,7 @@ def benchmark_source_verify(
         raise typer.Exit(1)
 
 
-@app.command("family-support")
+@app.command("family-support", hidden=True)
 def family_support(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "docs/family_support_matrix.json"
@@ -1838,7 +1905,7 @@ def family_support(
     typer.echo(f"family_support={out}")
 
 
-@app.command("family-support-verify")
+@app.command("family-support-verify", hidden=True)
 def family_support_verify(
     matrix: Annotated[Path, typer.Option("--matrix")] = Path(
         "docs/family_support_matrix.json"
@@ -1851,7 +1918,7 @@ def family_support_verify(
         raise typer.Exit(1)
 
 
-@app.command("family-registry-manifest")
+@app.command("family-registry-manifest", hidden=True)
 def family_registry_manifest(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "docs/family_registry_manifest.json"
@@ -1862,7 +1929,7 @@ def family_registry_manifest(
     typer.echo(f"family_registry_manifest={out}")
 
 
-@app.command("family-registry-manifest-verify")
+@app.command("family-registry-manifest-verify", hidden=True)
 def family_registry_manifest_verify(
     manifest: Annotated[Path, typer.Option("--manifest")] = Path(
         "docs/family_registry_manifest.json"
@@ -1875,7 +1942,7 @@ def family_registry_manifest_verify(
         raise typer.Exit(1)
 
 
-@app.command("family-plugin-manifest")
+@app.command("family-plugin-manifest", hidden=True)
 def family_plugin_manifest(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "docs/family_plugin_manifest.json"
@@ -1886,7 +1953,7 @@ def family_plugin_manifest(
     typer.echo(f"family_plugin_manifest={out}")
 
 
-@app.command("family-plugin-manifest-verify")
+@app.command("family-plugin-manifest-verify", hidden=True)
 def family_plugin_manifest_verify(
     manifest: Annotated[Path, typer.Option("--manifest")] = Path(
         "docs/family_plugin_manifest.json"
@@ -1899,7 +1966,7 @@ def family_plugin_manifest_verify(
         raise typer.Exit(1)
 
 
-@app.command("ecosystem-source-graph")
+@app.command("ecosystem-source-graph", hidden=True)
 def ecosystem_source_graph(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "docs/ecosystem_source_graph.json"
@@ -1910,7 +1977,7 @@ def ecosystem_source_graph(
     typer.echo(f"ecosystem_source_graph={out}")
 
 
-@app.command("ecosystem-source-graph-verify")
+@app.command("ecosystem-source-graph-verify", hidden=True)
 def ecosystem_source_graph_verify(
     graph: Annotated[Path, typer.Option("--graph")] = Path(
         "docs/ecosystem_source_graph.json"
@@ -1923,7 +1990,7 @@ def ecosystem_source_graph_verify(
         raise typer.Exit(1)
 
 
-@app.command("family-operator-catalog")
+@app.command("family-operator-catalog", hidden=True)
 def family_operator_catalog(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "docs/family_operator_catalog.json"
@@ -1934,7 +2001,7 @@ def family_operator_catalog(
     typer.echo(f"family_operator_catalog={out}")
 
 
-@app.command("family-operator-catalog-verify")
+@app.command("family-operator-catalog-verify", hidden=True)
 def family_operator_catalog_verify(
     catalog: Annotated[Path, typer.Option("--catalog")] = Path(
         "docs/family_operator_catalog.json"
@@ -1947,7 +2014,7 @@ def family_operator_catalog_verify(
         raise typer.Exit(1)
 
 
-@app.command("lattice-estimator-manifest")
+@app.command("lattice-estimator-manifest", hidden=True)
 def lattice_estimator_manifest(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "docs/lattice_estimator_manifest.json"
@@ -1958,7 +2025,7 @@ def lattice_estimator_manifest(
     typer.echo(f"lattice_estimator_manifest={out}")
 
 
-@app.command("lattice-estimator-manifest-verify")
+@app.command("lattice-estimator-manifest-verify", hidden=True)
 def lattice_estimator_manifest_verify(
     manifest: Annotated[Path, typer.Option("--manifest")] = Path(
         "docs/lattice_estimator_manifest.json"
@@ -1971,7 +2038,7 @@ def lattice_estimator_manifest_verify(
         raise typer.Exit(1)
 
 
-@app.command("lattice-estimator-baseline-contracts")
+@app.command("lattice-estimator-baseline-contracts", hidden=True)
 def lattice_estimator_baseline_contracts(
     out: Annotated[Path, typer.Option("--out")] = Path(
         "docs/lattice_estimator_baseline_contracts.json"
@@ -1982,7 +2049,7 @@ def lattice_estimator_baseline_contracts(
     typer.echo(f"lattice_estimator_baseline_contracts={out}")
 
 
-@app.command("lattice-estimator-baseline-contracts-verify")
+@app.command("lattice-estimator-baseline-contracts-verify", hidden=True)
 def lattice_estimator_baseline_contracts_verify(
     contracts: Annotated[Path, typer.Option("--contracts")] = Path(
         "docs/lattice_estimator_baseline_contracts.json"
@@ -1995,7 +2062,7 @@ def lattice_estimator_baseline_contracts_verify(
         raise typer.Exit(1)
 
 
-@app.command("lattice-estimator-checkout-preflight")
+@app.command("lattice-estimator-checkout-preflight", hidden=True)
 def lattice_estimator_checkout_preflight(
     estimator_source: Annotated[
         Path,
@@ -2047,7 +2114,7 @@ def lattice_estimator_checkout_preflight(
         raise typer.Exit(1)
 
 
-@app.command("lattice-estimator-runtime-preflight")
+@app.command("lattice-estimator-runtime-preflight", hidden=True)
 def lattice_estimator_runtime_preflight(
     sage_command: Annotated[
         str,
@@ -2111,7 +2178,7 @@ def lattice_estimator_runtime_preflight(
         raise typer.Exit(1)
 
 
-@app.command("lattice-estimator-runtime-preflight-verify")
+@app.command("lattice-estimator-runtime-preflight-verify", hidden=True)
 def lattice_estimator_runtime_preflight_verify(
     preflight: Annotated[Path, typer.Option("--preflight")] = Path(
         "private/reports/lattice_estimator_runtime_preflight.json"
@@ -2124,7 +2191,7 @@ def lattice_estimator_runtime_preflight_verify(
         raise typer.Exit(1)
 
 
-@app.command("lattice-estimator-baseline-run")
+@app.command("lattice-estimator-baseline-run", hidden=True)
 def lattice_estimator_baseline_run(
     contracts: Annotated[Path, typer.Option("--contracts")] = Path(
         "docs/lattice_estimator_baseline_contracts.json"
@@ -2233,7 +2300,7 @@ def lattice_estimator_baseline_run(
         raise typer.Exit(1)
 
 
-@app.command("lattice-estimator-baseline-run-verify")
+@app.command("lattice-estimator-baseline-run-verify", hidden=True)
 def lattice_estimator_baseline_run_verify(
     report: Annotated[Path, typer.Option("--report")] = Path(
         "private/reports/lattice_estimator_baseline_run.json"
@@ -2259,7 +2326,7 @@ def lattice_estimator_baseline_run_verify(
         raise typer.Exit(1)
 
 
-@app.command("lattice-estimator-baseline-review-packet")
+@app.command("lattice-estimator-baseline-review-packet", hidden=True)
 def lattice_estimator_baseline_review_packet(
     baseline_report: Annotated[Path, typer.Option("--baseline-report")] = Path(
         "private/reports/lattice_estimator_baseline_run.json"
@@ -2318,7 +2385,7 @@ def lattice_estimator_baseline_review_packet(
     )
 
 
-@app.command("lattice-estimator-baseline-review-packet-verify")
+@app.command("lattice-estimator-baseline-review-packet-verify", hidden=True)
 def lattice_estimator_baseline_review_packet_verify(
     packet: Annotated[Path, typer.Option("--packet")] = Path(
         "private/reports/lattice_estimator_baseline_review_packet.json"
@@ -2352,7 +2419,7 @@ def lattice_estimator_baseline_review_packet_verify(
         raise typer.Exit(1)
 
 
-@app.command("release-audit")
+@app.command("release-audit", hidden=True)
 def release_audit(
     out: Annotated[Path, typer.Option("--out")] = Path("public/release_audit.json"),
 ) -> None:
@@ -2363,7 +2430,7 @@ def release_audit(
         raise typer.Exit(1)
 
 
-@app.command("release-artifacts")
+@app.command("release-artifacts", hidden=True)
 def release_artifacts(
     root: Annotated[Path, typer.Option("--root")] = Path("."),
     max_passes: Annotated[int, typer.Option("--max-passes")] = 6,
@@ -2375,7 +2442,7 @@ def release_artifacts(
         raise typer.Exit(1)
 
 
-@app.command("release-status")
+@app.command("release-status", hidden=True)
 def release_status(
     out: Annotated[Path, typer.Option("--out")] = Path("docs/release_status.json"),
 ) -> None:
@@ -2384,7 +2451,7 @@ def release_status(
     typer.echo(f"release_status={out}")
 
 
-@app.command("release-status-verify")
+@app.command("release-status-verify", hidden=True)
 def release_status_verify(
     status: Annotated[Path, typer.Option("--status")] = Path(
         "docs/release_status.json"
@@ -2397,7 +2464,7 @@ def release_status_verify(
         raise typer.Exit(1)
 
 
-@app.command("runbook-audit")
+@app.command("runbook-audit", hidden=True)
 def runbook_audit(
     out: Annotated[Path, typer.Option("--out")] = Path("public/runbook_audit.json"),
     brief: Annotated[
@@ -2422,7 +2489,7 @@ def runbook_audit(
         raise typer.Exit(1)
 
 
-@app.command("runbook-input-manifest")
+@app.command("runbook-input-manifest", hidden=True)
 def runbook_input_manifest(
     brief: Annotated[
         Path,
@@ -2441,7 +2508,7 @@ def runbook_input_manifest(
     typer.echo(f"runbook_input_manifest={out}")
 
 
-@app.command("runbook-input-manifest-verify")
+@app.command("runbook-input-manifest-verify", hidden=True)
 def runbook_input_manifest_verify(
     manifest: Annotated[Path, typer.Option("--manifest")] = Path(
         "docs/runbook_input_manifest.json"
@@ -2490,6 +2557,52 @@ def evaluate_attack_plan(
         )
     )
     return result
+
+
+def format_evaluation_summary(result: CascadeResult, out: Path) -> str:
+    status = result.metrics.get("evaluation_status")
+    if status is None:
+        status = "invalid" if not result.validation.valid else "unknown"
+    score = result.metrics.get("combined_score")
+    summary = f"status={status} score={score} valid={result.valid} trace={out}"
+    if status != "ok" and result.warnings:
+        summary += f" reason={result.warnings[0]}"
+    elif status != "ok" and result.validation.errors:
+        summary += f" reason={result.validation.errors[0]}"
+    return summary
+
+
+def write_benchmark_trace(
+    benchmark_path: Path,
+    out: Path,
+    estimator: EstimatorChoice = "mock",
+    estimator_cache: Path | None = None,
+) -> list[tuple[str, float | int | str | bool | None]]:
+    plans = load_benchmark_plans(benchmark_path)
+    if not plans:
+        raise ValueError(f"no benchmark inputs found: {benchmark_path}")
+
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text("", encoding="utf-8")
+    writer = JsonlTraceWriter(out)
+    evaluator = CascadeEvaluator(
+        estimator=build_lattice_estimator(
+            estimator=estimator,
+            estimator_cache=estimator_cache,
+        )
+    )
+    records: list[tuple[str, float | int | str | bool | None]] = []
+    for index, plan in enumerate(plans):
+        result = evaluator.evaluate_plan(plan)
+        record = build_trace_record(
+            plan=plan,
+            result=result,
+            run_id=benchmark_path.name,
+            candidate_id=f"{plan.attack_plan_id}-{index}",
+        )
+        writer.append(record)
+        records.append((plan.attack_plan_id, result.metrics.get("combined_score")))
+    return records
 
 
 def build_lattice_estimator(

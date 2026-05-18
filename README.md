@@ -63,15 +63,30 @@ uv sync --extra dev
 ## Quick Start
 
 ```bash
-uv run agades-pqc validate examples/attack_plans/lattice_primal_usvp_toy.json
-uv run agades-pqc verify examples/attack_plans/lattice_primal_usvp_toy.json
-uv run agades-pqc evaluate examples/attack_plans/lattice_primal_usvp_toy.json --out runs/demo_trace.jsonl
-uv run agades-pqc benchmark benchmarks/lattice_toy_lwe --out runs/toy_benchmark.jsonl
-uv run agades-pqc report runs/toy_benchmark.jsonl --out reports/toy_benchmark_report.md
+uv run agades-pqc quickstart
 ```
 
-Schema-only examples validate structurally but do not produce cryptanalytic
-estimates:
+The quickstart runs the short core loop and writes local artifacts under
+`runs/quickstart/`:
+
+- `lattice_trace.jsonl`: one toy LWE evaluation trace.
+- `lattice_benchmark.jsonl`: the toy LWE benchmark trace.
+- `lattice_report.md`: a Markdown report generated from the trace.
+- `code_based_prange_trace.jsonl`: a toy code-based evaluator trace.
+- `unsupported_placeholder_trace.jsonl`: a schema-only unsupported example.
+
+See `docs/QUICKSTART.md` for the guided walkthrough.
+
+Manual core-loop commands:
+
+```bash
+uv run agades-pqc validate examples/attack_plans/lattice_primal_usvp_toy.json
+uv run agades-pqc evaluate examples/attack_plans/lattice_primal_usvp_toy.json --out runs/demo_trace.jsonl
+uv run agades-pqc report runs/demo_trace.jsonl --out reports/demo_report.md
+```
+
+Schema-only examples validate structurally but return `status=unsupported`
+instead of cryptanalytic estimates:
 
 ```bash
 uv run agades-pqc validate examples/attack_plans/code_based_isd_placeholder.json
