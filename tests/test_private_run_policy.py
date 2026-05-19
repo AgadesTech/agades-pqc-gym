@@ -34,6 +34,8 @@ def test_private_run_policy_defines_private_moat_boundaries() -> None:
     }
     assert policy["allowed_private_roots"] == [
         "private/candidates",
+        "private/datasets",
+        "private/models",
         "private/reports",
         "private/runs",
         "private/traces",
@@ -58,7 +60,48 @@ def test_private_run_policy_defines_private_moat_boundaries() -> None:
         "evaluator weighting and anti-gaming heuristics",
         "unreleased candidate strategies",
         "responsible-disclosure material",
+        "pedagogical RL traces and reviewer annotations",
+        "private Qwen fine-tuning corpora and adapters",
+        (
+            "license-reviewed derived datasets from LWE-benchmarking TAPAS "
+            "and pq-code-package"
+        ),
     ]
+    assert policy["private_rl_policy"] == {
+        "method": "pedagogical_rl",
+        "teacher_student_pattern": "privileged_self_teacher_student",
+        "reward_terms": [
+            "formal_validity",
+            "cryptographic_applicability",
+            "no_security_overclaim",
+            "student_readability",
+            "reproducibility",
+            "reviewer_quality",
+        ],
+        "student_model": "private_qwen3_6_27b",
+        "preferred_private_quantization": "gguf_otq_5bit",
+        "training_path": "lora_or_qlora_then_private_gguf_otq_quantization",
+        "publish_finetuned_model_publicly": False,
+        "publish_training_traces_publicly": False,
+        "public_metadata_only": True,
+    }
+    assert policy["private_dataset_policy"] == {
+        "sources": [
+            "facebookresearch/LWE-benchmarking",
+            "facebook/TAPAS",
+            "pq-code-package",
+        ],
+        "required_controls": [
+            "license_review",
+            "provenance_tracking",
+            "deduplication",
+            "redaction",
+            "contamination_audit",
+        ],
+        "publish_train_datasets_publicly": False,
+        "publish_rollouts_publicly": False,
+        "publish_reviewer_annotations_publicly": False,
+    }
     assert policy["scheduler_policy"] == {
         "scheduler_enabled_by_default": False,
         "allowed_triggers": [
@@ -146,19 +189,37 @@ def test_private_run_policy_verify_accepts_committed_policy() -> None:
     assert result == {
         "schema_version": PRIVATE_RUN_POLICY_VERIFICATION_SCHEMA,
         "policy_path": "docs/private_run_policy.json",
-        "accepted": True,
-        "summary": {
-            "allowed_private_commands": 16,
-            "allowed_private_roots": 4,
-            "failure_count": 0,
-            "forbidden_public_roots": 5,
-            "required_publication_controls": 5,
-            "scheduler_allowed_triggers": 2,
-            "scheduler_approval_gates": 4,
-            "scheduler_retention_rules": 4,
-        },
-        "failures": [],
-    }
+            "accepted": True,
+            "summary": {
+                "allowed_private_commands": 16,
+                "allowed_private_roots": 6,
+                "failure_count": 0,
+                "forbidden_public_roots": 5,
+                "required_publication_controls": 5,
+                "scheduler_allowed_triggers": 2,
+                "scheduler_approval_gates": 4,
+                "scheduler_retention_rules": 4,
+                "private_rl_reward_terms": 6,
+                "private_dataset_sources": 3,
+            },
+            "failures": [],
+        }
+
+
+def test_private_run_policy_verify_rejects_public_qwen_publication(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "private_run_policy.json"
+    policy = build_private_run_policy()
+    policy["private_rl_policy"]["publish_finetuned_model_publicly"] = True
+    path.write_text(json.dumps(policy, indent=2, sort_keys=True) + "\n")
+
+    result = verify_private_run_policy(path)
+
+    assert result["accepted"] is False
+    assert "Private RL policy must not publish the fine-tuned Qwen model." in result[
+        "failures"
+    ]
 
 
 def test_private_run_policy_verify_rejects_public_release_defaults(
@@ -175,6 +236,22 @@ def test_private_run_policy_verify_rejects_public_release_defaults(
     assert "Private trace public release default must be false." in result[
         "failures"
     ]
+
+
+def test_private_run_policy_verify_rejects_public_private_dataset_release(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "private_run_policy.json"
+    policy = build_private_run_policy()
+    policy["private_dataset_policy"]["publish_train_datasets_publicly"] = True
+    path.write_text(json.dumps(policy, indent=2, sort_keys=True) + "\n")
+
+    result = verify_private_run_policy(path)
+
+    assert result["accepted"] is False
+    assert "Private dataset policy publish_train_datasets_publicly must be false." in (
+        result["failures"]
+    )
 
 
 def test_private_run_policy_verify_rejects_missing_forbidden_public_root(

@@ -17,6 +17,8 @@ PROJECT = {
 }
 ALLOWED_PRIVATE_ROOTS = [
     "private/candidates",
+    "private/datasets",
+    "private/models",
     "private/reports",
     "private/runs",
     "private/traces",
@@ -59,7 +61,45 @@ PRIVATE_HOLDBACK = [
     "evaluator weighting and anti-gaming heuristics",
     "unreleased candidate strategies",
     "responsible-disclosure material",
+    "pedagogical RL traces and reviewer annotations",
+    "private Qwen fine-tuning corpora and adapters",
+    "license-reviewed derived datasets from LWE-benchmarking TAPAS and pq-code-package",
 ]
+PRIVATE_RL_POLICY = {
+    "method": "pedagogical_rl",
+    "teacher_student_pattern": "privileged_self_teacher_student",
+    "reward_terms": [
+        "formal_validity",
+        "cryptographic_applicability",
+        "no_security_overclaim",
+        "student_readability",
+        "reproducibility",
+        "reviewer_quality",
+    ],
+    "student_model": "private_qwen3_6_27b",
+    "preferred_private_quantization": "gguf_otq_5bit",
+    "training_path": "lora_or_qlora_then_private_gguf_otq_quantization",
+    "publish_finetuned_model_publicly": False,
+    "publish_training_traces_publicly": False,
+    "public_metadata_only": True,
+}
+PRIVATE_DATASET_POLICY = {
+    "sources": [
+        "facebookresearch/LWE-benchmarking",
+        "facebook/TAPAS",
+        "pq-code-package",
+    ],
+    "required_controls": [
+        "license_review",
+        "provenance_tracking",
+        "deduplication",
+        "redaction",
+        "contamination_audit",
+    ],
+    "publish_train_datasets_publicly": False,
+    "publish_rollouts_publicly": False,
+    "publish_reviewer_annotations_publicly": False,
+}
 SCHEDULER_ALLOWED_TRIGGERS = [
     "manual_reviewed",
     "local_cron_after_review",
@@ -101,6 +141,8 @@ def build_private_run_policy() -> dict[str, Any]:
         "allowed_private_commands": list(ALLOWED_PRIVATE_COMMANDS),
         "required_publication_controls": list(REQUIRED_PUBLICATION_CONTROLS),
         "private_holdback": list(PRIVATE_HOLDBACK),
+        "private_rl_policy": dict(PRIVATE_RL_POLICY),
+        "private_dataset_policy": dict(PRIVATE_DATASET_POLICY),
         "scheduler_policy": {
             "scheduler_enabled_by_default": False,
             "allowed_triggers": list(SCHEDULER_ALLOWED_TRIGGERS),
@@ -171,6 +213,12 @@ def verify_private_run_policy(
         "scheduler_retention_rules": len(
             scheduler_policy.get("retention", {})
         ),
+        "private_rl_reward_terms": len(
+            policy.get("private_rl_policy", {}).get("reward_terms", [])
+        ),
+        "private_dataset_sources": len(
+            policy.get("private_dataset_policy", {}).get("sources", [])
+        ),
     }
     return {
         "schema_version": PRIVATE_RUN_POLICY_VERIFICATION_SCHEMA,
@@ -228,6 +276,11 @@ def _verify_policy(policy: dict[str, Any], failures: list[str]) -> None:
         failures.append("Private run policy commands are incorrect.")
     if policy.get("private_holdback") != PRIVATE_HOLDBACK:
         failures.append("Private run holdback list is incorrect.")
+    _verify_private_rl_policy(policy.get("private_rl_policy", {}), failures)
+    _verify_private_dataset_policy(
+        policy.get("private_dataset_policy", {}),
+        failures,
+    )
     _verify_scheduler_policy(policy.get("scheduler_policy", {}), failures)
 
     export_policy = policy.get("export_policy", {})
@@ -246,6 +299,35 @@ def _verify_policy(policy: dict[str, Any], failures: list[str]) -> None:
     for key in expected_false:
         if export_policy.get(key) is not False:
             failures.append(f"Private run export policy {key} must be false.")
+
+
+def _verify_private_rl_policy(
+    private_rl_policy: Any,
+    failures: list[str],
+) -> None:
+    if private_rl_policy != PRIVATE_RL_POLICY:
+        failures.append("Private RL policy is incorrect.")
+    if private_rl_policy.get("method") != "pedagogical_rl":
+        failures.append("Private RL policy must use pedagogical_rl.")
+    if private_rl_policy.get("publish_finetuned_model_publicly") is not False:
+        failures.append("Private RL policy must not publish the fine-tuned Qwen model.")
+    if private_rl_policy.get("publish_training_traces_publicly") is not False:
+        failures.append("Private RL policy must not publish training traces.")
+
+
+def _verify_private_dataset_policy(
+    private_dataset_policy: Any,
+    failures: list[str],
+) -> None:
+    if private_dataset_policy != PRIVATE_DATASET_POLICY:
+        failures.append("Private dataset policy is incorrect.")
+    for key in (
+        "publish_train_datasets_publicly",
+        "publish_rollouts_publicly",
+        "publish_reviewer_annotations_publicly",
+    ):
+        if private_dataset_policy.get(key) is not False:
+            failures.append(f"Private dataset policy {key} must be false.")
 
 
 def _verify_scheduler_policy(

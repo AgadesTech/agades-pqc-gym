@@ -19,6 +19,8 @@
   ],
   "allowed_private_roots": [
     "private/candidates",
+    "private/datasets",
+    "private/models",
     "private/reports",
     "private/runs",
     "private/traces"
@@ -37,13 +39,51 @@
     "prime_intellect/verifiers_environment/data",
     "public"
   ],
+  "private_dataset_policy": {
+    "publish_reviewer_annotations_publicly": false,
+    "publish_rollouts_publicly": false,
+    "publish_train_datasets_publicly": false,
+    "required_controls": [
+      "license_review",
+      "provenance_tracking",
+      "deduplication",
+      "redaction",
+      "contamination_audit"
+    ],
+    "sources": [
+      "facebookresearch/LWE-benchmarking",
+      "facebook/TAPAS",
+      "pq-code-package"
+    ]
+  },
   "private_holdback": [
     "serious evolution traces",
     "private prompts and prompt-ranking policies",
     "evaluator weighting and anti-gaming heuristics",
     "unreleased candidate strategies",
-    "responsible-disclosure material"
+    "responsible-disclosure material",
+    "pedagogical RL traces and reviewer annotations",
+    "private Qwen fine-tuning corpora and adapters",
+    "license-reviewed derived datasets from LWE-benchmarking TAPAS and pq-code-package"
   ],
+  "private_rl_policy": {
+    "method": "pedagogical_rl",
+    "preferred_private_quantization": "gguf_otq_5bit",
+    "public_metadata_only": true,
+    "publish_finetuned_model_publicly": false,
+    "publish_training_traces_publicly": false,
+    "reward_terms": [
+      "formal_validity",
+      "cryptographic_applicability",
+      "no_security_overclaim",
+      "student_readability",
+      "reproducibility",
+      "reviewer_quality"
+    ],
+    "student_model": "private_qwen3_6_27b",
+    "teacher_student_pattern": "privileged_self_teacher_student",
+    "training_path": "lora_or_qlora_then_private_gguf_otq_quantization"
+  },
   "private_run_defaults": {
     "arbitrary_python_candidates": false,
     "candidate_public_release_ok_default": false,

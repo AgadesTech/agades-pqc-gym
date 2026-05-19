@@ -45,6 +45,10 @@ from agades_pqc_gym.evolution.scheduler import (
     write_heldout_schedule,
 )
 from agades_pqc_gym.evolution.snapshot import write_private_archive_snapshot
+from agades_pqc_gym.formal.artifacts import (
+    verify_attack_plan_proof_artifact,
+    write_attack_plan_proof_artifact,
+)
 from agades_pqc_gym.integrations.benchmark_source_contracts import (
     verify_benchmark_source_contracts,
     write_benchmark_source_contracts,
@@ -184,6 +188,10 @@ from agades_pqc_gym.integrations.release_audit import write_release_audit
 from agades_pqc_gym.integrations.release_status import (
     verify_release_status,
     write_release_status,
+)
+from agades_pqc_gym.integrations.rl_environment_contract import (
+    verify_rl_environment_contract,
+    write_rl_environment_contract,
 )
 from agades_pqc_gym.integrations.runbook_audit import (
     verify_runbook_input_manifest,
@@ -1632,6 +1640,70 @@ def private_run_policy_verify(
 ) -> None:
     """Verify the private evolution trace and moat holdback policy."""
     result = verify_private_run_policy(policy)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("formal-proof-artifact", hidden=True)
+def formal_proof_artifact(
+    attack_plan: Annotated[Path, typer.Argument(help="AttackPlan JSON path.")],
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("docs/formal_proof_artifact.json"),
+    estimator_result: Annotated[
+        Path | None,
+        typer.Option(
+            "--estimator-result",
+            help="Optional evaluator result JSON to bind by hash.",
+        ),
+    ] = None,
+) -> None:
+    """Write a verifiable Lean-backed proof artifact for an AttackPlan."""
+    write_attack_plan_proof_artifact(
+        attack_plan,
+        out,
+        estimator_result_path=estimator_result,
+    )
+    typer.echo(f"formal_proof_artifact={out}")
+
+
+@app.command("formal-proof-artifact-verify", hidden=True)
+def formal_proof_artifact_verify(
+    artifact: Annotated[
+        Path,
+        typer.Option("--artifact"),
+    ] = Path("docs/formal_proof_artifact.json"),
+) -> None:
+    """Verify AttackPlan, obligation, Lean theorem, estimator, and reviewer bindings."""
+    result = verify_attack_plan_proof_artifact(artifact)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("rl-environment-contract", hidden=True)
+def rl_environment_contract(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("docs/rl_environment_contract.json"),
+) -> None:
+    """Write the HF/Prime public/private RL environment contract."""
+    write_rl_environment_contract(out)
+    typer.echo(f"rl_environment_contract={out}")
+
+
+@app.command("rl-environment-contract-verify", hidden=True)
+def rl_environment_contract_verify(
+    contract: Annotated[
+        Path,
+        typer.Option("--contract"),
+    ] = Path("docs/rl_environment_contract.json"),
+) -> None:
+    """Verify the HF/Prime public/private RL environment contract."""
+    result = verify_rl_environment_contract(contract)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)
