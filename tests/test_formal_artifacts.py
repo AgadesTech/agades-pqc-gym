@@ -33,6 +33,26 @@ def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() ->
     }
     assert artifact["attack_plan"]["id"] == "lattice_primal_usvp_toy_v1"
     assert len(artifact["attack_plan"]["sha256"]) == 64
+    assert artifact["formal_backend"]["root"] == "formal/lean"
+    assert artifact["formal_backend"]["toolchain"] == "formal/lean/lean-toolchain"
+    assert artifact["formal_backend"]["lakefile"] == "formal/lean/lakefile.lean"
+    assert artifact["formal_backend"]["lake_manifest"] == (
+        "formal/lean/lake-manifest.json"
+    )
+    assert artifact["formal_backend"]["entry_module"] == "formal/lean/AgadesPQC.lean"
+    assert artifact["formal_backend"]["build_command"] == "lake build"
+    assert artifact["formal_backend"]["execution_status"] == (
+        "ci_build_gate_required"
+    )
+    backend_manifest = artifact["formal_backend"]["backend_manifest"]
+    assert backend_manifest["path"] == "docs/formal_lean_backend.json"
+    assert backend_manifest["schema_version"] == "agades.pqc.formal.lean_backend.v1"
+    assert len(backend_manifest["sha256"]) == 64
+    assert len(backend_manifest["manifest_sha256"]) == 64
+    assert backend_manifest["source_modules"] == 11
+    assert backend_manifest["theorem_declarations"] >= 20
+    assert backend_manifest["ci_lean_build_gate"] is True
+    assert backend_manifest["placeholder_failures"] == 0
     assert artifact["family"] == "LWE"
     assert artifact["operator_semantics"][0] == {
         "operator": "primal_usvp",
@@ -313,6 +333,24 @@ def test_verify_attack_plan_proof_artifact_rejects_tampering(
     assert result["accepted"] is False
     assert "Proof artifact hash does not match its payload." in result["failures"]
     assert "Proof obligations do not match the AttackPlan." in result["failures"]
+
+
+def test_verify_attack_plan_proof_artifact_rejects_stale_formal_backend_binding(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+    )
+    artifact["formal_backend"]["backend_manifest"]["sha256"] = "0" * 64
+    artifact["artifact_sha256"] = artifact["artifact_sha256"]
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert "Proof artifact formal_backend is not in sync." in result["failures"]
 
 
 def test_formal_proof_artifact_cli_round_trip(tmp_path: Path) -> None:

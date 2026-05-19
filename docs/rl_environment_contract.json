@@ -24,11 +24,11 @@
   "linked_artifacts": {
     "formal_estimator_model": {
       "path": "docs/formal_estimator_model.json",
-      "sha256": "f88b29a06d8b8aaa222f77d232cad3b594a888d6fc0704790328769e3b915639"
+      "sha256": "066e1d1f4774dfdb7b5d1d0f04d947683dff3e36db914d5a86491329df172913"
     },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "276b673e8e526b6de2906c34dbf6634e1ec339488c4167ad6d34753135e403c3"
+      "sha256": "6bc03a7e762356a77ffa355811ec31a7990642d2fc08eacbf78be3d93f863f4e"
     },
     "formal_lean_backend": {
       "path": "docs/formal_lean_backend.json",
@@ -36,11 +36,11 @@
     },
     "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "2512d120077d8efb9aab414adedbaa4413df6fb8100d4b6f6e7d9129b02ee1fd"
+      "sha256": "62a02b07f43f66d1633c0844f363d8a349adddaca518e2784373124ac00f72de"
     },
     "formal_mlwe_proof_artifact": {
       "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
-      "sha256": "18f27646d64200e71bc9c8e2c02e75424ef544095e6e76790fc9119d28d6742a"
+      "sha256": "4b10175fce268cd6836f35c97cc1beef59bf4d0e0170726a023100c71c8bd4a7"
     },
     "formal_operator_semantics": {
       "path": "docs/formal_operator_semantics.json",
@@ -72,11 +72,11 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "038b1019dd9ba366570edb0da85f09ee9b21e79c3cbe5959a7e344ed76288eb8"
+      "sha256": "ed785ead9f8c63a5f2454dc28e9cc8a7c1db781a9e6ed7335686ee14ae944297"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "d37c10a8a86d8bf37168f64fa5496d148a4333fbc587e06b4a7c0d6f278b708c"
+      "sha256": "cabed99898d0d5a03c66fc919c038f6d88a293cb9b93cede9545d0825d3e2f31"
     }
   },
   "private_track": {
