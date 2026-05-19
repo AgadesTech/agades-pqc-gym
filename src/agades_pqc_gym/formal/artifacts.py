@@ -27,6 +27,7 @@ EVALUATOR_RESULT_SCHEMA_CONTRACT_SCHEMA = (
 )
 EVALUATOR_RESULT_SCHEMA_MODEL = "agades_pqc_gym.core.evaluator_result.EvaluatorResult"
 EVALUATOR_RESULT_VALIDATION = "pydantic_v2_extra_forbid_status_payload_checks"
+ESTIMATOR_ATTACK_TYPE_COMPATIBILITY_RULE = "exact_operator_or_colon_variant_v1"
 PROOF_OBLIGATION_TYPE_SCHEMA = "agades.pqc.formal.proof_obligation_type.v1"
 PROOF_OBLIGATION_CLAIM_POLICY = {
     "public_interpretation": "applicability_check_only",
@@ -270,7 +271,10 @@ def build_attack_plan_proof_artifact_from_json(
         ],
         "family_invariants": _family_invariants(plan),
         "estimator_model": _estimator_model(plan),
-        "estimator_result_binding": _estimator_result_binding(estimator_result_path),
+        "estimator_result_binding": _estimator_result_binding(
+            plan,
+            estimator_result_path,
+        ),
         "proof_obligations": _proof_obligations(plan),
         "review": {
             "status": review_status,
@@ -512,6 +516,7 @@ def _estimator_model(plan: AttackPlan) -> dict[str, Any]:
 
 
 def _estimator_result_binding(
+    plan: AttackPlan,
     estimator_result_path: Path | None,
 ) -> dict[str, Any]:
     if estimator_result_path is None:
@@ -535,6 +540,11 @@ def _estimator_result_binding(
             "attached estimator result must be a JSON EvaluatorResult"
         ) from exc
     evaluator_result = _validate_evaluator_result(canonical_payload)
+    compatibility = _estimator_attack_plan_compatibility(plan, evaluator_result)
+    if compatibility["compatible"] is not True:
+        raise ValueError(
+            "estimator result attack_type is incompatible with the bound AttackPlan"
+        )
     return {
         "status": "attached_unreviewed",
         "path": estimator_result_path.as_posix(),
@@ -542,6 +552,7 @@ def _estimator_result_binding(
         "sha256": hashlib.sha256(raw).hexdigest(),
         "canonical_sha256": stable_sha256(canonical_payload),
         "parsed_result": _evaluator_result_summary(evaluator_result),
+        "attack_plan_compatibility": compatibility,
         "claim_allowed": False,
         "notes": (
             "Estimator output is bound for reproducibility and reviewer "
@@ -1005,6 +1016,71 @@ def _evaluator_result_summary(result: EvaluatorResult) -> dict[str, Any]:
     }
 
 
+def _estimator_attack_plan_compatibility(
+    plan: AttackPlan,
+    result: EvaluatorResult,
+) -> dict[str, Any]:
+    return _estimator_attack_plan_compatibility_from_values(
+        attack_plan_id=plan.attack_plan_id,
+        target_family=plan.target.family.value,
+        operator_types=[operator.type for operator in plan.operators],
+        evaluator_attack_type=result.attack_type,
+    )
+
+
+def _estimator_attack_plan_compatibility_from_artifact(
+    artifact: dict[str, Any],
+    result: EvaluatorResult,
+) -> dict[str, Any]:
+    operator_types = [
+        item.get("operator")
+        for item in artifact.get("operator_semantics", [])
+        if isinstance(item, dict) and isinstance(item.get("operator"), str)
+    ]
+    attack_plan = artifact.get("attack_plan", {})
+    attack_plan_id = (
+        attack_plan.get("id") if isinstance(attack_plan, dict) else None
+    )
+    family = artifact.get("family")
+    return _estimator_attack_plan_compatibility_from_values(
+        attack_plan_id=attack_plan_id if isinstance(attack_plan_id, str) else "",
+        target_family=family if isinstance(family, str) else "",
+        operator_types=operator_types,
+        evaluator_attack_type=result.attack_type,
+    )
+
+
+def _estimator_attack_plan_compatibility_from_values(
+    *,
+    attack_plan_id: str,
+    target_family: str,
+    operator_types: list[str],
+    evaluator_attack_type: str,
+) -> dict[str, Any]:
+    return {
+        "attack_plan_id": attack_plan_id,
+        "target_family": target_family,
+        "operator_types": operator_types,
+        "evaluator_attack_type": evaluator_attack_type,
+        "compatible": _evaluator_attack_type_matches_operator(
+            evaluator_attack_type,
+            operator_types,
+        ),
+        "compatibility_rule": ESTIMATOR_ATTACK_TYPE_COMPATIBILITY_RULE,
+    }
+
+
+def _evaluator_attack_type_matches_operator(
+    evaluator_attack_type: str,
+    operator_types: list[str],
+) -> bool:
+    return any(
+        evaluator_attack_type == operator_type
+        or evaluator_attack_type.startswith(f"{operator_type}:")
+        for operator_type in operator_types
+    )
+
+
 def _verify_obligation_type(
     obligation: dict[str, Any],
     artifact: dict[str, Any],
@@ -1198,12 +1274,24 @@ def _verify_estimator_result_binding(
     except Exception as exc:  # noqa: BLE001
         failures.append(f"Bound estimator result is invalid: {exc}")
         return
+    compatibility = _estimator_attack_plan_compatibility_from_artifact(
+        artifact,
+        evaluator_result,
+    )
+    if compatibility["compatible"] is not True:
+        failures.append(
+            "Estimator result attack_type is incompatible with bound AttackPlan."
+        )
     if binding.get("schema_contract") != _evaluator_result_schema_contract():
         failures.append(
             "Estimator result schema binding does not match current core schema."
         )
     if binding.get("parsed_result") != _evaluator_result_summary(evaluator_result):
         failures.append("Estimator result parsed summary does not match bound file.")
+    if binding.get("attack_plan_compatibility") != compatibility:
+        failures.append(
+            "Estimator result AttackPlan compatibility does not match bound files."
+        )
     if binding.get("canonical_sha256") != stable_sha256(canonical_payload):
         failures.append(
             "Estimator result canonical SHA-256 does not match the bound file."
