@@ -165,6 +165,10 @@ from agades_pqc_gym.integrations.prime_environment_smoke import (
     verify_prime_environment_smoke_report,
     write_prime_environment_smoke_report,
 )
+from agades_pqc_gym.integrations.prime_eval_config import (
+    verify_prime_eval_config,
+    write_prime_eval_config,
+)
 from agades_pqc_gym.integrations.prime_publication_handoff import (
     verify_prime_publication_handoff,
     write_prime_publication_handoff,
@@ -1988,6 +1992,41 @@ def prime_environment_smoke_verify(
 ) -> None:
     """Verify the checked Prime Verifiers environment smoke report."""
     result = verify_prime_environment_smoke_report(report)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("prime-eval-config", hidden=True)
+def prime_eval_config(
+    config: Annotated[
+        Path,
+        typer.Option("--config"),
+    ] = Path("prime_intellect/evals/agades_pqc_eval.template.toml"),
+    manifest: Annotated[
+        Path,
+        typer.Option("--manifest"),
+    ] = Path("docs/prime_eval_config_manifest.json"),
+) -> None:
+    """Write a Prime eval template and public-safe review manifest."""
+    write_prime_eval_config(config, manifest)
+    typer.echo(f"prime_eval_config={config}")
+    typer.echo(f"prime_eval_manifest={manifest}")
+
+
+@app.command("prime-eval-config-verify", hidden=True)
+def prime_eval_config_verify(
+    config: Annotated[
+        Path,
+        typer.Option("--config"),
+    ] = Path("prime_intellect/evals/agades_pqc_eval.template.toml"),
+    manifest: Annotated[
+        Path,
+        typer.Option("--manifest"),
+    ] = Path("docs/prime_eval_config_manifest.json"),
+) -> None:
+    """Verify the Prime eval template and public-safe review manifest."""
+    result = verify_prime_eval_config(config, manifest)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)

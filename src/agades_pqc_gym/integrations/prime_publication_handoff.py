@@ -13,6 +13,15 @@ from agades_pqc_gym.integrations.family_support import (
 from agades_pqc_gym.integrations.prime_environment_manifest import (
     verify_prime_environment_manifest,
 )
+from agades_pqc_gym.integrations.prime_eval_config import (
+    DEFAULT_CONFIG_PATH as PRIME_EVAL_CONFIG_PATH,
+)
+from agades_pqc_gym.integrations.prime_eval_config import (
+    DEFAULT_MANIFEST_PATH as PRIME_EVAL_MANIFEST_PATH,
+)
+from agades_pqc_gym.integrations.prime_eval_config import (
+    verify_prime_eval_config,
+)
 from agades_pqc_gym.integrations.prime_verifier_schemas import (
     verify_prime_verifier_schemas,
 )
@@ -40,6 +49,7 @@ RELEASE_PLAN_PATH = Path("docs/PRIME_INTELLECT_RELEASE_PLAN.md")
 SCHEMA_DIR = Path("prime_intellect/schemas")
 LOCAL_PACKAGE_ARTIFACT_PATHS = [
     "prime_intellect/environment_card.md",
+    "prime_intellect/evals/agades_pqc_eval.template.toml",
     "prime_intellect/verifier_spec.md",
     "prime_intellect/verifiers_environment/README.md",
     "prime_intellect/verifiers_environment/pyproject.toml",
@@ -49,6 +59,7 @@ LOCAL_PACKAGE_ARTIFACT_PATHS = [
     "prime_intellect/schemas/verifier_result.schema.json",
     "prime_intellect/schemas/task_metadata.schema.json",
     SCHEMA_MANIFEST_PATH.as_posix(),
+    "docs/prime_eval_config_manifest.json",
 ]
 SOURCE_ANCHORS = [
     {
@@ -123,6 +134,7 @@ EXPECTED_FALSE_SAFETY_FLAGS = (
 REVIEW_REQUIRED_BEFORE_PUBLISH = [
     "Confirm Prime account, organization, and target namespace.",
     "Run the local Prime environment build and verifier smoke gates.",
+    "Review the Prime eval config before any credentialed eval run.",
     "Review all public cards for no private traces and no security claims.",
     "Publish first as private/unlisted if Prime Hub supports the target workflow.",
     "Record external Prime Hub URL only after credentialed review.",
@@ -136,6 +148,9 @@ REQUIRED_RELEASE_GATES = [
     "uv run agades-pqc prime-manifest-verify --manifest "
     "prime_intellect/verifiers_environment/prime_manifest.json",
     "uv run agades-pqc prime-schemas-verify --schemas prime_intellect/schemas",
+    "uv run agades-pqc prime-eval-config-verify --config "
+    "prime_intellect/evals/agades_pqc_eval.template.toml --manifest "
+    "docs/prime_eval_config_manifest.json",
     "uv build prime_intellect/verifiers_environment",
     "uv run agades-pqc ecosystem-smoke-verify --report "
     "reports/ecosystem_smoke.json",
@@ -151,6 +166,11 @@ def build_prime_publication_handoff(root: Path | None = None) -> dict[str, Any]:
     )
     schemas_verification = verify_prime_verifier_schemas(
         SCHEMA_DIR,
+        root=project_root,
+    )
+    eval_config_verification = verify_prime_eval_config(
+        PRIME_EVAL_CONFIG_PATH,
+        PRIME_EVAL_MANIFEST_PATH,
         root=project_root,
     )
     environment_manifest = _read_json(project_root / ENVIRONMENT_MANIFEST_PATH)
@@ -196,12 +216,18 @@ def build_prime_publication_handoff(root: Path | None = None) -> dict[str, Any]:
                 "uv run agades-pqc prime-schemas-verify --schemas "
                 "prime_intellect/schemas"
             ),
+            "eval_config_verify_command": (
+                "uv run agades-pqc prime-eval-config-verify --config "
+                f"{PRIME_EVAL_CONFIG_PATH.as_posix()} --manifest "
+                f"{PRIME_EVAL_MANIFEST_PATH.as_posix()}"
+            ),
         },
         "readiness": {
             "local_package_ready": release.get("publication_status")
             == "local_package_ready",
             "environment_manifest_accepted": environment_verification["accepted"],
             "schemas_accepted": schemas_verification["accepted"],
+            "eval_config_accepted": eval_config_verification["accepted"],
             "task_count": task_manifest.get("task_count"),
             "family_count": len(families),
             "json_only_scoring": (
@@ -376,6 +402,12 @@ def _verify_local_package(
         "uv run agades-pqc prime-schemas-verify --schemas prime_intellect/schemas"
     ):
         failures.append("Prime handoff schemas verify command drifted.")
+    if local_package.get("eval_config_verify_command") != (
+        "uv run agades-pqc prime-eval-config-verify --config "
+        "prime_intellect/evals/agades_pqc_eval.template.toml --manifest "
+        "docs/prime_eval_config_manifest.json"
+    ):
+        failures.append("Prime handoff eval config verify command drifted.")
 
 
 def _verify_readiness(handoff: dict[str, Any], failures: list[str]) -> None:
@@ -389,6 +421,8 @@ def _verify_readiness(handoff: dict[str, Any], failures: list[str]) -> None:
         failures.append("Prime handoff environment manifest is not accepted.")
     if readiness.get("schemas_accepted") is not True:
         failures.append("Prime handoff schemas are not accepted.")
+    if readiness.get("eval_config_accepted") is not True:
+        failures.append("Prime handoff eval config is not accepted.")
     if not isinstance(readiness.get("task_count"), int) or (
         readiness.get("task_count", 0) <= 0
     ):

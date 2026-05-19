@@ -34,6 +34,7 @@ def test_private_training_manifest_defines_prime_rl_qwen_and_dataset_controls(
         "config_path": config.as_posix(),
         "config_sha256": payload["prime_training"]["config_sha256"],
         "rl_environment_contract_path": "docs/rl_environment_contract.json",
+        "eval_config_manifest_path": "docs/prime_eval_config_manifest.json",
         "launch_command_template": (
             f"prime train {config.as_posix()} "
             "--env-var HF_TOKEN --env-var WANDB_API_KEY"
@@ -71,6 +72,12 @@ def test_private_training_manifest_defines_prime_rl_qwen_and_dataset_controls(
     assert payload["model_consumers"]["deepevolve"]["private_qwen_allowed"] is True
     assert payload["linked_artifacts"]["formal_lean_backend"]["path"] == (
         "docs/formal_lean_backend.json"
+    )
+    assert payload["linked_artifacts"]["prime_eval_config_manifest"]["path"] == (
+        "docs/prime_eval_config_manifest.json"
+    )
+    assert payload["linked_artifacts"]["prime_eval_template"]["path"] == (
+        "prime_intellect/evals/agades_pqc_eval.template.toml"
     )
 
 
@@ -130,7 +137,7 @@ def test_private_training_config_verify_accepts_committed_artifacts() -> None:
             "dataset_sources": 3,
             "dataset_controls": 5,
             "reward_terms": 8,
-            "linked_artifacts": 6,
+            "linked_artifacts": 8,
             "failure_count": 0,
         },
         "failures": [],

@@ -56,7 +56,15 @@
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
-      "sha256": "b4a421a2179773908e18b8a52a91fb17cd35dc826fa9a7a4ecdb8afffb15ebbf"
+      "sha256": "12c27d7254504526062db94d9cf128d9fdee8b59a0712a4efb456e3957f56bd4"
+    },
+    "prime_eval_config_manifest": {
+      "path": "docs/prime_eval_config_manifest.json",
+      "sha256": "ecaa5ee01641f6b59e9255626dedb7914c0d8eb6ede3a29cfc750676a62e0013"
+    },
+    "prime_eval_template": {
+      "path": "prime_intellect/evals/agades_pqc_eval.template.toml",
+      "sha256": "8a653d4d2258e3e51561676c479edd30ef756b4f66c09ef24f3be1b461e4e152"
     },
     "prime_rl_training_template": {
       "path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
@@ -72,11 +80,11 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "57c5ad725ede0a90ad5a3482112d272972c3082f41c12b1efffcc98568279acc"
+      "sha256": "0a4d279cbf8f44691d9e65e5efbe16dbd14945879cccb48d1d856171f9fea03a"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "361bd1624cc0748815ff1671f4078bc7382433bf928667554057fed456fb6523"
+      "sha256": "5b0636fad49e29a7cc5738523c14f2587ad17a25c9a4e6cefda275f3c1f0a393"
     }
   },
   "private_track": {
@@ -174,9 +182,11 @@
       "task_dataset": "hf/dataset/task_metadata.jsonl"
     },
     "prime_verifiers_environment": {
+      "credentialed_eval_command_template": "prime eval run ${AGADES_PRIME_ENV_REF} -m ${AGADES_EVAL_MODEL} -p prime -n 32 -r 2 -t 2048 -s -A",
       "environment": "agades-pqc-verifier-env",
       "environment_hub_handoff": true,
       "eval_command": "prime eval run agades-pqc-verifier-env",
+      "eval_config": "docs/prime_eval_config_manifest.json",
       "hosted_training_handoff": true,
       "private_trace_publication_allowed": false,
       "training_stack": "prime-rl"

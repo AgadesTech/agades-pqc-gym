@@ -82,7 +82,7 @@ EXPECTED_PRIME_HUB_WARNING_EVIDENCE = {
     "external_publication_requires_review": True,
     "local_package_ready": True,
     "prime_hub_publication_performed": False,
-    "publication_artifact_count": 10,
+    "publication_artifact_count": 12,
     "publication_family_count": 9,
     "publication_task_count": 79,
     "requires_credentials": True,

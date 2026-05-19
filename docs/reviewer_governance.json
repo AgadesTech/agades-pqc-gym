@@ -231,7 +231,7 @@
   "linked_artifacts": {
     "external_publication_review_packet": {
       "path": "docs/external_publication_review_packet.json",
-      "sha256": "cf6f9c3e7b06ccfca7396ebe4d0dd3231f2cadcaaaab53fc06ebbbceb08e691a"
+      "sha256": "9a8be8667f615ebc048c33b71499c9028556e26122cd423db8e5c004778ecb61"
     },
     "formal_estimator_model": {
       "path": "docs/formal_estimator_model.json",
@@ -263,15 +263,15 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "57c5ad725ede0a90ad5a3482112d272972c3082f41c12b1efffcc98568279acc"
+      "sha256": "0a4d279cbf8f44691d9e65e5efbe16dbd14945879cccb48d1d856171f9fea03a"
     },
     "publication_manifest": {
       "path": "docs/publication_manifest.json",
-      "sha256": "88aa5d4a676d0d25963c0566890236f65b3bc2532af6247a13234d0808b85187"
+      "sha256": "a7be193bd20560da4b41c6a8da0ac083dc40245bc855dca8a93cdf3afa568fee"
     },
     "release_audit": {
       "path": "public/release_audit.json",
-      "sha256": "4a222d08b863e7a771d9b52958c280e3e84118e56fdebc2218ff0fa18a3c9ed9"
+      "sha256": "6d04a94604f92d2d48c6834f120f059a84f7013cd8c8552cd89ad9ff2d4680eb"
     }
   },
   "private_training_review": {

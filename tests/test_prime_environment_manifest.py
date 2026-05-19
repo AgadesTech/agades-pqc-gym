@@ -132,6 +132,13 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
     }
     assert manifest["prime"] == {
         "environment_dir": "prime_intellect/verifiers_environment",
+        "eval_config_path": "prime_intellect/evals/agades_pqc_eval.template.toml",
+        "eval_manifest_path": "docs/prime_eval_config_manifest.json",
+        "eval_config_verify_command": (
+            "uv run agades-pqc prime-eval-config-verify --config "
+            "prime_intellect/evals/agades_pqc_eval.template.toml --manifest "
+            "docs/prime_eval_config_manifest.json"
+        ),
         "local_editable_install_command": (
             "cd prime_intellect/verifiers_environment && uv pip install -e ."
         ),
@@ -265,6 +272,12 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
         "reports/prime_environment_smoke.json",
         "uv run agades-pqc prime-environment-smoke-verify --report "
         "reports/prime_environment_smoke.json",
+        "uv run agades-pqc prime-eval-config --config "
+        "prime_intellect/evals/agades_pqc_eval.template.toml --manifest "
+        "docs/prime_eval_config_manifest.json",
+        "uv run agades-pqc prime-eval-config-verify --config "
+        "prime_intellect/evals/agades_pqc_eval.template.toml --manifest "
+        "docs/prime_eval_config_manifest.json",
         "uv run agades-pqc prime-schemas --out prime_intellect/schemas",
         "uv build prime_intellect/verifiers_environment",
         "uv run agades-pqc ecosystem-smoke-verify --report "
@@ -280,6 +293,8 @@ def test_prime_environment_readme_matches_hub_workflow_contract() -> None:
 
     assert "uv pip install -e ." in readme
     assert "uv run vf-eval agades-pqc-verifier-env" in readme
+    assert "prime-eval-config-verify" in readme
+    assert "AGADES_PRIME_ENV_REF" in readme
     assert "prime env push --visibility PRIVATE" in readme
     assert "prime env install <owner>/agades-pqc-verifier-env" in readme
     assert "Required Environment Variables" in readme

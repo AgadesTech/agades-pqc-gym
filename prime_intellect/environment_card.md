@@ -32,6 +32,17 @@ uv pip install -e .
 prime eval run agades-pqc-verifier-env
 ```
 
+Credentialed eval template:
+
+```bash
+uv run agades-pqc prime-eval-config --config prime_intellect/evals/agades_pqc_eval.template.toml --manifest docs/prime_eval_config_manifest.json
+uv run agades-pqc prime-eval-config-verify --config prime_intellect/evals/agades_pqc_eval.template.toml --manifest docs/prime_eval_config_manifest.json
+```
+
+The template is review-gated and uses `AGADES_PRIME_ENV_REF` plus
+`AGADES_EVAL_MODEL`; it does not include credentials and does not claim external
+Prime execution.
+
 Prime quickstart alignment for credentialed review:
 
 ```bash
