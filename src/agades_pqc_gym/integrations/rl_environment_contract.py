@@ -42,6 +42,7 @@ LINKED_ARTIFACT_PATHS = {
     "prime_rl_training_template": "prime_intellect/training/"
     "private_qwen_prime_rl.template.toml",
     "formal_proof_artifact": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+    "reviewer_governance": "docs/reviewer_governance.json",
     "prime_schema_manifest": "prime_intellect/schemas/schema_manifest.json",
 }
 
@@ -160,6 +161,8 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
             "docs/private_run_policy.json",
             "uv run agades-pqc formal-proof-artifact-verify --artifact "
             "docs/formal_lattice_primal_usvp_proof_artifact.json",
+            "uv run agades-pqc reviewer-governance-verify --governance "
+            "docs/reviewer_governance.json",
         ],
     }
 

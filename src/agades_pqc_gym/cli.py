@@ -193,6 +193,10 @@ from agades_pqc_gym.integrations.release_status import (
     verify_release_status,
     write_release_status,
 )
+from agades_pqc_gym.integrations.reviewer_governance import (
+    verify_reviewer_governance,
+    write_reviewer_governance,
+)
 from agades_pqc_gym.integrations.rl_environment_contract import (
     verify_rl_environment_contract,
     write_rl_environment_contract,
@@ -1721,6 +1725,32 @@ def formal_proof_artifact_verify(
 ) -> None:
     """Verify AttackPlan, obligation, Lean theorem, estimator, and reviewer bindings."""
     result = verify_attack_plan_proof_artifact(artifact)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("reviewer-governance", hidden=True)
+def reviewer_governance(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("docs/reviewer_governance.json"),
+) -> None:
+    """Write the reviewer role, proof, and release governance manifest."""
+    write_reviewer_governance(out)
+    typer.echo(f"reviewer_governance={out}")
+
+
+@app.command("reviewer-governance-verify", hidden=True)
+def reviewer_governance_verify(
+    governance: Annotated[
+        Path,
+        typer.Option("--governance"),
+    ] = Path("docs/reviewer_governance.json"),
+) -> None:
+    """Verify reviewer governance, role gates, and proof artifact bindings."""
+    result = verify_reviewer_governance(governance)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)
