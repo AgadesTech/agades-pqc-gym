@@ -282,7 +282,7 @@
           "hf/dataset/public_runs/multivariate_toy_uov_v0/MANIFEST.sha256",
           "public/run_export/MANIFEST.sha256"
         ],
-        "verified_entries": 188
+        "verified_entries": 189
       },
       "failures": [],
       "id": "checksum-manifests",
@@ -1106,7 +1106,7 @@
       "blocking": true,
       "detail": "Checked-in release gates that depend on release-audit must first declare ecosystem-smoke-verify, including nested Hugging Face dataset metadata.",
       "evidence": {
-        "checked_release_gate_artifacts": 29,
+        "checked_release_gate_artifacts": 31,
         "ecosystem_smoke_gate_artifacts": 24,
         "late_ecosystem_smoke_gate": [],
         "missing_ecosystem_smoke_gate": [],
@@ -1667,8 +1667,10 @@
       "detail": "Private evolution traces and candidate strategies are confined to private roots and require redaction/preflight before public export.",
       "evidence": {
         "allowed_private_commands": 16,
-        "allowed_private_roots": 4,
+        "allowed_private_roots": 6,
         "forbidden_public_roots": 5,
+        "private_dataset_sources": 3,
+        "private_rl_reward_terms": 6,
         "required_publication_controls": 5,
         "scheduler_allowed_triggers": 2,
         "scheduler_approval_gates": 4,

@@ -34,9 +34,13 @@ PRIVATE_DATASET_CONTROLS = [
 ]
 LINKED_ARTIFACT_PATHS = {
     "hf_space_manifest": "hf/space_manifest.json",
+    "hf_rl_rollout_examples": "hf/dataset/rl_rollouts.jsonl",
     "prime_environment_manifest": "prime_intellect/verifiers_environment/"
     "prime_manifest.json",
     "private_run_policy": "docs/private_run_policy.json",
+    "private_training_manifest": "docs/private_training_config_manifest.json",
+    "prime_rl_training_template": "prime_intellect/training/"
+    "private_qwen_prime_rl.template.toml",
     "formal_proof_artifact": "docs/formal_lattice_primal_usvp_proof_artifact.json",
     "prime_schema_manifest": "prime_intellect/schemas/schema_manifest.json",
 }
@@ -57,7 +61,7 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
                 "sdk": "gradio",
                 "category": "agent-environment",
                 "task_dataset": "hf/dataset/task_metadata.jsonl",
-                "rollout_examples": "hf/dataset/verifier_outputs.jsonl",
+                "rollout_examples": "hf/dataset/rl_rollouts.jsonl",
                 "public_visibility_allowed": True,
                 "private_trace_publication_allowed": False,
             },

@@ -48,8 +48,19 @@ class AgadesPQCGymEnvironment:
     def from_attack_plan_paths(
         cls,
         paths: list[Path],
+        *,
+        root: Path | None = None,
     ) -> AgadesPQCGymEnvironment:
-        return cls([_task_from_path(path) for path in paths])
+        project_root = root.resolve() if root is not None else None
+        return cls(
+            [
+                _task_from_path(
+                    _resolve_attack_plan_path(path, project_root),
+                    source_path=_source_path_label(path, project_root),
+                )
+                for path in paths
+            ]
+        )
 
     def reset(self, index: int = 0) -> dict[str, Any]:
         if index < 0 or index >= len(self._tasks):
@@ -165,16 +176,32 @@ def score_attack_plan_candidate(
     }
 
 
+def build_public_rollout_examples(
+    paths: list[Path],
+    *,
+    root: Path | None = None,
+) -> list[dict[str, Any]]:
+    project_root = root.resolve() if root is not None else None
+    rows: list[dict[str, Any]] = []
+    for path in paths:
+        resolved_path = _resolve_attack_plan_path(path, project_root)
+        env = AgadesPQCGymEnvironment.from_attack_plan_paths(
+            [path],
+            root=project_root,
+        )
+        env.reset()
+        step = env.step(resolved_path.read_text(encoding="utf-8"))
+        rows.append(step["info"]["trace"])
+    return rows
+
+
 def write_public_rollout_examples(
     paths: list[Path],
     out: Path,
+    *,
+    root: Path | None = None,
 ) -> list[dict[str, Any]]:
-    rows: list[dict[str, Any]] = []
-    for path in paths:
-        env = AgadesPQCGymEnvironment.from_attack_plan_paths([path])
-        env.reset()
-        step = env.step(path.read_text(encoding="utf-8"))
-        rows.append(step["info"]["trace"])
+    rows = build_public_rollout_examples(paths, root=root)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(
         "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows),
@@ -183,12 +210,27 @@ def write_public_rollout_examples(
     return rows
 
 
-def _task_from_path(path: Path) -> dict[str, Any]:
+def _resolve_attack_plan_path(path: Path, root: Path | None) -> Path:
+    if root is not None and not path.is_absolute():
+        return root / path
+    return path
+
+
+def _source_path_label(path: Path, root: Path | None) -> str:
+    if root is None or not path.is_absolute():
+        return path.as_posix()
+    try:
+        return path.relative_to(root).as_posix()
+    except ValueError:
+        return path.as_posix()
+
+
+def _task_from_path(path: Path, *, source_path: str | None = None) -> dict[str, Any]:
     raw_json = path.read_text(encoding="utf-8")
     plan = AttackPlan.model_validate_json(raw_json)
     return task_metadata_for_plan(
         plan,
-        source_path=path.as_posix(),
+        source_path=source_path or path.as_posix(),
         seed_attack_plan_json=raw_json,
     )
 

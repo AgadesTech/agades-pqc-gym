@@ -38,6 +38,10 @@
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
       "sha256": "b4a421a2179773908e18b8a52a91fb17cd35dc826fa9a7a4ecdb8afffb15ebbf"
     },
+    "prime_rl_training_template": {
+      "path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
+      "sha256": "4f89c488ac48ab8c8f65627cfbf08ce478a2909bbb0cb53ad6a376c3312618a5"
+    },
     "prime_schema_manifest": {
       "path": "prime_intellect/schemas/schema_manifest.json",
       "sha256": "f448d41c640e6dc02a462af1bf695a93045676a191cee53403a121cab833fbeb"
@@ -45,6 +49,10 @@
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
       "sha256": "a0992031eb7a4268e4813b4d5f02a9ca4dda078972c935ef829c8e981259d86a"
+    },
+    "private_training_manifest": {
+      "path": "docs/private_training_config_manifest.json",
+      "sha256": "90114f6adc03e884703f92a11121c2dadfac39cc936255ebdca3d02edc4b11f2"
     }
   },
   "private_track": {
@@ -134,7 +142,7 @@
       "category": "agent-environment",
       "private_trace_publication_allowed": false,
       "public_visibility_allowed": true,
-      "rollout_examples": "hf/dataset/verifier_outputs.jsonl",
+      "rollout_examples": "hf/dataset/rl_rollouts.jsonl",
       "sdk": "gradio",
       "space_id_template": "agades/agades-pqc-gym-agent-env",
       "task_dataset": "hf/dataset/task_metadata.jsonl"
