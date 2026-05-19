@@ -49,6 +49,10 @@ from agades_pqc_gym.formal.artifacts import (
     verify_attack_plan_proof_artifact,
     write_attack_plan_proof_artifact,
 )
+from agades_pqc_gym.formal.family_coverage import (
+    verify_formal_family_coverage,
+    write_formal_family_coverage,
+)
 from agades_pqc_gym.integrations.benchmark_source_contracts import (
     verify_benchmark_source_contracts,
     write_benchmark_source_contracts,
@@ -1725,6 +1729,32 @@ def formal_proof_artifact_verify(
 ) -> None:
     """Verify AttackPlan, obligation, Lean theorem, estimator, and reviewer bindings."""
     result = verify_attack_plan_proof_artifact(artifact)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("formal-family-coverage", hidden=True)
+def formal_family_coverage(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("docs/formal_family_coverage.json"),
+) -> None:
+    """Write the multi-family formal invariant and obligation coverage artifact."""
+    write_formal_family_coverage(out)
+    typer.echo(f"formal_family_coverage={out}")
+
+
+@app.command("formal-family-coverage-verify", hidden=True)
+def formal_family_coverage_verify(
+    coverage: Annotated[
+        Path,
+        typer.Option("--coverage"),
+    ] = Path("docs/formal_family_coverage.json"),
+) -> None:
+    """Verify multi-family formal coverage, Lean bindings, and reviewers."""
+    result = verify_formal_family_coverage(coverage)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)

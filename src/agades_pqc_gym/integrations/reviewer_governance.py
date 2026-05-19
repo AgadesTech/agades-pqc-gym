@@ -58,6 +58,7 @@ FAMILY_REVIEW_COMPETENCIES = {
     ],
 }
 LINKED_ARTIFACT_PATHS = {
+    "formal_family_coverage": "docs/formal_family_coverage.json",
     "formal_lattice_proof_artifact": (
         "docs/formal_lattice_primal_usvp_proof_artifact.json"
     ),
@@ -135,6 +136,7 @@ def build_reviewer_governance(root: Path | None = None) -> dict[str, Any]:
             "unassigned_role_status": "role_required_unassigned",
         },
         "formal_artifact_binding": {
+            "formal_family_coverage_path": "docs/formal_family_coverage.json",
             "formal_lattice_proof_artifact_path": (
                 "docs/formal_lattice_primal_usvp_proof_artifact.json"
             ),

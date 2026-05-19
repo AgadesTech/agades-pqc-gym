@@ -57,6 +57,12 @@ def test_reviewer_governance_defines_family_roles_and_review_gates(
         governance["private_training_review"]["train_traces_publication_allowed"]
         is False
     )
+    assert governance["formal_artifact_binding"]["formal_family_coverage_path"] == (
+        "docs/formal_family_coverage.json"
+    )
+    assert governance["linked_artifacts"]["formal_family_coverage"]["path"] == (
+        "docs/formal_family_coverage.json"
+    )
 
 
 def test_committed_reviewer_governance_is_in_sync(tmp_path: Path) -> None:
@@ -78,7 +84,7 @@ def test_reviewer_governance_verify_accepts_committed_artifact() -> None:
             "family_reviewers": 9,
             "role_groups": 3,
             "approval_gates": 4,
-            "linked_artifacts": 6,
+            "linked_artifacts": 7,
             "failure_count": 0,
         },
         "failures": [],
