@@ -134,6 +134,17 @@ def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() ->
         "formal_methods_reviewer",
         "release_boundary_reviewer",
     ]
+    assert artifact["review"]["evidence"] == {
+        "schema_version": "agades.pqc.formal.review_evidence.v1",
+        "status": "not_attached",
+        "required_for_statuses": ["reviewed", "rejected"],
+        "covered_reviewer_roles": [],
+        "claim_allowed": False,
+        "notes": (
+            "No reviewer attestation is attached; this artifact must remain "
+            "pending_review."
+        ),
+    }
     assert artifact["artifact_sha256"] == artifact["artifact_sha256"]
 
 
@@ -330,6 +341,17 @@ def test_write_and_verify_attack_plan_proof_artifact(tmp_path: Path) -> None:
     }
 
 
+def test_build_attack_plan_proof_artifact_rejects_reviewed_without_evidence() -> None:
+    with pytest.raises(
+        ValueError,
+        match="review evidence is required for non-pending proof artifacts",
+    ):
+        build_attack_plan_proof_artifact(
+            Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+            review_status="reviewed",
+        )
+
+
 def test_attached_estimator_result_binding_includes_evaluator_schema_contract(
     tmp_path: Path,
 ) -> None:
@@ -470,6 +492,26 @@ def test_verify_attack_plan_proof_artifact_rejects_stale_attack_plan_schema_cont
         "AttackPlan schema binding does not match current core schema."
         in result["failures"]
     )
+
+
+def test_verify_rejects_reviewed_status_without_reviewer_evidence(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+    )
+    artifact["review"]["status"] = "reviewed"
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Non-pending proof artifact review statuses require attached review "
+        "evidence covering all required reviewers."
+    ) in result["failures"]
 
 
 def test_verify_rejects_stale_estimator_result_schema_contract(
