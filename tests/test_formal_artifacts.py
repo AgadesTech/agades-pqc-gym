@@ -357,6 +357,14 @@ def test_attached_estimator_result_binding_includes_evaluator_schema_contract(
         "attack_type": "primal_usvp",
         "claim_allowed": False,
     }
+    assert artifact["estimator_result_binding"]["attack_plan_compatibility"] == {
+        "attack_plan_id": "lattice_primal_usvp_toy_v1",
+        "target_family": "LWE",
+        "operator_types": ["primal_usvp"],
+        "evaluator_attack_type": "primal_usvp",
+        "compatible": True,
+        "compatibility_rule": "exact_operator_or_colon_variant_v1",
+    }
 
 
 def test_committed_lattice_proof_artifact_is_in_sync(tmp_path: Path) -> None:
@@ -526,6 +534,48 @@ def test_verify_attack_plan_proof_artifact_rejects_invalid_attached_estimator_re
     )
 
 
+def test_build_attack_plan_proof_artifact_rejects_incompatible_estimator_result(
+    tmp_path: Path,
+) -> None:
+    result_path = _write_estimator_result(
+        tmp_path,
+        {"attack_type": "module_lattice_reduction_hypothesis"},
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="estimator result attack_type is incompatible",
+    ):
+        build_attack_plan_proof_artifact(
+            Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+            estimator_result_path=result_path,
+        )
+
+
+def test_verify_rejects_stale_estimator_attack_plan_compatibility(
+    tmp_path: Path,
+) -> None:
+    result_path = _write_estimator_result(tmp_path)
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+        estimator_result_path=result_path,
+    )
+    artifact["estimator_result_binding"]["attack_plan_compatibility"][
+        "evaluator_attack_type"
+    ] = "module_lattice_reduction_hypothesis"
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Estimator result AttackPlan compatibility does not match bound files."
+        in result["failures"]
+    )
+
+
 def test_verify_attack_plan_proof_artifact_rejects_claim_enabled_obligation_type(
     tmp_path: Path,
 ) -> None:
@@ -571,11 +621,16 @@ def test_formal_proof_artifact_cli_round_trip(tmp_path: Path) -> None:
     assert '"accepted": true' in verify_result.output
 
 
-def _write_estimator_result(tmp_path: Path) -> Path:
+def _write_estimator_result(
+    tmp_path: Path,
+    overrides: dict[str, object] | None = None,
+) -> Path:
     result_path = tmp_path / "estimator_result.json"
+    payload = _valid_estimator_result_payload()
+    if overrides:
+        payload.update(overrides)
     result_path.write_text(
-        json.dumps(_valid_estimator_result_payload(), indent=2, sort_keys=True)
-        + "\n",
+        json.dumps(payload, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
     return result_path
