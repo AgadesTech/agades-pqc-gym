@@ -53,6 +53,10 @@
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
       "sha256": "90114f6adc03e884703f92a11121c2dadfac39cc936255ebdca3d02edc4b11f2"
+    },
+    "reviewer_governance": {
+      "path": "docs/reviewer_governance.json",
+      "sha256": "0aaf5ff0debcf335263f571581188cdfd6e6431794e74e2be7586b4a58e07dc8"
     }
   },
   "private_track": {
@@ -115,7 +119,8 @@
     "uv run agades-pqc rl-environment-contract --out docs/rl_environment_contract.json",
     "uv run agades-pqc rl-environment-contract-verify --contract docs/rl_environment_contract.json",
     "uv run agades-pqc private-run-policy-verify --policy docs/private_run_policy.json",
-    "uv run agades-pqc formal-proof-artifact-verify --artifact docs/formal_lattice_primal_usvp_proof_artifact.json"
+    "uv run agades-pqc formal-proof-artifact-verify --artifact docs/formal_lattice_primal_usvp_proof_artifact.json",
+    "uv run agades-pqc reviewer-governance-verify --governance docs/reviewer_governance.json"
   ],
   "reward_model": {
     "range": [
