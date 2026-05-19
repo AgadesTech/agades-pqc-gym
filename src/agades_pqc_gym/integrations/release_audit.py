@@ -359,8 +359,17 @@ FAMILY_READINESS_REQUIREMENTS = {
 }
 GITHUB_ACTIONS_REQUIRED_ACTIONS = (
     "actions/checkout@",
+    "leanprover/lean-action@",
     "astral-sh/setup-uv@",
 )
+GITHUB_ACTIONS_LEAN_GATE_REQUIRED_INPUTS: dict[str, Any] = {
+    "lake-package-directory": "formal/lean",
+    "build": True,
+    "test": False,
+    "lint": False,
+    "auto-config": False,
+    "use-mathlib-cache": True,
+}
 GITHUB_ACTIONS_REQUIRED_COMMANDS = (
     ("build-package", "uv build"),
     ("build-prime-environment", "uv build prime_intellect/verifiers_environment"),
@@ -373,6 +382,7 @@ GITHUB_ACTIONS_REQUIRED_COMMANDS = (
         "docs/family_support_matrix.json "
         "docs/ecosystem_source_graph.json "
         "docs/family_operator_catalog.json "
+        "docs/formal_lean_backend.json "
         "docs/lattice_estimator_manifest.json "
         "docs/lattice_estimator_baseline_contracts.json "
         "docs/runbook_input_manifest.json "
@@ -479,6 +489,15 @@ GITHUB_ACTIONS_REQUIRED_COMMANDS = (
         "verify-family-operator-catalog",
         "uv run agades-pqc family-operator-catalog-verify --catalog "
         "docs/family_operator_catalog.json",
+    ),
+    (
+        "generate-formal-lean-backend",
+        "uv run agades-pqc formal-lean-backend --out docs/formal_lean_backend.json",
+    ),
+    (
+        "verify-formal-lean-backend",
+        "uv run agades-pqc formal-lean-backend-verify --backend "
+        "docs/formal_lean_backend.json",
     ),
     (
         "generate-hf-dataset",
@@ -1134,6 +1153,7 @@ def _github_actions_ci(root: Path) -> dict[str, Any]:
     failures: list[str] = []
     run_commands: list[str] = []
     used_actions: list[str] = []
+    lean_gate_inputs: dict[str, Any] | None = None
     jobs: dict[str, Any] = {}
     triggers: Any = None
 
@@ -1168,10 +1188,28 @@ def _github_actions_ci(root: Path) -> dict[str, Any]:
                 uses = step.get("uses")
                 if isinstance(uses, str):
                     used_actions.append(uses)
+                    if uses.startswith("leanprover/lean-action@"):
+                        step_inputs = step.get("with", {})
+                        lean_gate_inputs = (
+                            dict(step_inputs) if isinstance(step_inputs, dict) else {}
+                        )
 
     for action in GITHUB_ACTIONS_REQUIRED_ACTIONS:
         if not any(used_action.startswith(action) for used_action in used_actions):
             failures.append(f"GitHub Actions CI workflow does not use {action}.")
+
+    if lean_gate_inputs is None:
+        failures.append("GitHub Actions CI workflow is missing the Lean build gate.")
+    else:
+        for input_name, expected_value in (
+            GITHUB_ACTIONS_LEAN_GATE_REQUIRED_INPUTS.items()
+        ):
+            actual_value = lean_gate_inputs.get(input_name)
+            if actual_value != expected_value:
+                failures.append(
+                    "GitHub Actions CI Lean build gate has invalid input "
+                    f"{input_name}: expected {expected_value!r}, got {actual_value!r}."
+                )
 
     for command_id, required_command in GITHUB_ACTIONS_REQUIRED_COMMANDS:
         normalized = " ".join(required_command.split())
@@ -1193,6 +1231,8 @@ def _github_actions_ci(root: Path) -> dict[str, Any]:
         evidence={
             "jobs": sorted(jobs) if isinstance(jobs, dict) else [],
             "required_actions": list(GITHUB_ACTIONS_REQUIRED_ACTIONS),
+            "lean_gate_required_inputs": dict(GITHUB_ACTIONS_LEAN_GATE_REQUIRED_INPUTS),
+            "lean_gate_inputs": lean_gate_inputs or {},
             "required_commands": [
                 command_id for command_id, _ in GITHUB_ACTIONS_REQUIRED_COMMANDS
             ],

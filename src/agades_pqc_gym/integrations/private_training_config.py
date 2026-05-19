@@ -58,6 +58,7 @@ LINKED_ARTIFACT_PATHS = {
     "formal_mlwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
         TargetFamily.MLWE.value
     ],
+    "formal_lean_backend": "docs/formal_lean_backend.json",
 }
 FORBIDDEN_ENV_FILE_NAMES = {
     ".env",

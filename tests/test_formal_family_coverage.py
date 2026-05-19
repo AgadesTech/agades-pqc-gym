@@ -93,6 +93,9 @@ def test_formal_family_coverage_binds_every_family_to_proof_material(
     assert coverage["linked_artifacts"]["formal_mlwe_proof_artifact"]["path"] == (
         "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json"
     )
+    assert coverage["linked_artifacts"]["formal_lean_backend"]["path"] == (
+        "docs/formal_lean_backend.json"
+    )
 
 
 def test_committed_formal_family_coverage_is_in_sync(tmp_path: Path) -> None:
@@ -115,7 +118,7 @@ def test_formal_family_coverage_verify_accepts_committed_artifact() -> None:
             "family_invariants": 12,
             "proof_obligations": 22,
             "operator_semantics": 10,
-            "linked_artifacts": 4,
+            "linked_artifacts": 5,
             "failure_count": 0,
         },
         "failures": [],

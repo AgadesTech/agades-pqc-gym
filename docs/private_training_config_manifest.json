@@ -20,6 +20,10 @@
     "train_traces_publication_allowed": false
   },
   "linked_artifacts": {
+    "formal_lean_backend": {
+      "path": "docs/formal_lean_backend.json",
+      "sha256": "d4843bb121e1a671fe50da8f2eea985783fefa99c1bdef262dc9cf3a87bfdbb3"
+    },
     "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
       "sha256": "2512d120077d8efb9aab414adedbaa4413df6fb8100d4b6f6e7d9129b02ee1fd"

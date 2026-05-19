@@ -12,6 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6.0.2
+      - name: Build Lean formal backend
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formal/lean
+          build: true
+          test: false
+          lint: false
+          auto-config: false
+          use-mathlib-cache: true
       - uses: astral-sh/setup-uv@v8.1.0
       - name: Run tests
         run: uv run --extra dev pytest -q
@@ -37,6 +46,8 @@ jobs:
           uv run agades-pqc ecosystem-source-graph-verify --graph docs/ecosystem_source_graph.json
           uv run agades-pqc family-operator-catalog --out docs/family_operator_catalog.json
           uv run agades-pqc family-operator-catalog-verify --catalog docs/family_operator_catalog.json
+          uv run agades-pqc formal-lean-backend --out docs/formal_lean_backend.json
+          uv run agades-pqc formal-lean-backend-verify --backend docs/formal_lean_backend.json
           uv run agades-pqc hf-dataset --out hf/dataset
           uv run agades-pqc hf-dataset-verify --dataset hf/dataset
           uv run agades-pqc lattice-estimator-manifest --out docs/lattice_estimator_manifest.json
@@ -82,7 +93,7 @@ jobs:
           uv run agades-pqc publication-manifest-verify --manifest docs/publication_manifest.json
           uv run agades-pqc release-artifacts --max-passes 6
       - name: Check public release artifacts are committed
-        run: git diff --exit-code -- docs/benchmark_source_contracts.json docs/source_catalog.json docs/deepevolve_research_hooks_manifest.json docs/family_registry_manifest.json docs/family_plugin_manifest.json docs/family_support_matrix.json docs/ecosystem_source_graph.json docs/family_operator_catalog.json docs/lattice_estimator_manifest.json docs/lattice_estimator_baseline_contracts.json docs/runbook_input_manifest.json docs/public_benchmark_manifest.json public/run_export hf/dataset hf/space_manifest.json hf/collection_manifest.json docs/huggingface_publication_handoff.json nvidia/accelerator_manifest.json docs/nvidia_publication_handoff.json docs/publication_manifest.json docs/external_publication_review_packet.json docs/private_run_policy.json docs/prime_publication_handoff.json docs/prime_speedrun_handoff.json prime_intellect/verifiers_environment/prime_manifest.json prime_intellect/schemas/attack_plan.schema.json prime_intellect/schemas/verifier_result.schema.json prime_intellect/schemas/schema_manifest.json prime_intellect/schemas/task_metadata.schema.json public/runbook_audit.json public/release_audit.json docs/release_status.json public/publication_preflight.json reports/ecosystem_smoke.json reports/hf_space_smoke.json reports/openevolve_smoke.json reports/prime_environment_smoke.json reports/nvidia_manifest_safety.json
+        run: git diff --exit-code -- docs/benchmark_source_contracts.json docs/source_catalog.json docs/deepevolve_research_hooks_manifest.json docs/family_registry_manifest.json docs/family_plugin_manifest.json docs/family_support_matrix.json docs/ecosystem_source_graph.json docs/family_operator_catalog.json docs/formal_lean_backend.json docs/lattice_estimator_manifest.json docs/lattice_estimator_baseline_contracts.json docs/runbook_input_manifest.json docs/public_benchmark_manifest.json public/run_export hf/dataset hf/space_manifest.json hf/collection_manifest.json docs/huggingface_publication_handoff.json nvidia/accelerator_manifest.json docs/nvidia_publication_handoff.json docs/publication_manifest.json docs/external_publication_review_packet.json docs/private_run_policy.json docs/prime_publication_handoff.json docs/prime_speedrun_handoff.json prime_intellect/verifiers_environment/prime_manifest.json prime_intellect/schemas/attack_plan.schema.json prime_intellect/schemas/verifier_result.schema.json prime_intellect/schemas/schema_manifest.json prime_intellect/schemas/task_metadata.schema.json public/runbook_audit.json public/release_audit.json docs/release_status.json public/publication_preflight.json reports/ecosystem_smoke.json reports/hf_space_smoke.json reports/openevolve_smoke.json reports/prime_environment_smoke.json reports/nvidia_manifest_safety.json
       - name: Build package
         run: uv build
       - name: Build Prime verifier environment

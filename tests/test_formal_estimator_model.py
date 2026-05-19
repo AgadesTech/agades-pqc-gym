@@ -61,6 +61,9 @@ def test_formal_estimator_model_binds_families_to_claim_policy(
         "AgadesPQC.Evaluator.no_security_claim",
         "AgadesPQC.Evaluator.schema_only_no_estimator_no_security_claim",
     ]
+    assert model["linked_artifacts"]["formal_lean_backend"]["path"] == (
+        "docs/formal_lean_backend.json"
+    )
 
     by_family = {entry["family"]: entry for entry in model["families"]}
     assert by_family["LWE"]["estimator_model"]["model_id"] == (
@@ -110,7 +113,7 @@ def test_formal_estimator_model_verify_accepts_committed_artifact() -> None:
         "summary": {
             "families": 9,
             "runtime_operator_count": 36,
-            "linked_artifacts": 4,
+            "linked_artifacts": 5,
             "failure_count": 0,
         },
         "failures": [],

@@ -50,6 +50,7 @@ REPRESENTATIVE_ATTACK_PLANS = {
 LINKED_ARTIFACT_PATHS = {
     "family_plugin_manifest": "docs/family_plugin_manifest.json",
     "formal_operator_semantics": "docs/formal_operator_semantics.json",
+    "formal_lean_backend": "docs/formal_lean_backend.json",
     "formal_lwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
         TargetFamily.LWE.value
     ],
