@@ -231,7 +231,7 @@
   "linked_artifacts": {
     "external_publication_review_packet": {
       "path": "docs/external_publication_review_packet.json",
-      "sha256": "053fbae7bfce5ab9d2feab4f35ecf34446a5218751b3ac01d4843eb3cb4155b0"
+      "sha256": "cf6f9c3e7b06ccfca7396ebe4d0dd3231f2cadcaaaab53fc06ebbbceb08e691a"
     },
     "formal_estimator_model": {
       "path": "docs/formal_estimator_model.json",
@@ -267,11 +267,11 @@
     },
     "publication_manifest": {
       "path": "docs/publication_manifest.json",
-      "sha256": "6ee5c1b6b0041bace51a5ebce4d5891b066ebd0e81cf2d625d621fe5a0246af6"
+      "sha256": "88aa5d4a676d0d25963c0566890236f65b3bc2532af6247a13234d0808b85187"
     },
     "release_audit": {
       "path": "public/release_audit.json",
-      "sha256": "f3c0a6e1aead16b2d3854cc927e3eac3336121a77f928050aac89610043b0dd9"
+      "sha256": "4a222d08b863e7a771d9b52958c280e3e84118e56fdebc2218ff0fa18a3c9ed9"
     }
   },
   "private_training_review": {

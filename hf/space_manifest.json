@@ -1,4 +1,17 @@
 {
+  "agent_environment_contract": {
+    "claims_pqc_breaks": false,
+    "environment_class": "agades_pqc_gym.rl.environment.AgadesPQCGymEnvironment",
+    "observation_schema": "agades.pqc.rl.observation.v1",
+    "private_trace_publication_allowed": false,
+    "public_track_only": true,
+    "reward_report_schema": "agades.pqc.rl.reward_report.v1",
+    "rollout_examples": "hf/dataset/rl_rollouts.jsonl",
+    "rollout_trace_schema": "agades.pqc.rl.rollout_trace.v1",
+    "scoring_function": "agades_pqc_gym.rl.environment.score_attack_plan_candidate",
+    "task_dataset": "hf/dataset/task_metadata.jsonl",
+    "task_interface": "single_turn_attackplan_json"
+  },
   "example_manifest": {
     "dataset_attack_plan_count": 80,
     "dataset_invalid_attack_plan_count": 1,
@@ -138,7 +151,9 @@
       "typer>=0.12,<1"
     ],
     "requires_gradio_to_import_for_audit": false,
-    "requires_gradio_to_launch": true
+    "requires_gradio_to_launch": true,
+    "rollout_examples_source": "hf/dataset/rl_rollouts.jsonl",
+    "task_metadata_source": "hf/dataset/task_metadata.jsonl"
   },
   "safety": {
     "arbitrary_code_execution": false,
@@ -150,13 +165,14 @@
   "schema_version": "agades.pqc.hf_space_manifest.v1",
   "space": {
     "app_file": "hf/app.py",
+    "category": "agent-environment",
     "dataset_bundle": "hf/dataset",
-    "hub_create_command_template": "hf repos create <owner>/pqc-gym --type=space --space-sdk gradio --private --exist-ok",
-    "hub_upload_command_template": "hf upload <owner>/pqc-gym hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Space\"",
+    "hub_create_command_template": "hf repos create AgadesTech/agades-pqc-gym-agent-env --type=space --space-sdk gradio --private --exist-ok",
+    "hub_upload_command_template": "hf upload AgadesTech/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Agent Environment\"",
     "public_push_requires_review": true,
     "requirements_file": "hf/requirements.txt",
     "sdk": "gradio",
-    "suggested_space_id": "agades/pqc-gym"
+    "suggested_space_id": "AgadesTech/agades-pqc-gym-agent-env"
   },
   "verifier_contract": {
     "accepts_arbitrary_code": false,

@@ -30,20 +30,34 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "app_path": "hf/app.py",
     }
     assert manifest["space"] == {
-        "suggested_space_id": "agades/pqc-gym",
+        "suggested_space_id": "AgadesTech/agades-pqc-gym-agent-env",
         "sdk": "gradio",
+        "category": "agent-environment",
         "app_file": "hf/app.py",
         "requirements_file": "hf/requirements.txt",
         "dataset_bundle": "hf/dataset",
         "hub_create_command_template": (
-            "hf repos create <owner>/pqc-gym --type=space "
+            "hf repos create AgadesTech/agades-pqc-gym-agent-env --type=space "
             "--space-sdk gradio --private --exist-ok"
         ),
         "hub_upload_command_template": (
-            'hf upload <owner>/pqc-gym hf . --repo-type=space '
-            '--commit-message "Sync Agades PQC Gym Space"'
+            'hf upload AgadesTech/agades-pqc-gym-agent-env hf . --repo-type=space '
+            '--commit-message "Sync Agades PQC Gym Agent Environment"'
         ),
         "public_push_requires_review": True,
+    }
+    assert manifest["agent_environment_contract"] == {
+        "environment_class": "agades_pqc_gym.rl.environment.AgadesPQCGymEnvironment",
+        "observation_schema": "agades.pqc.rl.observation.v1",
+        "reward_report_schema": "agades.pqc.rl.reward_report.v1",
+        "rollout_trace_schema": "agades.pqc.rl.rollout_trace.v1",
+        "task_dataset": "hf/dataset/task_metadata.jsonl",
+        "rollout_examples": "hf/dataset/rl_rollouts.jsonl",
+        "scoring_function": "agades_pqc_gym.rl.environment.score_attack_plan_candidate",
+        "task_interface": "single_turn_attackplan_json",
+        "public_track_only": True,
+        "private_trace_publication_allowed": False,
+        "claims_pqc_breaks": False,
     }
     assert manifest["example_manifest"]["default_label"] == (
         "LWE / lattice_primal_usvp_toy_v1"
@@ -248,9 +262,14 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
 def test_huggingface_space_readme_matches_hub_workflow_contract() -> None:
     readme = Path("hf/space_README.md").read_text(encoding="utf-8")
 
-    assert "hf repos create <owner>/pqc-gym --type=space" in readme
-    assert "hf upload <owner>/pqc-gym hf . --repo-type=space" in readme
+    assert "hf repos create AgadesTech/agades-pqc-gym-agent-env --type=space" in readme
+    assert (
+        "hf upload AgadesTech/agades-pqc-gym-agent-env hf . --repo-type=space"
+        in readme
+    )
     assert "HF_TOKEN" in readme
+    assert "Agent Environment" in readme
+    assert "rl_rollouts.jsonl" in readme
     assert "Use a private Space first" in readme
 
 
@@ -277,6 +296,7 @@ def test_hf_space_manifest_verify_accepts_committed_manifest() -> None:
             "default_label": "LWE / lattice_primal_usvp_toy_v1",
             "example_count": 79,
             "failure_count": 0,
+            "is_agent_environment": True,
             "labels_match_valid_dataset_rows": True,
             "public_push_requires_review": True,
             "requires_gradio_to_import_for_audit": False,

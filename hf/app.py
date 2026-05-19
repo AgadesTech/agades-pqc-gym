@@ -10,6 +10,8 @@ except ImportError:  # pragma: no cover - exercised in deployments with Gradio.
     gr = None
 
 from agades_pqc_gym.core.attack_plan import AttackPlan
+from agades_pqc_gym.integrations.task_metadata import task_metadata_for_plan
+from agades_pqc_gym.rl.environment import AgadesPQCGymEnvironment
 from agades_pqc_gym.verifier import verify_attack_plan_json
 
 APP_DIR = Path(__file__).resolve().parent
@@ -91,6 +93,32 @@ def evaluate_attack_plan_json(raw_plan: str) -> tuple[str, str]:
     return summary, json.dumps(_json_safe(result), indent=2, sort_keys=True)
 
 
+def load_environment_observation(label: str) -> str:
+    raw_plan = load_example_plan(label)
+    env = _environment_for_raw_plan(raw_plan, source_path=f"hf-space:{label}")
+    observation = env.reset()
+    return json.dumps(_json_safe(observation), indent=2, sort_keys=True)
+
+
+def score_attack_plan_for_task(label: str, raw_plan: str) -> tuple[str, str, str]:
+    task_seed = load_example_plan(label)
+    env = _environment_for_raw_plan(task_seed, source_path=f"hf-space:{label}")
+    env.reset()
+    step = env.step(raw_plan)
+    reward_report = step["info"]["reward_report"]
+    trace = step["info"]["trace"]
+    summary = (
+        f"reward={reward_report['reward']}; "
+        f"accepted={str(reward_report['accepted']).lower()}. "
+        "Toy/demo Agent Environment output only; not a security claim."
+    )
+    return (
+        summary,
+        json.dumps(_json_safe(reward_report), indent=2, sort_keys=True),
+        json.dumps(_json_safe(trace), indent=2, sort_keys=True),
+    )
+
+
 def build_demo() -> Any:
     if gr is None:
         raise RuntimeError("gradio is required to launch the Hugging Face Space")
@@ -100,18 +128,74 @@ def build_demo() -> Any:
             "Safe toy AttackPlan verifier. Outputs are estimator plumbing signals, "
             "not claims about deployed PQC standards."
         )
-        selected_plan = gr.Dropdown(
-            choices=example_plan_choices(),
-            value=DEFAULT_EXAMPLE_LABEL,
-            label="Public example",
-        )
-        plan = gr.Code(value=DEFAULT_PLAN, language="json", label="AttackPlan JSON")
-        run = gr.Button("Evaluate")
-        summary = gr.Textbox(label="Summary")
-        payload = gr.Code(language="json", label="Verifier JSON")
-        selected_plan.change(load_example_plan, inputs=selected_plan, outputs=plan)
-        run.click(evaluate_attack_plan_json, inputs=plan, outputs=[summary, payload])
+        with gr.Tabs():
+            with gr.Tab("Verifier"):
+                selected_plan = gr.Dropdown(
+                    choices=example_plan_choices(),
+                    value=DEFAULT_EXAMPLE_LABEL,
+                    label="Public example",
+                )
+                plan = gr.Code(
+                    value=DEFAULT_PLAN,
+                    language="json",
+                    label="AttackPlan JSON",
+                )
+                run = gr.Button("Evaluate")
+                summary = gr.Textbox(label="Summary")
+                payload = gr.Code(language="json", label="Verifier JSON")
+                selected_plan.change(
+                    load_example_plan,
+                    inputs=selected_plan,
+                    outputs=plan,
+                )
+                run.click(
+                    evaluate_attack_plan_json,
+                    inputs=plan,
+                    outputs=[summary, payload],
+                )
+            with gr.Tab("Agent Environment"):
+                env_task = gr.Dropdown(
+                    choices=example_plan_choices(),
+                    value=DEFAULT_EXAMPLE_LABEL,
+                    label="Task",
+                )
+                candidate = gr.Code(
+                    value=DEFAULT_PLAN,
+                    language="json",
+                    label="Candidate AttackPlan JSON",
+                )
+                observe = gr.Button("Load Observation")
+                score = gr.Button("Score Candidate")
+                observation = gr.Code(language="json", label="Observation JSON")
+                reward_summary = gr.Textbox(label="Reward Summary")
+                reward_payload = gr.Code(language="json", label="Reward Report JSON")
+                trace_payload = gr.Code(language="json", label="Rollout Trace JSON")
+                env_task.change(load_example_plan, inputs=env_task, outputs=candidate)
+                observe.click(
+                    load_environment_observation,
+                    inputs=env_task,
+                    outputs=observation,
+                )
+                score.click(
+                    score_attack_plan_for_task,
+                    inputs=[env_task, candidate],
+                    outputs=[reward_summary, reward_payload, trace_payload],
+                )
     return demo
+
+
+def _environment_for_raw_plan(
+    raw_plan: str,
+    *,
+    source_path: str,
+) -> AgadesPQCGymEnvironment:
+    plan = AttackPlan.model_validate_json(raw_plan)
+    task = task_metadata_for_plan(
+        plan,
+        source_path=source_path,
+        seed_attack_plan_json=raw_plan,
+    )
+    return AgadesPQCGymEnvironment([task])
 
 
 def _json_safe(value: Any) -> Any:

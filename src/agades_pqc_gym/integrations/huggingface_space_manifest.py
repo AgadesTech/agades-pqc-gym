@@ -8,6 +8,11 @@ from typing import Any
 from pydantic import ValidationError
 
 from agades_pqc_gym.core.attack_plan import AttackPlan
+from agades_pqc_gym.rl.environment import (
+    OBSERVATION_SCHEMA,
+    RL_REWARD_REPORT_SCHEMA,
+    ROLLOUT_TRACE_SCHEMA,
+)
 from agades_pqc_gym.verifier import PUBLIC_VERIFIER_SCHEMA
 
 HF_SPACE_MANIFEST_SCHEMA = "agades.pqc.hf_space_manifest.v1"
@@ -52,27 +57,48 @@ def build_huggingface_space_manifest(root: Path | None = None) -> dict[str, Any]
             "app_path": "hf/app.py",
         },
         "space": {
-            "suggested_space_id": "agades/pqc-gym",
+            "suggested_space_id": "AgadesTech/agades-pqc-gym-agent-env",
             "sdk": "gradio",
+            "category": "agent-environment",
             "app_file": "hf/app.py",
             "requirements_file": "hf/requirements.txt",
             "dataset_bundle": "hf/dataset",
             "hub_create_command_template": (
-                "hf repos create <owner>/pqc-gym --type=space "
+                "hf repos create AgadesTech/agades-pqc-gym-agent-env --type=space "
                 "--space-sdk gradio --private --exist-ok"
             ),
             "hub_upload_command_template": (
-                'hf upload <owner>/pqc-gym hf . --repo-type=space '
-                '--commit-message "Sync Agades PQC Gym Space"'
+                "hf upload AgadesTech/agades-pqc-gym-agent-env hf "
+                '. --repo-type=space --commit-message "Sync Agades PQC Gym '
+                'Agent Environment"'
             ),
             "public_push_requires_review": True,
         },
         "runtime": {
             "requirements": _requirements(project_root / "hf" / "requirements.txt"),
             "dataset_source": "hf/dataset/attack_plans.jsonl",
+            "task_metadata_source": "hf/dataset/task_metadata.jsonl",
+            "rollout_examples_source": "hf/dataset/rl_rollouts.jsonl",
             "fallback_source": "examples/attack_plans",
             "requires_gradio_to_launch": True,
             "requires_gradio_to_import_for_audit": False,
+        },
+        "agent_environment_contract": {
+            "environment_class": (
+                "agades_pqc_gym.rl.environment.AgadesPQCGymEnvironment"
+            ),
+            "observation_schema": OBSERVATION_SCHEMA,
+            "reward_report_schema": RL_REWARD_REPORT_SCHEMA,
+            "rollout_trace_schema": ROLLOUT_TRACE_SCHEMA,
+            "task_dataset": "hf/dataset/task_metadata.jsonl",
+            "rollout_examples": "hf/dataset/rl_rollouts.jsonl",
+            "scoring_function": (
+                "agades_pqc_gym.rl.environment.score_attack_plan_candidate"
+            ),
+            "task_interface": "single_turn_attackplan_json",
+            "public_track_only": True,
+            "private_trace_publication_allowed": False,
+            "claims_pqc_breaks": False,
         },
         "example_manifest": {
             "default_label": default_label,
@@ -147,6 +173,7 @@ def verify_huggingface_space_manifest(
     _verify_project_metadata(manifest, failures)
     _verify_space_contract(manifest, expected, failures)
     _verify_runtime(project_root, manifest, failures)
+    _verify_agent_environment_contract(project_root, manifest, failures)
     _verify_example_manifest(project_root, manifest, failures)
     _verify_verifier_contract(manifest, failures)
     _verify_safety(manifest, failures)
@@ -224,6 +251,8 @@ def _verify_space_contract(
     ):
         if space.get(field) != expected_space.get(field):
             failures.append(f"Hugging Face Space manifest has incorrect {field}.")
+    if space.get("category") != "agent-environment":
+        failures.append("Hugging Face Space manifest is not an Agent Environment.")
     if space.get("public_push_requires_review") is not True:
         failures.append("Hugging Face Space manifest lacks public push review gate.")
 
@@ -241,12 +270,101 @@ def _verify_runtime(
         failures.append("Hugging Face Space manifest requirements are not in sync.")
     if runtime.get("dataset_source") != "hf/dataset/attack_plans.jsonl":
         failures.append("Hugging Face Space manifest dataset_source is incorrect.")
+    if runtime.get("task_metadata_source") != "hf/dataset/task_metadata.jsonl":
+        failures.append(
+            "Hugging Face Space manifest task_metadata_source is incorrect."
+        )
+    if runtime.get("rollout_examples_source") != "hf/dataset/rl_rollouts.jsonl":
+        failures.append(
+            "Hugging Face Space manifest rollout_examples_source is incorrect."
+        )
+    for field in ("dataset_source", "task_metadata_source", "rollout_examples_source"):
+        path = runtime.get(field)
+        if isinstance(path, str) and not (root / path).is_file():
+            failures.append(
+                "Hugging Face Space manifest runtime file is missing: "
+                f"{path}."
+            )
     if runtime.get("fallback_source") != "examples/attack_plans":
         failures.append("Hugging Face Space manifest fallback_source is incorrect.")
     if runtime.get("requires_gradio_to_launch") is not True:
         failures.append("Hugging Face Space manifest launch boundary is incorrect.")
     if runtime.get("requires_gradio_to_import_for_audit") is not False:
         failures.append("Hugging Face Space manifest audit import boundary drifted.")
+
+
+def _verify_agent_environment_contract(
+    root: Path,
+    manifest: dict[str, Any],
+    failures: list[str],
+) -> None:
+    contract = manifest.get("agent_environment_contract")
+    if not isinstance(contract, dict):
+        failures.append(
+            "Hugging Face Space manifest agent_environment_contract must be an object."
+        )
+        return
+    expected = {
+        "environment_class": "agades_pqc_gym.rl.environment.AgadesPQCGymEnvironment",
+        "observation_schema": OBSERVATION_SCHEMA,
+        "reward_report_schema": RL_REWARD_REPORT_SCHEMA,
+        "rollout_trace_schema": ROLLOUT_TRACE_SCHEMA,
+        "task_dataset": "hf/dataset/task_metadata.jsonl",
+        "rollout_examples": "hf/dataset/rl_rollouts.jsonl",
+        "scoring_function": "agades_pqc_gym.rl.environment.score_attack_plan_candidate",
+        "task_interface": "single_turn_attackplan_json",
+        "public_track_only": True,
+        "private_trace_publication_allowed": False,
+        "claims_pqc_breaks": False,
+    }
+    if contract != expected:
+        failures.append("Hugging Face Space Agent Environment contract drifted.")
+    for field in ("task_dataset", "rollout_examples"):
+        path = contract.get(field)
+        if not isinstance(path, str) or not (root / path).is_file():
+            failures.append(
+                f"Hugging Face Space Agent Environment file is missing: {path}."
+            )
+    if contract.get("public_track_only") is not True:
+        failures.append(
+            "Hugging Face Space Agent Environment must be public-track only."
+        )
+    if contract.get("private_trace_publication_allowed") is not False:
+        failures.append(
+            "Hugging Face Space Agent Environment must not publish private traces."
+        )
+    if contract.get("claims_pqc_breaks") is not False:
+        failures.append(
+            "Hugging Face Space Agent Environment must not claim PQC breaks."
+        )
+    try:
+        app_module = _load_python_module(
+            root / "hf" / "app.py",
+            "agades_pqc_hf_space_agent_environment_verifier",
+        )
+        label = app_module.DEFAULT_EXAMPLE_LABEL
+        raw_plan = app_module.load_example_plan(label)
+        observation = json.loads(app_module.load_environment_observation(label))
+        _summary, reward_report, trace = app_module.score_attack_plan_for_task(
+            label,
+            raw_plan,
+        )
+        reward = json.loads(reward_report)
+        rollout = json.loads(trace)
+    except Exception as exc:  # noqa: BLE001 - verifier must report app issues.
+        failures.append(
+            "Hugging Face Space Agent Environment app comparison failed: "
+            f"{exc}"
+        )
+        return
+    if observation.get("schema_version") != OBSERVATION_SCHEMA:
+        failures.append("Hugging Face Space Agent Environment observation drifted.")
+    if reward.get("schema_version") != RL_REWARD_REPORT_SCHEMA:
+        failures.append("Hugging Face Space Agent Environment reward schema drifted.")
+    if rollout.get("schema_version") != ROLLOUT_TRACE_SCHEMA:
+        failures.append("Hugging Face Space Agent Environment trace schema drifted.")
+    if rollout.get("private_fields_present") is not False:
+        failures.append("Hugging Face Space Agent Environment exposes private fields.")
 
 
 def _verify_example_manifest(
@@ -442,6 +560,9 @@ def _verification_result(
     verifier_contract = manifest.get("verifier_contract", {})
     if not isinstance(verifier_contract, dict):
         verifier_contract = {}
+    agent_environment = manifest.get("agent_environment_contract", {})
+    if not isinstance(agent_environment, dict):
+        agent_environment = {}
     return {
         "schema_version": HF_SPACE_MANIFEST_VERIFICATION_SCHEMA,
         "manifest_path": manifest_path.as_posix(),
@@ -457,6 +578,10 @@ def _verification_result(
             "default_label": examples.get("default_label"),
             "example_count": examples.get("example_count"),
             "failure_count": len(failures),
+            "is_agent_environment": (
+                space.get("category") == "agent-environment"
+                and agent_environment.get("observation_schema") == OBSERVATION_SCHEMA
+            ),
             "labels_match_valid_dataset_rows": examples.get(
                 "labels_match_valid_dataset_rows"
             ),
