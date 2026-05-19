@@ -6,6 +6,12 @@ from pathlib import Path
 from typing import Any
 
 from agades_pqc_gym.core.target import TargetFamily
+from agades_pqc_gym.formal.review import (
+    FAMILY_REVIEWER_ROLE_IDS,
+    REVIEW_STATUSES,
+    REVIEWER_ROLE_GROUPS,
+    required_reviewers_for_family,
+)
 
 REVIEWER_GOVERNANCE_SCHEMA = "agades.pqc.reviewer_governance.v1"
 REVIEWER_GOVERNANCE_VERIFICATION_SCHEMA = (
@@ -13,29 +19,6 @@ REVIEWER_GOVERNANCE_VERIFICATION_SCHEMA = (
 )
 ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_GOVERNANCE_PATH = Path("docs/reviewer_governance.json")
-ROLE_GROUPS = [
-    "family_cryptography_reviewer",
-    "formal_methods_reviewer",
-    "release_boundary_reviewer",
-]
-REVIEW_STATUSES = [
-    "pending_review",
-    "reviewed",
-    "rejected",
-]
-FAMILY_REVIEWER_ROLE_IDS = {
-    TargetFamily.LWE.value: "lattice_cryptographer",
-    TargetFamily.MLWE.value: "lattice_cryptographer",
-    TargetFamily.NTRU.value: "lattice_cryptographer",
-    TargetFamily.SIS.value: "lattice_cryptographer",
-    TargetFamily.CODE_BASED.value: "code_based_cryptographer",
-    TargetFamily.MULTIVARIATE.value: "multivariate_cryptographer",
-    TargetFamily.HASH_BASED.value: "hash_based_signature_reviewer",
-    TargetFamily.ISOGENY_HISTORICAL.value: "isogeny_historical_reviewer",
-    TargetFamily.IMPLEMENTATION_SECURITY.value: (
-        "implementation_security_reviewer"
-    ),
-}
 FAMILY_REVIEW_COMPETENCIES = {
     TargetFamily.LWE.value: [
         "LWE/BDD/SIS reductions and lattice attack applicability",
@@ -264,7 +247,7 @@ def _family_reviewers() -> list[dict[str, Any]]:
 def _approval_gates() -> dict[str, dict[str, Any]]:
     return {
         "formal_artifact_review_gate": {
-            "required_role_groups": list(ROLE_GROUPS),
+            "required_role_groups": list(REVIEWER_ROLE_GROUPS),
             "security_claim_requires_review": True,
             "security_claim_allowed_without_review": False,
             "unreviewed_proof_artifact_status": "pending_review",
@@ -276,13 +259,13 @@ def _approval_gates() -> dict[str, dict[str, Any]]:
             "security_claim_allowed_without_review": False,
         },
         "private_training_gate": {
-            "required_role_groups": list(ROLE_GROUPS),
+            "required_role_groups": list(REVIEWER_ROLE_GROUPS),
             "requires_private_dataset_controls": True,
             "public_model_or_trace_publication_allowed": False,
             "security_claim_allowed_without_review": False,
         },
         "evolution_research_gate": {
-            "required_role_groups": list(ROLE_GROUPS),
+            "required_role_groups": list(REVIEWER_ROLE_GROUPS),
             "requires_validator_pass": True,
             "requires_formal_obligations": True,
             "requires_human_review_before_claim": True,
@@ -293,11 +276,7 @@ def _approval_gates() -> dict[str, dict[str, Any]]:
 
 def _required_reviewers_by_family() -> dict[str, list[str]]:
     return {
-        family.value: [
-            FAMILY_REVIEWER_ROLE_IDS[family.value],
-            "formal_methods_reviewer",
-            "release_boundary_reviewer",
-        ]
+        family.value: required_reviewers_for_family(family)
         for family in TargetFamily
     }
 
@@ -315,7 +294,7 @@ def _verify_role_groups(governance: dict[str, Any], failures: list[str]) -> None
     if not isinstance(role_groups, dict):
         failures.append("Reviewer governance role_groups must be an object.")
         return
-    if sorted(role_groups) != sorted(ROLE_GROUPS):
+    if sorted(role_groups) != sorted(REVIEWER_ROLE_GROUPS):
         failures.append("Reviewer governance role groups are incorrect.")
     family_group = _dict_or_empty(role_groups.get("family_cryptography_reviewer"))
     if family_group.get("minimum_reviewers_per_family_artifact") != 1:
@@ -414,7 +393,7 @@ def _verify_approval_gates(
     if set(gates) != expected_gate_ids:
         failures.append("Reviewer governance approval gates are incomplete.")
     formal_gate = _dict_or_empty(gates.get("formal_artifact_review_gate"))
-    if formal_gate.get("required_role_groups") != ROLE_GROUPS:
+    if formal_gate.get("required_role_groups") != REVIEWER_ROLE_GROUPS:
         failures.append("Formal artifact gate role groups are incorrect.")
     if formal_gate.get("security_claim_requires_review") is not True:
         failures.append("Security claims must require reviewer approval.")

@@ -41,6 +41,48 @@ theorem parameters_positive
     ParametersPositive target := by
   exact And.intro hn hq
 
+def ModuleRankPresent (k : Nat) : Prop :=
+  k > 0
+
+theorem module_rank_present
+    (k : Nat)
+    (hk : k > 0) :
+    ModuleRankPresent k := by
+  exact hk
+
+def NTRUSchemaShape (target : LatticeTarget) : Prop :=
+  target.n > 0 ∧ target.q > 1 ∧ target.hasSecretDistribution = true
+
+theorem ntru_schema_shape
+    (target : LatticeTarget)
+    (hn : target.n > 0)
+    (hq : target.q > 1)
+    (hsecret : target.hasSecretDistribution = true) :
+    NTRUSchemaShape target := by
+  exact And.intro hn (And.intro hq hsecret)
+
+def SISSchemaShape (target : LatticeTarget) : Prop :=
+  target.n > 0 ∧ target.q > 1 ∧ target.hasSecretDistribution = true
+
+theorem sis_schema_shape
+    (target : LatticeTarget)
+    (hn : target.n > 0)
+    (hq : target.q > 1)
+    (hsecret : target.hasSecretDistribution = true) :
+    SISSchemaShape target := by
+  exact And.intro hn (And.intro hq hsecret)
+
+def SchemaOnlyNoEstimate : Prop :=
+  True
+
+theorem ntru_schema_only_no_estimate :
+    SchemaOnlyNoEstimate := by
+  exact True.intro
+
+theorem sis_schema_only_no_estimate :
+    SchemaOnlyNoEstimate := by
+  exact True.intro
+
 end Target
 end Lattice
 end AgadesPQC
