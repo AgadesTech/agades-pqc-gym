@@ -23,6 +23,7 @@ LEAN_PROJECT = {
     "root": "formal/lean",
     "toolchain": "formal/lean/lean-toolchain",
     "lakefile": "formal/lean/lakefile.lean",
+    "lake_manifest": "formal/lean/lake-manifest.json",
     "entry_module": "formal/lean/AgadesPQC.lean",
     "build_command": "lake build",
 }
@@ -71,6 +72,16 @@ def build_formal_lean_backend(
         "lean_project": {
             **LEAN_PROJECT,
             "toolchain_value": _toolchain_value(project_root),
+            "toolchain_sha256": _file_sha256(
+                project_root / LEAN_PROJECT["toolchain"]
+            ),
+            "lakefile_sha256": _file_sha256(
+                project_root / LEAN_PROJECT["lakefile"]
+            ),
+            "lake_manifest_sha256": _file_sha256(
+                project_root / LEAN_PROJECT["lake_manifest"]
+            ),
+            "lake_manifest_packages": _lake_manifest_packages(project_root),
         },
         "ci": ci,
         "placeholder_scan": placeholder_scan,
@@ -162,7 +173,7 @@ def _lean_sources(root: Path) -> list[dict[str, Any]]:
     source_paths = sorted(
         path
         for path in (root / LEAN_ROOT).rglob("*.lean")
-        if path.name != "lakefile.lean"
+        if path.name != "lakefile.lean" and ".lake" not in path.parts
     )
     sources: list[dict[str, Any]] = []
     for path in source_paths:
@@ -263,6 +274,38 @@ def _toolchain_value(root: Path) -> str:
     return (root / LEAN_PROJECT["toolchain"]).read_text(encoding="utf-8").strip()
 
 
+def _file_sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _lake_manifest_packages(root: Path) -> list[dict[str, str]]:
+    payload = json.loads(
+        (root / LEAN_PROJECT["lake_manifest"]).read_text(encoding="utf-8")
+    )
+    packages = payload.get("packages", [])
+    if not isinstance(packages, list):
+        return []
+    normalized_packages: list[dict[str, str]] = []
+    for package in packages:
+        if not isinstance(package, dict):
+            continue
+        name = package.get("name")
+        rev = package.get("rev")
+        url = package.get("url")
+        input_rev = package.get("inputRev")
+        if not all(isinstance(value, str) for value in (name, rev, url, input_rev)):
+            continue
+        normalized_packages.append(
+            {
+                "name": name,
+                "url": url,
+                "input_rev": input_rev,
+                "rev": rev,
+            }
+        )
+    return sorted(normalized_packages, key=lambda package: package["name"])
+
+
 def _summary(
     sources: list[dict[str, Any]],
     ci: dict[str, Any],
@@ -292,6 +335,12 @@ def _verify_shape(
     expected_project = {
         **LEAN_PROJECT,
         "toolchain_value": _toolchain_value(root),
+        "toolchain_sha256": _file_sha256(root / LEAN_PROJECT["toolchain"]),
+        "lakefile_sha256": _file_sha256(root / LEAN_PROJECT["lakefile"]),
+        "lake_manifest_sha256": _file_sha256(
+            root / LEAN_PROJECT["lake_manifest"]
+        ),
+        "lake_manifest_packages": _lake_manifest_packages(root),
     }
     if lean_project != expected_project:
         failures.append("Formal Lean backend project binding is incorrect.")

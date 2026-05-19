@@ -17,9 +17,63 @@
   "lean_project": {
     "build_command": "lake build",
     "entry_module": "formal/lean/AgadesPQC.lean",
+    "lake_manifest": "formal/lean/lake-manifest.json",
+    "lake_manifest_packages": [
+      {
+        "input_rev": "main",
+        "name": "Cli",
+        "rev": "2cf1030dc2ae6b3632c84a09350b675ef3e347d0",
+        "url": "https://github.com/leanprover/lean4-cli"
+      },
+      {
+        "input_rev": "main",
+        "name": "LeanSearchClient",
+        "rev": "2ba60fa2c384a94735454db11a2d523612eaabff",
+        "url": "https://github.com/leanprover-community/LeanSearchClient"
+      },
+      {
+        "input_rev": "master",
+        "name": "Qq",
+        "rev": "2c8ae451ce9ffc83554322b14437159c1a9703f9",
+        "url": "https://github.com/leanprover-community/quote4"
+      },
+      {
+        "input_rev": "master",
+        "name": "aesop",
+        "rev": "28fa80508edc97d96ed6342c9a771a67189e0baa",
+        "url": "https://github.com/leanprover-community/aesop"
+      },
+      {
+        "input_rev": "main",
+        "name": "batteries",
+        "rev": "4756e0fc48acce0cc808df0ad149de5973240df6",
+        "url": "https://github.com/leanprover-community/batteries"
+      },
+      {
+        "input_rev": "main",
+        "name": "importGraph",
+        "rev": "e285a7ade149c551c17a4b24f127e1ef782e4bb1",
+        "url": "https://github.com/leanprover-community/import-graph"
+      },
+      {
+        "input_rev": "v4.12.0",
+        "name": "mathlib",
+        "rev": "809c3fb3b5c8f5d7dace56e200b426187516535a",
+        "url": "https://github.com/leanprover-community/mathlib4.git"
+      },
+      {
+        "input_rev": "v0.0.42",
+        "name": "proofwidgets",
+        "rev": "eb08eee94098fe530ccd6d8751a86fe405473d4c",
+        "url": "https://github.com/leanprover-community/ProofWidgets4"
+      }
+    ],
+    "lake_manifest_sha256": "d357bd51e4ae12c2d62ca0289f78874e1a01eb14597e7fda54217042645e282f",
     "lakefile": "formal/lean/lakefile.lean",
+    "lakefile_sha256": "1ba611ea7d88d72fdc37b2bde34540266ed760c1f35a6676f17cecd8e7ca4990",
     "root": "formal/lean",
     "toolchain": "formal/lean/lean-toolchain",
+    "toolchain_sha256": "e6930c662006db4d6dc76c651d60a608e4f6a18bcfd53e6b0167d70a125285d5",
     "toolchain_value": "leanprover/lean4:v4.12.0"
   },
   "lean_sources": [
@@ -201,7 +255,7 @@
       "theorems": []
     }
   ],
-  "manifest_sha256": "9b0cb3d2c0f53e63de8cad068cbc81c110f64d7a08093adfd546c5982402908b",
+  "manifest_sha256": "52587cfe4a811b01591ea572efca6e64624338473ebcce1e7a4cc9d014cb7512",
   "placeholder_scan": {
     "contains_admit": false,
     "contains_axiom": false,

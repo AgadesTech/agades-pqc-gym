@@ -34,14 +34,51 @@ def test_formal_lean_backend_manifest_binds_sources_and_ci(
         "library": "mathlib",
         "smt_assist": "z3_optional_finite_decidable_obligations_only",
     }
-    assert manifest["lean_project"] == {
+    lean_project = manifest["lean_project"]
+    assert {
+        key: lean_project[key]
+        for key in (
+            "root",
+            "toolchain",
+            "toolchain_value",
+            "lakefile",
+            "lake_manifest",
+            "entry_module",
+            "build_command",
+        )
+    } == {
         "root": "formal/lean",
         "toolchain": "formal/lean/lean-toolchain",
         "toolchain_value": "leanprover/lean4:v4.12.0",
         "lakefile": "formal/lean/lakefile.lean",
+        "lake_manifest": "formal/lean/lake-manifest.json",
         "entry_module": "formal/lean/AgadesPQC.lean",
         "build_command": "lake build",
     }
+    for hash_key in (
+        "toolchain_sha256",
+        "lakefile_sha256",
+        "lake_manifest_sha256",
+    ):
+        assert len(lean_project[hash_key]) == 64
+    packages = {
+        package["name"]: package
+        for package in lean_project["lake_manifest_packages"]
+    }
+    assert set(packages) == {
+        "batteries",
+        "Qq",
+        "aesop",
+        "proofwidgets",
+        "Cli",
+        "importGraph",
+        "LeanSearchClient",
+        "mathlib",
+    }
+    assert packages["mathlib"]["input_rev"] == "v4.12.0"
+    assert packages["mathlib"]["url"] == (
+        "https://github.com/leanprover-community/mathlib4.git"
+    )
     assert manifest["ci"] == {
         "workflow_path": ".github/workflows/ci.yml",
         "job": "test",
