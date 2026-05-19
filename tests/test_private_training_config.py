@@ -55,6 +55,34 @@ def test_private_training_manifest_defines_prime_rl_qwen_and_dataset_controls(
         "publish_adapters_publicly": False,
         "publish_trace_corpora_publicly": False,
     }
+    assert payload["pedagogical_rl"] == {
+        "method": "pedagogical_rl",
+        "method_manifest_path": "docs/pedagogical_rl_method.json",
+        "teacher_student_pattern": "privileged_self_teacher_student",
+        "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
+        "learnability_score": "spike_aware_logsumexp_surprise_gap",
+        "assimilation_objective": "surprisal_gated_imitation",
+        "stage_sequence": [
+            "privileged_self_teacher_grpo",
+            "spike_aware_trajectory_filter",
+            "surprisal_gated_student_assimilation",
+            "optional_private_grpo_refinement",
+        ],
+        "spike_aware_pedagogy_reward": True,
+        "surprisal_gated_imitation": True,
+        "reward_terms": [
+            "formal_validity",
+            "cryptographic_applicability",
+            "no_security_overclaim",
+            "student_readability",
+            "reproducibility",
+            "reviewer_quality",
+            "task_match",
+            "proof_obligation_coverage",
+        ],
+        "requires_reviewer_quality_signal": True,
+        "requires_no_security_overclaim": True,
+    }
     assert payload["datasets"]["sources"] == [
         "facebookresearch/LWE-benchmarking",
         "facebook/TAPAS",
@@ -78,6 +106,9 @@ def test_private_training_manifest_defines_prime_rl_qwen_and_dataset_controls(
     )
     assert payload["linked_artifacts"]["prime_eval_template"]["path"] == (
         "prime_intellect/evals/agades_pqc_eval.template.toml"
+    )
+    assert payload["linked_artifacts"]["pedagogical_rl_method"]["path"] == (
+        "docs/pedagogical_rl_method.json"
     )
 
 
@@ -111,6 +142,20 @@ def test_private_prime_rl_toml_template_is_sanitized_and_parseable(
         "task_match",
         "proof_obligation_coverage",
     ]
+    assert data["pedagogical_rl"] == {
+        "privileged_self_teacher": True,
+        "teacher_update": "grpo",
+        "student_update": "surprisal_gated_weighted_sft",
+        "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
+        "learnability_score": "spike_aware_logsumexp_surprise_gap",
+        "surprise_gap": (
+            "log p_student(a_max|x,prefix) - log p_student(a_t|x,prefix)"
+        ),
+        "spike_penalty_beta": 5.0,
+        "spike_penalty_lambda": 1.0,
+        "surprisal_gate_kappa": 2.0,
+        "surprisal_gate_gamma": -4.0,
+    }
     assert data.get("env_files", []) == []
 
 
@@ -137,7 +182,7 @@ def test_private_training_config_verify_accepts_committed_artifacts() -> None:
             "dataset_sources": 3,
             "dataset_controls": 5,
             "reward_terms": 8,
-            "linked_artifacts": 8,
+            "linked_artifacts": 9,
             "failure_count": 0,
         },
         "failures": [],

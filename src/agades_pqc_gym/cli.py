@@ -157,6 +157,10 @@ from agades_pqc_gym.integrations.nvidia_publication_handoff import (
     verify_nvidia_publication_handoff,
     write_nvidia_publication_handoff,
 )
+from agades_pqc_gym.integrations.pedagogical_rl_method import (
+    verify_pedagogical_rl_method,
+    write_pedagogical_rl_method,
+)
 from agades_pqc_gym.integrations.prime_environment_manifest import (
     verify_prime_environment_manifest,
     write_prime_environment_manifest,
@@ -1901,6 +1905,32 @@ def rl_environment_contract_verify(
 ) -> None:
     """Verify the HF/Prime public/private RL environment contract."""
     result = verify_rl_environment_contract(contract)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("pedagogical-rl-method", hidden=True)
+def pedagogical_rl_method(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("docs/pedagogical_rl_method.json"),
+) -> None:
+    """Write the private Pedagogical RL method contract."""
+    write_pedagogical_rl_method(out)
+    typer.echo(f"pedagogical_rl_method={out}")
+
+
+@app.command("pedagogical-rl-method-verify", hidden=True)
+def pedagogical_rl_method_verify(
+    method: Annotated[
+        Path,
+        typer.Option("--method"),
+    ] = Path("docs/pedagogical_rl_method.json"),
+) -> None:
+    """Verify the private Pedagogical RL method contract."""
+    result = verify_pedagogical_rl_method(method)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)

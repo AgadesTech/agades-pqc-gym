@@ -139,6 +139,9 @@ from agades_pqc_gym.integrations.nvidia_manifest_safety import (
 from agades_pqc_gym.integrations.nvidia_publication_handoff import (
     verify_nvidia_publication_handoff,
 )
+from agades_pqc_gym.integrations.pedagogical_rl_method import (
+    verify_pedagogical_rl_method,
+)
 from agades_pqc_gym.integrations.prime_environment_manifest import (
     verify_prime_environment_manifest,
 )
@@ -394,7 +397,7 @@ GITHUB_ACTIONS_REQUIRED_COMMANDS = (
         "docs/nvidia_publication_handoff.json "
         "docs/publication_manifest.json "
         "docs/external_publication_review_packet.json "
-        "docs/private_run_policy.json "
+        "docs/private_run_policy.json docs/pedagogical_rl_method.json "
         "docs/prime_publication_handoff.json docs/prime_speedrun_handoff.json "
         "docs/prime_eval_config_manifest.json "
         "prime_intellect/evals/agades_pqc_eval.template.toml "
@@ -645,6 +648,16 @@ GITHUB_ACTIONS_REQUIRED_COMMANDS = (
         "docs/prime_eval_config_manifest.json",
     ),
     (
+        "generate-pedagogical-rl-method",
+        "uv run agades-pqc pedagogical-rl-method --out "
+        "docs/pedagogical_rl_method.json",
+    ),
+    (
+        "verify-pedagogical-rl-method",
+        "uv run agades-pqc pedagogical-rl-method-verify --method "
+        "docs/pedagogical_rl_method.json",
+    ),
+    (
         "generate-prime-schemas",
         "uv run agades-pqc prime-schemas --out prime_intellect/schemas",
     ),
@@ -769,6 +782,7 @@ def build_release_audit(root: Path | None = None) -> dict[str, Any]:
         _prime_environment_smoke(project_root),
         _prime_environment_manifest(project_root),
         _prime_eval_config(project_root),
+        _pedagogical_rl_method(project_root),
         _prime_verifier_schemas(project_root),
         _prime_publication_handoff(project_root),
         _prime_speedrun_handoff(project_root),
@@ -4831,6 +4845,63 @@ def _prime_eval_config(root: Path) -> dict[str, Any]:
             "num_examples": summary["num_examples"],
             "rollouts_per_example": summary["rollouts_per_example"],
             "task_count": summary["task_count"],
+        },
+        failures=list(verification["failures"]),
+    )
+
+
+def _pedagogical_rl_method(root: Path) -> dict[str, Any]:
+    verification = verify_pedagogical_rl_method(
+        Path("docs/pedagogical_rl_method.json"),
+        root=root,
+    )
+    summary = verification["summary"]
+    artifact = _read_json(root / "docs" / "pedagogical_rl_method.json")
+    reward_contract = artifact.get("reward_contract", {})
+    if not isinstance(reward_contract, dict):
+        reward_contract = {}
+    roles = artifact.get("roles", {})
+    if not isinstance(roles, dict):
+        roles = {}
+    teacher = roles.get("self_teacher", {})
+    if not isinstance(teacher, dict):
+        teacher = {}
+    privacy = artifact.get("privacy", {})
+    if not isinstance(privacy, dict):
+        privacy = {}
+
+    privacy_preserving = all(
+        privacy.get(key) is False
+        for key in (
+            "raw_rollouts_publication_allowed",
+            "teacher_prompts_publication_allowed",
+            "student_logprobs_publication_allowed",
+            "reviewer_annotations_publication_allowed",
+            "fine_tuned_weights_publication_allowed",
+        )
+    )
+
+    return _check(
+        check_id="pedagogical-rl-method",
+        status="failed" if verification["failures"] else "passed",
+        blocking=True,
+        artifact="docs/pedagogical_rl_method.json",
+        detail=(
+            "Pedagogical RL is captured as a verifiable private method "
+            "contract with teacher/student roles, spike-aware reward, "
+            "surprisal-gated assimilation, and publication boundaries."
+        ),
+        evidence={
+            "stages": summary["stages"],
+            "reward_terms": summary["reward_terms"],
+            "linked_artifacts": summary["linked_artifacts"],
+            "teacher_student_pattern": (
+                "privileged_self_teacher_student"
+                if teacher.get("privileged_context_visible") is True
+                else None
+            ),
+            "pedagogy_reward": reward_contract.get("pedagogy_reward"),
+            "privacy_preserving": privacy_preserving,
         },
         failures=list(verification["failures"]),
     )

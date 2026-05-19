@@ -7,6 +7,13 @@ from typing import Any
 
 from agades_pqc_gym.core.target import TargetFamily
 from agades_pqc_gym.formal.artifacts import MVP_VERTICAL_PROOF_ARTIFACT_PATHS
+from agades_pqc_gym.integrations.pedagogical_rl_method import (
+    ASSIMILATION_OBJECTIVE,
+    LEARNABILITY_SCORE,
+    PEDAGOGY_REWARD,
+    STAGE_SEQUENCE,
+    TEACHER_STUDENT_PATTERN,
+)
 
 RL_ENVIRONMENT_CONTRACT_SCHEMA = "agades.pqc.rl_environment_contract.v1"
 RL_ENVIRONMENT_CONTRACT_VERIFICATION_SCHEMA = (
@@ -46,6 +53,7 @@ LINKED_ARTIFACT_PATHS = {
     "private_training_manifest": "docs/private_training_config_manifest.json",
     "prime_rl_training_template": "prime_intellect/training/"
     "private_qwen_prime_rl.template.toml",
+    "pedagogical_rl_method": "docs/pedagogical_rl_method.json",
     "formal_estimator_model": "docs/formal_estimator_model.json",
     "formal_family_coverage": "docs/formal_family_coverage.json",
     "formal_operator_semantics": "docs/formal_operator_semantics.json",
@@ -107,7 +115,9 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
         },
         "private_track": {
             "method": "pedagogical_rl",
-            "teacher_student_pattern": "privileged_self_teacher_student",
+            "method_manifest_path": "docs/pedagogical_rl_method.json",
+            "teacher_student_pattern": TEACHER_STUDENT_PATTERN,
+            "stage_sequence": list(STAGE_SEQUENCE),
             "spike_aware_pedagogy_reward": True,
             "surprisal_gated_imitation": True,
             "publish_training_traces_publicly": False,
@@ -140,6 +150,9 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
         "reward_model": {
             "type": "pedagogical_multi_term_reward",
             "range": [0.0, 1.0],
+            "pedagogy_reward": PEDAGOGY_REWARD,
+            "learnability_score": LEARNABILITY_SCORE,
+            "assimilation_objective": ASSIMILATION_OBJECTIVE,
             "terms": list(REWARD_TERMS),
             "requires_no_security_claim": True,
             "requires_reviewer_quality_signal": True,
@@ -330,10 +343,12 @@ def _verify_private_track(contract: dict[str, Any], failures: list[str]) -> None
         return
     if private_track.get("method") != "pedagogical_rl":
         failures.append("Private RL method must be pedagogical_rl.")
-    if private_track.get("teacher_student_pattern") != (
-        "privileged_self_teacher_student"
-    ):
+    if private_track.get("method_manifest_path") != "docs/pedagogical_rl_method.json":
+        failures.append("Private RL must bind the Pedagogical RL method.")
+    if private_track.get("teacher_student_pattern") != TEACHER_STUDENT_PATTERN:
         failures.append("Private RL must use privileged self-teacher/student.")
+    if private_track.get("stage_sequence") != STAGE_SEQUENCE:
+        failures.append("Private RL stage sequence is incorrect.")
     for key in (
         "publish_training_traces_publicly",
         "publish_reviewer_annotations_publicly",
@@ -370,6 +385,12 @@ def _verify_reward_model(contract: dict[str, Any], failures: list[str]) -> None:
         return
     if reward_model.get("terms") != REWARD_TERMS:
         failures.append("RL reward terms are incorrect.")
+    if reward_model.get("pedagogy_reward") != PEDAGOGY_REWARD:
+        failures.append("RL pedagogy reward is incorrect.")
+    if reward_model.get("learnability_score") != LEARNABILITY_SCORE:
+        failures.append("RL learnability score is incorrect.")
+    if reward_model.get("assimilation_objective") != ASSIMILATION_OBJECTIVE:
+        failures.append("RL assimilation objective is incorrect.")
     if reward_model.get("requires_no_security_claim") is not True:
         failures.append("RL reward must enforce no-overclaim behavior.")
     if reward_model.get("requires_reviewer_quality_signal") is not True:

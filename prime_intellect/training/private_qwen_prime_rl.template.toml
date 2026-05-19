@@ -28,6 +28,18 @@ private_roots = ["private/datasets", "private/models", "private/reports", "priva
 dataset_sources = ["facebookresearch/LWE-benchmarking", "facebook/TAPAS", "pq-code-package"]
 dataset_controls = ["license_review", "provenance_tracking", "deduplication", "redaction", "contamination_audit"]
 
+[pedagogical_rl]
+privileged_self_teacher = true
+teacher_update = "grpo"
+student_update = "surprisal_gated_weighted_sft"
+pedagogy_reward = "R_agades(x,c,tau) * G_spike_student(tau|x)"
+learnability_score = "spike_aware_logsumexp_surprise_gap"
+surprise_gap = "log p_student(a_max|x,prefix) - log p_student(a_t|x,prefix)"
+spike_penalty_beta = 5.0
+spike_penalty_lambda = 1.0
+surprisal_gate_kappa = 2.0
+surprisal_gate_gamma = -4.0
+
 [[env]]
 id = "agades-pqc-verifier-env"
 args = { num_examples = -1 }
