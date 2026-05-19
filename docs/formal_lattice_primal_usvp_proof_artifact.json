@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "b9daecc07a429fe1ac35c1230bc6f2e13a160af19b053f838e6577ba12165489",
+  "artifact_sha256": "43328e9115dc748619f50687c3b34827ab8bceda1d9fd13f88d1a4e92d675064",
   "attack_plan": {
     "canonical_sha256": "c06ca5ddc67e4a09af1cece6b5a368129068fef091b77f785694324028111d60",
     "id": "lattice_primal_usvp_toy_v1",
@@ -86,7 +86,21 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.parameters_positive",
       "obligation_id": "target.lwe.parameters.positive",
-      "obligation_sha256": "cdfa97ab8dc227f5378c7ca38605611f9492575f757122fd933b187a8617d1d7",
+      "obligation_sha256": "c48e1abacf7aa2807544d797f92857e1b959e8b559be328a6390e3908d356ff2",
+      "obligation_type": {
+        "claim_policy": {
+          "public_interpretation": "applicability_check_only",
+          "review_required_before_claim": true,
+          "security_claim_allowed": false
+        },
+        "kind": "target_invariant",
+        "schema_version": "agades.pqc.formal.proof_obligation_type.v1",
+        "subject": {
+          "family": "LWE",
+          "scope": "target",
+          "target_family": "LWE"
+        }
+      },
       "statement": "Target parameters satisfy n > 0, q > 1, and m/k bounds where present.",
       "status": "pending_review"
     },
@@ -99,7 +113,21 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
       "obligation_id": "target.lwe.distributions.present",
-      "obligation_sha256": "7d87c0991f794751b062c9608dca3d6a44c0c72668feddbf77b3f51b6001f1ba",
+      "obligation_sha256": "a67a3fa79472296adc53dafa605903ff9134ded2aadf0efc88a314dd60f430b6",
+      "obligation_type": {
+        "claim_policy": {
+          "public_interpretation": "applicability_check_only",
+          "review_required_before_claim": true,
+          "security_claim_allowed": false
+        },
+        "kind": "target_invariant",
+        "schema_version": "agades.pqc.formal.proof_obligation_type.v1",
+        "subject": {
+          "family": "LWE",
+          "scope": "target",
+          "target_family": "LWE"
+        }
+      },
       "statement": "Secret and error distributions are specified for LWE/MLWE.",
       "status": "pending_review"
     },
@@ -112,7 +140,21 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.PrimalUSVP.beta_valid_range",
       "obligation_id": "operator.primal_usvp.beta.valid_range",
-      "obligation_sha256": "4d54079f5d33e81c3a1c19990d9f7a84e53a723f1fa2ddcb685adc6b66c38378",
+      "obligation_sha256": "1a8b82cd74ead38548937841f876d62aaae2b369ae3ee29b7907c0e580e25db8",
+      "obligation_type": {
+        "claim_policy": {
+          "public_interpretation": "applicability_check_only",
+          "review_required_before_claim": true,
+          "security_claim_allowed": false
+        },
+        "kind": "operator_precondition",
+        "schema_version": "agades.pqc.formal.proof_obligation_type.v1",
+        "subject": {
+          "family": "LWE",
+          "operator": "primal_usvp",
+          "scope": "operator"
+        }
+      },
       "statement": "primal_usvp beta is positive and bounded by the target dimension policy.",
       "status": "pending_review"
     },
@@ -125,7 +167,21 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "obligation_id": "estimator.boundary.no_security_claim",
-      "obligation_sha256": "35be46d3ad737517f74cb36fb56cb6e0c41f231643fba487e1c02abfebd13ef4",
+      "obligation_sha256": "b88dd340d32891200b2002c34b28e1c7d2579145e27882ca6aa43aa3c01a4e83",
+      "obligation_type": {
+        "claim_policy": {
+          "public_interpretation": "applicability_check_only",
+          "review_required_before_claim": true,
+          "security_claim_allowed": false
+        },
+        "kind": "estimator_claim_boundary",
+        "schema_version": "agades.pqc.formal.proof_obligation_type.v1",
+        "subject": {
+          "estimator_status": "no_security_claim_without_review",
+          "family": "LWE",
+          "scope": "estimator"
+        }
+      },
       "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
       "status": "pending_review"
     }

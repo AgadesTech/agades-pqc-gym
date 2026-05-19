@@ -17,6 +17,19 @@ PROOF_ARTIFACT_SCHEMA = "agades.pqc.formal.proof_artifact.v1"
 PROOF_ARTIFACT_VERIFICATION_SCHEMA = (
     "agades.pqc.formal.proof_artifact_verification.v1"
 )
+PROOF_OBLIGATION_TYPE_SCHEMA = "agades.pqc.formal.proof_obligation_type.v1"
+PROOF_OBLIGATION_CLAIM_POLICY = {
+    "public_interpretation": "applicability_check_only",
+    "review_required_before_claim": True,
+    "security_claim_allowed": False,
+}
+PROOF_OBLIGATION_TYPE_KINDS = {
+    "target_invariant",
+    "operator_precondition",
+    "schema_only_boundary",
+    "family_applicability_boundary",
+    "estimator_claim_boundary",
+}
 BACKEND = {
     "primary": "lean4",
     "library": "mathlib",
@@ -534,11 +547,13 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                         "where present."
                     ),
                     "AgadesPQC.Lattice.Target.parameters_positive",
+                    family=family,
                 ),
                 _obligation(
                     "target.lwe.distributions.present",
                     "Secret and error distributions are specified for LWE/MLWE.",
                     "AgadesPQC.Lattice.Target.distributions_present",
+                    family=family,
                 ),
             ]
         )
@@ -552,16 +567,19 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                         "and module-rank bounds where present."
                     ),
                     "AgadesPQC.Lattice.Target.parameters_positive",
+                    family=family,
                 ),
                 _obligation(
                     "target.mlwe.distributions.present",
                     "Secret and error distributions are specified for MLWE.",
                     "AgadesPQC.Lattice.Target.distributions_present",
+                    family=family,
                 ),
                 _obligation(
                     "target.mlwe.module_rank.present",
                     "MLWE module rank k is positive.",
                     "AgadesPQC.Lattice.Target.module_rank_present",
+                    family=family,
                 ),
             ]
         )
@@ -574,6 +592,8 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                     "dimension policy."
                 ),
                 "AgadesPQC.Lattice.PrimalUSVP.beta_valid_range",
+                family=family,
+                operator_type="primal_usvp",
             )
         )
     if (
@@ -585,6 +605,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 "family.ntru.schema_only.no_estimate",
                 "Schema-only NTRU plans must not emit cryptanalytic estimates.",
                 "AgadesPQC.Lattice.Target.ntru_schema_only_no_estimate",
+                family=family,
             )
         )
     if (
@@ -596,6 +617,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 "family.sis.schema_only.no_estimate",
                 "Schema-only SIS plans must not emit cryptanalytic estimates.",
                 "AgadesPQC.Lattice.Target.sis_schema_only_no_estimate",
+                family=family,
             )
         )
     if (
@@ -607,6 +629,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 "family.code_based.schema_only.no_estimate",
                 "Schema-only code-based plans must not emit cryptanalytic estimates.",
                 "AgadesPQC.CodeBased.SchemaOnly.no_estimate",
+                family=family,
             )
         )
     if family is TargetFamily.MULTIVARIATE:
@@ -618,6 +641,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                     "positive equations, and a declared finite field."
                 ),
                 "AgadesPQC.Multivariate.Target.applicability_shape",
+                family=family,
             )
         )
     if family is TargetFamily.HASH_BASED:
@@ -629,6 +653,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                     "not attack-success claims."
                 ),
                 "AgadesPQC.HashBased.Target.bound_check_is_not_attack_claim",
+                family=family,
             )
         )
     if family is TargetFamily.ISOGENY_HISTORICAL:
@@ -640,6 +665,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                     "checks and cannot describe current-standard break claims."
                 ),
                 "AgadesPQC.IsogenyHistorical.Target.historical_only",
+                family=family,
             )
         )
     if family is TargetFamily.IMPLEMENTATION_SECURITY:
@@ -651,6 +677,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                     "conformance, side-channel resistance, or security claims."
                 ),
                 "AgadesPQC.ImplementationSecurity.Target.no_conformance_claim",
+                family=family,
             )
         )
     obligations.append(
@@ -661,6 +688,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 "security-break proofs."
             ),
             "AgadesPQC.Evaluator.no_security_claim",
+            family=family,
         )
     )
     return obligations
@@ -670,11 +698,19 @@ def _obligation(
     obligation_id: str,
     statement: str,
     lean_theorem: str,
+    *,
+    family: TargetFamily,
+    operator_type: str | None = None,
 ) -> dict[str, Any]:
     payload = {
         "obligation_id": obligation_id,
         "statement": statement,
         "backend": "lean4",
+        "obligation_type": _obligation_type(
+            obligation_id,
+            family=family,
+            operator_type=operator_type,
+        ),
         "lean_theorem": lean_theorem,
         **_lean_source(lean_theorem),
         "status": "pending_review",
@@ -683,6 +719,79 @@ def _obligation(
         **payload,
         "obligation_sha256": stable_sha256(payload),
     }
+
+
+def _obligation_type(
+    obligation_id: str,
+    *,
+    family: TargetFamily,
+    operator_type: str | None = None,
+) -> dict[str, Any]:
+    kind = _obligation_type_kind(obligation_id)
+    subject = _obligation_subject(
+        kind,
+        family=family,
+        operator_type=operator_type,
+    )
+    return {
+        "schema_version": PROOF_OBLIGATION_TYPE_SCHEMA,
+        "kind": kind,
+        "subject": subject,
+        "claim_policy": dict(PROOF_OBLIGATION_CLAIM_POLICY),
+    }
+
+
+def _obligation_type_kind(obligation_id: str) -> str:
+    if obligation_id.startswith("target."):
+        return "target_invariant"
+    if obligation_id.startswith("operator."):
+        return "operator_precondition"
+    if obligation_id.startswith("estimator."):
+        return "estimator_claim_boundary"
+    if obligation_id.startswith("family.") and ".schema_only." in obligation_id:
+        return "schema_only_boundary"
+    if obligation_id.startswith("family."):
+        return "family_applicability_boundary"
+    raise ValueError(f"Unsupported proof obligation id: {obligation_id}")
+
+
+def _obligation_subject(
+    kind: str,
+    *,
+    family: TargetFamily,
+    operator_type: str | None,
+) -> dict[str, str]:
+    if kind == "target_invariant":
+        return {
+            "family": family.value,
+            "scope": "target",
+            "target_family": family.value,
+        }
+    if kind == "operator_precondition":
+        return {
+            "family": family.value,
+            "operator": operator_type or "unknown",
+            "scope": "operator",
+        }
+    if kind == "estimator_claim_boundary":
+        return {
+            "family": family.value,
+            "scope": "estimator",
+            "estimator_status": "no_security_claim_without_review",
+        }
+    if kind == "schema_only_boundary":
+        return {
+            "family": family.value,
+            "scope": "schema_only_estimator_boundary",
+            "support_level": SupportLevel.SCHEMA_ONLY.value,
+        }
+    if kind == "family_applicability_boundary":
+        return {
+            "family": family.value,
+            "scope": "family_applicability",
+            "target_family": family.value,
+        }
+    raise ValueError(f"Unsupported proof obligation type kind: {kind}")
 
 
 def _artifact_sha256(artifact: dict[str, Any]) -> str:
@@ -823,6 +932,7 @@ def _verify_obligation_hashes(
                 "obligation_id",
                 "statement",
                 "backend",
+                "obligation_type",
                 "lean_theorem",
                 "lean_source",
                 "status",
@@ -830,11 +940,49 @@ def _verify_obligation_hashes(
         }
         if obligation.get("backend") != "lean4":
             failures.append("Proof obligations must target lean4.")
+        _verify_obligation_type(obligation, artifact, failures)
         if not obligation.get("lean_theorem"):
             failures.append("Proof obligations must bind a Lean theorem.")
         if obligation.get("obligation_sha256") != stable_sha256(payload):
             failures.append(
                 f"Proof obligation hash mismatch: {obligation.get('obligation_id')}."
+            )
+
+
+def _verify_obligation_type(
+    obligation: dict[str, Any],
+    artifact: dict[str, Any],
+    failures: list[str],
+) -> None:
+    obligation_id = obligation.get("obligation_id")
+    obligation_type = obligation.get("obligation_type")
+    if not isinstance(obligation_type, dict):
+        failures.append(f"Proof obligation type is missing: {obligation_id}.")
+        return
+    if obligation_type.get("schema_version") != PROOF_OBLIGATION_TYPE_SCHEMA:
+        failures.append(f"Proof obligation type schema mismatch: {obligation_id}.")
+    kind = obligation_type.get("kind")
+    if kind not in PROOF_OBLIGATION_TYPE_KINDS:
+        failures.append(f"Proof obligation type kind is unsupported: {obligation_id}.")
+    subject = obligation_type.get("subject")
+    if not isinstance(subject, dict):
+        failures.append(f"Proof obligation type subject is missing: {obligation_id}.")
+    elif subject.get("family") != artifact.get("family"):
+        failures.append(f"Proof obligation type family mismatch: {obligation_id}.")
+    claim_policy = obligation_type.get("claim_policy")
+    if not isinstance(claim_policy, dict):
+        failures.append(
+            f"Proof obligation claim policy is invalid: {obligation_id}."
+        )
+    else:
+        if claim_policy.get("security_claim_allowed") is not False:
+            failures.append(
+                "Proof obligation type must forbid security claims: "
+                f"{obligation_id}."
+            )
+        if claim_policy != PROOF_OBLIGATION_CLAIM_POLICY:
+            failures.append(
+                f"Proof obligation claim policy is invalid: {obligation_id}."
             )
 
 

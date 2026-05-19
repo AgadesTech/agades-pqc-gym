@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "275b9206259d1b5c5d92a537790bce2e5a678b52ee4e76e41a47931d0a0f2648",
+  "artifact_sha256": "a59f4fd6bd628d3ee024d5311bd40e5ff798b29ee673f1d478d69cf23aa6a926",
   "attack_plan": {
     "canonical_sha256": "cd75f20024968e2d6bd6f019c623b23663aba3d1fff350d81770755c197e284d",
     "id": "lattice_mlwe_module_hypothesis_toy_v1",
@@ -101,7 +101,21 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.parameters_positive",
       "obligation_id": "target.mlwe.parameters.positive",
-      "obligation_sha256": "4095e58aefef77de17e9a5eb4d26aed8c88596527911d3d7117120ddbe7246a2",
+      "obligation_sha256": "e683592dc9ed803befb3ef87aae70a9d052209df66c531cf4d4e579535fd1324",
+      "obligation_type": {
+        "claim_policy": {
+          "public_interpretation": "applicability_check_only",
+          "review_required_before_claim": true,
+          "security_claim_allowed": false
+        },
+        "kind": "target_invariant",
+        "schema_version": "agades.pqc.formal.proof_obligation_type.v1",
+        "subject": {
+          "family": "MLWE",
+          "scope": "target",
+          "target_family": "MLWE"
+        }
+      },
       "statement": "MLWE target parameters satisfy n > 0, q > 1, and module-rank bounds where present.",
       "status": "pending_review"
     },
@@ -114,7 +128,21 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
       "obligation_id": "target.mlwe.distributions.present",
-      "obligation_sha256": "98f6608f1619a6d80f6b163ce18d0ec8002c6a756a54437d705719bb34b61c5e",
+      "obligation_sha256": "558c537342a0045e1c53fad168ec453b7a19949a56c0ab0e4e3dff5278d3b4ad",
+      "obligation_type": {
+        "claim_policy": {
+          "public_interpretation": "applicability_check_only",
+          "review_required_before_claim": true,
+          "security_claim_allowed": false
+        },
+        "kind": "target_invariant",
+        "schema_version": "agades.pqc.formal.proof_obligation_type.v1",
+        "subject": {
+          "family": "MLWE",
+          "scope": "target",
+          "target_family": "MLWE"
+        }
+      },
       "statement": "Secret and error distributions are specified for MLWE.",
       "status": "pending_review"
     },
@@ -127,7 +155,21 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.module_rank_present",
       "obligation_id": "target.mlwe.module_rank.present",
-      "obligation_sha256": "976b499819597c18d0d41d04c387856e0fcb7a2d1e2c8bc3e2247d25770ab960",
+      "obligation_sha256": "4714ed1b498464c74ffcd8bc81a4f29ddee5b2d6bfbcb57627abdde9b75a5869",
+      "obligation_type": {
+        "claim_policy": {
+          "public_interpretation": "applicability_check_only",
+          "review_required_before_claim": true,
+          "security_claim_allowed": false
+        },
+        "kind": "target_invariant",
+        "schema_version": "agades.pqc.formal.proof_obligation_type.v1",
+        "subject": {
+          "family": "MLWE",
+          "scope": "target",
+          "target_family": "MLWE"
+        }
+      },
       "statement": "MLWE module rank k is positive.",
       "status": "pending_review"
     },
@@ -140,7 +182,21 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "obligation_id": "estimator.boundary.no_security_claim",
-      "obligation_sha256": "35be46d3ad737517f74cb36fb56cb6e0c41f231643fba487e1c02abfebd13ef4",
+      "obligation_sha256": "14db4b7ab88c79cbdbbc784584ba3e4b9fd56cc522a04a157d16bc970512e76a",
+      "obligation_type": {
+        "claim_policy": {
+          "public_interpretation": "applicability_check_only",
+          "review_required_before_claim": true,
+          "security_claim_allowed": false
+        },
+        "kind": "estimator_claim_boundary",
+        "schema_version": "agades.pqc.formal.proof_obligation_type.v1",
+        "subject": {
+          "estimator_status": "no_security_claim_without_review",
+          "family": "MLWE",
+          "scope": "estimator"
+        }
+      },
       "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
       "status": "pending_review"
     }
