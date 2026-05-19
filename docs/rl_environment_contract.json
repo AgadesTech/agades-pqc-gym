@@ -24,7 +24,7 @@
   "linked_artifacts": {
     "formal_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "9a3bc5e37690348bc16fb12ccf07ebbba4dadd537183ab8863e2626b1bf90fc0"
+      "sha256": "d0b47901a925d52182e2d6c24db121491a4f195bb91cd1a1912335fc586f5f2f"
     },
     "hf_space_manifest": {
       "path": "hf/space_manifest.json",

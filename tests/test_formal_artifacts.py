@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -52,6 +53,12 @@ def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() ->
             "security claim."
         ),
     }
+    first_obligation_source = artifact["proof_obligations"][0]["lean_source"]
+    assert first_obligation_source["path"] == (
+        "formal/lean/AgadesPQC/Lattice/Target.lean"
+    )
+    assert first_obligation_source["declaration"] == "parameters_positive"
+    assert len(first_obligation_source["sha256"]) == 64
     assert artifact["proof_obligations"][0]["status"] == "pending_review"
     assert artifact["review"]["required_reviewers"] == [
         "lattice_cryptographer",
@@ -59,6 +66,25 @@ def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() ->
         "release_boundary_reviewer",
     ]
     assert artifact["artifact_sha256"] == artifact["artifact_sha256"]
+
+
+def test_lattice_proof_artifact_binds_existing_lean_sources() -> None:
+    artifact = build_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json")
+    )
+
+    lean_sources = [
+        invariant["lean_source"] for invariant in artifact["family_invariants"]
+    ] + [
+        obligation["lean_source"] for obligation in artifact["proof_obligations"]
+    ]
+
+    for source in lean_sources:
+        path = Path(source["path"])
+        raw = path.read_bytes()
+        assert path.is_file()
+        assert hashlib.sha256(raw).hexdigest() == source["sha256"]
+        assert f"theorem {source['declaration']}" in raw.decode("utf-8")
 
 
 def test_schema_only_code_based_proof_artifact_refuses_fake_estimator_obligations(

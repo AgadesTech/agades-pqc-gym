@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "f3a7b38b7eb25b1cb8bfe3209677b5d0d6d00b6fb6f7586559c9d81b9e3222b3",
+  "artifact_sha256": "a83cbe34e9855f4687651b08e3b375f7e9999c6c7f4e13416c1f52ef6858de0c",
   "attack_plan": {
     "canonical_sha256": "c06ca5ddc67e4a09af1cece6b5a368129068fef091b77f785694324028111d60",
     "id": "lattice_primal_usvp_toy_v1",
@@ -28,15 +28,32 @@
   "family_invariants": [
     {
       "invariant_id": "lattice.dimension_modulus_positive",
+      "lean_source": {
+        "declaration": "dimension_modulus_positive",
+        "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+        "sha256": "8fe1fdfd9d033d887cfdbad2d5540d1988fa7e3a76035cc67e72108cd26aaed3"
+      },
       "lean_theorem": "AgadesPQC.Lattice.Target.dimension_modulus_positive",
       "statement": "n > 0 and q > 1"
     },
     {
       "invariant_id": "lattice.distributions_present",
+      "lean_source": {
+        "declaration": "distributions_present",
+        "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+        "sha256": "8fe1fdfd9d033d887cfdbad2d5540d1988fa7e3a76035cc67e72108cd26aaed3"
+      },
       "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
       "statement": "secret and error distributions are present for LWE/MLWE"
     }
   ],
+  "formal_backend": {
+    "entry_module": "formal/lean/AgadesPQC.lean",
+    "execution_status": "not_run_in_this_environment",
+    "lakefile": "formal/lean/lakefile.lean",
+    "root": "formal/lean",
+    "toolchain": "formal/lean/lean-toolchain"
+  },
   "operator_semantics": [
     {
       "lean_namespace": "AgadesPQC.Lattice.PrimalUSVP",
@@ -47,33 +64,53 @@
   "proof_obligations": [
     {
       "backend": "lean4",
+      "lean_source": {
+        "declaration": "parameters_positive",
+        "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+        "sha256": "8fe1fdfd9d033d887cfdbad2d5540d1988fa7e3a76035cc67e72108cd26aaed3"
+      },
       "lean_theorem": "AgadesPQC.Lattice.Target.parameters_positive",
       "obligation_id": "target.lwe.parameters.positive",
-      "obligation_sha256": "f9df8d00afc823e3c7b2efe76b7ae6d4f799e1858a46cfcd1a6abb61bd48c198",
+      "obligation_sha256": "a8c322016234a6e468ac1da29643ee9748cd6b2221a999296135031663200e11",
       "statement": "Target parameters satisfy n > 0, q > 1, and m/k bounds where present.",
       "status": "pending_review"
     },
     {
       "backend": "lean4",
+      "lean_source": {
+        "declaration": "distributions_present",
+        "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+        "sha256": "8fe1fdfd9d033d887cfdbad2d5540d1988fa7e3a76035cc67e72108cd26aaed3"
+      },
       "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
       "obligation_id": "target.lwe.distributions.present",
-      "obligation_sha256": "745c22cedb29f8fa5657b608504f1b8e5b5423a0594e9d86b0f02fe94509027d",
+      "obligation_sha256": "3b48983deea07d2f2a736f893c1c022af2c78e13e9dfe93fd82beea4f3cc16a8",
       "statement": "Secret and error distributions are specified for LWE/MLWE.",
       "status": "pending_review"
     },
     {
       "backend": "lean4",
+      "lean_source": {
+        "declaration": "beta_valid_range",
+        "path": "formal/lean/AgadesPQC/Lattice/PrimalUSVP.lean",
+        "sha256": "680e394604173883de8b974719b80b91c341e4c6d829eba2437c5a5e0d059dd5"
+      },
       "lean_theorem": "AgadesPQC.Lattice.PrimalUSVP.beta_valid_range",
       "obligation_id": "operator.primal_usvp.beta.valid_range",
-      "obligation_sha256": "40633f4755b7cd185b08ee7dcd7f5755dec0f79e8ebf3d4be6b9d9a8fd2372e7",
+      "obligation_sha256": "4d54079f5d33e81c3a1c19990d9f7a84e53a723f1fa2ddcb685adc6b66c38378",
       "statement": "primal_usvp beta is positive and bounded by the target dimension policy.",
       "status": "pending_review"
     },
     {
       "backend": "lean4",
+      "lean_source": {
+        "declaration": "no_security_claim",
+        "path": "formal/lean/AgadesPQC/Evaluator.lean",
+        "sha256": "3ec5782f5d3e250aa558cbd0ea6c9c6ff50690c6fddf4f4c49d3c2c1d600a7cc"
+      },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "obligation_id": "estimator.boundary.no_security_claim",
-      "obligation_sha256": "c0425a8b3fbe9804f3fea9123cf1d6067037d63cd99f37ad1f86ba4b605ee84b",
+      "obligation_sha256": "f706e7441b7d1825ea40cdb4e539c1d2e2ea62cfaae650d7476a5e934a4a5d70",
       "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
       "status": "pending_review"
     }
