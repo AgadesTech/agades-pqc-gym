@@ -163,8 +163,11 @@
     "claim_boundary_contains": "not PQC break claims",
     "formal_estimator_model_path": "docs/formal_estimator_model.json",
     "formal_family_coverage_path": "docs/formal_family_coverage.json",
-    "formal_lattice_proof_artifact_path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
     "formal_operator_semantics_path": "docs/formal_operator_semantics.json",
+    "mvp_vertical_proof_artifacts": {
+      "LWE": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+      "MLWE": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json"
+    },
     "required_reviewers_by_family": {
       "CODE_BASED": [
         "code_based_cryptographer",
@@ -232,15 +235,19 @@
     },
     "formal_estimator_model": {
       "path": "docs/formal_estimator_model.json",
-      "sha256": "d179ab8d3fa13d9980ce989cf3b39d8a63c3f8c975d0c303b00fd052d6265080"
+      "sha256": "2ce756ffcc43076dd954a3ba4d8ba67bcd3fcaa2f84a452cdfa090be77cdf640"
     },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "e60ef6f0f482b3c1daaa65e7b473c92ce24740f7d29fac42eda11df48ee67ea1"
+      "sha256": "5ffeb4ac11eeacb9b119f311fc07f065a60f997845d87389756ce135d6c5e469"
     },
-    "formal_lattice_proof_artifact": {
+    "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
       "sha256": "2512d120077d8efb9aab414adedbaa4413df6fb8100d4b6f6e7d9129b02ee1fd"
+    },
+    "formal_mlwe_proof_artifact": {
+      "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
+      "sha256": "18f27646d64200e71bc9c8e2c02e75424ef544095e6e76790fc9119d28d6742a"
     },
     "formal_operator_semantics": {
       "path": "docs/formal_operator_semantics.json",
@@ -252,7 +259,7 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "2f236e8e97ec3594e2f00ad6c2c35a57950fb11c8612d01b740fe6550212d248"
+      "sha256": "dd753088a85898b6edba5a72b5e55e19ed802b4a18e96f9725ef2ffbfe79ceb5"
     },
     "publication_manifest": {
       "path": "docs/publication_manifest.json",

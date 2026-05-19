@@ -89,8 +89,11 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
         "requires_no_security_claim": True,
         "requires_reviewer_quality_signal": True,
     }
-    assert contract["linked_artifacts"]["formal_proof_artifact"]["path"] == (
+    assert contract["linked_artifacts"]["formal_lwe_proof_artifact"]["path"] == (
         "docs/formal_lattice_primal_usvp_proof_artifact.json"
+    )
+    assert contract["linked_artifacts"]["formal_mlwe_proof_artifact"]["path"] == (
+        "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json"
     )
     assert contract["linked_artifacts"]["hf_rl_rollout_examples"]["path"] == (
         "hf/dataset/rl_rollouts.jsonl"
@@ -107,7 +110,14 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
     assert contract["linked_artifacts"]["formal_operator_semantics"]["path"] == (
         "docs/formal_operator_semantics.json"
     )
-    assert len(contract["linked_artifacts"]["formal_proof_artifact"]["sha256"]) == 64
+    assert (
+        len(contract["linked_artifacts"]["formal_lwe_proof_artifact"]["sha256"])
+        == 64
+    )
+    assert (
+        len(contract["linked_artifacts"]["formal_mlwe_proof_artifact"]["sha256"])
+        == 64
+    )
 
 
 def test_committed_rl_environment_contract_is_in_sync(tmp_path: Path) -> None:
@@ -130,7 +140,7 @@ def test_rl_environment_contract_verify_accepts_committed_contract() -> None:
             "surfaces": 2,
             "reward_terms": 8,
             "private_dataset_sources": 3,
-            "linked_artifacts": 12,
+            "linked_artifacts": 13,
             "failure_count": 0,
         },
         "failures": [],

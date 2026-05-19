@@ -127,7 +127,7 @@ def test_private_training_config_verify_accepts_committed_artifacts() -> None:
             "dataset_sources": 3,
             "dataset_controls": 5,
             "reward_terms": 8,
-            "linked_artifacts": 4,
+            "linked_artifacts": 5,
             "failure_count": 0,
         },
         "failures": [],

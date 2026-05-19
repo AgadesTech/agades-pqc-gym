@@ -355,14 +355,18 @@
     },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "e60ef6f0f482b3c1daaa65e7b473c92ce24740f7d29fac42eda11df48ee67ea1"
+      "sha256": "5ffeb4ac11eeacb9b119f311fc07f065a60f997845d87389756ce135d6c5e469"
     },
-    "formal_lattice_proof_artifact": {
+    "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
       "sha256": "2512d120077d8efb9aab414adedbaa4413df6fb8100d4b6f6e7d9129b02ee1fd"
+    },
+    "formal_mlwe_proof_artifact": {
+      "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
+      "sha256": "18f27646d64200e71bc9c8e2c02e75424ef544095e6e76790fc9119d28d6742a"
     }
   },
-  "model_sha256": "132803cc65c65d442ddfa3b4bf9a27634ec5755257dc433941aa10f71f0b1be8",
+  "model_sha256": "52d87e42f213259d9b207bd691a44dc1d150329acabfd02806eca841bad5df35",
   "project": {
     "name": "Agades PQC Gym",
     "package": "agades_pqc_gym",
@@ -375,6 +379,10 @@
     ],
     "estimator_result_binding_required_before_claim": true,
     "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+    "mvp_vertical_proof_artifacts": {
+      "LWE": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+      "MLWE": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json"
+    },
     "security_claim_status_without_review": "disallowed"
   },
   "release_gates": [

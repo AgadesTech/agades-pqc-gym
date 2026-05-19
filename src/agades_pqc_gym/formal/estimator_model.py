@@ -22,7 +22,11 @@ from agades_pqc_gym.families.multivariate.mq_estimator import (
     ToyMultivariateMQEstimator,
 )
 from agades_pqc_gym.families.plugins import plugin_descriptor_entries_by_family
-from agades_pqc_gym.formal.artifacts import BACKEND, LEAN_THEOREM_SOURCES
+from agades_pqc_gym.formal.artifacts import (
+    BACKEND,
+    LEAN_THEOREM_SOURCES,
+    MVP_VERTICAL_PROOF_ARTIFACT_PATHS,
+)
 from agades_pqc_gym.formal.review import required_reviewers_for_family
 from agades_pqc_gym.utils.hashing import stable_sha256
 
@@ -40,9 +44,12 @@ NO_SECURITY_CLAIM_THEOREMS = [
 LINKED_ARTIFACT_PATHS = {
     "family_plugin_manifest": "docs/family_plugin_manifest.json",
     "formal_family_coverage": "docs/formal_family_coverage.json",
-    "formal_lattice_proof_artifact": (
-        "docs/formal_lattice_primal_usvp_proof_artifact.json"
-    ),
+    "formal_lwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
+        TargetFamily.LWE.value
+    ],
+    "formal_mlwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
+        TargetFamily.MLWE.value
+    ],
 }
 ESTIMATOR_MODEL_IDS = {
     TargetFamily.LWE: MockEstimatorAdapter.estimator_name,
@@ -84,6 +91,7 @@ def build_formal_estimator_model(root: Path | None = None) -> dict[str, Any]:
             ],
             "security_claim_status_without_review": "disallowed",
             "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+            "mvp_vertical_proof_artifacts": dict(MVP_VERTICAL_PROOF_ARTIFACT_PATHS),
         },
         "estimator_result_contract": {
             "required_fields": [
@@ -289,6 +297,10 @@ def _verify_model_shape(model: dict[str, Any], failures: list[str]) -> None:
     if binding.get("security_claim_status_without_review") != "disallowed":
         failures.append(
             "Formal estimator model proof binding must disallow unreviewed claims."
+        )
+    if binding.get("mvp_vertical_proof_artifacts") != MVP_VERTICAL_PROOF_ARTIFACT_PATHS:
+        failures.append(
+            "Formal estimator model must bind both LWE and MLWE proof artifacts."
         )
     families = [
         entry

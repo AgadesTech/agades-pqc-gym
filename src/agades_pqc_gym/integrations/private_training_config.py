@@ -6,6 +6,9 @@ import tomllib
 from pathlib import Path
 from typing import Any
 
+from agades_pqc_gym.core.target import TargetFamily
+from agades_pqc_gym.formal.artifacts import MVP_VERTICAL_PROOF_ARTIFACT_PATHS
+
 PRIVATE_TRAINING_CONFIG_SCHEMA = "agades.pqc.private_training_config.v1"
 PRIVATE_TRAINING_CONFIG_VERIFICATION_SCHEMA = (
     "agades.pqc.private_training_config_verification.v1"
@@ -49,7 +52,12 @@ LINKED_ARTIFACT_PATHS = {
     "hf_rl_rollout_examples": "hf/dataset/rl_rollouts.jsonl",
     "prime_environment_manifest": "prime_intellect/verifiers_environment/"
     "prime_manifest.json",
-    "formal_proof_artifact": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+    "formal_lwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
+        TargetFamily.LWE.value
+    ],
+    "formal_mlwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
+        TargetFamily.MLWE.value
+    ],
 }
 FORBIDDEN_ENV_FILE_NAMES = {
     ".env",

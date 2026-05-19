@@ -51,6 +51,10 @@ def test_formal_estimator_model_binds_families_to_claim_policy(
         ],
         "security_claim_status_without_review": "disallowed",
         "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+        "mvp_vertical_proof_artifacts": {
+            "LWE": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+            "MLWE": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
+        },
     }
     assert [binding["lean_theorem"] for binding in model["lean_bindings"]] == [
         "AgadesPQC.Evaluator.attached_unreviewed_no_security_claim",
@@ -106,7 +110,7 @@ def test_formal_estimator_model_verify_accepts_committed_artifact() -> None:
         "summary": {
             "families": 9,
             "runtime_operator_count": 36,
-            "linked_artifacts": 3,
+            "linked_artifacts": 4,
             "failure_count": 0,
         },
         "failures": [],

@@ -10,6 +10,7 @@ from agades_pqc_gym.families.plugins import plugin_descriptor_entries_by_family
 from agades_pqc_gym.formal.artifacts import (
     BACKEND,
     LEAN_THEOREM_SOURCES,
+    MVP_VERTICAL_PROOF_ARTIFACT_PATHS,
     build_attack_plan_proof_artifact_from_json,
 )
 from agades_pqc_gym.formal.review import required_reviewers_for_family
@@ -49,9 +50,12 @@ REPRESENTATIVE_ATTACK_PLANS = {
 LINKED_ARTIFACT_PATHS = {
     "family_plugin_manifest": "docs/family_plugin_manifest.json",
     "formal_operator_semantics": "docs/formal_operator_semantics.json",
-    "formal_lattice_proof_artifact": (
-        "docs/formal_lattice_primal_usvp_proof_artifact.json"
-    ),
+    "formal_lwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
+        TargetFamily.LWE.value
+    ],
+    "formal_mlwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
+        TargetFamily.MLWE.value
+    ],
 }
 
 
@@ -89,7 +93,9 @@ def build_formal_family_coverage(root: Path | None = None) -> dict[str, Any]:
             "uv run agades-pqc formal-family-coverage-verify --coverage "
             "docs/formal_family_coverage.json",
             "uv run agades-pqc formal-proof-artifact-verify --artifact "
-            "docs/formal_lattice_primal_usvp_proof_artifact.json",
+            f"{MVP_VERTICAL_PROOF_ARTIFACT_PATHS[TargetFamily.LWE.value]}",
+            "uv run agades-pqc formal-proof-artifact-verify --artifact "
+            f"{MVP_VERTICAL_PROOF_ARTIFACT_PATHS[TargetFamily.MLWE.value]}",
         ],
     }
     coverage["coverage_sha256"] = _coverage_sha256(coverage)
