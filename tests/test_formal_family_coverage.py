@@ -87,6 +87,12 @@ def test_formal_family_coverage_binds_every_family_to_proof_material(
     assert by_family["CODE_BASED"]["required_reviewers"] == (
         required_reviewers_for_family(TargetFamily.CODE_BASED)
     )
+    assert coverage["linked_artifacts"]["formal_lwe_proof_artifact"]["path"] == (
+        "docs/formal_lattice_primal_usvp_proof_artifact.json"
+    )
+    assert coverage["linked_artifacts"]["formal_mlwe_proof_artifact"]["path"] == (
+        "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json"
+    )
 
 
 def test_committed_formal_family_coverage_is_in_sync(tmp_path: Path) -> None:
@@ -106,12 +112,12 @@ def test_formal_family_coverage_verify_accepts_committed_artifact() -> None:
         "accepted": True,
         "summary": {
                 "families": 9,
-                "family_invariants": 12,
-                "proof_obligations": 22,
-                "operator_semantics": 10,
-                "linked_artifacts": 3,
-                "failure_count": 0,
-            },
+            "family_invariants": 12,
+            "proof_obligations": 22,
+            "operator_semantics": 10,
+            "linked_artifacts": 4,
+            "failure_count": 0,
+        },
         "failures": [],
     }
 

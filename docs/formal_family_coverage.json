@@ -5,7 +5,7 @@
     "smt_assist": "z3_optional_finite_decidable_obligations_only"
   },
   "claim_boundary": "formal family coverage proves AttackPlan applicability bindings, not PQC break claims",
-  "coverage_sha256": "49551320e0cad11e47271f0d25fee5b6f35b9d478906b0e0ba5bc9d3a2b5d8ac",
+  "coverage_sha256": "b6ad54db405b4b75dd31a8e28885b40c4842a3cd706b62887b30eef47f1f7219",
   "families": [
     {
       "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
@@ -580,9 +580,13 @@
       "path": "docs/family_plugin_manifest.json",
       "sha256": "c6fca7e84e9abcb06772f866e47f7b19dc0713e3a8b2dbdbea26dc97a2386745"
     },
-    "formal_lattice_proof_artifact": {
+    "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
       "sha256": "2512d120077d8efb9aab414adedbaa4413df6fb8100d4b6f6e7d9129b02ee1fd"
+    },
+    "formal_mlwe_proof_artifact": {
+      "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
+      "sha256": "18f27646d64200e71bc9c8e2c02e75424ef544095e6e76790fc9119d28d6742a"
     },
     "formal_operator_semantics": {
       "path": "docs/formal_operator_semantics.json",
@@ -598,7 +602,8 @@
     "uv run pytest tests/test_formal_family_coverage.py -q",
     "uv run agades-pqc formal-family-coverage --out docs/formal_family_coverage.json",
     "uv run agades-pqc formal-family-coverage-verify --coverage docs/formal_family_coverage.json",
-    "uv run agades-pqc formal-proof-artifact-verify --artifact docs/formal_lattice_primal_usvp_proof_artifact.json"
+    "uv run agades-pqc formal-proof-artifact-verify --artifact docs/formal_lattice_primal_usvp_proof_artifact.json",
+    "uv run agades-pqc formal-proof-artifact-verify --artifact docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json"
   ],
   "schema_version": "agades.pqc.formal.family_coverage.v1",
   "summary": {

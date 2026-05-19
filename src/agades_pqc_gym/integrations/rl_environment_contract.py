@@ -5,6 +5,9 @@ import json
 from pathlib import Path
 from typing import Any
 
+from agades_pqc_gym.core.target import TargetFamily
+from agades_pqc_gym.formal.artifacts import MVP_VERTICAL_PROOF_ARTIFACT_PATHS
+
 RL_ENVIRONMENT_CONTRACT_SCHEMA = "agades.pqc.rl_environment_contract.v1"
 RL_ENVIRONMENT_CONTRACT_VERIFICATION_SCHEMA = (
     "agades.pqc.rl_environment_contract_verification.v1"
@@ -44,7 +47,12 @@ LINKED_ARTIFACT_PATHS = {
     "formal_estimator_model": "docs/formal_estimator_model.json",
     "formal_family_coverage": "docs/formal_family_coverage.json",
     "formal_operator_semantics": "docs/formal_operator_semantics.json",
-    "formal_proof_artifact": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+    "formal_lwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
+        TargetFamily.LWE.value
+    ],
+    "formal_mlwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
+        TargetFamily.MLWE.value
+    ],
     "reviewer_governance": "docs/reviewer_governance.json",
     "prime_schema_manifest": "prime_intellect/schemas/schema_manifest.json",
 }
@@ -163,7 +171,9 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
             "uv run agades-pqc private-run-policy-verify --policy "
             "docs/private_run_policy.json",
             "uv run agades-pqc formal-proof-artifact-verify --artifact "
-            "docs/formal_lattice_primal_usvp_proof_artifact.json",
+            f"{MVP_VERTICAL_PROOF_ARTIFACT_PATHS[TargetFamily.LWE.value]}",
+            "uv run agades-pqc formal-proof-artifact-verify --artifact "
+            f"{MVP_VERTICAL_PROOF_ARTIFACT_PATHS[TargetFamily.MLWE.value]}",
             "uv run agades-pqc reviewer-governance-verify --governance "
             "docs/reviewer_governance.json",
         ],

@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from agades_pqc_gym.core.target import TargetFamily
+from agades_pqc_gym.formal.artifacts import MVP_VERTICAL_PROOF_ARTIFACT_PATHS
 from agades_pqc_gym.formal.review import (
     FAMILY_REVIEWER_ROLE_IDS,
     REVIEW_STATUSES,
@@ -61,9 +62,12 @@ LINKED_ARTIFACT_PATHS = {
     "formal_estimator_model": "docs/formal_estimator_model.json",
     "formal_family_coverage": "docs/formal_family_coverage.json",
     "formal_operator_semantics": "docs/formal_operator_semantics.json",
-    "formal_lattice_proof_artifact": (
-        "docs/formal_lattice_primal_usvp_proof_artifact.json"
-    ),
+    "formal_lwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
+        TargetFamily.LWE.value
+    ],
+    "formal_mlwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
+        TargetFamily.MLWE.value
+    ],
     "private_run_policy": "docs/private_run_policy.json",
     "private_training_manifest": "docs/private_training_config_manifest.json",
     "external_publication_review_packet": (
@@ -143,9 +147,7 @@ def build_reviewer_governance(root: Path | None = None) -> dict[str, Any]:
             "formal_operator_semantics_path": (
                 "docs/formal_operator_semantics.json"
             ),
-            "formal_lattice_proof_artifact_path": (
-                "docs/formal_lattice_primal_usvp_proof_artifact.json"
-            ),
+            "mvp_vertical_proof_artifacts": dict(MVP_VERTICAL_PROOF_ARTIFACT_PATHS),
             "required_reviewers_by_family": _required_reviewers_by_family(),
             "claim_boundary_contains": "not PQC break claims",
         },
@@ -453,27 +455,31 @@ def _verify_formal_artifact_binding(
     failures: list[str],
 ) -> None:
     binding = _dict_or_empty(governance.get("formal_artifact_binding"))
-    path_value = binding.get("formal_lattice_proof_artifact_path")
-    if not isinstance(path_value, str) or not path_value:
-        failures.append("Formal artifact binding path is missing.")
+    proof_artifacts = binding.get("mvp_vertical_proof_artifacts")
+    if proof_artifacts != MVP_VERTICAL_PROOF_ARTIFACT_PATHS:
+        failures.append("Formal artifact binding must include LWE and MLWE artifacts.")
         return
-    artifact = _read_json_object(
-        root / path_value,
-        "Formal proof artifact required by reviewer governance",
-        failures,
-    )
-    if not artifact:
-        return
-    family = artifact.get("family")
     required_by_family = _dict_or_empty(binding.get("required_reviewers_by_family"))
-    expected_reviewers = required_by_family.get(family)
-    if artifact.get("review", {}).get("required_reviewers") != expected_reviewers:
-        failures.append("Formal proof artifact reviewers do not match governance.")
-    if artifact.get("review", {}).get("status") not in REVIEW_STATUSES:
-        failures.append("Formal proof artifact review status is unsupported.")
-    claim_boundary = artifact.get("review", {}).get("claim_boundary", "")
-    if binding.get("claim_boundary_contains") not in claim_boundary:
-        failures.append("Formal proof artifact claim boundary is not explicit.")
+    for family_name, path_value in proof_artifacts.items():
+        artifact = _read_json_object(
+            root / path_value,
+            "Formal proof artifact required by reviewer governance",
+            failures,
+        )
+        if not artifact:
+            continue
+        if artifact.get("family") != family_name:
+            failures.append(
+                f"Formal proof artifact family mismatch: {path_value}."
+            )
+        expected_reviewers = required_by_family.get(family_name)
+        if artifact.get("review", {}).get("required_reviewers") != expected_reviewers:
+            failures.append("Formal proof artifact reviewers do not match governance.")
+        if artifact.get("review", {}).get("status") not in REVIEW_STATUSES:
+            failures.append("Formal proof artifact review status is unsupported.")
+        claim_boundary = artifact.get("review", {}).get("claim_boundary", "")
+        if binding.get("claim_boundary_contains") not in claim_boundary:
+            failures.append("Formal proof artifact claim boundary is not explicit.")
 
 
 def _verify_linked_artifacts(

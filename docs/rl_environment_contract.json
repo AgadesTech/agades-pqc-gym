@@ -24,19 +24,23 @@
   "linked_artifacts": {
     "formal_estimator_model": {
       "path": "docs/formal_estimator_model.json",
-      "sha256": "d179ab8d3fa13d9980ce989cf3b39d8a63c3f8c975d0c303b00fd052d6265080"
+      "sha256": "2ce756ffcc43076dd954a3ba4d8ba67bcd3fcaa2f84a452cdfa090be77cdf640"
     },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "e60ef6f0f482b3c1daaa65e7b473c92ce24740f7d29fac42eda11df48ee67ea1"
+      "sha256": "5ffeb4ac11eeacb9b119f311fc07f065a60f997845d87389756ce135d6c5e469"
+    },
+    "formal_lwe_proof_artifact": {
+      "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+      "sha256": "2512d120077d8efb9aab414adedbaa4413df6fb8100d4b6f6e7d9129b02ee1fd"
+    },
+    "formal_mlwe_proof_artifact": {
+      "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
+      "sha256": "18f27646d64200e71bc9c8e2c02e75424ef544095e6e76790fc9119d28d6742a"
     },
     "formal_operator_semantics": {
       "path": "docs/formal_operator_semantics.json",
       "sha256": "19f7692ee88dc5b30092d7dfd7bded125f61a023f92967b996f7023bfdc93377"
-    },
-    "formal_proof_artifact": {
-      "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "2512d120077d8efb9aab414adedbaa4413df6fb8100d4b6f6e7d9129b02ee1fd"
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",
@@ -64,11 +68,11 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "2f236e8e97ec3594e2f00ad6c2c35a57950fb11c8612d01b740fe6550212d248"
+      "sha256": "dd753088a85898b6edba5a72b5e55e19ed802b4a18e96f9725ef2ffbfe79ceb5"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "ed317c9031743d49edb62f9b1b6e3a5e5e86b787714802d859ad156d7ca8038b"
+      "sha256": "93cc9c23c6399324d4c4d03f1a4ed1e85375dfe0b394c164886399225a046105"
     }
   },
   "private_track": {
@@ -132,6 +136,7 @@
     "uv run agades-pqc rl-environment-contract-verify --contract docs/rl_environment_contract.json",
     "uv run agades-pqc private-run-policy-verify --policy docs/private_run_policy.json",
     "uv run agades-pqc formal-proof-artifact-verify --artifact docs/formal_lattice_primal_usvp_proof_artifact.json",
+    "uv run agades-pqc formal-proof-artifact-verify --artifact docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
     "uv run agades-pqc reviewer-governance-verify --governance docs/reviewer_governance.json"
   ],
   "reward_model": {

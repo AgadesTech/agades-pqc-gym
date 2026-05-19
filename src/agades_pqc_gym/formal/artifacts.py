@@ -24,6 +24,12 @@ BACKEND = {
 }
 ROOT = Path(__file__).resolve().parents[3]
 LEAN_BACKEND_ROOT = Path("formal/lean")
+MVP_VERTICAL_PROOF_ARTIFACT_PATHS = {
+    TargetFamily.LWE.value: "docs/formal_lattice_primal_usvp_proof_artifact.json",
+    TargetFamily.MLWE.value: (
+        "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json"
+    ),
+}
 LEAN_THEOREM_SOURCES = {
     "AgadesPQC.Lattice.Target.dimension_modulus_positive": (
         "formal/lean/AgadesPQC/Lattice/Target.lean"

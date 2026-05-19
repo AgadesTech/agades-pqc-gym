@@ -66,6 +66,10 @@ def test_reviewer_governance_defines_family_roles_and_review_gates(
     assert governance["formal_artifact_binding"]["formal_operator_semantics_path"] == (
         "docs/formal_operator_semantics.json"
     )
+    assert governance["formal_artifact_binding"]["mvp_vertical_proof_artifacts"] == {
+        "LWE": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+        "MLWE": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
+    }
     assert governance["linked_artifacts"]["formal_family_coverage"]["path"] == (
         "docs/formal_family_coverage.json"
     )
@@ -74,6 +78,9 @@ def test_reviewer_governance_defines_family_roles_and_review_gates(
     )
     assert governance["linked_artifacts"]["formal_operator_semantics"]["path"] == (
         "docs/formal_operator_semantics.json"
+    )
+    assert governance["linked_artifacts"]["formal_mlwe_proof_artifact"]["path"] == (
+        "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json"
     )
 
 
@@ -96,7 +103,7 @@ def test_reviewer_governance_verify_accepts_committed_artifact() -> None:
             "family_reviewers": 9,
             "role_groups": 3,
             "approval_gates": 4,
-            "linked_artifacts": 9,
+            "linked_artifacts": 10,
             "failure_count": 0,
         },
         "failures": [],

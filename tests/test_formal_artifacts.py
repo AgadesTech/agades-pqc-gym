@@ -14,6 +14,11 @@ from agades_pqc_gym.formal.artifacts import (
     write_attack_plan_proof_artifact,
 )
 
+LWE_PROOF_ARTIFACT_PATH = Path("docs/formal_lattice_primal_usvp_proof_artifact.json")
+MLWE_PROOF_ARTIFACT_PATH = Path(
+    "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json"
+)
+
 
 def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() -> None:
     artifact = build_attack_plan_proof_artifact(
@@ -245,14 +250,51 @@ def test_write_and_verify_attack_plan_proof_artifact(tmp_path: Path) -> None:
 
 def test_committed_lattice_proof_artifact_is_in_sync(tmp_path: Path) -> None:
     generated = tmp_path / "proof_artifact.json"
-    committed = Path("docs/formal_lattice_primal_usvp_proof_artifact.json")
 
     write_attack_plan_proof_artifact(
         Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
         generated,
     )
 
-    assert committed.read_bytes() == generated.read_bytes()
+    assert LWE_PROOF_ARTIFACT_PATH.read_bytes() == generated.read_bytes()
+
+
+def test_committed_mlwe_proof_artifact_is_in_sync_and_verifiable(
+    tmp_path: Path,
+) -> None:
+    generated = tmp_path / "proof_artifact.json"
+
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_mlwe_module_hypothesis_toy.json"),
+        generated,
+    )
+    result = verify_attack_plan_proof_artifact(MLWE_PROOF_ARTIFACT_PATH)
+
+    assert MLWE_PROOF_ARTIFACT_PATH.read_bytes() == generated.read_bytes()
+    assert artifact["family"] == "MLWE"
+    assert {
+        obligation["obligation_id"] for obligation in artifact["proof_obligations"]
+    } == {
+        "target.mlwe.parameters.positive",
+        "target.mlwe.distributions.present",
+        "target.mlwe.module_rank.present",
+        "estimator.boundary.no_security_claim",
+    }
+    assert result == {
+        "schema_version": "agades.pqc.formal.proof_artifact_verification.v1",
+        "artifact_path": MLWE_PROOF_ARTIFACT_PATH.as_posix(),
+        "accepted": True,
+        "summary": {
+            "operator_semantics": 2,
+            "family_invariants": 3,
+            "proof_obligations": 4,
+            "lean_theorems": 4,
+            "estimator_result_attached": False,
+            "required_reviewers": 3,
+            "failure_count": 0,
+        },
+        "failures": [],
+    }
 
 
 def test_verify_attack_plan_proof_artifact_rejects_tampering(
