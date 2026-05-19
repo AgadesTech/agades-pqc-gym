@@ -8,11 +8,13 @@ import pytest
 from typer.testing import CliRunner
 
 from agades_pqc_gym.cli import app
+from agades_pqc_gym.core.attack_plan import AttackPlan
 from agades_pqc_gym.formal.artifacts import (
     build_attack_plan_proof_artifact,
     verify_attack_plan_proof_artifact,
     write_attack_plan_proof_artifact,
 )
+from agades_pqc_gym.utils.hashing import stable_sha256
 
 LWE_PROOF_ARTIFACT_PATH = Path("docs/formal_lattice_primal_usvp_proof_artifact.json")
 MLWE_PROOF_ARTIFACT_PATH = Path(
@@ -33,6 +35,14 @@ def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() ->
     }
     assert artifact["attack_plan"]["id"] == "lattice_primal_usvp_toy_v1"
     assert len(artifact["attack_plan"]["sha256"]) == 64
+    assert artifact["attack_plan"]["schema_contract"] == {
+        "schema_version": "agades.pqc.attack_plan.schema_contract.v1",
+        "model": "agades_pqc_gym.core.attack_plan.AttackPlan",
+        "json_schema_sha256": stable_sha256(AttackPlan.model_json_schema()),
+        "canonicalization": "json_sort_keys_minified_v1",
+        "validation": "pydantic_v2_extra_forbid_family_cross_checks",
+    }
+    assert len(artifact["attack_plan"]["schema_contract"]["json_schema_sha256"]) == 64
     assert artifact["formal_backend"]["root"] == "formal/lean"
     assert artifact["formal_backend"]["toolchain"] == "formal/lean/lean-toolchain"
     assert artifact["formal_backend"]["lakefile"] == "formal/lean/lakefile.lean"
@@ -402,6 +412,26 @@ def test_verify_attack_plan_proof_artifact_rejects_stale_formal_backend_binding(
 
     assert result["accepted"] is False
     assert "Proof artifact formal_backend is not in sync." in result["failures"]
+
+
+def test_verify_attack_plan_proof_artifact_rejects_stale_attack_plan_schema_contract(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+    )
+    artifact["attack_plan"]["schema_contract"]["json_schema_sha256"] = "0" * 64
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "AttackPlan schema binding does not match current core schema."
+        in result["failures"]
+    )
 
 
 def test_verify_attack_plan_proof_artifact_rejects_claim_enabled_obligation_type(

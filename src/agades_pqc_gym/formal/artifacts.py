@@ -17,6 +17,10 @@ PROOF_ARTIFACT_SCHEMA = "agades.pqc.formal.proof_artifact.v1"
 PROOF_ARTIFACT_VERIFICATION_SCHEMA = (
     "agades.pqc.formal.proof_artifact_verification.v1"
 )
+ATTACK_PLAN_SCHEMA_CONTRACT_SCHEMA = "agades.pqc.attack_plan.schema_contract.v1"
+ATTACK_PLAN_SCHEMA_MODEL = "agades_pqc_gym.core.attack_plan.AttackPlan"
+ATTACK_PLAN_CANONICALIZATION = "json_sort_keys_minified_v1"
+ATTACK_PLAN_VALIDATION = "pydantic_v2_extra_forbid_family_cross_checks"
 PROOF_OBLIGATION_TYPE_SCHEMA = "agades.pqc.formal.proof_obligation_type.v1"
 PROOF_OBLIGATION_CLAIM_POLICY = {
     "public_interpretation": "applicability_check_only",
@@ -250,6 +254,7 @@ def build_attack_plan_proof_artifact_from_json(
         "attack_plan": {
             "id": plan.attack_plan_id,
             "path": source_label,
+            "schema_contract": _attack_plan_schema_contract(),
             "sha256": hashlib.sha256(raw_json.encode("utf-8")).hexdigest(),
             "canonical_sha256": stable_sha256(plan_payload),
         },
@@ -888,6 +893,10 @@ def _verify_plan_binding(
 
     if attack_plan.get("sha256") != hashlib.sha256(raw.encode("utf-8")).hexdigest():
         failures.append("AttackPlan raw SHA-256 does not match the bound file.")
+    if attack_plan.get("schema_contract") != _attack_plan_schema_contract():
+        failures.append(
+            "AttackPlan schema binding does not match current core schema."
+        )
     try:
         plan_payload = json.loads(raw)
         plan = AttackPlan.model_validate(plan_payload)
@@ -947,6 +956,16 @@ def _verify_obligation_hashes(
             failures.append(
                 f"Proof obligation hash mismatch: {obligation.get('obligation_id')}."
             )
+
+
+def _attack_plan_schema_contract() -> dict[str, str]:
+    return {
+        "schema_version": ATTACK_PLAN_SCHEMA_CONTRACT_SCHEMA,
+        "model": ATTACK_PLAN_SCHEMA_MODEL,
+        "json_schema_sha256": stable_sha256(AttackPlan.model_json_schema()),
+        "canonicalization": ATTACK_PLAN_CANONICALIZATION,
+        "validation": ATTACK_PLAN_VALIDATION,
+    }
 
 
 def _verify_obligation_type(

@@ -1,9 +1,16 @@
 {
-  "artifact_sha256": "43328e9115dc748619f50687c3b34827ab8bceda1d9fd13f88d1a4e92d675064",
+  "artifact_sha256": "b89aed96a96f1345a37b5fd2a9caf072d248289d88edc3b0ab200589875764a5",
   "attack_plan": {
     "canonical_sha256": "c06ca5ddc67e4a09af1cece6b5a368129068fef091b77f785694324028111d60",
     "id": "lattice_primal_usvp_toy_v1",
     "path": "examples/attack_plans/lattice_primal_usvp_toy.json",
+    "schema_contract": {
+      "canonicalization": "json_sort_keys_minified_v1",
+      "json_schema_sha256": "051c5fea57fed0ec5ade9074b00e0dc119e8d295df342eb6e91ec70392659081",
+      "model": "agades_pqc_gym.core.attack_plan.AttackPlan",
+      "schema_version": "agades.pqc.attack_plan.schema_contract.v1",
+      "validation": "pydantic_v2_extra_forbid_family_cross_checks"
+    },
     "sha256": "5cb2938a2b72024d50ab478d871c05446b92ec20c28f1971435499a12bf0a934"
   },
   "backend": {
