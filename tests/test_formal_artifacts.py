@@ -67,6 +67,38 @@ def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() ->
         "operator.primal_usvp.beta.valid_range",
         "estimator.boundary.no_security_claim",
     }
+    obligation_types = {
+        obligation["obligation_id"]: obligation["obligation_type"]
+        for obligation in artifact["proof_obligations"]
+    }
+    assert obligation_types["target.lwe.parameters.positive"] == {
+        "schema_version": "agades.pqc.formal.proof_obligation_type.v1",
+        "kind": "target_invariant",
+        "subject": {
+            "family": "LWE",
+            "scope": "target",
+            "target_family": "LWE",
+        },
+        "claim_policy": {
+            "public_interpretation": "applicability_check_only",
+            "review_required_before_claim": True,
+            "security_claim_allowed": False,
+        },
+    }
+    assert obligation_types["operator.primal_usvp.beta.valid_range"] == {
+        "schema_version": "agades.pqc.formal.proof_obligation_type.v1",
+        "kind": "operator_precondition",
+        "subject": {
+            "family": "LWE",
+            "operator": "primal_usvp",
+            "scope": "operator",
+        },
+        "claim_policy": {
+            "public_interpretation": "applicability_check_only",
+            "review_required_before_claim": True,
+            "security_claim_allowed": False,
+        },
+    }
     assert artifact["attack_plan"]["canonical_sha256"]
     assert artifact["estimator_result_binding"] == {
         "status": "not_attached",
@@ -151,6 +183,14 @@ def test_mlwe_proof_artifact_uses_mlwe_specific_obligations() -> None:
     assert "target.mlwe.distributions.present" in obligation_ids
     assert "target.mlwe.module_rank.present" in obligation_ids
     assert "target.lwe.parameters.positive" not in obligation_ids
+    assert all(
+        obligation["obligation_type"]["subject"]["family"] == "MLWE"
+        for obligation in artifact["proof_obligations"]
+    )
+    assert {
+        obligation["obligation_type"]["kind"]
+        for obligation in artifact["proof_obligations"]
+    } == {"target_invariant", "estimator_claim_boundary"}
 
 
 @pytest.mark.parametrize(
@@ -238,6 +278,17 @@ def test_family_specific_proof_artifacts_do_not_use_generic_fallback(
     assert all(
         not item["semantics_id"].startswith("agades.pqc.operator_semantics.generic.")
         for item in artifact["operator_semantics"]
+    )
+    assert all(
+        obligation["obligation_type"]["subject"]["family"] == family
+        for obligation in artifact["proof_obligations"]
+    )
+    assert all(
+        obligation["obligation_type"]["claim_policy"][
+            "security_claim_allowed"
+        ]
+        is False
+        for obligation in artifact["proof_obligations"]
     )
 
 
@@ -351,6 +402,28 @@ def test_verify_attack_plan_proof_artifact_rejects_stale_formal_backend_binding(
 
     assert result["accepted"] is False
     assert "Proof artifact formal_backend is not in sync." in result["failures"]
+
+
+def test_verify_attack_plan_proof_artifact_rejects_claim_enabled_obligation_type(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+    )
+    artifact["proof_obligations"][0]["obligation_type"]["claim_policy"][
+        "security_claim_allowed"
+    ] = True
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Proof obligation type must forbid security claims: "
+        "target.lwe.parameters.positive."
+    ) in result["failures"]
 
 
 def test_formal_proof_artifact_cli_round_trip(tmp_path: Path) -> None:
