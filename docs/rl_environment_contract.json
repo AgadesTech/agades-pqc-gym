@@ -26,6 +26,10 @@
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
       "sha256": "d0b47901a925d52182e2d6c24db121491a4f195bb91cd1a1912335fc586f5f2f"
     },
+    "hf_rl_rollout_examples": {
+      "path": "hf/dataset/rl_rollouts.jsonl",
+      "sha256": "ca31008dbc6f1bf94a79580b7ff0698d3cb81fb84b1927454005fc6ea04a3c65"
+    },
     "hf_space_manifest": {
       "path": "hf/space_manifest.json",
       "sha256": "df95cf04d618998377a3a6bf712dc8dad7cd500fb56c29d0898926250e1de58f"

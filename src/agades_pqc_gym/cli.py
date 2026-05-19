@@ -211,6 +211,10 @@ from agades_pqc_gym.openevolve_adapter.smoke import (
     write_openevolve_smoke_report,
 )
 from agades_pqc_gym.reporting.report import render_report_from_jsonl
+from agades_pqc_gym.rl.environment import (
+    DEFAULT_ROLLOUT_PLANS,
+    write_public_rollout_examples,
+)
 from agades_pqc_gym.traces.public_bundle import write_public_run_bundle
 from agades_pqc_gym.traces.public_ledger import (
     build_public_run_ledger,
@@ -1707,6 +1711,23 @@ def rl_environment_contract_verify(
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)
+
+
+@app.command("rl-rollout-examples", hidden=True)
+def rl_rollout_examples(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("hf/dataset/rl_rollouts.jsonl"),
+    plan: Annotated[
+        list[Path] | None,
+        typer.Option("--plan"),
+    ] = None,
+) -> None:
+    """Write deterministic public-safe RL rollout traces for HF/Prime demos."""
+    paths = plan if plan else DEFAULT_ROLLOUT_PLANS
+    rows = write_public_rollout_examples(paths, out)
+    typer.echo(f"rl_rollout_examples={out} count={len(rows)}")
 
 
 @app.command("public-benchmark-manifest", hidden=True)

@@ -6,11 +6,10 @@ from typing import Any
 
 from agades_pqc_gym.core.attack_plan import AttackPlan
 from agades_pqc_gym.integrations.task_metadata import (
-    attack_plan_matches_task_metadata,
     normalize_task_metadata,
     task_metadata_for_plan,
 )
-from agades_pqc_gym.verifier import verify_attack_plan_json
+from agades_pqc_gym.rl.environment import score_attack_plan_candidate
 
 PACKAGE_DIR = Path(__file__).resolve().parent
 DATA_DIR = PACKAGE_DIR / "data"
@@ -39,25 +38,12 @@ def score_attack_plan_completion(
     if candidate is None:
         return 0.0
 
-    try:
-        candidate_plan = AttackPlan.model_validate_json(candidate)
-    except ValueError:
-        return 0.0
-
-    result = verify_attack_plan_json(candidate)
-    if result["schema_valid"] is not True:
-        return 0.0
-    if result["accepted"] is not True:
-        return 0.0
-    task_info = normalize_task_metadata(info)
-    if require_info and task_info is None:
-        return 0.0
-    if task_info is not None and not attack_plan_matches_task_metadata(
-        candidate_plan,
-        task_info,
-    ):
-        return 0.0
-    return 1.0
+    reward_report = score_attack_plan_candidate(
+        candidate,
+        task_info=normalize_task_metadata(info),
+        require_task_match=require_info or info is not None,
+    )
+    return float(reward_report["reward"])
 
 
 def load_environment(num_examples: int = -1, **kwargs: Any) -> Any:
