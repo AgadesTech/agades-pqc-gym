@@ -9,6 +9,7 @@ from typer.testing import CliRunner
 
 from agades_pqc_gym.cli import app
 from agades_pqc_gym.core.attack_plan import AttackPlan
+from agades_pqc_gym.core.evaluator_result import EvaluatorResult
 from agades_pqc_gym.formal.artifacts import (
     build_attack_plan_proof_artifact,
     verify_attack_plan_proof_artifact,
@@ -329,6 +330,35 @@ def test_write_and_verify_attack_plan_proof_artifact(tmp_path: Path) -> None:
     }
 
 
+def test_attached_estimator_result_binding_includes_evaluator_schema_contract(
+    tmp_path: Path,
+) -> None:
+    result_path = _write_estimator_result(tmp_path)
+
+    artifact = build_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        estimator_result_path=result_path,
+    )
+
+    assert artifact["estimator_result_binding"]["status"] == "attached_unreviewed"
+    assert artifact["estimator_result_binding"]["schema_contract"] == {
+        "schema_version": "agades.pqc.evaluator_result.schema_contract.v1",
+        "model": "agades_pqc_gym.core.evaluator_result.EvaluatorResult",
+        "json_schema_sha256": stable_sha256(EvaluatorResult.model_json_schema()),
+        "canonicalization": "json_sort_keys_minified_v1",
+        "validation": "pydantic_v2_extra_forbid_status_payload_checks",
+    }
+    assert artifact["estimator_result_binding"]["parsed_result"] == {
+        "schema_version": "agades.pqc.evaluator_result.v1",
+        "evaluator_name": "mock-lattice-estimator",
+        "evaluator_version": "0.1.0",
+        "evaluator_commit": None,
+        "evaluation_status": "ok",
+        "attack_type": "primal_usvp",
+        "claim_allowed": False,
+    }
+
+
 def test_committed_lattice_proof_artifact_is_in_sync(tmp_path: Path) -> None:
     generated = tmp_path / "proof_artifact.json"
 
@@ -434,6 +464,68 @@ def test_verify_attack_plan_proof_artifact_rejects_stale_attack_plan_schema_cont
     )
 
 
+def test_verify_rejects_stale_estimator_result_schema_contract(
+    tmp_path: Path,
+) -> None:
+    result_path = _write_estimator_result(tmp_path)
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+        estimator_result_path=result_path,
+    )
+    artifact["estimator_result_binding"]["schema_contract"][
+        "json_schema_sha256"
+    ] = "0" * 64
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Estimator result schema binding does not match current core schema."
+        in result["failures"]
+    )
+
+
+def test_verify_attack_plan_proof_artifact_rejects_invalid_attached_estimator_result(
+    tmp_path: Path,
+) -> None:
+    result_path = _write_estimator_result(tmp_path)
+    out = tmp_path / "proof_artifact.json"
+    write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+        estimator_result_path=result_path,
+    )
+    result_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "agades.pqc.evaluator_result.v1",
+                "evaluator_name": "mock-lattice-estimator",
+                "evaluator_version": "0.1.0",
+                "evaluator_commit": None,
+                "evaluation_status": "unsupported",
+                "attack_type": "primal_usvp",
+                "time_bits": 75.0,
+                "memory_bits": 25.0,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert any(
+        failure.startswith("Bound estimator result is invalid:")
+        for failure in result["failures"]
+    )
+
+
 def test_verify_attack_plan_proof_artifact_rejects_claim_enabled_obligation_type(
     tmp_path: Path,
 ) -> None:
@@ -477,3 +569,29 @@ def test_formal_proof_artifact_cli_round_trip(tmp_path: Path) -> None:
     assert f"formal_proof_artifact={out}" in write_result.output
     assert verify_result.exit_code == 0
     assert '"accepted": true' in verify_result.output
+
+
+def _write_estimator_result(tmp_path: Path) -> Path:
+    result_path = tmp_path / "estimator_result.json"
+    result_path.write_text(
+        json.dumps(_valid_estimator_result_payload(), indent=2, sort_keys=True)
+        + "\n",
+        encoding="utf-8",
+    )
+    return result_path
+
+
+def _valid_estimator_result_payload() -> dict[str, object]:
+    return {
+        "schema_version": "agades.pqc.evaluator_result.v1",
+        "evaluator_name": "mock-lattice-estimator",
+        "evaluator_version": "0.1.0",
+        "evaluator_commit": None,
+        "evaluation_status": "ok",
+        "attack_type": "primal_usvp",
+        "time_bits": 75.0,
+        "memory_bits": 25.0,
+        "success_probability": None,
+        "raw_output": {"source": "unit-test"},
+        "warnings": ["Mock estimator output is not cryptanalytic evidence."],
+    }
