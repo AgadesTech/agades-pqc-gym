@@ -44,19 +44,19 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert audit["schema_version"] == "agades.pqc.release_audit.v1"
     assert audit["accepted"] is True
     assert audit["summary"] == {
-        "passed": 58,
+        "passed": 59,
         "failed": 0,
         "warning": 1,
-        "total": 59,
+        "total": 60,
     }
 
     checks = {check["id"]: check for check in audit["checks"]}
     assert checks["release-gate-closure"]["status"] == "passed"
     assert checks["release-gate-closure"]["blocking"] is True
     assert checks["release-gate-closure"]["evidence"] == {
-        "checked_release_gate_artifacts": 37,
-        "release_audit_gate_artifacts": 23,
-        "ecosystem_smoke_gate_artifacts": 25,
+        "checked_release_gate_artifacts": 38,
+        "release_audit_gate_artifacts": 24,
+        "ecosystem_smoke_gate_artifacts": 26,
         "missing_ecosystem_smoke_gate": [],
         "late_ecosystem_smoke_gate": [],
     }
@@ -680,6 +680,16 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "rollouts_per_example": 2,
         "task_count": 79,
     }
+    assert checks["pedagogical-rl-method"]["status"] == "passed"
+    assert checks["pedagogical-rl-method"]["blocking"] is True
+    assert checks["pedagogical-rl-method"]["evidence"] == {
+        "stages": 4,
+        "reward_terms": 8,
+        "linked_artifacts": 8,
+        "teacher_student_pattern": "privileged_self_teacher_student",
+        "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
+        "privacy_preserving": True,
+    }
     assert checks["hf-space-smoke"]["status"] == "passed"
     assert checks["hf-space-smoke"]["blocking"] is True
     assert checks["hf-space-smoke"]["evidence"] == {
@@ -879,6 +889,8 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "verify-prime-environment-smoke",
         "generate-prime-eval-config",
         "verify-prime-eval-config",
+        "generate-pedagogical-rl-method",
+        "verify-pedagogical-rl-method",
         "generate-prime-schemas",
         "verify-prime-schemas",
         "generate-prime-publication-handoff",

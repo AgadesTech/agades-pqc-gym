@@ -36,6 +36,10 @@
       "path": "hf/dataset/rl_rollouts.jsonl",
       "sha256": "ca31008dbc6f1bf94a79580b7ff0698d3cb81fb84b1927454005fc6ea04a3c65"
     },
+    "pedagogical_rl_method": {
+      "path": "docs/pedagogical_rl_method.json",
+      "sha256": "0f2dd4a1255df1a3c1996d39bc85002f03d85ce2aba6c89410fa67c765388998"
+    },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
       "sha256": "12c27d7254504526062db94d9cf128d9fdee8b59a0712a4efb456e3957f56bd4"
@@ -66,7 +70,11 @@
     }
   },
   "pedagogical_rl": {
+    "assimilation_objective": "surprisal_gated_imitation",
+    "learnability_score": "spike_aware_logsumexp_surprise_gap",
     "method": "pedagogical_rl",
+    "method_manifest_path": "docs/pedagogical_rl_method.json",
+    "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
     "requires_no_security_overclaim": true,
     "requires_reviewer_quality_signal": true,
     "reward_terms": [
@@ -80,12 +88,18 @@
       "proof_obligation_coverage"
     ],
     "spike_aware_pedagogy_reward": true,
+    "stage_sequence": [
+      "privileged_self_teacher_grpo",
+      "spike_aware_trajectory_filter",
+      "surprisal_gated_student_assimilation",
+      "optional_private_grpo_refinement"
+    ],
     "surprisal_gated_imitation": true,
     "teacher_student_pattern": "privileged_self_teacher_student"
   },
   "prime_training": {
     "config_path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
-    "config_sha256": "4f89c488ac48ab8c8f65627cfbf08ce478a2909bbb0cb53ad6a376c3312618a5",
+    "config_sha256": "762d24e9da5a7afd6f98c9f9922bce3ebb780a70763568e3bf3050560151eea1",
     "eval_command": "prime eval run agades-pqc-verifier-env",
     "eval_config_manifest_path": "docs/prime_eval_config_manifest.json",
     "launch_command_template": "prime train prime_intellect/training/private_qwen_prime_rl.template.toml --env-var HF_TOKEN --env-var WANDB_API_KEY",

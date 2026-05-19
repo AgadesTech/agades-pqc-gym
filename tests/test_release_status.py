@@ -267,12 +267,12 @@ def test_release_status_summarizes_current_public_evidence(tmp_path: Path) -> No
     }
     assert status["audit"] == {
         "accepted": True,
-        "passed": 58,
+        "passed": 59,
         "failed": 0,
         "warning": 1,
         "warning_check_ids": ["prime-hub-publication"],
         "warning_records": [EXPECTED_PRIME_HUB_WARNING_RECORD],
-        "total": 59,
+        "total": 60,
     }
     assert status["runbook"] == {
         "artifact_count": 47,
@@ -556,8 +556,8 @@ def test_release_status_verify_accepts_committed_status() -> None:
         "summary": {
             "audit_accepted": True,
             "audit_failed": 0,
-                "audit_passed": 58,
-                "audit_total": 59,
+            "audit_passed": 59,
+            "audit_total": 60,
             "audit_warning": 1,
             "audit_warning_evidence_items": 1,
             "audit_warning_records": 1,

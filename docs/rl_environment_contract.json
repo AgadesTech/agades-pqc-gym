@@ -54,6 +54,10 @@
       "path": "hf/space_manifest.json",
       "sha256": "2de86fe98df248c369b73ca28edeced73a8439cb9b1bf1fc67b57f25de5fc462"
     },
+    "pedagogical_rl_method": {
+      "path": "docs/pedagogical_rl_method.json",
+      "sha256": "0f2dd4a1255df1a3c1996d39bc85002f03d85ce2aba6c89410fa67c765388998"
+    },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
       "sha256": "12c27d7254504526062db94d9cf128d9fdee8b59a0712a4efb456e3957f56bd4"
@@ -68,7 +72,7 @@
     },
     "prime_rl_training_template": {
       "path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
-      "sha256": "4f89c488ac48ab8c8f65627cfbf08ce478a2909bbb0cb53ad6a376c3312618a5"
+      "sha256": "762d24e9da5a7afd6f98c9f9922bce3ebb780a70763568e3bf3050560151eea1"
     },
     "prime_schema_manifest": {
       "path": "prime_intellect/schemas/schema_manifest.json",
@@ -80,11 +84,11 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "0a4d279cbf8f44691d9e65e5efbe16dbd14945879cccb48d1d856171f9fea03a"
+      "sha256": "fd6d092ff38283f397c66bf62730636fdd8a1e38d93dee3c8975f72c21966d98"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "5b0636fad49e29a7cc5738523c14f2587ad17a25c9a4e6cefda275f3c1f0a393"
+      "sha256": "1d6ad15f8291a297d2b19205686d53c3830714ce0e19790ee8bea7cf819a4e1b"
     }
   },
   "private_track": {
@@ -109,6 +113,7 @@
       ]
     },
     "method": "pedagogical_rl",
+    "method_manifest_path": "docs/pedagogical_rl_method.json",
     "publish_finetuned_model_publicly": false,
     "publish_prompts_publicly": false,
     "publish_reviewer_annotations_publicly": false,
@@ -123,6 +128,12 @@
       "training_path": "lora_or_qlora_on_trainable_weights_then_private_gguf_otq_quantization"
     },
     "spike_aware_pedagogy_reward": true,
+    "stage_sequence": [
+      "privileged_self_teacher_grpo",
+      "spike_aware_trajectory_filter",
+      "surprisal_gated_student_assimilation",
+      "optional_private_grpo_refinement"
+    ],
     "surprisal_gated_imitation": true,
     "teacher_student_pattern": "privileged_self_teacher_student"
   },
@@ -152,6 +163,9 @@
     "uv run agades-pqc reviewer-governance-verify --governance docs/reviewer_governance.json"
   ],
   "reward_model": {
+    "assimilation_objective": "surprisal_gated_imitation",
+    "learnability_score": "spike_aware_logsumexp_surprise_gap",
+    "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
     "range": [
       0.0,
       1.0

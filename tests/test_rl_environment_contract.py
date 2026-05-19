@@ -60,9 +60,18 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
         "requires_public_redaction": True,
     }
     assert contract["private_track"]["method"] == "pedagogical_rl"
+    assert contract["private_track"]["method_manifest_path"] == (
+        "docs/pedagogical_rl_method.json"
+    )
     assert contract["private_track"]["teacher_student_pattern"] == (
         "privileged_self_teacher_student"
     )
+    assert contract["private_track"]["stage_sequence"] == [
+        "privileged_self_teacher_grpo",
+        "spike_aware_trajectory_filter",
+        "surprisal_gated_student_assimilation",
+        "optional_private_grpo_refinement",
+    ]
     assert contract["private_track"]["qwen_training"]["target_model"] == (
         "Qwen3.6-27B-private"
     )
@@ -81,6 +90,9 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
     assert contract["reward_model"] == {
         "type": "pedagogical_multi_term_reward",
         "range": [0.0, 1.0],
+        "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
+        "learnability_score": "spike_aware_logsumexp_surprise_gap",
+        "assimilation_objective": "surprisal_gated_imitation",
         "terms": [
             "formal_validity",
             "cryptographic_applicability",
@@ -108,6 +120,9 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
     )
     assert contract["linked_artifacts"]["prime_eval_template"]["path"] == (
         "prime_intellect/evals/agades_pqc_eval.template.toml"
+    )
+    assert contract["linked_artifacts"]["pedagogical_rl_method"]["path"] == (
+        "docs/pedagogical_rl_method.json"
     )
     assert contract["linked_artifacts"]["reviewer_governance"]["path"] == (
         "docs/reviewer_governance.json"
@@ -154,7 +169,7 @@ def test_rl_environment_contract_verify_accepts_committed_contract() -> None:
             "surfaces": 2,
             "reward_terms": 8,
             "private_dataset_sources": 3,
-            "linked_artifacts": 16,
+            "linked_artifacts": 17,
             "failure_count": 0,
         },
         "failures": [],

@@ -1,0 +1,207 @@
+{
+  "assimilation": {
+    "gamma": -4.0,
+    "kappa": 2.0,
+    "objective": "surprisal_gated_imitation",
+    "raw_logits_publication_allowed": false,
+    "recompute_weights_after_student_update": true,
+    "token_weight": "sigmoid(kappa * (logp_student(a_t|x,prefix) - gamma))"
+  },
+  "datasets": {
+    "private_roots": [
+      "private/datasets",
+      "private/traces",
+      "private/reviewer_annotations"
+    ],
+    "public_rows_allowed": false,
+    "required_controls": [
+      "license_review",
+      "provenance_tracking",
+      "deduplication",
+      "redaction",
+      "contamination_audit"
+    ],
+    "sources": [
+      "facebookresearch/LWE-benchmarking",
+      "facebook/TAPAS",
+      "pq-code-package"
+    ]
+  },
+  "integration_bindings": {
+    "deepevolve_private_serious_research_allowed": true,
+    "hf_public_environment_category": "agent-environment",
+    "openevolve_private_serious_research_allowed": true,
+    "prime_environment": "agades-pqc-verifier-env",
+    "prime_training_stack": "prime-rl",
+    "public_toy_eval_private_data_allowed": false
+  },
+  "linked_artifacts": {
+    "formal_estimator_model": {
+      "path": "docs/formal_estimator_model.json",
+      "sha256": "25a097140780b75fe468caadc192c054d3f2077e67fb8359d34742b2ecd93bdc"
+    },
+    "formal_family_coverage": {
+      "path": "docs/formal_family_coverage.json",
+      "sha256": "33fe17cff70166830149c5038929d30eadbe0680a7ab105a8f32453458592b4d"
+    },
+    "formal_lwe_proof_artifact": {
+      "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+      "sha256": "636c25280c9c2544329c44dd0a42748efdba3f184d18e125a4860b9b55cf8e32"
+    },
+    "formal_mlwe_proof_artifact": {
+      "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
+      "sha256": "7581193d504a86a41fe21947e19281ff07bb4cc9c36110a6ae09c0201e958eac"
+    },
+    "formal_operator_semantics": {
+      "path": "docs/formal_operator_semantics.json",
+      "sha256": "19f7692ee88dc5b30092d7dfd7bded125f61a023f92967b996f7023bfdc93377"
+    },
+    "hf_rl_rollout_examples": {
+      "path": "hf/dataset/rl_rollouts.jsonl",
+      "sha256": "ca31008dbc6f1bf94a79580b7ff0698d3cb81fb84b1927454005fc6ea04a3c65"
+    },
+    "prime_eval_config_manifest": {
+      "path": "docs/prime_eval_config_manifest.json",
+      "sha256": "ecaa5ee01641f6b59e9255626dedb7914c0d8eb6ede3a29cfc750676a62e0013"
+    },
+    "private_run_policy": {
+      "path": "docs/private_run_policy.json",
+      "sha256": "a0992031eb7a4268e4813b4d5f02a9ca4dda078972c935ef829c8e981259d86a"
+    }
+  },
+  "method": {
+    "base_paradigm": "learn_nearest_successes_from_privileged_context",
+    "domain": "AttackPlan_generation_validation_and_repair",
+    "private_outputs_only": true,
+    "public_training_claim": "agents learn to produce formally valid and reviewable AttackPlans, not cryptographic break claims",
+    "teacher_student_pattern": "privileged_self_teacher_student"
+  },
+  "privacy": {
+    "fine_tuned_weights_publication_allowed": false,
+    "raw_rollouts_publication_allowed": false,
+    "reviewer_annotations_publication_allowed": false,
+    "sanitized_metadata_cards_allowed": true,
+    "student_logprobs_publication_allowed": false,
+    "teacher_prompts_publication_allowed": false
+  },
+  "project": {
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "publication_boundary": {
+    "forbidden_public_claims": [
+      "unreviewed_pqc_break_claims",
+      "private_qwen_weights_or_adapters",
+      "private_training_traces_or_reviewer_annotations",
+      "private_dataset_rows_or_prompts"
+    ],
+    "public_claims_allowed": [
+      "environment_scoring_contracts",
+      "sanitized_metadata_cards",
+      "toy_or_schema_only_rollout_examples"
+    ]
+  },
+  "release_gates": [
+    "uv run pytest tests/test_pedagogical_rl_method.py -q",
+    "uv run agades-pqc pedagogical-rl-method --out docs/pedagogical_rl_method.json",
+    "uv run agades-pqc pedagogical-rl-method-verify --method docs/pedagogical_rl_method.json",
+    "uv run agades-pqc private-training-config-verify --config prime_intellect/training/private_qwen_prime_rl.template.toml --manifest docs/private_training_config_manifest.json",
+    "uv run agades-pqc rl-environment-contract-verify --contract docs/rl_environment_contract.json",
+    "uv run agades-pqc reviewer-governance-verify --governance docs/reviewer_governance.json",
+    "uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json",
+    "uv run agades-pqc release-audit --out public/release_audit.json"
+  ],
+  "reward_contract": {
+    "claim_boundary": {
+      "allows_security_claims": false,
+      "requires_formal_obligations": true,
+      "requires_human_crypto_review": true
+    },
+    "learnability_score": {
+      "beta": 5.0,
+      "formula": "exp(-(lambda/beta) * log(mean_t(exp(beta * d_t))))",
+      "lambda": 1.0,
+      "surprise_gap": "log p_student(a_max|x,prefix) - log p_student(a_t|x,prefix)",
+      "type": "spike_aware_logsumexp_surprise_gap"
+    },
+    "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
+    "range": [
+      0.0,
+      1.0
+    ],
+    "success_gate": {
+      "good_answer_only_is_sufficient": false,
+      "required_terms": [
+        "formal_validity",
+        "cryptographic_applicability",
+        "no_security_overclaim",
+        "student_readability",
+        "reproducibility",
+        "reviewer_quality",
+        "task_match",
+        "proof_obligation_coverage"
+      ],
+      "type": "agades_verifier_and_reviewer_gate"
+    },
+    "type": "multiplicative_pedagogical_reward"
+  },
+  "roles": {
+    "self_teacher": {
+      "conditioning": "attackplan_prompt_with_privileged_context",
+      "model": "Qwen3.6-27B-private",
+      "must_remain_student_learnable": true,
+      "privileged_context": [
+        "formal_obligations",
+        "family_invariants",
+        "estimator_results",
+        "reviewer_rubric",
+        "license_and_provenance_metadata"
+      ],
+      "privileged_context_visible": true
+    },
+    "student": {
+      "conditioning": "attackplan_prompt_without_privileged_context",
+      "model": "Qwen3.6-27B-private",
+      "private_outputs_only": true,
+      "privileged_context_visible": false
+    }
+  },
+  "schema_version": "agades.pqc.pedagogical_rl_method.v1",
+  "source": {
+    "citation_key": "chakraborty_ziems_2026_pedagogical_rl",
+    "name": "Pedagogical RL",
+    "url": "https://noahziems.com/pedagogical-rl"
+  },
+  "stages": [
+    {
+      "external_publication_allowed": false,
+      "id": "privileged_self_teacher_grpo",
+      "objective": "R_agades(x,c,tau) * G_spike_student(tau|x)",
+      "policy": "self_teacher",
+      "trainer": "prime-rl",
+      "uses_privileged_context": true
+    },
+    {
+      "id": "spike_aware_trajectory_filter",
+      "objective": "spike_aware_logsumexp_surprise_gap",
+      "policy": "student_scorer",
+      "raw_logits_publication_allowed": false,
+      "uses_student_logprobs": true
+    },
+    {
+      "id": "surprisal_gated_student_assimilation",
+      "objective": "surprisal_gated_imitation",
+      "policy": "student",
+      "raw_teacher_tokens_publication_allowed": false,
+      "update": "weighted_sft"
+    },
+    {
+      "external_publication_allowed": false,
+      "id": "optional_private_grpo_refinement",
+      "objective": "R_agades(x,c,tau)",
+      "policy": "student",
+      "requires_prior_method_artifact": true
+    }
+  ]
+}

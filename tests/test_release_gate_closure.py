@@ -44,6 +44,6 @@ def test_release_audit_gates_are_preceded_by_ecosystem_smoke_gate() -> None:
         else:
             release_audit_artifacts.append(path.as_posix())
 
-    assert len(release_audit_artifacts) == 23
-    assert len(ecosystem_smoke_artifacts) == 25
+    assert len(release_audit_artifacts) == 24
+    assert len(ecosystem_smoke_artifacts) == 26
     assert missing == []

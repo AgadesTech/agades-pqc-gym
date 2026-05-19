@@ -8,6 +8,13 @@ from typing import Any
 
 from agades_pqc_gym.core.target import TargetFamily
 from agades_pqc_gym.formal.artifacts import MVP_VERTICAL_PROOF_ARTIFACT_PATHS
+from agades_pqc_gym.integrations.pedagogical_rl_method import (
+    ASSIMILATION_OBJECTIVE,
+    LEARNABILITY_SCORE,
+    PEDAGOGY_REWARD,
+    STAGE_SEQUENCE,
+    TEACHER_STUDENT_PATTERN,
+)
 
 PRIVATE_TRAINING_CONFIG_SCHEMA = "agades.pqc.private_training_config.v1"
 PRIVATE_TRAINING_CONFIG_VERIFICATION_SCHEMA = (
@@ -54,6 +61,7 @@ LINKED_ARTIFACT_PATHS = {
     "prime_manifest.json",
     "prime_eval_config_manifest": "docs/prime_eval_config_manifest.json",
     "prime_eval_template": "prime_intellect/evals/agades_pqc_eval.template.toml",
+    "pedagogical_rl_method": "docs/pedagogical_rl_method.json",
     "formal_lwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
         TargetFamily.LWE.value
     ],
@@ -110,6 +118,19 @@ def build_prime_rl_training_template() -> str:
         f"private_roots = {private_roots}\n"
         f"dataset_sources = {dataset_sources}\n"
         f"dataset_controls = {dataset_controls}\n"
+        "\n"
+        "[pedagogical_rl]\n"
+        "privileged_self_teacher = true\n"
+        'teacher_update = "grpo"\n'
+        'student_update = "surprisal_gated_weighted_sft"\n'
+        f'pedagogy_reward = "{PEDAGOGY_REWARD}"\n'
+        f'learnability_score = "{LEARNABILITY_SCORE}"\n'
+        "surprise_gap = \"log p_student(a_max|x,prefix) - "
+        'log p_student(a_t|x,prefix)"\n'
+        "spike_penalty_beta = 5.0\n"
+        "spike_penalty_lambda = 1.0\n"
+        "surprisal_gate_kappa = 2.0\n"
+        "surprisal_gate_gamma = -4.0\n"
         "\n"
         "[[env]]\n"
         'id = "agades-pqc-verifier-env"\n'
@@ -202,7 +223,12 @@ def build_private_training_manifest(
         },
         "pedagogical_rl": {
             "method": "pedagogical_rl",
-            "teacher_student_pattern": "privileged_self_teacher_student",
+            "method_manifest_path": "docs/pedagogical_rl_method.json",
+            "teacher_student_pattern": TEACHER_STUDENT_PATTERN,
+            "pedagogy_reward": PEDAGOGY_REWARD,
+            "learnability_score": LEARNABILITY_SCORE,
+            "assimilation_objective": ASSIMILATION_OBJECTIVE,
+            "stage_sequence": list(STAGE_SEQUENCE),
             "spike_aware_pedagogy_reward": True,
             "surprisal_gated_imitation": True,
             "reward_terms": list(REWARD_TERMS),
@@ -368,6 +394,25 @@ def _verify_training_toml(
         failures.append("Prime RL config dataset controls are incorrect.")
     if run_config.get("gguf_direct_training_allowed") is not False:
         failures.append("Prime RL config must not allow direct GGUF training.")
+    pedagogical_rl = _dict_or_empty(config.get("pedagogical_rl"))
+    if pedagogical_rl.get("privileged_self_teacher") is not True:
+        failures.append("Prime RL config must enable privileged self-teacher.")
+    if pedagogical_rl.get("teacher_update") != "grpo":
+        failures.append("Prime RL config teacher update must be grpo.")
+    if pedagogical_rl.get("student_update") != "surprisal_gated_weighted_sft":
+        failures.append("Prime RL config student update must be surprisal-gated.")
+    if pedagogical_rl.get("pedagogy_reward") != PEDAGOGY_REWARD:
+        failures.append("Prime RL config pedagogy reward is incorrect.")
+    if pedagogical_rl.get("learnability_score") != LEARNABILITY_SCORE:
+        failures.append("Prime RL config learnability score is incorrect.")
+    if pedagogical_rl.get("spike_penalty_beta") != 5.0:
+        failures.append("Prime RL config spike beta is incorrect.")
+    if pedagogical_rl.get("spike_penalty_lambda") != 1.0:
+        failures.append("Prime RL config spike lambda is incorrect.")
+    if pedagogical_rl.get("surprisal_gate_kappa") != 2.0:
+        failures.append("Prime RL config surprisal kappa is incorrect.")
+    if pedagogical_rl.get("surprisal_gate_gamma") != -4.0:
+        failures.append("Prime RL config surprisal gamma is incorrect.")
 
     env = config.get("env", [])
     first_env = env[0] if isinstance(env, list) and env else {}
@@ -437,10 +482,18 @@ def _verify_training_manifest(
     pedagogical_rl = _dict_or_empty(manifest.get("pedagogical_rl"))
     if pedagogical_rl.get("method") != "pedagogical_rl":
         failures.append("Private training method must be pedagogical_rl.")
-    if pedagogical_rl.get("teacher_student_pattern") != (
-        "privileged_self_teacher_student"
-    ):
+    if pedagogical_rl.get("method_manifest_path") != "docs/pedagogical_rl_method.json":
+        failures.append("Private training must bind the Pedagogical RL method.")
+    if pedagogical_rl.get("teacher_student_pattern") != TEACHER_STUDENT_PATTERN:
         failures.append("Private training must use self-teacher/student traces.")
+    if pedagogical_rl.get("pedagogy_reward") != PEDAGOGY_REWARD:
+        failures.append("Private training pedagogy reward is incorrect.")
+    if pedagogical_rl.get("learnability_score") != LEARNABILITY_SCORE:
+        failures.append("Private training learnability score is incorrect.")
+    if pedagogical_rl.get("assimilation_objective") != ASSIMILATION_OBJECTIVE:
+        failures.append("Private training assimilation objective is incorrect.")
+    if pedagogical_rl.get("stage_sequence") != STAGE_SEQUENCE:
+        failures.append("Private training stage sequence is incorrect.")
     if pedagogical_rl.get("reward_terms") != REWARD_TERMS:
         failures.append("Private training reward terms are incorrect.")
 
