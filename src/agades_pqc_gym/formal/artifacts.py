@@ -183,8 +183,23 @@ def build_attack_plan_proof_artifact(
     review_status: str = "pending_review",
 ) -> dict[str, Any]:
     raw = plan_path.read_text(encoding="utf-8")
-    plan = AttackPlan.model_validate_json(raw)
-    plan_payload = json.loads(raw)
+    return build_attack_plan_proof_artifact_from_json(
+        raw,
+        source_label=plan_path.as_posix(),
+        estimator_result_path=estimator_result_path,
+        review_status=review_status,
+    )
+
+
+def build_attack_plan_proof_artifact_from_json(
+    raw_json: str,
+    *,
+    source_label: str,
+    estimator_result_path: Path | None = None,
+    review_status: str = "pending_review",
+) -> dict[str, Any]:
+    plan = AttackPlan.model_validate_json(raw_json)
+    plan_payload = json.loads(raw_json)
     if review_status not in REVIEW_STATUSES:
         raise ValueError(
             "review_status must be one of: " + ", ".join(sorted(REVIEW_STATUSES))
@@ -201,8 +216,8 @@ def build_attack_plan_proof_artifact(
         },
         "attack_plan": {
             "id": plan.attack_plan_id,
-            "path": plan_path.as_posix(),
-            "sha256": hashlib.sha256(raw.encode("utf-8")).hexdigest(),
+            "path": source_label,
+            "sha256": hashlib.sha256(raw_json.encode("utf-8")).hexdigest(),
             "canonical_sha256": stable_sha256(plan_payload),
         },
         "family": plan.target.family.value,
