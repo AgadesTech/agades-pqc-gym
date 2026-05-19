@@ -37,6 +37,11 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
         "prime_verifiers_environment": {
             "environment": "agades-pqc-verifier-env",
             "eval_command": "prime eval run agades-pqc-verifier-env",
+            "eval_config": "docs/prime_eval_config_manifest.json",
+            "credentialed_eval_command_template": (
+                "prime eval run ${AGADES_PRIME_ENV_REF} -m "
+                "${AGADES_EVAL_MODEL} -p prime -n 32 -r 2 -t 2048 -s -A"
+            ),
             "training_stack": "prime-rl",
             "environment_hub_handoff": True,
             "hosted_training_handoff": True,
@@ -98,6 +103,12 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
     assert contract["linked_artifacts"]["hf_rl_rollout_examples"]["path"] == (
         "hf/dataset/rl_rollouts.jsonl"
     )
+    assert contract["linked_artifacts"]["prime_eval_config_manifest"]["path"] == (
+        "docs/prime_eval_config_manifest.json"
+    )
+    assert contract["linked_artifacts"]["prime_eval_template"]["path"] == (
+        "prime_intellect/evals/agades_pqc_eval.template.toml"
+    )
     assert contract["linked_artifacts"]["reviewer_governance"]["path"] == (
         "docs/reviewer_governance.json"
     )
@@ -143,7 +154,7 @@ def test_rl_environment_contract_verify_accepts_committed_contract() -> None:
             "surfaces": 2,
             "reward_terms": 8,
             "private_dataset_sources": 3,
-            "linked_artifacts": 14,
+            "linked_artifacts": 16,
             "failure_count": 0,
         },
         "failures": [],

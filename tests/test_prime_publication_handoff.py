@@ -15,6 +15,7 @@ from agades_pqc_gym.integrations.prime_publication_handoff import (
 
 EXPECTED_PRIME_ARTIFACT_PATHS = [
     "prime_intellect/environment_card.md",
+    "prime_intellect/evals/agades_pqc_eval.template.toml",
     "prime_intellect/verifier_spec.md",
     "prime_intellect/verifiers_environment/README.md",
     "prime_intellect/verifiers_environment/pyproject.toml",
@@ -24,6 +25,7 @@ EXPECTED_PRIME_ARTIFACT_PATHS = [
     "prime_intellect/schemas/verifier_result.schema.json",
     "prime_intellect/schemas/task_metadata.schema.json",
     "prime_intellect/schemas/schema_manifest.json",
+    "docs/prime_eval_config_manifest.json",
 ]
 EXPECTED_SOURCE_CATALOG_SCOPE = {
     "non_lattice_toy_evaluator_count": 41,
@@ -127,10 +129,16 @@ def test_prime_publication_handoff_records_review_boundaries(
     assert handoff["local_package"]["schemas_verify_command"] == (
         "uv run agades-pqc prime-schemas-verify --schemas prime_intellect/schemas"
     )
+    assert handoff["local_package"]["eval_config_verify_command"] == (
+        "uv run agades-pqc prime-eval-config-verify --config "
+        "prime_intellect/evals/agades_pqc_eval.template.toml --manifest "
+        "docs/prime_eval_config_manifest.json"
+    )
     assert handoff["readiness"] == {
         "local_package_ready": True,
         "environment_manifest_accepted": True,
         "schemas_accepted": True,
+        "eval_config_accepted": True,
         "task_count": 79,
         "family_count": 9,
         "json_only_scoring": True,
@@ -174,6 +182,7 @@ def test_prime_publication_handoff_records_review_boundaries(
     assert handoff["review_required_before_publish"] == [
         "Confirm Prime account, organization, and target namespace.",
         "Run the local Prime environment build and verifier smoke gates.",
+        "Review the Prime eval config before any credentialed eval run.",
         "Review all public cards for no private traces and no security claims.",
         "Publish first as private/unlisted if Prime Hub supports the target workflow.",
         "Record external Prime Hub URL only after credentialed review.",
@@ -187,6 +196,9 @@ def test_prime_publication_handoff_records_review_boundaries(
         "uv run agades-pqc prime-manifest-verify --manifest "
         "prime_intellect/verifiers_environment/prime_manifest.json",
         "uv run agades-pqc prime-schemas-verify --schemas prime_intellect/schemas",
+        "uv run agades-pqc prime-eval-config-verify --config "
+        "prime_intellect/evals/agades_pqc_eval.template.toml --manifest "
+        "docs/prime_eval_config_manifest.json",
         "uv build prime_intellect/verifiers_environment",
         "uv run agades-pqc ecosystem-smoke-verify --report "
         "reports/ecosystem_smoke.json",
@@ -213,7 +225,7 @@ def test_prime_publication_handoff_verify_accepts_committed_handoff() -> None:
         "handoff_path": "docs/prime_publication_handoff.json",
         "accepted": True,
         "summary": {
-            "artifact_count": 10,
+            "artifact_count": 12,
             "external_publication_requires_review": True,
             "failure_count": 0,
             "family_count": 9,

@@ -1,0 +1,43 @@
+# Template only: review credentials, namespace, and model before launch.
+name = "agades-pqc-verifier-eval"
+environment_id = "agades-pqc-verifier-env"
+environment_ref = "${AGADES_PRIME_ENV_REF}"
+model = "${AGADES_EVAL_MODEL}"
+provider = "prime"
+num_examples = 32
+rollouts_per_example = 2
+max_tokens = 2048
+seed = 42
+env_files = []
+launch_readiness = "blocked_until_prime_credentials_namespace_and_model_review"
+
+[commands]
+local_verifiers_smoke = "cd prime_intellect/verifiers_environment && uv run vf-eval agades-pqc-verifier-env"
+credentialed_eval_template = "prime eval run ${AGADES_PRIME_ENV_REF} -m ${AGADES_EVAL_MODEL} -p prime -n 32 -r 2 -t 2048 -s -A"
+
+[task_source]
+manifest_path = "prime_intellect/verifiers_environment/prime_manifest.json"
+schema_manifest_path = "prime_intellect/schemas/schema_manifest.json"
+public_examples_only = true
+
+[reward_contract]
+reward_range = [0.0, 1.0]
+accepted_reward = 1.0
+unsupported_reward = 0.0
+invalid_reward = 0.0
+requires_single_json_object = true
+requires_task_match = true
+accepts_executable_code = false
+
+[safety]
+template_only = true
+external_prime_execution_performed = false
+credentials_checked_at_generation = false
+credentials_present_in_artifact = false
+publish_outputs_publicly = false
+publish_private_traces = false
+security_claim = false
+
+[review]
+required_reviewers = ["prime_operator", "cryptography_domain_reviewer", "release_owner"]
+operator_checklist = "confirm_prime_org_namespace_model_and_billing"

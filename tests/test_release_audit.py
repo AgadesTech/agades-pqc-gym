@@ -44,19 +44,19 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert audit["schema_version"] == "agades.pqc.release_audit.v1"
     assert audit["accepted"] is True
     assert audit["summary"] == {
-        "passed": 57,
+        "passed": 58,
         "failed": 0,
         "warning": 1,
-        "total": 58,
+        "total": 59,
     }
 
     checks = {check["id"]: check for check in audit["checks"]}
     assert checks["release-gate-closure"]["status"] == "passed"
     assert checks["release-gate-closure"]["blocking"] is True
     assert checks["release-gate-closure"]["evidence"] == {
-        "checked_release_gate_artifacts": 36,
-        "release_audit_gate_artifacts": 22,
-        "ecosystem_smoke_gate_artifacts": 24,
+        "checked_release_gate_artifacts": 37,
+        "release_audit_gate_artifacts": 23,
+        "ecosystem_smoke_gate_artifacts": 25,
         "missing_ecosystem_smoke_gate": [],
         "late_ecosystem_smoke_gate": [],
     }
@@ -663,12 +663,21 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "hub_install_command_template": (
             "prime env install <owner>/agades-pqc-verifier-env"
         ),
+        "eval_config_path": "prime_intellect/evals/agades_pqc_eval.template.toml",
         "local_eval_command": (
             "cd prime_intellect/verifiers_environment && "
             "uv run vf-eval agades-pqc-verifier-env"
         ),
         "mirrored_public_examples": 79,
         "mirrors_public_examples": True,
+        "task_count": 79,
+    }
+    assert checks["prime-eval-config"]["status"] == "passed"
+    assert checks["prime-eval-config"]["blocking"] is True
+    assert checks["prime-eval-config"]["evidence"] == {
+        "family_count": 9,
+        "num_examples": 32,
+        "rollouts_per_example": 2,
         "task_count": 79,
     }
     assert checks["hf-space-smoke"]["status"] == "passed"
@@ -868,6 +877,8 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "verify-prime-manifest",
         "generate-prime-environment-smoke",
         "verify-prime-environment-smoke",
+        "generate-prime-eval-config",
+        "verify-prime-eval-config",
         "generate-prime-schemas",
         "verify-prime-schemas",
         "generate-prime-publication-handoff",
@@ -1426,7 +1437,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert checks["prime-publication-handoff"]["status"] == "passed"
     assert checks["prime-publication-handoff"]["blocking"] is True
     assert checks["prime-publication-handoff"]["evidence"] == {
-        "artifact_count": 10,
+        "artifact_count": 12,
         "external_publication_requires_review": True,
         "family_count": 9,
         "local_package_ready": True,
@@ -1451,7 +1462,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "external_publication_requires_review": True,
         "local_package_ready": True,
         "prime_hub_publication_performed": False,
-        "publication_artifact_count": 10,
+        "publication_artifact_count": 12,
         "publication_family_count": 9,
         "publication_task_count": 79,
         "requires_credentials": True,

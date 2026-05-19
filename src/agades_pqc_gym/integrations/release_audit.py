@@ -145,6 +145,7 @@ from agades_pqc_gym.integrations.prime_environment_manifest import (
 from agades_pqc_gym.integrations.prime_environment_smoke import (
     verify_prime_environment_smoke_report,
 )
+from agades_pqc_gym.integrations.prime_eval_config import verify_prime_eval_config
 from agades_pqc_gym.integrations.prime_publication_handoff import (
     verify_prime_publication_handoff,
 )
@@ -395,6 +396,8 @@ GITHUB_ACTIONS_REQUIRED_COMMANDS = (
         "docs/external_publication_review_packet.json "
         "docs/private_run_policy.json "
         "docs/prime_publication_handoff.json docs/prime_speedrun_handoff.json "
+        "docs/prime_eval_config_manifest.json "
+        "prime_intellect/evals/agades_pqc_eval.template.toml "
         "prime_intellect/verifiers_environment/prime_manifest.json "
         "prime_intellect/schemas/attack_plan.schema.json "
         "prime_intellect/schemas/verifier_result.schema.json "
@@ -630,6 +633,18 @@ GITHUB_ACTIONS_REQUIRED_COMMANDS = (
         "reports/prime_environment_smoke.json",
     ),
     (
+        "generate-prime-eval-config",
+        "uv run agades-pqc prime-eval-config --config "
+        "prime_intellect/evals/agades_pqc_eval.template.toml --manifest "
+        "docs/prime_eval_config_manifest.json",
+    ),
+    (
+        "verify-prime-eval-config",
+        "uv run agades-pqc prime-eval-config-verify --config "
+        "prime_intellect/evals/agades_pqc_eval.template.toml --manifest "
+        "docs/prime_eval_config_manifest.json",
+    ),
+    (
         "generate-prime-schemas",
         "uv run agades-pqc prime-schemas --out prime_intellect/schemas",
     ),
@@ -753,6 +768,7 @@ def build_release_audit(root: Path | None = None) -> dict[str, Any]:
         _ecosystem_release_plans(project_root),
         _prime_environment_smoke(project_root),
         _prime_environment_manifest(project_root),
+        _prime_eval_config(project_root),
         _prime_verifier_schemas(project_root),
         _prime_publication_handoff(project_root),
         _prime_speedrun_handoff(project_root),
@@ -4780,6 +4796,7 @@ def _prime_environment_manifest(root: Path) -> dict[str, Any]:
         evidence={
             "families": task_manifest.get("families", []),
             "hub_install_command_template": prime.get("hub_install_command_template"),
+            "eval_config_path": prime.get("eval_config_path"),
             "local_eval_command": prime.get("local_eval_command"),
             "mirrored_public_examples": source_mirror.get("valid_public_example_count"),
             "mirrors_public_examples": source_mirror.get(
@@ -4788,6 +4805,34 @@ def _prime_environment_manifest(root: Path) -> dict[str, Any]:
             "task_count": task_manifest.get("task_count"),
         },
         failures=failures,
+    )
+
+
+def _prime_eval_config(root: Path) -> dict[str, Any]:
+    verification = verify_prime_eval_config(
+        Path("prime_intellect/evals/agades_pqc_eval.template.toml"),
+        Path("docs/prime_eval_config_manifest.json"),
+        root=root,
+    )
+    summary = verification["summary"]
+
+    return _check(
+        check_id="prime-eval-config",
+        status="failed" if verification["failures"] else "passed",
+        blocking=True,
+        artifact="docs/prime_eval_config_manifest.json",
+        detail=(
+            "Prime eval config template is checked in, synchronized with the "
+            "Verifiers environment, and blocks credentialed eval runs until "
+            "Prime namespace, billing, and model review."
+        ),
+        evidence={
+            "family_count": summary["family_count"],
+            "num_examples": summary["num_examples"],
+            "rollouts_per_example": summary["rollouts_per_example"],
+            "task_count": summary["task_count"],
+        },
+        failures=list(verification["failures"]),
     )
 
 

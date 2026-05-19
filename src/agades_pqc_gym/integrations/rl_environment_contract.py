@@ -40,6 +40,8 @@ LINKED_ARTIFACT_PATHS = {
     "hf_rl_rollout_examples": "hf/dataset/rl_rollouts.jsonl",
     "prime_environment_manifest": "prime_intellect/verifiers_environment/"
     "prime_manifest.json",
+    "prime_eval_config_manifest": "docs/prime_eval_config_manifest.json",
+    "prime_eval_template": "prime_intellect/evals/agades_pqc_eval.template.toml",
     "private_run_policy": "docs/private_run_policy.json",
     "private_training_manifest": "docs/private_training_config_manifest.json",
     "prime_rl_training_template": "prime_intellect/training/"
@@ -81,6 +83,11 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
             "prime_verifiers_environment": {
                 "environment": "agades-pqc-verifier-env",
                 "eval_command": "prime eval run agades-pqc-verifier-env",
+                "eval_config": "docs/prime_eval_config_manifest.json",
+                "credentialed_eval_command_template": (
+                    "prime eval run ${AGADES_PRIME_ENV_REF} -m "
+                    "${AGADES_EVAL_MODEL} -p prime -n 32 -r 2 -t 2048 -s -A"
+                ),
                 "training_stack": "prime-rl",
                 "environment_hub_handoff": True,
                 "hosted_training_handoff": True,
@@ -290,6 +297,13 @@ def _verify_surfaces(contract: dict[str, Any], failures: list[str]) -> None:
         )
     if prime.get("eval_command") != "prime eval run agades-pqc-verifier-env":
         failures.append("Prime eval command is incorrect.")
+    if prime.get("eval_config") != "docs/prime_eval_config_manifest.json":
+        failures.append("Prime eval config manifest is incorrect.")
+    if prime.get("credentialed_eval_command_template") != (
+        "prime eval run ${AGADES_PRIME_ENV_REF} -m ${AGADES_EVAL_MODEL} "
+        "-p prime -n 32 -r 2 -t 2048 -s -A"
+    ):
+        failures.append("Prime credentialed eval command template is incorrect.")
     if prime.get("training_stack") != "prime-rl":
         failures.append("Prime training stack must be prime-rl.")
     if prime.get("private_trace_publication_allowed") is not False:

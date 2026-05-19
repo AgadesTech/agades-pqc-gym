@@ -143,7 +143,7 @@ EXPECTED_PRIME_HUB_WARNING_EVIDENCE = {
     "external_publication_requires_review": True,
     "local_package_ready": True,
     "prime_hub_publication_performed": False,
-    "publication_artifact_count": 10,
+    "publication_artifact_count": 12,
     "publication_family_count": 9,
     "publication_task_count": 79,
     "requires_credentials": True,
@@ -267,12 +267,12 @@ def test_release_status_summarizes_current_public_evidence(tmp_path: Path) -> No
     }
     assert status["audit"] == {
         "accepted": True,
-        "passed": 57,
+        "passed": 58,
         "failed": 0,
         "warning": 1,
         "warning_check_ids": ["prime-hub-publication"],
         "warning_records": [EXPECTED_PRIME_HUB_WARNING_RECORD],
-        "total": 58,
+        "total": 59,
     }
     assert status["runbook"] == {
         "artifact_count": 47,
@@ -382,7 +382,7 @@ def test_release_status_summarizes_current_public_evidence(tmp_path: Path) -> No
             "task_count": 79,
             "family_count": 9,
             "handoff_local_package_ready": True,
-            "handoff_artifact_count": 10,
+            "handoff_artifact_count": 12,
             "prime_hub_publication_performed": False,
             "requires_credentials": True,
             "review_required_before_publish": True,
@@ -556,8 +556,8 @@ def test_release_status_verify_accepts_committed_status() -> None:
         "summary": {
             "audit_accepted": True,
             "audit_failed": 0,
-            "audit_passed": 57,
-            "audit_total": 58,
+                "audit_passed": 58,
+                "audit_total": 59,
             "audit_warning": 1,
             "audit_warning_evidence_items": 1,
             "audit_warning_records": 1,

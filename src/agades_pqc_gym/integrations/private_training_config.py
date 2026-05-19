@@ -52,6 +52,8 @@ LINKED_ARTIFACT_PATHS = {
     "hf_rl_rollout_examples": "hf/dataset/rl_rollouts.jsonl",
     "prime_environment_manifest": "prime_intellect/verifiers_environment/"
     "prime_manifest.json",
+    "prime_eval_config_manifest": "docs/prime_eval_config_manifest.json",
+    "prime_eval_template": "prime_intellect/evals/agades_pqc_eval.template.toml",
     "formal_lwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
         TargetFamily.LWE.value
     ],
@@ -176,6 +178,7 @@ def build_private_training_manifest(
             "config_path": config_path.as_posix(),
             "config_sha256": _file_sha256(_resolve_path(config_path, project_root)),
             "rl_environment_contract_path": "docs/rl_environment_contract.json",
+            "eval_config_manifest_path": "docs/prime_eval_config_manifest.json",
             "launch_command_template": (
                 f"prime train {config_path.as_posix()} "
                 "--env-var HF_TOKEN --env-var WANDB_API_KEY"
@@ -408,6 +411,10 @@ def _verify_training_manifest(
     prime_training = _dict_or_empty(manifest.get("prime_training"))
     if prime_training.get("training_stack") != "prime-rl":
         failures.append("Private training stack must be prime-rl.")
+    if prime_training.get("eval_config_manifest_path") != (
+        "docs/prime_eval_config_manifest.json"
+    ):
+        failures.append("Private training must bind the Prime eval config manifest.")
     if prime_training.get("launch_readiness") != (
         "blocked_until_private_model_and_dataset_review"
     ):

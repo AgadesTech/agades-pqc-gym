@@ -2,8 +2,8 @@
   "audit": {
     "accepted": true,
     "failed": 0,
-    "passed": 57,
-    "total": 58,
+    "passed": 58,
+    "total": 59,
     "warning": 1,
     "warning_check_ids": [
       "prime-hub-publication"
@@ -17,7 +17,7 @@
           "external_publication_requires_review": true,
           "local_package_ready": true,
           "prime_hub_publication_performed": false,
-          "publication_artifact_count": 10,
+          "publication_artifact_count": 12,
           "publication_family_count": 9,
           "publication_task_count": 79,
           "requires_credentials": true,
@@ -289,7 +289,7 @@
         ],
         "unique_future_reviewed_adapter_source_count": 15
       },
-      "handoff_artifact_count": 10,
+      "handoff_artifact_count": 12,
       "handoff_local_package_ready": true,
       "prime_hub_publication_performed": false,
       "requires_credentials": true,

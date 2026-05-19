@@ -91,7 +91,7 @@ EXPECTED_PRIME_HUB_WARNING_EVIDENCE = {
     "external_publication_requires_review": True,
     "local_package_ready": True,
     "prime_hub_publication_performed": False,
-    "publication_artifact_count": 10,
+    "publication_artifact_count": 12,
     "publication_family_count": 9,
     "publication_task_count": 79,
     "requires_credentials": True,
@@ -325,10 +325,10 @@ def test_publication_preflight_blocks_external_publication_without_review() -> N
     assert preflight["audit"] == {
         "accepted": True,
         "failed": 0,
-        "passed": 57,
+            "passed": 58,
         "warning": 1,
         "warning_check_ids": ["prime-hub-publication"],
-        "total": 58,
+            "total": 59,
     }
     assert preflight["external_review"] == EXPECTED_EXTERNAL_REVIEW
     assert preflight["blockers"] == [

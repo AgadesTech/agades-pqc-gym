@@ -494,9 +494,9 @@
         "docs/huggingface_publication_handoff.json": "11c47d571964d3fe7fd352f038aff15c48d11b2ad1f255162adfda834690b33d",
         "docs/lattice_estimator_baseline_contracts.json": "09100e2ba4733daffee5c82e58153ed8585210589b2112467ff29e86ba2bf2a5",
         "docs/lattice_estimator_manifest.json": "0b52a47bd0217a194d1004ce3433ea5c9e0404f85e0a05415e8c37bbe240c2cb",
-        "docs/nvidia_publication_handoff.json": "8e5a255f6b8aafd5763b116a1862bc3425fdc87f4b6a6f375b9be9c1374e171f",
-        "docs/prime_publication_handoff.json": "5f630dee464bd1c104e1dfb132bd3f2d6fcf62cec1d0bba257c5e8b9db13943f",
-        "docs/prime_speedrun_handoff.json": "8819f4806bfa7a16d66ec235a08c58d24464a09a1d636f80b6859074fa600cbc",
+        "docs/nvidia_publication_handoff.json": "0b661f296f39403d724977b3f84a9deb1668be2e33cc42c055470cc66ed38e8b",
+        "docs/prime_publication_handoff.json": "5ab3d0512173b1602206b8ad2cdb285030a695794958c304f08b539a37196e3f",
+        "docs/prime_speedrun_handoff.json": "2cfe3d153e315c5b4c4519f26d836df4c97d2e8538878fa4e1c3f56bfc3591f7",
         "docs/private_run_policy.json": "a0992031eb7a4268e4813b4d5f02a9ca4dda078972c935ef829c8e981259d86a",
         "docs/public_benchmark_manifest.json": "c45741efde84f27edfd6feab0e3217f68c88a5be4d56a038b2973ea2296722f7",
         "docs/runbook_input_manifest.json": "c5b8adbb47849f7684ede4a52113902f2f60f205b74893b9170a60093904d6fe",
@@ -634,16 +634,16 @@
         "docs/prime_speedrun_handoff.json"
       ],
       "artifact_sha256": {
-        "docs/prime_speedrun_handoff.json": "8819f4806bfa7a16d66ec235a08c58d24464a09a1d636f80b6859074fa600cbc",
-        "prime_intellect/environment_card.md": "d81e6b2148ebac63041aae1ac58e241ba84c5a433fabd78d19f333614d47e99b",
+        "docs/prime_speedrun_handoff.json": "2cfe3d153e315c5b4c4519f26d836df4c97d2e8538878fa4e1c3f56bfc3591f7",
+        "prime_intellect/environment_card.md": "e7476a86add4e7464636565db91e83dcfab57488ed2d48a18157e0ce52163011",
         "prime_intellect/schemas/attack_plan.schema.json": "4d8a4e49974d6c0df0d466f5ee3b488e54893af4ef23e61e00af4a0cbb7ea592",
         "prime_intellect/schemas/schema_manifest.json": "f448d41c640e6dc02a462af1bf695a93045676a191cee53403a121cab833fbeb",
         "prime_intellect/schemas/task_metadata.schema.json": "95ee9534b21fce15122c5d65aafcaa181210a0e898c284b5b8b46a0cdcbd3e07",
         "prime_intellect/schemas/verifier_result.schema.json": "dca189a653db3cfc7b70ad099ba8a627f7940402ffc3846b10ec33989cb468a4",
         "prime_intellect/verifier_spec.md": "90ef567a4f2421b5468a88669413bb0004134c7ac9fc3869037a02e7860f7131",
-        "prime_intellect/verifiers_environment/README.md": "7f8bf07a93968f5bbd986c89cd770d3253d6bff2a26cae9906094a1076c3043e",
+        "prime_intellect/verifiers_environment/README.md": "39ec4ff9d9d609ab1e2533d08a623b8ccfd7a6dca086f000bc5e9a6de15ea662",
         "prime_intellect/verifiers_environment/agades_pqc_verifier_env.py": "17fa16a88719114d1305c0e6fdb682f9f38d1d7f58be43eb5815602f0c573f6a",
-        "prime_intellect/verifiers_environment/prime_manifest.json": "b4a421a2179773908e18b8a52a91fb17cd35dc826fa9a7a4ecdb8afffb15ebbf",
+        "prime_intellect/verifiers_environment/prime_manifest.json": "12c27d7254504526062db94d9cf128d9fdee8b59a0712a4efb456e3957f56bd4",
         "prime_intellect/verifiers_environment/pyproject.toml": "f3a01ff6dde5b20ace513244eefa6f00831fbd5636f362f5f0e615bd4cc6a6a5"
       },
       "id": "prime-verifiers-environment",
@@ -669,7 +669,7 @@
       ],
       "artifact_sha256": {
         "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md": "2c7ac9e3d7d2144f01524501c46162a0649fcdd035cc4973be682d8c87224e99",
-        "docs/nvidia_publication_handoff.json": "8e5a255f6b8aafd5763b116a1862bc3425fdc87f4b6a6f375b9be9c1374e171f",
+        "docs/nvidia_publication_handoff.json": "0b661f296f39403d724977b3f84a9deb1668be2e33cc42c055470cc66ed38e8b",
         "nvidia/README.md": "18568265697f8a33eef8fab9d0d1b1312d32c9d1f365eae588fbc35a1c194f62",
         "nvidia/accelerator_manifest.json": "4220fb49bd07624af90e5be1dfe2fbd8a72a7c4a968782d46e3ccc12f15b04cc"
       },

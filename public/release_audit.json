@@ -136,6 +136,8 @@
           "verify-prime-manifest",
           "generate-prime-environment-smoke",
           "verify-prime-environment-smoke",
+          "generate-prime-eval-config",
+          "verify-prime-eval-config",
           "generate-prime-schemas",
           "verify-prime-schemas",
           "generate-prime-publication-handoff",
@@ -1125,11 +1127,11 @@
       "blocking": true,
       "detail": "Checked-in release gates that depend on release-audit must first declare ecosystem-smoke-verify, including nested Hugging Face dataset metadata.",
       "evidence": {
-        "checked_release_gate_artifacts": 36,
-        "ecosystem_smoke_gate_artifacts": 24,
+        "checked_release_gate_artifacts": 37,
+        "ecosystem_smoke_gate_artifacts": 25,
         "late_ecosystem_smoke_gate": [],
         "missing_ecosystem_smoke_gate": [],
-        "release_audit_gate_artifacts": 22
+        "release_audit_gate_artifacts": 23
       },
       "failures": [],
       "id": "release-gate-closure",
@@ -1547,6 +1549,7 @@
       "blocking": true,
       "detail": "Prime environment manifest is checked in, synchronized with packaged tasks, and documents the JSON-only scoring contract.",
       "evidence": {
+        "eval_config_path": "prime_intellect/evals/agades_pqc_eval.template.toml",
         "families": [
           "CODE_BASED",
           "HASH_BASED",
@@ -1566,6 +1569,20 @@
       },
       "failures": [],
       "id": "prime-environment-manifest",
+      "status": "passed"
+    },
+    {
+      "artifact": "docs/prime_eval_config_manifest.json",
+      "blocking": true,
+      "detail": "Prime eval config template is checked in, synchronized with the Verifiers environment, and blocks credentialed eval runs until Prime namespace, billing, and model review.",
+      "evidence": {
+        "family_count": 9,
+        "num_examples": 32,
+        "rollouts_per_example": 2,
+        "task_count": 79
+      },
+      "failures": [],
+      "id": "prime-eval-config",
       "status": "passed"
     },
     {
@@ -1601,7 +1618,7 @@
       "blocking": true,
       "detail": "Prime publication handoff is checked in, synchronized with the local environment package, and keeps external Prime Hub publication behind credentials and release review.",
       "evidence": {
-        "artifact_count": 10,
+        "artifact_count": 12,
         "external_publication_requires_review": true,
         "family_count": 9,
         "local_package_ready": true,
@@ -1719,7 +1736,7 @@
         "external_publication_requires_review": true,
         "local_package_ready": true,
         "prime_hub_publication_performed": false,
-        "publication_artifact_count": 10,
+        "publication_artifact_count": 12,
         "publication_family_count": 9,
         "publication_task_count": 79,
         "requires_credentials": true,
@@ -1749,8 +1766,8 @@
   "schema_version": "agades.pqc.release_audit.v1",
   "summary": {
     "failed": 0,
-    "passed": 57,
-    "total": 58,
+    "passed": 58,
+    "total": 59,
     "warning": 1
   }
 }
