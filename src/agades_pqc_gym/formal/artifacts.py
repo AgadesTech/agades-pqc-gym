@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from agades_pqc_gym.core.attack_plan import AttackPlan
+from agades_pqc_gym.core.evaluator_result import EvaluatorResult
 from agades_pqc_gym.core.target import SupportLevel, TargetFamily
 from agades_pqc_gym.formal.review import (
     REVIEW_STATUSES,
@@ -21,6 +22,11 @@ ATTACK_PLAN_SCHEMA_CONTRACT_SCHEMA = "agades.pqc.attack_plan.schema_contract.v1"
 ATTACK_PLAN_SCHEMA_MODEL = "agades_pqc_gym.core.attack_plan.AttackPlan"
 ATTACK_PLAN_CANONICALIZATION = "json_sort_keys_minified_v1"
 ATTACK_PLAN_VALIDATION = "pydantic_v2_extra_forbid_family_cross_checks"
+EVALUATOR_RESULT_SCHEMA_CONTRACT_SCHEMA = (
+    "agades.pqc.evaluator_result.schema_contract.v1"
+)
+EVALUATOR_RESULT_SCHEMA_MODEL = "agades_pqc_gym.core.evaluator_result.EvaluatorResult"
+EVALUATOR_RESULT_VALIDATION = "pydantic_v2_extra_forbid_status_payload_checks"
 PROOF_OBLIGATION_TYPE_SCHEMA = "agades.pqc.formal.proof_obligation_type.v1"
 PROOF_OBLIGATION_CLAIM_POLICY = {
     "public_interpretation": "applicability_check_only",
@@ -524,13 +530,18 @@ def _estimator_result_binding(
     raw = estimator_result_path.read_bytes()
     try:
         canonical_payload: Any = json.loads(raw.decode("utf-8"))
-    except json.JSONDecodeError:
-        canonical_payload = raw.decode("utf-8", errors="replace")
+    except json.JSONDecodeError as exc:
+        raise ValueError(
+            "attached estimator result must be a JSON EvaluatorResult"
+        ) from exc
+    evaluator_result = _validate_evaluator_result(canonical_payload)
     return {
         "status": "attached_unreviewed",
         "path": estimator_result_path.as_posix(),
+        "schema_contract": _evaluator_result_schema_contract(),
         "sha256": hashlib.sha256(raw).hexdigest(),
         "canonical_sha256": stable_sha256(canonical_payload),
+        "parsed_result": _evaluator_result_summary(evaluator_result),
         "claim_allowed": False,
         "notes": (
             "Estimator output is bound for reproducibility and reviewer "
@@ -968,6 +979,32 @@ def _attack_plan_schema_contract() -> dict[str, str]:
     }
 
 
+def _evaluator_result_schema_contract() -> dict[str, str]:
+    return {
+        "schema_version": EVALUATOR_RESULT_SCHEMA_CONTRACT_SCHEMA,
+        "model": EVALUATOR_RESULT_SCHEMA_MODEL,
+        "json_schema_sha256": stable_sha256(EvaluatorResult.model_json_schema()),
+        "canonicalization": ATTACK_PLAN_CANONICALIZATION,
+        "validation": EVALUATOR_RESULT_VALIDATION,
+    }
+
+
+def _validate_evaluator_result(payload: Any) -> EvaluatorResult:
+    return EvaluatorResult.model_validate(payload)
+
+
+def _evaluator_result_summary(result: EvaluatorResult) -> dict[str, Any]:
+    return {
+        "schema_version": result.schema_version,
+        "evaluator_name": result.evaluator_name,
+        "evaluator_version": result.evaluator_version,
+        "evaluator_commit": result.evaluator_commit,
+        "evaluation_status": result.evaluation_status,
+        "attack_type": result.attack_type,
+        "claim_allowed": False,
+    }
+
+
 def _verify_obligation_type(
     obligation: dict[str, Any],
     artifact: dict[str, Any],
@@ -1151,8 +1188,22 @@ def _verify_estimator_result_binding(
         failures.append("Estimator result SHA-256 does not match the bound file.")
     try:
         canonical_payload: Any = json.loads(raw.decode("utf-8"))
-    except json.JSONDecodeError:
-        canonical_payload = raw.decode("utf-8", errors="replace")
+    except json.JSONDecodeError as exc:
+        failures.append(
+            f"Bound estimator result is invalid JSON at line {exc.lineno}."
+        )
+        return
+    try:
+        evaluator_result = _validate_evaluator_result(canonical_payload)
+    except Exception as exc:  # noqa: BLE001
+        failures.append(f"Bound estimator result is invalid: {exc}")
+        return
+    if binding.get("schema_contract") != _evaluator_result_schema_contract():
+        failures.append(
+            "Estimator result schema binding does not match current core schema."
+        )
+    if binding.get("parsed_result") != _evaluator_result_summary(evaluator_result):
+        failures.append("Estimator result parsed summary does not match bound file.")
     if binding.get("canonical_sha256") != stable_sha256(canonical_payload):
         failures.append(
             "Estimator result canonical SHA-256 does not match the bound file."
