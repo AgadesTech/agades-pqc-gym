@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 
+import pytest
 from typer.testing import CliRunner
 
 from agades_pqc_gym.cli import app
@@ -99,6 +100,80 @@ def test_schema_only_code_based_proof_artifact_refuses_fake_estimator_obligation
     assert any(
         obligation["obligation_id"] == "family.code_based.schema_only.no_estimate"
         for obligation in artifact["proof_obligations"]
+    )
+
+
+@pytest.mark.parametrize(
+    ("plan_path", "family", "invariant_id", "obligation_id", "lean_path"),
+    [
+        (
+            "examples/attack_plans/code_based_isd_placeholder.json",
+            "CODE_BASED",
+            "code_based.length_dimension_weight_positive",
+            "family.code_based.schema_only.no_estimate",
+            "formal/lean/AgadesPQC/CodeBased/Target.lean",
+        ),
+        (
+            "examples/attack_plans/multivariate_mq_toy.json",
+            "MULTIVARIATE",
+            "multivariate.variables_equations_field_present",
+            "family.multivariate.applicability_shape",
+            "formal/lean/AgadesPQC/Multivariate/Target.lean",
+        ),
+        (
+            "examples/attack_plans/hash_based_collision_toy.json",
+            "HASH_BASED",
+            "hash_based.hash_function_and_security_parameter_present",
+            "family.hash_based.bound_check_is_not_attack_claim",
+            "formal/lean/AgadesPQC/HashBased/Target.lean",
+        ),
+        (
+            "examples/attack_plans/isogeny_historical_toy.json",
+            "ISOGENY_HISTORICAL",
+            "isogeny_historical.dimension_positive_historical_scope",
+            "family.isogeny_historical.historical_only",
+            "formal/lean/AgadesPQC/IsogenyHistorical/Target.lean",
+        ),
+        (
+            "examples/attack_plans/implementation_security_kat_toy.json",
+            "IMPLEMENTATION_SECURITY",
+            "implementation_security.review_scope_declared",
+            "family.implementation_security.no_conformance_claim",
+            "formal/lean/AgadesPQC/ImplementationSecurity/Target.lean",
+        ),
+    ],
+)
+def test_family_specific_proof_artifacts_do_not_use_generic_fallback(
+    plan_path: str,
+    family: str,
+    invariant_id: str,
+    obligation_id: str,
+    lean_path: str,
+) -> None:
+    artifact = build_attack_plan_proof_artifact(Path(plan_path))
+
+    invariant_ids = {
+        invariant["invariant_id"] for invariant in artifact["family_invariants"]
+    }
+    obligation_ids = {
+        obligation["obligation_id"] for obligation in artifact["proof_obligations"]
+    }
+    lean_paths = {
+        invariant["lean_source"]["path"]
+        for invariant in artifact["family_invariants"]
+    } | {
+        obligation["lean_source"]["path"]
+        for obligation in artifact["proof_obligations"]
+    }
+
+    assert artifact["family"] == family
+    assert invariant_id in invariant_ids
+    assert obligation_id in obligation_ids
+    assert lean_path in lean_paths
+    assert "generic.family_shape_validated" not in invariant_ids
+    assert all(
+        not item["semantics_id"].startswith("agades.pqc.operator_semantics.generic.")
+        for item in artifact["operator_semantics"]
     )
 
 

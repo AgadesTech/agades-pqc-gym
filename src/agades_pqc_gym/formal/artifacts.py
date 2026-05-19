@@ -39,6 +39,30 @@ LEAN_THEOREM_SOURCES = {
     "AgadesPQC.CodeBased.SchemaOnly.no_estimate": (
         "formal/lean/AgadesPQC/CodeBased/SchemaOnly.lean"
     ),
+    "AgadesPQC.Multivariate.Target.variables_equations_field_present": (
+        "formal/lean/AgadesPQC/Multivariate/Target.lean"
+    ),
+    "AgadesPQC.Multivariate.Target.applicability_shape": (
+        "formal/lean/AgadesPQC/Multivariate/Target.lean"
+    ),
+    "AgadesPQC.HashBased.Target.hash_function_and_security_parameter_present": (
+        "formal/lean/AgadesPQC/HashBased/Target.lean"
+    ),
+    "AgadesPQC.HashBased.Target.bound_check_is_not_attack_claim": (
+        "formal/lean/AgadesPQC/HashBased/Target.lean"
+    ),
+    "AgadesPQC.IsogenyHistorical.Target.dimension_positive_historical_scope": (
+        "formal/lean/AgadesPQC/IsogenyHistorical/Target.lean"
+    ),
+    "AgadesPQC.IsogenyHistorical.Target.historical_only": (
+        "formal/lean/AgadesPQC/IsogenyHistorical/Target.lean"
+    ),
+    "AgadesPQC.ImplementationSecurity.Target.review_scope_declared": (
+        "formal/lean/AgadesPQC/ImplementationSecurity/Target.lean"
+    ),
+    "AgadesPQC.ImplementationSecurity.Target.no_conformance_claim": (
+        "formal/lean/AgadesPQC/ImplementationSecurity/Target.lean"
+    ),
     "AgadesPQC.Evaluator.no_security_claim": (
         "formal/lean/AgadesPQC/Evaluator.lean"
     ),
@@ -52,6 +76,104 @@ REQUIRED_REVIEWERS = [
     "release_boundary_reviewer",
 ]
 REVIEW_STATUSES = {"pending_review", "reviewed", "rejected"}
+OPERATOR_SEMANTICS = {
+    "primal_usvp": (
+        "agades.pqc.operator_semantics.lattice.primal_usvp.v1",
+        "AgadesPQC.Lattice.PrimalUSVP",
+    ),
+    "bounded_distance_decoding": (
+        "agades.pqc.operator_semantics.lattice.bdd.v1",
+        "AgadesPQC.Lattice.BDD",
+    ),
+    "dual_attack": (
+        "agades.pqc.operator_semantics.lattice.dual_attack.v1",
+        "AgadesPQC.Lattice.DualAttack",
+    ),
+    "dual_hybrid": (
+        "agades.pqc.operator_semantics.lattice.dual_hybrid.v1",
+        "AgadesPQC.Lattice.DualHybrid",
+    ),
+    "bkw": (
+        "agades.pqc.operator_semantics.lattice.bkw.v1",
+        "AgadesPQC.Lattice.BKW",
+    ),
+    "modulus_switching": (
+        "agades.pqc.operator_semantics.lattice.modulus_switching.v1",
+        "AgadesPQC.Lattice.ModulusSwitching",
+    ),
+    "sample_selection": (
+        "agades.pqc.operator_semantics.lattice.sample_selection.v1",
+        "AgadesPQC.Lattice.SampleSelection",
+    ),
+    "secret_guessing": (
+        "agades.pqc.operator_semantics.lattice.secret_guessing.v1",
+        "AgadesPQC.Lattice.SecretGuessing",
+    ),
+    "meet_in_the_middle": (
+        "agades.pqc.operator_semantics.lattice.meet_in_the_middle.v1",
+        "AgadesPQC.Lattice.MeetInTheMiddle",
+    ),
+    "normal_form_transform": (
+        "agades.pqc.operator_semantics.lattice.normal_form_transform.v1",
+        "AgadesPQC.Lattice.NormalFormTransform",
+    ),
+    "bkz_parameter_sweep": (
+        "agades.pqc.operator_semantics.lattice.bkz_parameter_sweep.v1",
+        "AgadesPQC.Lattice.BKZParameterSweep",
+    ),
+    "module_lattice_reduction_hypothesis": (
+        "agades.pqc.operator_semantics.lattice.module_reduction_hypothesis.v1",
+        "AgadesPQC.Lattice.ModuleReductionHypothesis",
+    ),
+    "decoding_fixture_check": (
+        "agades.pqc.operator_semantics.code_based.decoding_fixture_check.v1",
+        "AgadesPQC.CodeBased.DecodingFixtureCheck",
+    ),
+    "information_set_decoding": (
+        "agades.pqc.operator_semantics.code_based.isd.v1",
+        "AgadesPQC.CodeBased.ISD",
+    ),
+    "minrank_attack": (
+        "agades.pqc.operator_semantics.multivariate.minrank_attack.v1",
+        "AgadesPQC.Multivariate.MinRank",
+    ),
+    "groebner_basis": (
+        "agades.pqc.operator_semantics.multivariate.groebner_basis.v1",
+        "AgadesPQC.Multivariate.GroebnerBasis",
+    ),
+    "signature_fixture_check": (
+        "agades.pqc.operator_semantics.multivariate.signature_fixture_check.v1",
+        "AgadesPQC.Multivariate.SignatureFixtureCheck",
+    ),
+    "security_bound_check": (
+        "agades.pqc.operator_semantics.hash_based.security_bound_check.v1",
+        "AgadesPQC.HashBased.SecurityBoundCheck",
+    ),
+    "hash_signature_verification": (
+        "agades.pqc.operator_semantics.hash_based.signature_verification.v1",
+        "AgadesPQC.HashBased.SignatureVerification",
+    ),
+    "misuse_check": (
+        "agades.pqc.operator_semantics.hash_based.misuse_check.v1",
+        "AgadesPQC.HashBased.MisuseCheck",
+    ),
+    "historical_isogeny_reconstruction": (
+        "agades.pqc.operator_semantics.isogeny_historical.reconstruction.v1",
+        "AgadesPQC.IsogenyHistorical.Reconstruction",
+    ),
+    "kat_conformance": (
+        "agades.pqc.operator_semantics.implementation_security.kat_conformance.v1",
+        "AgadesPQC.ImplementationSecurity.KATConformance",
+    ),
+    "constant_time_check": (
+        "agades.pqc.operator_semantics.implementation_security.constant_time_check.v1",
+        "AgadesPQC.ImplementationSecurity.ConstantTimeCheck",
+    ),
+    "benchmark_harness": (
+        "agades.pqc.operator_semantics.implementation_security.benchmark_harness.v1",
+        "AgadesPQC.ImplementationSecurity.BenchmarkHarness",
+    ),
+}
 
 
 def build_attack_plan_proof_artifact(
@@ -169,26 +291,15 @@ def verify_attack_plan_proof_artifact(
 
 
 def _operator_semantics(operator_type: str) -> dict[str, str]:
-    if operator_type == "primal_usvp":
-        return {
-            "operator": operator_type,
-            "semantics_id": "agades.pqc.operator_semantics.lattice.primal_usvp.v1",
-            "lean_namespace": "AgadesPQC.Lattice.PrimalUSVP",
-        }
-    if operator_type == "information_set_decoding":
-        return {
-            "operator": operator_type,
-            "semantics_id": "agades.pqc.operator_semantics.code_based.isd.v1",
-            "lean_namespace": "AgadesPQC.CodeBased.ISD",
-        }
+    semantics_id, lean_namespace = OPERATOR_SEMANTICS[operator_type]
     return {
         "operator": operator_type,
-        "semantics_id": f"agades.pqc.operator_semantics.generic.{operator_type}.v1",
-        "lean_namespace": "AgadesPQC.Generic",
+        "semantics_id": semantics_id,
+        "lean_namespace": lean_namespace,
     }
 
 
-def _family_invariants(plan: AttackPlan) -> list[dict[str, str]]:
+def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
     family = plan.target.family
     if family in {TargetFamily.LWE, TargetFamily.MLWE}:
         return [
@@ -215,6 +326,71 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, str]]:
                 "lean_theorem": "AgadesPQC.CodeBased.Target.parameters_well_formed",
             }
             | _lean_source("AgadesPQC.CodeBased.Target.parameters_well_formed")
+        ]
+    if family is TargetFamily.MULTIVARIATE:
+        return [
+            {
+                "invariant_id": "multivariate.variables_equations_field_present",
+                "statement": "variables > 0, equations > 0, and field is present",
+                "lean_theorem": (
+                    "AgadesPQC.Multivariate.Target."
+                    "variables_equations_field_present"
+                ),
+            }
+            | _lean_source(
+                "AgadesPQC.Multivariate.Target."
+                "variables_equations_field_present"
+            )
+        ]
+    if family is TargetFamily.HASH_BASED:
+        return [
+            {
+                "invariant_id": (
+                    "hash_based.hash_function_and_security_parameter_present"
+                ),
+                "statement": "hash_function is present and n > 0 when provided",
+                "lean_theorem": (
+                    "AgadesPQC.HashBased.Target."
+                    "hash_function_and_security_parameter_present"
+                ),
+            }
+            | _lean_source(
+                "AgadesPQC.HashBased.Target."
+                "hash_function_and_security_parameter_present"
+            )
+        ]
+    if family is TargetFamily.ISOGENY_HISTORICAL:
+        return [
+            {
+                "invariant_id": (
+                    "isogeny_historical.dimension_positive_historical_scope"
+                ),
+                "statement": "n > 0 and the family is historical-scope only",
+                "lean_theorem": (
+                    "AgadesPQC.IsogenyHistorical.Target."
+                    "dimension_positive_historical_scope"
+                ),
+            }
+            | _lean_source(
+                "AgadesPQC.IsogenyHistorical.Target."
+                "dimension_positive_historical_scope"
+            )
+        ]
+    if family is TargetFamily.IMPLEMENTATION_SECURITY:
+        return [
+            {
+                "invariant_id": "implementation_security.review_scope_declared",
+                "statement": (
+                    "implementation-security tasks declare a review-only scope"
+                ),
+                "lean_theorem": (
+                    "AgadesPQC.ImplementationSecurity.Target."
+                    "review_scope_declared"
+                ),
+            }
+            | _lean_source(
+                "AgadesPQC.ImplementationSecurity.Target.review_scope_declared"
+            )
         ]
     return [
         {
@@ -315,6 +491,50 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 "family.code_based.schema_only.no_estimate",
                 "Schema-only code-based plans must not emit cryptanalytic estimates.",
                 "AgadesPQC.CodeBased.SchemaOnly.no_estimate",
+            )
+        )
+    if family is TargetFamily.MULTIVARIATE:
+        obligations.append(
+            _obligation(
+                "family.multivariate.applicability_shape",
+                (
+                    "Multivariate AttackPlans require positive variables, "
+                    "positive equations, and a declared finite field."
+                ),
+                "AgadesPQC.Multivariate.Target.applicability_shape",
+            )
+        )
+    if family is TargetFamily.HASH_BASED:
+        obligations.append(
+            _obligation(
+                "family.hash_based.bound_check_is_not_attack_claim",
+                (
+                    "Hash-based bound checks are applicability/routing checks, "
+                    "not attack-success claims."
+                ),
+                "AgadesPQC.HashBased.Target.bound_check_is_not_attack_claim",
+            )
+        )
+    if family is TargetFamily.ISOGENY_HISTORICAL:
+        obligations.append(
+            _obligation(
+                "family.isogeny_historical.historical_only",
+                (
+                    "Historical isogeny tasks are toy/historical routing "
+                    "checks and cannot describe current-standard break claims."
+                ),
+                "AgadesPQC.IsogenyHistorical.Target.historical_only",
+            )
+        )
+    if family is TargetFamily.IMPLEMENTATION_SECURITY:
+        obligations.append(
+            _obligation(
+                "family.implementation_security.no_conformance_claim",
+                (
+                    "Implementation-security toy checks do not establish "
+                    "conformance, side-channel resistance, or security claims."
+                ),
+                "AgadesPQC.ImplementationSecurity.Target.no_conformance_claim",
             )
         )
     obligations.append(
