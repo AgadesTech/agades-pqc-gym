@@ -18,6 +18,34 @@ BACKEND = {
     "library": "mathlib",
     "smt_assist": "z3_optional_finite_decidable_obligations_only",
 }
+ROOT = Path(__file__).resolve().parents[3]
+LEAN_BACKEND_ROOT = Path("formal/lean")
+LEAN_THEOREM_SOURCES = {
+    "AgadesPQC.Lattice.Target.dimension_modulus_positive": (
+        "formal/lean/AgadesPQC/Lattice/Target.lean"
+    ),
+    "AgadesPQC.Lattice.Target.distributions_present": (
+        "formal/lean/AgadesPQC/Lattice/Target.lean"
+    ),
+    "AgadesPQC.Lattice.Target.parameters_positive": (
+        "formal/lean/AgadesPQC/Lattice/Target.lean"
+    ),
+    "AgadesPQC.Lattice.PrimalUSVP.beta_valid_range": (
+        "formal/lean/AgadesPQC/Lattice/PrimalUSVP.lean"
+    ),
+    "AgadesPQC.CodeBased.Target.parameters_well_formed": (
+        "formal/lean/AgadesPQC/CodeBased/Target.lean"
+    ),
+    "AgadesPQC.CodeBased.SchemaOnly.no_estimate": (
+        "formal/lean/AgadesPQC/CodeBased/SchemaOnly.lean"
+    ),
+    "AgadesPQC.Evaluator.no_security_claim": (
+        "formal/lean/AgadesPQC/Evaluator.lean"
+    ),
+    "AgadesPQC.Generic.Target.family_shape_validated": (
+        "formal/lean/AgadesPQC/Generic/Target.lean"
+    ),
+}
 REQUIRED_REVIEWERS = [
     "lattice_cryptographer",
     "formal_methods_reviewer",
@@ -42,6 +70,13 @@ def build_attack_plan_proof_artifact(
     artifact: dict[str, Any] = {
         "schema_version": PROOF_ARTIFACT_SCHEMA,
         "backend": BACKEND,
+        "formal_backend": {
+            "root": LEAN_BACKEND_ROOT.as_posix(),
+            "toolchain": (LEAN_BACKEND_ROOT / "lean-toolchain").as_posix(),
+            "lakefile": (LEAN_BACKEND_ROOT / "lakefile.lean").as_posix(),
+            "entry_module": (LEAN_BACKEND_ROOT / "AgadesPQC.lean").as_posix(),
+            "execution_status": "not_run_in_this_environment",
+        },
         "attack_plan": {
             "id": plan.attack_plan_id,
             "path": plan_path.as_posix(),
@@ -161,12 +196,16 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, str]]:
                 "invariant_id": "lattice.dimension_modulus_positive",
                 "statement": "n > 0 and q > 1",
                 "lean_theorem": "AgadesPQC.Lattice.Target.dimension_modulus_positive",
-            },
+            }
+            | _lean_source(
+                "AgadesPQC.Lattice.Target.dimension_modulus_positive"
+            ),
             {
                 "invariant_id": "lattice.distributions_present",
                 "statement": "secret and error distributions are present for LWE/MLWE",
                 "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
-            },
+            }
+            | _lean_source("AgadesPQC.Lattice.Target.distributions_present"),
         ]
     if family is TargetFamily.CODE_BASED:
         return [
@@ -175,6 +214,7 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, str]]:
                 "statement": "n > 0, k > 0, w > 0, and k <= n",
                 "lean_theorem": "AgadesPQC.CodeBased.Target.parameters_well_formed",
             }
+            | _lean_source("AgadesPQC.CodeBased.Target.parameters_well_formed")
         ]
     return [
         {
@@ -182,6 +222,7 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, str]]:
             "statement": "TargetSpec family-specific validator accepted the shape",
             "lean_theorem": "AgadesPQC.Generic.Target.family_shape_validated",
         }
+        | _lean_source("AgadesPQC.Generic.Target.family_shape_validated")
     ]
 
 
@@ -299,6 +340,7 @@ def _obligation(
         "statement": statement,
         "backend": "lean4",
         "lean_theorem": lean_theorem,
+        **_lean_source(lean_theorem),
         "status": "pending_review",
     }
     return {
@@ -312,6 +354,19 @@ def _artifact_sha256(artifact: dict[str, Any]) -> str:
         key: value for key, value in artifact.items() if key != "artifact_sha256"
     }
     return stable_sha256(payload)
+
+
+def _lean_source(lean_theorem: str) -> dict[str, Any]:
+    path = LEAN_THEOREM_SOURCES[lean_theorem]
+    declaration = lean_theorem.rsplit(".", 1)[1]
+    source_path = ROOT / path
+    return {
+        "lean_source": {
+            "path": path,
+            "sha256": hashlib.sha256(source_path.read_bytes()).hexdigest(),
+            "declaration": declaration,
+        }
+    }
 
 
 def _read_json_object(path: Path, failures: list[str]) -> dict[str, Any]:
@@ -351,6 +406,7 @@ def _verify_artifact_shape(
     ):
         if key not in artifact:
             failures.append(f"Proof artifact is missing {key}.")
+    _verify_formal_backend(artifact, failures)
 
 
 def _verify_artifact_hash(
@@ -410,6 +466,7 @@ def _verify_plan_binding(
         failures.append("Estimator model does not match the AttackPlan.")
     if artifact.get("proof_obligations") != _proof_obligations(plan):
         failures.append("Proof obligations do not match the AttackPlan.")
+    _verify_lean_bindings(artifact, project_root, failures)
 
 
 def _verify_obligation_hashes(
@@ -431,6 +488,7 @@ def _verify_obligation_hashes(
                 "statement",
                 "backend",
                 "lean_theorem",
+                "lean_source",
                 "status",
             )
         }
@@ -442,6 +500,64 @@ def _verify_obligation_hashes(
             failures.append(
                 f"Proof obligation hash mismatch: {obligation.get('obligation_id')}."
             )
+
+
+def _verify_formal_backend(
+    artifact: dict[str, Any],
+    failures: list[str],
+) -> None:
+    formal_backend = artifact.get("formal_backend")
+    if not isinstance(formal_backend, dict):
+        failures.append("Proof artifact formal_backend must be a JSON object.")
+        return
+    expected = {
+        "root": "formal/lean",
+        "toolchain": "formal/lean/lean-toolchain",
+        "lakefile": "formal/lean/lakefile.lean",
+        "entry_module": "formal/lean/AgadesPQC.lean",
+        "execution_status": "not_run_in_this_environment",
+    }
+    if formal_backend != expected:
+        failures.append("Proof artifact formal_backend is incorrect.")
+
+
+def _verify_lean_bindings(
+    artifact: dict[str, Any],
+    project_root: Path,
+    failures: list[str],
+) -> None:
+    entries = [
+        *artifact.get("family_invariants", []),
+        *artifact.get("proof_obligations", []),
+    ]
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        lean_theorem = entry.get("lean_theorem")
+        source = entry.get("lean_source")
+        if not isinstance(lean_theorem, str) or not lean_theorem:
+            failures.append("Lean-bound entry is missing lean_theorem.")
+            continue
+        if not isinstance(source, dict):
+            failures.append(f"Lean theorem {lean_theorem} is missing lean_source.")
+            continue
+        expected_path = LEAN_THEOREM_SOURCES.get(lean_theorem)
+        if source.get("path") != expected_path:
+            failures.append(f"Lean theorem {lean_theorem} has wrong source path.")
+            continue
+        source_path = project_root / expected_path
+        try:
+            raw = source_path.read_bytes()
+        except FileNotFoundError:
+            failures.append(f"Lean source is missing: {expected_path}.")
+            continue
+        if source.get("sha256") != hashlib.sha256(raw).hexdigest():
+            failures.append(f"Lean source hash mismatch: {expected_path}.")
+        declaration = lean_theorem.rsplit(".", 1)[1]
+        if source.get("declaration") != declaration:
+            failures.append(f"Lean theorem {lean_theorem} declaration drifted.")
+        if f"theorem {declaration}" not in raw.decode("utf-8"):
+            failures.append(f"Lean theorem {lean_theorem} is missing from source.")
 
 
 def _verify_estimator_result_binding(
