@@ -54,7 +54,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert checks["release-gate-closure"]["status"] == "passed"
     assert checks["release-gate-closure"]["blocking"] is True
     assert checks["release-gate-closure"]["evidence"] == {
-        "checked_release_gate_artifacts": 29,
+        "checked_release_gate_artifacts": 31,
         "release_audit_gate_artifacts": 22,
         "ecosystem_smoke_gate_artifacts": 24,
         "missing_ecosystem_smoke_gate": [],
@@ -790,9 +790,9 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
             "hf/dataset/public_runs/multivariate_toy_mq_v0/MANIFEST.sha256",
             "hf/dataset/public_runs/multivariate_toy_uov_v0/MANIFEST.sha256",
             "public/run_export/MANIFEST.sha256",
-        ],
-        "verified_entries": 188,
-    }
+            ],
+            "verified_entries": 189,
+        }
     assert checks["github-actions-ci"]["status"] == "passed"
     assert checks["github-actions-ci"]["blocking"] is True
     assert checks["github-actions-ci"]["evidence"]["required_commands"] == [
@@ -1381,8 +1381,10 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert checks["private-run-policy"]["blocking"] is True
     assert checks["private-run-policy"]["evidence"] == {
         "allowed_private_commands": 16,
-        "allowed_private_roots": 4,
+        "allowed_private_roots": 6,
         "forbidden_public_roots": 5,
+        "private_dataset_sources": 3,
+        "private_rl_reward_terms": 6,
         "required_publication_controls": 5,
         "scheduler_allowed_triggers": 2,
         "scheduler_approval_gates": 4,

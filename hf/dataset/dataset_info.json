@@ -7,6 +7,7 @@
     "attack_plans.jsonl",
     "task_metadata.jsonl",
     "verifier_outputs.jsonl",
+    "rl_rollouts.jsonl",
     "public_runs/code_based_toy_classic_mceliece_v0/README.md",
     "public_runs/code_based_toy_classic_mceliece_v0/run_ledger.json",
     "public_runs/code_based_toy_classic_mceliece_v0/trace_public.jsonl",
@@ -115,6 +116,7 @@
     "uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json",
     "uv run agades-pqc release-audit --out public/release_audit.json"
   ],
+  "rl_rollout_count": 2,
   "safety": {
     "arbitrary_code_execution": false,
     "contains_private_traces": false,

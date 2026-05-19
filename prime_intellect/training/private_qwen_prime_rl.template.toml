@@ -1,0 +1,77 @@
+# Template only: review, fill environment variables, then launch manually.
+name = "agades-pqc-private-qwen-pedagogical-rl"
+model = "${AGADES_QWEN_BASE_MODEL}"
+max_steps = 1000
+batch_size = 8
+rollouts_per_example = 4
+learning_rate = 0.00001
+lora_alpha = 128
+env_files = []
+
+[run_config]
+method = "pedagogical_rl"
+launch_readiness = "blocked_until_private_model_and_dataset_review"
+private_outputs_only = true
+requires_license_review = true
+requires_provenance_review = true
+publish_to_hf_public = false
+publish_to_prime_public = false
+student_model = "Qwen3.6-27B-private"
+preferred_user_artifact = "private GGUF OTQ 5-bit"
+gguf_direct_training_allowed = false
+spike_aware_pedagogy_reward = true
+surprisal_gated_imitation = true
+openevolve_after_training = true
+deepevolve_after_training = true
+reward_terms = ["formal_validity", "cryptographic_applicability", "no_security_overclaim", "student_readability", "reproducibility", "reviewer_quality", "task_match", "proof_obligation_coverage"]
+private_roots = ["private/datasets", "private/models", "private/reports", "private/runs", "private/traces"]
+dataset_sources = ["facebookresearch/LWE-benchmarking", "facebook/TAPAS", "pq-code-package"]
+dataset_controls = ["license_review", "provenance_tracking", "deduplication", "redaction", "contamination_audit"]
+
+[[env]]
+id = "agades-pqc-verifier-env"
+args = { num_examples = -1 }
+
+[sampling]
+max_tokens = 2048
+temperature = 0.6
+top_p = 0.95
+enable_thinking = true
+
+[eval]
+interval = 100
+num_examples = 32
+rollouts_per_example = 2
+eval_base_model = true
+
+[[eval.env]]
+id = "agades-pqc-verifier-env"
+args = { num_examples = 32 }
+
+[buffer]
+online_difficulty_filtering = true
+skip_verification = false
+min_reward = 0.2
+max_reward = 0.95
+
+[adapters]
+enabled = true
+type = "lora_or_qlora"
+rank = 64
+alpha = 128
+target_modules = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+publish_publicly = false
+
+[checkpoints]
+root = "private/models/qwen3_6_27b_pedagogical_rl"
+save_interval = 100
+publish_publicly = false
+
+[infrastructure]
+provider = "prime_intellect"
+gpu_family = "review_required"
+private_storage_only = true
+
+[wandb]
+mode = "offline"
+project = "agades-pqc-private"

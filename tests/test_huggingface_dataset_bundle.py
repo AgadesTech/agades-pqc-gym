@@ -28,6 +28,7 @@ def test_huggingface_dataset_bundle_contains_public_examples_and_outputs(
     assert (out_dir / "attack_plans.jsonl").exists()
     assert (out_dir / "task_metadata.jsonl").exists()
     assert (out_dir / "verifier_outputs.jsonl").exists()
+    assert (out_dir / "rl_rollouts.jsonl").exists()
     info = json.loads((out_dir / "dataset_info.json").read_text())
     expected_public_runs = [
         "code_based_toy_classic_mceliece_v0",
@@ -61,6 +62,7 @@ def test_huggingface_dataset_bundle_contains_public_examples_and_outputs(
     assert info["attack_plan_count"] == 80
     assert info["valid_attack_plan_count"] == 79
     assert info["invalid_attack_plan_count"] == 1
+    assert info["rl_rollout_count"] == 2
     assert info["task_metadata_count"] == 79
     assert info["prime_task_eligible_count"] == 79
     assert info["task_metadata_summary"] == EXPECTED_TASK_METADATA_SUMMARY
@@ -807,6 +809,7 @@ def test_huggingface_dataset_bundle_contains_public_examples_and_outputs(
     manifest = (out_dir / "MANIFEST.sha256").read_text().splitlines()
     assert any(line.endswith("  attack_plans.jsonl") for line in manifest)
     assert any(line.endswith("  task_metadata.jsonl") for line in manifest)
+    assert any(line.endswith("  rl_rollouts.jsonl") for line in manifest)
     assert any(line.endswith("  verifier_outputs.jsonl") for line in manifest)
     assert any(
         line.endswith("  public_runs/code_based_toy_hqc_v0/run_ledger.json")
@@ -1006,10 +1009,11 @@ def test_hf_dataset_verify_accepts_committed_bundle() -> None:
             "failure_count": 0,
             "invalid_attack_plan_count": 1,
             "invalid_attack_plan_ids": ["invalid_module_hypothesis_on_lwe_v1"],
-            "manifest_entry_count": 77,
+            "manifest_entry_count": 78,
             "prime_task_eligible_count": 79,
             "public_run_bundle_count": 18,
             "release_gate_count": 7,
+            "rl_rollout_rows": 2,
             "security_claim": False,
             "task_metadata_rows": 79,
             "task_metadata_rows_match_attack_plans": True,

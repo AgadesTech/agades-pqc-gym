@@ -165,6 +165,10 @@ from agades_pqc_gym.integrations.private_run_policy import (
     verify_private_run_policy,
     write_private_run_policy,
 )
+from agades_pqc_gym.integrations.private_training_config import (
+    verify_private_training_config,
+    write_private_training_config,
+)
 from agades_pqc_gym.integrations.public_benchmark_manifest import (
     verify_public_benchmark_manifest,
     write_public_benchmark_manifest,
@@ -1644,6 +1648,41 @@ def private_run_policy_verify(
 ) -> None:
     """Verify the private evolution trace and moat holdback policy."""
     result = verify_private_run_policy(policy)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("private-training-config", hidden=True)
+def private_training_config(
+    config: Annotated[
+        Path,
+        typer.Option("--config"),
+    ] = Path("prime_intellect/training/private_qwen_prime_rl.template.toml"),
+    manifest: Annotated[
+        Path,
+        typer.Option("--manifest"),
+    ] = Path("docs/private_training_config_manifest.json"),
+) -> None:
+    """Write the private Prime RL/Qwen training config template and manifest."""
+    write_private_training_config(config, manifest)
+    typer.echo(f"private_training_config={config}")
+    typer.echo(f"private_training_manifest={manifest}")
+
+
+@app.command("private-training-config-verify", hidden=True)
+def private_training_config_verify(
+    config: Annotated[
+        Path,
+        typer.Option("--config"),
+    ] = Path("prime_intellect/training/private_qwen_prime_rl.template.toml"),
+    manifest: Annotated[
+        Path,
+        typer.Option("--manifest"),
+    ] = Path("docs/private_training_config_manifest.json"),
+) -> None:
+    """Verify the private Prime RL/Qwen training config template and manifest."""
+    result = verify_private_training_config(config, manifest)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)

@@ -1,0 +1,118 @@
+{
+  "datasets": {
+    "private_roots": [
+      "private/datasets"
+    ],
+    "publication_allowed": false,
+    "required_controls": [
+      "license_review",
+      "provenance_tracking",
+      "deduplication",
+      "redaction",
+      "contamination_audit"
+    ],
+    "reviewer_annotations_publication_allowed": false,
+    "sources": [
+      "facebookresearch/LWE-benchmarking",
+      "facebook/TAPAS",
+      "pq-code-package"
+    ],
+    "train_traces_publication_allowed": false
+  },
+  "linked_artifacts": {
+    "formal_proof_artifact": {
+      "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+      "sha256": "d0b47901a925d52182e2d6c24db121491a4f195bb91cd1a1912335fc586f5f2f"
+    },
+    "hf_rl_rollout_examples": {
+      "path": "hf/dataset/rl_rollouts.jsonl",
+      "sha256": "ca31008dbc6f1bf94a79580b7ff0698d3cb81fb84b1927454005fc6ea04a3c65"
+    },
+    "prime_environment_manifest": {
+      "path": "prime_intellect/verifiers_environment/prime_manifest.json",
+      "sha256": "b4a421a2179773908e18b8a52a91fb17cd35dc826fa9a7a4ecdb8afffb15ebbf"
+    },
+    "private_run_policy": {
+      "path": "docs/private_run_policy.json",
+      "sha256": "a0992031eb7a4268e4813b4d5f02a9ca4dda078972c935ef829c8e981259d86a"
+    }
+  },
+  "model_consumers": {
+    "deepevolve": {
+      "private_dataset_allowed": true,
+      "private_qwen_allowed": true,
+      "public_publication_allowed": false
+    },
+    "openevolve": {
+      "private_dataset_allowed": true,
+      "private_qwen_allowed": true,
+      "public_publication_allowed": false
+    }
+  },
+  "pedagogical_rl": {
+    "method": "pedagogical_rl",
+    "requires_no_security_overclaim": true,
+    "requires_reviewer_quality_signal": true,
+    "reward_terms": [
+      "formal_validity",
+      "cryptographic_applicability",
+      "no_security_overclaim",
+      "student_readability",
+      "reproducibility",
+      "reviewer_quality",
+      "task_match",
+      "proof_obligation_coverage"
+    ],
+    "spike_aware_pedagogy_reward": true,
+    "surprisal_gated_imitation": true,
+    "teacher_student_pattern": "privileged_self_teacher_student"
+  },
+  "prime_training": {
+    "config_path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
+    "config_sha256": "4f89c488ac48ab8c8f65627cfbf08ce478a2909bbb0cb53ad6a376c3312618a5",
+    "eval_command": "prime eval run agades-pqc-verifier-env",
+    "launch_command_template": "prime train prime_intellect/training/private_qwen_prime_rl.template.toml --env-var HF_TOKEN --env-var WANDB_API_KEY",
+    "launch_readiness": "blocked_until_private_model_and_dataset_review",
+    "rl_environment_contract_path": "docs/rl_environment_contract.json",
+    "training_stack": "prime-rl"
+  },
+  "privacy_controls": {
+    "allowed_env_vars": [
+      "HF_TOKEN",
+      "WANDB_API_KEY"
+    ],
+    "env_file_upload_allowed": false,
+    "private_roots": [
+      "private/datasets",
+      "private/models",
+      "private/reports",
+      "private/runs",
+      "private/traces"
+    ],
+    "public_adapters_allowed": false,
+    "public_trace_corpora_allowed": false,
+    "public_train_dataset_allowed": false,
+    "public_weights_allowed": false
+  },
+  "project": {
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "qwen": {
+    "base_model_env": "AGADES_QWEN_BASE_MODEL",
+    "gguf_direct_training_allowed": false,
+    "preferred_user_artifact": "private GGUF OTQ 5-bit",
+    "publish_adapters_publicly": false,
+    "publish_trace_corpora_publicly": false,
+    "publish_weights_publicly": false,
+    "target_model": "Qwen3.6-27B-private",
+    "training_path": "LoRA_or_QLoRA_on_trainable_weights_then_private_GGUF_OTQ_quantization"
+  },
+  "release_gates": [
+    "uv run pytest tests/test_private_training_config.py -q",
+    "uv run agades-pqc private-training-config --config prime_intellect/training/private_qwen_prime_rl.template.toml --manifest docs/private_training_config_manifest.json",
+    "uv run agades-pqc private-training-config-verify --config prime_intellect/training/private_qwen_prime_rl.template.toml --manifest docs/private_training_config_manifest.json"
+  ],
+  "schema_version": "agades.pqc.private_training_config.v1"
+}
