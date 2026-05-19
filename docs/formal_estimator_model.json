@@ -355,14 +355,14 @@
     },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "340cc9f9987b549436e4fe7bf8c0833ca3afd2321cc350378698b4d2b21b079b"
+      "sha256": "e60ef6f0f482b3c1daaa65e7b473c92ce24740f7d29fac42eda11df48ee67ea1"
     },
     "formal_lattice_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
       "sha256": "2512d120077d8efb9aab414adedbaa4413df6fb8100d4b6f6e7d9129b02ee1fd"
     }
   },
-  "model_sha256": "e09d0810c8671d574a0adb7d065275c6933184aff8777abded5db85489af30be",
+  "model_sha256": "132803cc65c65d442ddfa3b4bf9a27634ec5755257dc433941aa10f71f0b1be8",
   "project": {
     "name": "Agades PQC Gym",
     "package": "agades_pqc_gym",

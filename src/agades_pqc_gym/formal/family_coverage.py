@@ -48,6 +48,7 @@ REPRESENTATIVE_ATTACK_PLANS = {
 }
 LINKED_ARTIFACT_PATHS = {
     "family_plugin_manifest": "docs/family_plugin_manifest.json",
+    "formal_operator_semantics": "docs/formal_operator_semantics.json",
     "formal_lattice_proof_artifact": (
         "docs/formal_lattice_primal_usvp_proof_artifact.json"
     ),

@@ -60,6 +60,7 @@ FAMILY_REVIEW_COMPETENCIES = {
 LINKED_ARTIFACT_PATHS = {
     "formal_estimator_model": "docs/formal_estimator_model.json",
     "formal_family_coverage": "docs/formal_family_coverage.json",
+    "formal_operator_semantics": "docs/formal_operator_semantics.json",
     "formal_lattice_proof_artifact": (
         "docs/formal_lattice_primal_usvp_proof_artifact.json"
     ),
@@ -139,6 +140,9 @@ def build_reviewer_governance(root: Path | None = None) -> dict[str, Any]:
         "formal_artifact_binding": {
             "formal_estimator_model_path": "docs/formal_estimator_model.json",
             "formal_family_coverage_path": "docs/formal_family_coverage.json",
+            "formal_operator_semantics_path": (
+                "docs/formal_operator_semantics.json"
+            ),
             "formal_lattice_proof_artifact_path": (
                 "docs/formal_lattice_primal_usvp_proof_artifact.json"
             ),

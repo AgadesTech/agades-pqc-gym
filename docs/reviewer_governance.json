@@ -164,6 +164,7 @@
     "formal_estimator_model_path": "docs/formal_estimator_model.json",
     "formal_family_coverage_path": "docs/formal_family_coverage.json",
     "formal_lattice_proof_artifact_path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+    "formal_operator_semantics_path": "docs/formal_operator_semantics.json",
     "required_reviewers_by_family": {
       "CODE_BASED": [
         "code_based_cryptographer",
@@ -231,15 +232,19 @@
     },
     "formal_estimator_model": {
       "path": "docs/formal_estimator_model.json",
-      "sha256": "dc89b918d3392ed67b415339cb3005e8fb732b3683105e5e9d5502c3348a4d68"
+      "sha256": "d179ab8d3fa13d9980ce989cf3b39d8a63c3f8c975d0c303b00fd052d6265080"
     },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "340cc9f9987b549436e4fe7bf8c0833ca3afd2321cc350378698b4d2b21b079b"
+      "sha256": "e60ef6f0f482b3c1daaa65e7b473c92ce24740f7d29fac42eda11df48ee67ea1"
     },
     "formal_lattice_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
       "sha256": "2512d120077d8efb9aab414adedbaa4413df6fb8100d4b6f6e7d9129b02ee1fd"
+    },
+    "formal_operator_semantics": {
+      "path": "docs/formal_operator_semantics.json",
+      "sha256": "19f7692ee88dc5b30092d7dfd7bded125f61a023f92967b996f7023bfdc93377"
     },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
@@ -255,7 +260,7 @@
     },
     "release_audit": {
       "path": "public/release_audit.json",
-      "sha256": "6aad72606073093522c702ee00efe2dada485120c0b6a8e04cf8d6a9fe99f933"
+      "sha256": "2af20c66566f7453c96cba5b8d4d26846e9a32401eaa8c166c39e9c7aa619d2a"
     }
   },
   "private_training_review": {

@@ -327,12 +327,9 @@ def verify_attack_plan_proof_artifact(
 
 
 def _operator_semantics(operator_type: str) -> dict[str, str]:
-    semantics_id, lean_namespace = OPERATOR_SEMANTICS[operator_type]
-    return {
-        "operator": operator_type,
-        "semantics_id": semantics_id,
-        "lean_namespace": lean_namespace,
-    }
+    from agades_pqc_gym.formal.operator_semantics import operator_semantics_entry
+
+    return operator_semantics_entry(operator_type)
 
 
 def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:

@@ -57,6 +57,10 @@ from agades_pqc_gym.formal.family_coverage import (
     verify_formal_family_coverage,
     write_formal_family_coverage,
 )
+from agades_pqc_gym.formal.operator_semantics import (
+    verify_formal_operator_semantics,
+    write_formal_operator_semantics,
+)
 from agades_pqc_gym.integrations.benchmark_source_contracts import (
     verify_benchmark_source_contracts,
     write_benchmark_source_contracts,
@@ -1785,6 +1789,32 @@ def formal_estimator_model_verify(
 ) -> None:
     """Verify estimator model bindings, Lean theorem links, and claim policy."""
     result = verify_formal_estimator_model(model)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("formal-operator-semantics", hidden=True)
+def formal_operator_semantics(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("docs/formal_operator_semantics.json"),
+) -> None:
+    """Write the stable AttackPlan operator semantics artifact."""
+    write_formal_operator_semantics(out)
+    typer.echo(f"formal_operator_semantics={out}")
+
+
+@app.command("formal-operator-semantics-verify", hidden=True)
+def formal_operator_semantics_verify(
+    semantics: Annotated[
+        Path,
+        typer.Option("--semantics"),
+    ] = Path("docs/formal_operator_semantics.json"),
+) -> None:
+    """Verify operator semantics, params, family bindings, and claim policy."""
+    result = verify_formal_operator_semantics(semantics)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)
