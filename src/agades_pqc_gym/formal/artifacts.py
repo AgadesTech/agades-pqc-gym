@@ -7,6 +7,10 @@ from typing import Any
 
 from agades_pqc_gym.core.attack_plan import AttackPlan
 from agades_pqc_gym.core.target import SupportLevel, TargetFamily
+from agades_pqc_gym.formal.review import (
+    REVIEW_STATUSES,
+    required_reviewers_for_family,
+)
 from agades_pqc_gym.utils.hashing import stable_sha256
 
 PROOF_ARTIFACT_SCHEMA = "agades.pqc.formal.proof_artifact.v1"
@@ -28,6 +32,21 @@ LEAN_THEOREM_SOURCES = {
         "formal/lean/AgadesPQC/Lattice/Target.lean"
     ),
     "AgadesPQC.Lattice.Target.parameters_positive": (
+        "formal/lean/AgadesPQC/Lattice/Target.lean"
+    ),
+    "AgadesPQC.Lattice.Target.module_rank_present": (
+        "formal/lean/AgadesPQC/Lattice/Target.lean"
+    ),
+    "AgadesPQC.Lattice.Target.ntru_schema_shape": (
+        "formal/lean/AgadesPQC/Lattice/Target.lean"
+    ),
+    "AgadesPQC.Lattice.Target.sis_schema_shape": (
+        "formal/lean/AgadesPQC/Lattice/Target.lean"
+    ),
+    "AgadesPQC.Lattice.Target.ntru_schema_only_no_estimate": (
+        "formal/lean/AgadesPQC/Lattice/Target.lean"
+    ),
+    "AgadesPQC.Lattice.Target.sis_schema_only_no_estimate": (
         "formal/lean/AgadesPQC/Lattice/Target.lean"
     ),
     "AgadesPQC.Lattice.PrimalUSVP.beta_valid_range": (
@@ -70,12 +89,6 @@ LEAN_THEOREM_SOURCES = {
         "formal/lean/AgadesPQC/Generic/Target.lean"
     ),
 }
-REQUIRED_REVIEWERS = [
-    "lattice_cryptographer",
-    "formal_methods_reviewer",
-    "release_boundary_reviewer",
-]
-REVIEW_STATUSES = {"pending_review", "reviewed", "rejected"}
 OPERATOR_SEMANTICS = {
     "primal_usvp": (
         "agades.pqc.operator_semantics.lattice.primal_usvp.v1",
@@ -230,7 +243,9 @@ def build_attack_plan_proof_artifact_from_json(
         "proof_obligations": _proof_obligations(plan),
         "review": {
             "status": review_status,
-            "required_reviewers": REQUIRED_REVIEWERS,
+            "required_reviewers": required_reviewers_for_family(
+                plan.target.family
+            ),
             "claim_boundary": (
                 "formal obligations are applicability checks, not PQC break claims"
             ),
@@ -316,22 +331,41 @@ def _operator_semantics(operator_type: str) -> dict[str, str]:
 
 def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
     family = plan.target.family
-    if family in {TargetFamily.LWE, TargetFamily.MLWE}:
+    if family is TargetFamily.LWE:
+        return _lwe_lattice_invariants()
+    if family is TargetFamily.MLWE:
+        return [
+            *_lwe_lattice_invariants(),
+            {
+                "invariant_id": "lattice.mlwe.module_rank_present",
+                "statement": "MLWE module rank k is present and positive",
+                "lean_theorem": "AgadesPQC.Lattice.Target.module_rank_present",
+            }
+            | _lean_source("AgadesPQC.Lattice.Target.module_rank_present"),
+        ]
+    if family is TargetFamily.NTRU:
         return [
             {
-                "invariant_id": "lattice.dimension_modulus_positive",
-                "statement": "n > 0 and q > 1",
-                "lean_theorem": "AgadesPQC.Lattice.Target.dimension_modulus_positive",
+                "invariant_id": "lattice.ntru.schema_shape",
+                "statement": (
+                    "NTRU schema-only targets carry positive n/q parameters "
+                    "and a secret distribution"
+                ),
+                "lean_theorem": "AgadesPQC.Lattice.Target.ntru_schema_shape",
             }
-            | _lean_source(
-                "AgadesPQC.Lattice.Target.dimension_modulus_positive"
-            ),
+            | _lean_source("AgadesPQC.Lattice.Target.ntru_schema_shape")
+        ]
+    if family is TargetFamily.SIS:
+        return [
             {
-                "invariant_id": "lattice.distributions_present",
-                "statement": "secret and error distributions are present for LWE/MLWE",
-                "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
+                "invariant_id": "lattice.sis.schema_shape",
+                "statement": (
+                    "SIS schema-only targets carry positive n/q parameters "
+                    "and a bounded secret distribution"
+                ),
+                "lean_theorem": "AgadesPQC.Lattice.Target.sis_schema_shape",
             }
-            | _lean_source("AgadesPQC.Lattice.Target.distributions_present"),
+            | _lean_source("AgadesPQC.Lattice.Target.sis_schema_shape")
         ]
     if family is TargetFamily.CODE_BASED:
         return [
@@ -417,6 +451,23 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
     ]
 
 
+def _lwe_lattice_invariants() -> list[dict[str, Any]]:
+    return [
+        {
+            "invariant_id": "lattice.dimension_modulus_positive",
+            "statement": "n > 0 and q > 1",
+            "lean_theorem": "AgadesPQC.Lattice.Target.dimension_modulus_positive",
+        }
+        | _lean_source("AgadesPQC.Lattice.Target.dimension_modulus_positive"),
+        {
+            "invariant_id": "lattice.distributions_present",
+            "statement": "secret and error distributions are present for LWE/MLWE",
+            "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
+        }
+        | _lean_source("AgadesPQC.Lattice.Target.distributions_present"),
+    ]
+
+
 def _estimator_model(plan: AttackPlan) -> dict[str, Any]:
     if plan.target.support_level is SupportLevel.SCHEMA_ONLY:
         return {
@@ -468,7 +519,7 @@ def _estimator_result_binding(
 def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
     family = plan.target.family
     obligations: list[dict[str, Any]] = []
-    if family in {TargetFamily.LWE, TargetFamily.MLWE}:
+    if family is TargetFamily.LWE:
         obligations.extend(
             [
                 _obligation(
@@ -486,6 +537,29 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 ),
             ]
         )
+    if family is TargetFamily.MLWE:
+        obligations.extend(
+            [
+                _obligation(
+                    "target.mlwe.parameters.positive",
+                    (
+                        "MLWE target parameters satisfy n > 0, q > 1, "
+                        "and module-rank bounds where present."
+                    ),
+                    "AgadesPQC.Lattice.Target.parameters_positive",
+                ),
+                _obligation(
+                    "target.mlwe.distributions.present",
+                    "Secret and error distributions are specified for MLWE.",
+                    "AgadesPQC.Lattice.Target.distributions_present",
+                ),
+                _obligation(
+                    "target.mlwe.module_rank.present",
+                    "MLWE module rank k is positive.",
+                    "AgadesPQC.Lattice.Target.module_rank_present",
+                ),
+            ]
+        )
     if any(operator.type == "primal_usvp" for operator in plan.operators):
         obligations.append(
             _obligation(
@@ -495,6 +569,28 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                     "dimension policy."
                 ),
                 "AgadesPQC.Lattice.PrimalUSVP.beta_valid_range",
+            )
+        )
+    if (
+        family is TargetFamily.NTRU
+        and plan.target.support_level is SupportLevel.SCHEMA_ONLY
+    ):
+        obligations.append(
+            _obligation(
+                "family.ntru.schema_only.no_estimate",
+                "Schema-only NTRU plans must not emit cryptanalytic estimates.",
+                "AgadesPQC.Lattice.Target.ntru_schema_only_no_estimate",
+            )
+        )
+    if (
+        family is TargetFamily.SIS
+        and plan.target.support_level is SupportLevel.SCHEMA_ONLY
+    ):
+        obligations.append(
+            _obligation(
+                "family.sis.schema_only.no_estimate",
+                "Schema-only SIS plans must not emit cryptanalytic estimates.",
+                "AgadesPQC.Lattice.Target.sis_schema_only_no_estimate",
             )
         )
     if (
@@ -849,7 +945,12 @@ def _verify_review_binding(
         return
     if review.get("status") not in REVIEW_STATUSES:
         failures.append("Proof artifact review status is unsupported.")
-    if review.get("required_reviewers") != REQUIRED_REVIEWERS:
+    try:
+        family = TargetFamily(artifact.get("family"))
+    except ValueError:
+        failures.append("Proof artifact family is unsupported for reviewer binding.")
+        return
+    if review.get("required_reviewers") != required_reviewers_for_family(family):
         failures.append("Proof artifact required reviewers are incorrect.")
     if "not PQC break claims" not in review.get("claim_boundary", ""):
         failures.append("Proof artifact must state the no-overclaim boundary.")

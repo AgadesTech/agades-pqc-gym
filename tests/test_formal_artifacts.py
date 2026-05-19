@@ -101,11 +101,50 @@ def test_schema_only_code_based_proof_artifact_refuses_fake_estimator_obligation
         obligation["obligation_id"] == "family.code_based.schema_only.no_estimate"
         for obligation in artifact["proof_obligations"]
     )
+    assert artifact["review"]["required_reviewers"] == [
+        "code_based_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer",
+    ]
+
+
+def test_mlwe_proof_artifact_uses_mlwe_specific_obligations() -> None:
+    artifact = build_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_mlwe_module_hypothesis_toy.json")
+    )
+
+    invariant_ids = {
+        invariant["invariant_id"] for invariant in artifact["family_invariants"]
+    }
+    obligation_ids = {
+        obligation["obligation_id"] for obligation in artifact["proof_obligations"]
+    }
+
+    assert artifact["family"] == "MLWE"
+    assert "lattice.mlwe.module_rank_present" in invariant_ids
+    assert "target.mlwe.parameters.positive" in obligation_ids
+    assert "target.mlwe.distributions.present" in obligation_ids
+    assert "target.mlwe.module_rank.present" in obligation_ids
+    assert "target.lwe.parameters.positive" not in obligation_ids
 
 
 @pytest.mark.parametrize(
     ("plan_path", "family", "invariant_id", "obligation_id", "lean_path"),
     [
+        (
+            "examples/attack_plans/lattice_ntru_schema_placeholder.json",
+            "NTRU",
+            "lattice.ntru.schema_shape",
+            "family.ntru.schema_only.no_estimate",
+            "formal/lean/AgadesPQC/Lattice/Target.lean",
+        ),
+        (
+            "examples/attack_plans/lattice_sis_schema_placeholder.json",
+            "SIS",
+            "lattice.sis.schema_shape",
+            "family.sis.schema_only.no_estimate",
+            "formal/lean/AgadesPQC/Lattice/Target.lean",
+        ),
         (
             "examples/attack_plans/code_based_isd_placeholder.json",
             "CODE_BASED",

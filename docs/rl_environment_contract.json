@@ -24,7 +24,7 @@
   "linked_artifacts": {
     "formal_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "d0b47901a925d52182e2d6c24db121491a4f195bb91cd1a1912335fc586f5f2f"
+      "sha256": "db7b0ae13027881bf4421b19e34c164faa564c9629290f1546231503d4159705"
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",
@@ -52,11 +52,11 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "90114f6adc03e884703f92a11121c2dadfac39cc936255ebdca3d02edc4b11f2"
+      "sha256": "7a3dd28bd33545fcc94bf708ef87c0277768a18d0260cdaad2699fe985f7b0ac"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "0aaf5ff0debcf335263f571581188cdfd6e6431794e74e2be7586b4a58e07dc8"
+      "sha256": "acdbc1656af880b8e4ce38e8c25110365aeba7d0a2b7d9f19ec3b99abde8354e"
     }
   },
   "private_track": {
