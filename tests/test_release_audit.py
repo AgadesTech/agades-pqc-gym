@@ -54,7 +54,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert checks["release-gate-closure"]["status"] == "passed"
     assert checks["release-gate-closure"]["blocking"] is True
     assert checks["release-gate-closure"]["evidence"] == {
-        "checked_release_gate_artifacts": 35,
+        "checked_release_gate_artifacts": 36,
         "release_audit_gate_artifacts": 22,
         "ecosystem_smoke_gate_artifacts": 24,
         "missing_ecosystem_smoke_gate": [],
@@ -795,6 +795,27 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         }
     assert checks["github-actions-ci"]["status"] == "passed"
     assert checks["github-actions-ci"]["blocking"] is True
+    assert checks["github-actions-ci"]["evidence"]["required_actions"] == [
+        "actions/checkout@",
+        "leanprover/lean-action@",
+        "astral-sh/setup-uv@",
+    ]
+    assert checks["github-actions-ci"]["evidence"]["lean_gate_required_inputs"] == {
+        "lake-package-directory": "formal/lean",
+        "build": True,
+        "test": False,
+        "lint": False,
+        "auto-config": False,
+        "use-mathlib-cache": True,
+    }
+    assert checks["github-actions-ci"]["evidence"]["lean_gate_inputs"] == {
+        "lake-package-directory": "formal/lean",
+        "build": True,
+        "test": False,
+        "lint": False,
+        "auto-config": False,
+        "use-mathlib-cache": True,
+    }
     assert checks["github-actions-ci"]["evidence"]["required_commands"] == [
         "build-package",
         "build-prime-environment",
@@ -817,6 +838,8 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "verify-ecosystem-source-graph",
         "generate-family-operator-catalog",
         "verify-family-operator-catalog",
+        "generate-formal-lean-backend",
+        "verify-formal-lean-backend",
         "generate-hf-dataset",
         "verify-hf-dataset",
         "generate-hf-space-manifest",
@@ -884,10 +907,19 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "uv run agades-pqc openevolve-smoke-verify --report "
         "reports/openevolve_smoke.json" in workflow
     )
+    assert (
+        "uv run agades-pqc formal-lean-backend --out "
+        "docs/formal_lean_backend.json" in workflow
+    )
+    assert (
+        "uv run agades-pqc formal-lean-backend-verify --backend "
+        "docs/formal_lean_backend.json" in workflow
+    )
     artifact_diff_line = next(
         line for line in workflow.splitlines() if "git diff --exit-code --" in line
     )
     assert "docs/external_publication_review_packet.json" in artifact_diff_line
+    assert "docs/formal_lean_backend.json" in artifact_diff_line
     assert "reports/openevolve_smoke.json" in artifact_diff_line
     assert checks["openevolve-config-template"]["status"] == "passed"
     assert checks["openevolve-config-template"]["blocking"] is True
@@ -1852,6 +1884,45 @@ def test_release_audit_rejects_ci_release_artifacts_without_explicit_max_passes(
     assert any(
         "converge-release-artifacts" in failure
         and "release-artifacts --max-passes 6" in failure
+        for failure in checks["github-actions-ci"]["failures"]
+    )
+
+
+def test_release_audit_rejects_ci_lean_gate_with_wrong_project_dir(
+    tmp_path: Path,
+) -> None:
+    copied_root = tmp_path / "repo"
+    shutil.copytree(
+        Path.cwd(),
+        copied_root,
+        ignore=shutil.ignore_patterns(
+            ".git",
+            ".venv",
+            ".pytest_cache",
+            ".ruff_cache",
+            "build",
+            "dist",
+            "*.egg-info",
+            "__pycache__",
+        ),
+    )
+    workflow_path = copied_root / ".github" / "workflows" / "ci.yml"
+    workflow_path.write_text(
+        workflow_path.read_text(encoding="utf-8").replace(
+            "lake-package-directory: formal/lean",
+            "lake-package-directory: formal",
+        ),
+        encoding="utf-8",
+    )
+
+    audit = build_release_audit(copied_root)
+
+    checks = {check["id"]: check for check in audit["checks"]}
+    assert audit["accepted"] is False
+    assert checks["github-actions-ci"]["status"] == "failed"
+    assert any(
+        "Lean build gate has invalid input lake-package-directory" in failure
+        and "'formal/lean'" in failure
         for failure in checks["github-actions-ci"]["failures"]
     )
 

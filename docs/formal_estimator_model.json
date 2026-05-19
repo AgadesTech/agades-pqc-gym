@@ -355,7 +355,11 @@
     },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "5ffeb4ac11eeacb9b119f311fc07f065a60f997845d87389756ce135d6c5e469"
+      "sha256": "be23c47c2396df84d71cf3facc233e601dda256593c96aa714b021f5411a73f8"
+    },
+    "formal_lean_backend": {
+      "path": "docs/formal_lean_backend.json",
+      "sha256": "d4843bb121e1a671fe50da8f2eea985783fefa99c1bdef262dc9cf3a87bfdbb3"
     },
     "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
@@ -366,7 +370,7 @@
       "sha256": "18f27646d64200e71bc9c8e2c02e75424ef544095e6e76790fc9119d28d6742a"
     }
   },
-  "model_sha256": "52d87e42f213259d9b207bd691a44dc1d150329acabfd02806eca841bad5df35",
+  "model_sha256": "2a705092799a93be09bc6e2097f70e280cd824da70da2087eedc663cd36d5194",
   "project": {
     "name": "Agades PQC Gym",
     "package": "agades_pqc_gym",

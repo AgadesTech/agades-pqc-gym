@@ -63,8 +63,25 @@
         "jobs": [
           "test"
         ],
+        "lean_gate_inputs": {
+          "auto-config": false,
+          "build": true,
+          "lake-package-directory": "formal/lean",
+          "lint": false,
+          "test": false,
+          "use-mathlib-cache": true
+        },
+        "lean_gate_required_inputs": {
+          "auto-config": false,
+          "build": true,
+          "lake-package-directory": "formal/lean",
+          "lint": false,
+          "test": false,
+          "use-mathlib-cache": true
+        },
         "required_actions": [
           "actions/checkout@",
+          "leanprover/lean-action@",
           "astral-sh/setup-uv@"
         ],
         "required_commands": [
@@ -89,6 +106,8 @@
           "verify-ecosystem-source-graph",
           "generate-family-operator-catalog",
           "verify-family-operator-catalog",
+          "generate-formal-lean-backend",
+          "verify-formal-lean-backend",
           "generate-hf-dataset",
           "verify-hf-dataset",
           "generate-hf-space-manifest",
@@ -1106,7 +1125,7 @@
       "blocking": true,
       "detail": "Checked-in release gates that depend on release-audit must first declare ecosystem-smoke-verify, including nested Hugging Face dataset metadata.",
       "evidence": {
-        "checked_release_gate_artifacts": 35,
+        "checked_release_gate_artifacts": 36,
         "ecosystem_smoke_gate_artifacts": 24,
         "late_ecosystem_smoke_gate": [],
         "missing_ecosystem_smoke_gate": [],

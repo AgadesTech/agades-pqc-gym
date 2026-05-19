@@ -235,11 +235,15 @@
     },
     "formal_estimator_model": {
       "path": "docs/formal_estimator_model.json",
-      "sha256": "2ce756ffcc43076dd954a3ba4d8ba67bcd3fcaa2f84a452cdfa090be77cdf640"
+      "sha256": "07d653bc8f7eba86d0b544c74f0d1a66d3a73b3c1f33ee69742e95d9c52d8c00"
     },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "5ffeb4ac11eeacb9b119f311fc07f065a60f997845d87389756ce135d6c5e469"
+      "sha256": "be23c47c2396df84d71cf3facc233e601dda256593c96aa714b021f5411a73f8"
+    },
+    "formal_lean_backend": {
+      "path": "docs/formal_lean_backend.json",
+      "sha256": "d4843bb121e1a671fe50da8f2eea985783fefa99c1bdef262dc9cf3a87bfdbb3"
     },
     "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
@@ -259,7 +263,7 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "dd753088a85898b6edba5a72b5e55e19ed802b4a18e96f9725ef2ffbfe79ceb5"
+      "sha256": "72b74dd16a50d141f35cabf31bd59c1311c9f8a48645c3dfffd29d583e9f304b"
     },
     "publication_manifest": {
       "path": "docs/publication_manifest.json",
@@ -267,7 +271,7 @@
     },
     "release_audit": {
       "path": "public/release_audit.json",
-      "sha256": "2af20c66566f7453c96cba5b8d4d26846e9a32401eaa8c166c39e9c7aa619d2a"
+      "sha256": "f3c0a6e1aead16b2d3854cc927e3eac3336121a77f928050aac89610043b0dd9"
     }
   },
   "private_training_review": {

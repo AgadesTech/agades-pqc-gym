@@ -110,6 +110,9 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
     assert contract["linked_artifacts"]["formal_operator_semantics"]["path"] == (
         "docs/formal_operator_semantics.json"
     )
+    assert contract["linked_artifacts"]["formal_lean_backend"]["path"] == (
+        "docs/formal_lean_backend.json"
+    )
     assert (
         len(contract["linked_artifacts"]["formal_lwe_proof_artifact"]["sha256"])
         == 64
@@ -140,7 +143,7 @@ def test_rl_environment_contract_verify_accepts_committed_contract() -> None:
             "surfaces": 2,
             "reward_terms": 8,
             "private_dataset_sources": 3,
-            "linked_artifacts": 13,
+            "linked_artifacts": 14,
             "failure_count": 0,
         },
         "failures": [],

@@ -47,6 +47,7 @@ LINKED_ARTIFACT_PATHS = {
     "formal_estimator_model": "docs/formal_estimator_model.json",
     "formal_family_coverage": "docs/formal_family_coverage.json",
     "formal_operator_semantics": "docs/formal_operator_semantics.json",
+    "formal_lean_backend": "docs/formal_lean_backend.json",
     "formal_lwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
         TargetFamily.LWE.value
     ],

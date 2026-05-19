@@ -69,6 +69,9 @@ def test_private_training_manifest_defines_prime_rl_qwen_and_dataset_controls(
     assert payload["datasets"]["publication_allowed"] is False
     assert payload["model_consumers"]["openevolve"]["private_qwen_allowed"] is True
     assert payload["model_consumers"]["deepevolve"]["private_qwen_allowed"] is True
+    assert payload["linked_artifacts"]["formal_lean_backend"]["path"] == (
+        "docs/formal_lean_backend.json"
+    )
 
 
 def test_private_prime_rl_toml_template_is_sanitized_and_parseable(
@@ -127,7 +130,7 @@ def test_private_training_config_verify_accepts_committed_artifacts() -> None:
             "dataset_sources": 3,
             "dataset_controls": 5,
             "reward_terms": 8,
-            "linked_artifacts": 5,
+            "linked_artifacts": 6,
             "failure_count": 0,
         },
         "failures": [],

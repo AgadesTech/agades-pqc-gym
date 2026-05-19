@@ -57,6 +57,10 @@ from agades_pqc_gym.formal.family_coverage import (
     verify_formal_family_coverage,
     write_formal_family_coverage,
 )
+from agades_pqc_gym.formal.lean_backend import (
+    verify_formal_lean_backend,
+    write_formal_lean_backend,
+)
 from agades_pqc_gym.formal.operator_semantics import (
     verify_formal_operator_semantics,
     write_formal_operator_semantics,
@@ -1815,6 +1819,32 @@ def formal_operator_semantics_verify(
 ) -> None:
     """Verify operator semantics, params, family bindings, and claim policy."""
     result = verify_formal_operator_semantics(semantics)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("formal-lean-backend", hidden=True)
+def formal_lean_backend(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("docs/formal_lean_backend.json"),
+) -> None:
+    """Write the Lean 4 + Mathlib backend manifest and CI gate binding."""
+    write_formal_lean_backend(out)
+    typer.echo(f"formal_lean_backend={out}")
+
+
+@app.command("formal-lean-backend-verify", hidden=True)
+def formal_lean_backend_verify(
+    backend: Annotated[
+        Path,
+        typer.Option("--backend"),
+    ] = Path("docs/formal_lean_backend.json"),
+) -> None:
+    """Verify Lean sources, theorem declarations, placeholders, and CI gate."""
+    result = verify_formal_lean_backend(backend)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)
