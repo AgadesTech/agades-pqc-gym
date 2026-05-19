@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "4890abda8ce593ed91c5c840be210fe17a28698ecdbc8a90ae16390e32e27d2e",
+  "artifact_sha256": "c56b4785ebf9020a006b36952547d5823aca2b2497001621ebb19ce046a5ace9",
   "attack_plan": {
     "canonical_sha256": "cd75f20024968e2d6bd6f019c623b23663aba3d1fff350d81770755c197e284d",
     "id": "lattice_mlwe_module_hypothesis_toy_v1",
@@ -210,6 +210,17 @@
   ],
   "review": {
     "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
+    "evidence": {
+      "claim_allowed": false,
+      "covered_reviewer_roles": [],
+      "notes": "No reviewer attestation is attached; this artifact must remain pending_review.",
+      "required_for_statuses": [
+        "reviewed",
+        "rejected"
+      ],
+      "schema_version": "agades.pqc.formal.review_evidence.v1",
+      "status": "not_attached"
+    },
     "required_reviewers": [
       "lattice_cryptographer",
       "formal_methods_reviewer",

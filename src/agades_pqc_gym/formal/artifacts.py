@@ -22,6 +22,7 @@ ATTACK_PLAN_SCHEMA_CONTRACT_SCHEMA = "agades.pqc.attack_plan.schema_contract.v1"
 ATTACK_PLAN_SCHEMA_MODEL = "agades_pqc_gym.core.attack_plan.AttackPlan"
 ATTACK_PLAN_CANONICALIZATION = "json_sort_keys_minified_v1"
 ATTACK_PLAN_VALIDATION = "pydantic_v2_extra_forbid_family_cross_checks"
+REVIEW_EVIDENCE_SCHEMA = "agades.pqc.formal.review_evidence.v1"
 EVALUATOR_RESULT_SCHEMA_CONTRACT_SCHEMA = (
     "agades.pqc.evaluator_result.schema_contract.v1"
 )
@@ -254,6 +255,11 @@ def build_attack_plan_proof_artifact_from_json(
         raise ValueError(
             "review_status must be one of: " + ", ".join(sorted(REVIEW_STATUSES))
         )
+    if review_status != "pending_review":
+        raise ValueError(
+            "review evidence is required for non-pending proof artifacts"
+        )
+    required_reviewers = required_reviewers_for_family(plan.target.family)
     artifact: dict[str, Any] = {
         "schema_version": PROOF_ARTIFACT_SCHEMA,
         "backend": BACKEND,
@@ -278,9 +284,8 @@ def build_attack_plan_proof_artifact_from_json(
         "proof_obligations": _proof_obligations(plan),
         "review": {
             "status": review_status,
-            "required_reviewers": required_reviewers_for_family(
-                plan.target.family
-            ),
+            "required_reviewers": required_reviewers,
+            "evidence": _pending_review_evidence(),
             "claim_boundary": (
                 "formal obligations are applicability checks, not PQC break claims"
             ),
@@ -1081,6 +1086,20 @@ def _evaluator_attack_type_matches_operator(
     )
 
 
+def _pending_review_evidence() -> dict[str, Any]:
+    return {
+        "schema_version": REVIEW_EVIDENCE_SCHEMA,
+        "status": "not_attached",
+        "required_for_statuses": ["reviewed", "rejected"],
+        "covered_reviewer_roles": [],
+        "claim_allowed": False,
+        "notes": (
+            "No reviewer attestation is attached; this artifact must remain "
+            "pending_review."
+        ),
+    }
+
+
 def _verify_obligation_type(
     obligation: dict[str, Any],
     artifact: dict[str, Any],
@@ -1315,5 +1334,32 @@ def _verify_review_binding(
         return
     if review.get("required_reviewers") != required_reviewers_for_family(family):
         failures.append("Proof artifact required reviewers are incorrect.")
+    _verify_review_evidence(review, failures)
     if "not PQC break claims" not in review.get("claim_boundary", ""):
         failures.append("Proof artifact must state the no-overclaim boundary.")
+
+
+def _verify_review_evidence(
+    review: dict[str, Any],
+    failures: list[str],
+) -> None:
+    evidence = review.get("evidence")
+    if review.get("status") == "pending_review":
+        if evidence != _pending_review_evidence():
+            failures.append(
+                "Pending proof artifacts must carry pending review evidence."
+            )
+        return
+    if not isinstance(evidence, dict) or evidence.get("status") != "attached":
+        failures.append(
+            "Non-pending proof artifact review statuses require attached review "
+            "evidence covering all required reviewers."
+        )
+        return
+    required_reviewers = review.get("required_reviewers", [])
+    covered_roles = evidence.get("covered_reviewer_roles", [])
+    if sorted(covered_roles) != sorted(required_reviewers):
+        failures.append(
+            "Attached proof artifact review evidence must cover all required "
+            "reviewer roles."
+        )
