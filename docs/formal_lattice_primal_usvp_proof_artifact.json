@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "1a9d3a251e35a6a79a115822b53bf2667343a221b321647b51cd4dd235030305",
+  "artifact_sha256": "b9daecc07a429fe1ac35c1230bc6f2e13a160af19b053f838e6577ba12165489",
   "attack_plan": {
     "canonical_sha256": "c06ca5ddc67e4a09af1cece6b5a368129068fef091b77f785694324028111d60",
     "id": "lattice_primal_usvp_toy_v1",
@@ -48,11 +48,26 @@
     }
   ],
   "formal_backend": {
+    "backend_manifest": {
+      "ci_lean_build_gate": true,
+      "manifest_sha256": "52587cfe4a811b01591ea572efca6e64624338473ebcce1e7a4cc9d014cb7512",
+      "path": "docs/formal_lean_backend.json",
+      "placeholder_failures": 0,
+      "schema_version": "agades.pqc.formal.lean_backend.v1",
+      "sha256": "50b3f223a3ddc2ea13fe29b31783364552ee666ff0e667c169eb62928dcc940b",
+      "source_modules": 11,
+      "theorem_declarations": 23
+    },
+    "build_command": "lake build",
     "entry_module": "formal/lean/AgadesPQC.lean",
-    "execution_status": "not_run_in_this_environment",
+    "execution_status": "ci_build_gate_required",
+    "lake_manifest": "formal/lean/lake-manifest.json",
+    "lake_manifest_sha256": "d357bd51e4ae12c2d62ca0289f78874e1a01eb14597e7fda54217042645e282f",
     "lakefile": "formal/lean/lakefile.lean",
+    "lakefile_sha256": "1ba611ea7d88d72fdc37b2bde34540266ed760c1f35a6676f17cecd8e7ca4990",
     "root": "formal/lean",
-    "toolchain": "formal/lean/lean-toolchain"
+    "toolchain": "formal/lean/lean-toolchain",
+    "toolchain_sha256": "e6930c662006db4d6dc76c651d60a608e4f6a18bcfd53e6b0167d70a125285d5"
   },
   "operator_semantics": [
     {

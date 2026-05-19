@@ -24,6 +24,7 @@ BACKEND = {
 }
 ROOT = Path(__file__).resolve().parents[3]
 LEAN_BACKEND_ROOT = Path("formal/lean")
+FORMAL_LEAN_BACKEND_PATH = Path("docs/formal_lean_backend.json")
 MVP_VERTICAL_PROOF_ARTIFACT_PATHS = {
     TargetFamily.LWE.value: "docs/formal_lattice_primal_usvp_proof_artifact.json",
     TargetFamily.MLWE.value: (
@@ -232,13 +233,7 @@ def build_attack_plan_proof_artifact_from_json(
     artifact: dict[str, Any] = {
         "schema_version": PROOF_ARTIFACT_SCHEMA,
         "backend": BACKEND,
-        "formal_backend": {
-            "root": LEAN_BACKEND_ROOT.as_posix(),
-            "toolchain": (LEAN_BACKEND_ROOT / "lean-toolchain").as_posix(),
-            "lakefile": (LEAN_BACKEND_ROOT / "lakefile.lean").as_posix(),
-            "entry_module": (LEAN_BACKEND_ROOT / "AgadesPQC.lean").as_posix(),
-            "execution_status": "not_run_in_this_environment",
-        },
+        "formal_backend": _formal_backend_binding(ROOT),
         "attack_plan": {
             "id": plan.attack_plan_id,
             "path": source_label,
@@ -297,6 +292,7 @@ def verify_attack_plan_proof_artifact(
     artifact = _read_json_object(artifact_path, failures)
     if artifact:
         _verify_artifact_shape(artifact, failures)
+        _verify_formal_backend(artifact, project_root, failures)
         _verify_artifact_hash(artifact, failures)
         _verify_plan_binding(artifact, project_root, failures)
         _verify_obligation_hashes(artifact, failures)
@@ -742,11 +738,11 @@ def _verify_artifact_shape(
         "estimator_result_binding",
         "proof_obligations",
         "review",
+        "formal_backend",
         "artifact_sha256",
     ):
         if key not in artifact:
             failures.append(f"Proof artifact is missing {key}.")
-    _verify_formal_backend(artifact, failures)
 
 
 def _verify_artifact_hash(
@@ -844,21 +840,73 @@ def _verify_obligation_hashes(
 
 def _verify_formal_backend(
     artifact: dict[str, Any],
+    project_root: Path,
     failures: list[str],
 ) -> None:
     formal_backend = artifact.get("formal_backend")
     if not isinstance(formal_backend, dict):
         failures.append("Proof artifact formal_backend must be a JSON object.")
         return
-    expected = {
-        "root": "formal/lean",
-        "toolchain": "formal/lean/lean-toolchain",
-        "lakefile": "formal/lean/lakefile.lean",
-        "entry_module": "formal/lean/AgadesPQC.lean",
-        "execution_status": "not_run_in_this_environment",
-    }
+    expected = _formal_backend_binding(project_root, failures=failures)
     if formal_backend != expected:
-        failures.append("Proof artifact formal_backend is incorrect.")
+        failures.append("Proof artifact formal_backend is not in sync.")
+
+
+def _formal_backend_binding(
+    root: Path,
+    *,
+    failures: list[str] | None = None,
+) -> dict[str, Any]:
+    manifest_path = root / FORMAL_LEAN_BACKEND_PATH
+    try:
+        raw = manifest_path.read_bytes()
+        manifest = json.loads(raw.decode("utf-8"))
+    except FileNotFoundError:
+        if failures is not None:
+            failures.append(
+                "Formal Lean backend manifest is missing: "
+                f"{FORMAL_LEAN_BACKEND_PATH.as_posix()}."
+            )
+        manifest = {}
+        raw = b""
+    except json.JSONDecodeError as exc:
+        if failures is not None:
+            failures.append(
+                "Formal Lean backend manifest is invalid JSON at line "
+                f"{exc.lineno}."
+            )
+        manifest = {}
+        raw = b""
+
+    lean_project = manifest.get("lean_project", {})
+    if not isinstance(lean_project, dict):
+        lean_project = {}
+    summary = manifest.get("summary", {})
+    if not isinstance(summary, dict):
+        summary = {}
+
+    return {
+        "root": LEAN_BACKEND_ROOT.as_posix(),
+        "toolchain": (LEAN_BACKEND_ROOT / "lean-toolchain").as_posix(),
+        "toolchain_sha256": lean_project.get("toolchain_sha256"),
+        "lakefile": (LEAN_BACKEND_ROOT / "lakefile.lean").as_posix(),
+        "lakefile_sha256": lean_project.get("lakefile_sha256"),
+        "lake_manifest": (LEAN_BACKEND_ROOT / "lake-manifest.json").as_posix(),
+        "lake_manifest_sha256": lean_project.get("lake_manifest_sha256"),
+        "entry_module": (LEAN_BACKEND_ROOT / "AgadesPQC.lean").as_posix(),
+        "build_command": "lake build",
+        "execution_status": "ci_build_gate_required",
+        "backend_manifest": {
+            "path": FORMAL_LEAN_BACKEND_PATH.as_posix(),
+            "schema_version": manifest.get("schema_version"),
+            "sha256": hashlib.sha256(raw).hexdigest() if raw else None,
+            "manifest_sha256": manifest.get("manifest_sha256"),
+            "source_modules": summary.get("source_modules"),
+            "theorem_declarations": summary.get("theorem_declarations"),
+            "ci_lean_build_gate": summary.get("ci_lean_build_gate"),
+            "placeholder_failures": summary.get("placeholder_failures"),
+        },
+    }
 
 
 def _verify_lean_bindings(
