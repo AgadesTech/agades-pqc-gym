@@ -1,0 +1,147 @@
+{
+  "claim_boundary": {
+    "agent_task": "produce, critique, repair, or validate AttackPlan JSON and proof obligations",
+    "formal_obligations_required_before_claim": true,
+    "human_review_required_before_claim": true,
+    "not_a_task": "claiming practical PQC breaks without formal/domain review"
+  },
+  "evolution_loops": {
+    "private_serious_research": {
+      "deepevolve_allowed": true,
+      "openevolve_allowed": true,
+      "private_qwen_allowed": true,
+      "publication_allowed": false,
+      "requires_human_review": true,
+      "requires_private_run_policy": true
+    },
+    "public_toy_eval": {
+      "deepevolve_allowed": true,
+      "openevolve_allowed": true,
+      "private_data_allowed": false,
+      "security_claims_allowed": false
+    }
+  },
+  "linked_artifacts": {
+    "formal_proof_artifact": {
+      "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+      "sha256": "9a3bc5e37690348bc16fb12ccf07ebbba4dadd537183ab8863e2626b1bf90fc0"
+    },
+    "hf_space_manifest": {
+      "path": "hf/space_manifest.json",
+      "sha256": "df95cf04d618998377a3a6bf712dc8dad7cd500fb56c29d0898926250e1de58f"
+    },
+    "prime_environment_manifest": {
+      "path": "prime_intellect/verifiers_environment/prime_manifest.json",
+      "sha256": "b4a421a2179773908e18b8a52a91fb17cd35dc826fa9a7a4ecdb8afffb15ebbf"
+    },
+    "prime_schema_manifest": {
+      "path": "prime_intellect/schemas/schema_manifest.json",
+      "sha256": "f448d41c640e6dc02a462af1bf695a93045676a191cee53403a121cab833fbeb"
+    },
+    "private_run_policy": {
+      "path": "docs/private_run_policy.json",
+      "sha256": "a0992031eb7a4268e4813b4d5f02a9ca4dda078972c935ef829c8e981259d86a"
+    }
+  },
+  "private_track": {
+    "datasets": {
+      "private_roots": [
+        "private/datasets",
+        "private/traces",
+        "private/models"
+      ],
+      "publication_allowed": false,
+      "required_controls": [
+        "license_review",
+        "provenance_tracking",
+        "deduplication",
+        "redaction",
+        "contamination_audit"
+      ],
+      "sources": [
+        "facebookresearch/LWE-benchmarking",
+        "facebook/TAPAS",
+        "pq-code-package"
+      ]
+    },
+    "method": "pedagogical_rl",
+    "publish_finetuned_model_publicly": false,
+    "publish_prompts_publicly": false,
+    "publish_reviewer_annotations_publicly": false,
+    "publish_training_traces_publicly": false,
+    "qwen_training": {
+      "gguf_direct_training_allowed": false,
+      "preferred_user_artifact": "private GGUF OTQ 5-bit",
+      "public_card_metadata_only": true,
+      "publish_trace_corpora_publicly": false,
+      "publish_weights_publicly": false,
+      "target_model": "Qwen3.6-27B-private",
+      "training_path": "lora_or_qlora_on_trainable_weights_then_private_gguf_otq_quantization"
+    },
+    "spike_aware_pedagogy_reward": true,
+    "surprisal_gated_imitation": true,
+    "teacher_student_pattern": "privileged_self_teacher_student"
+  },
+  "project": {
+    "name": "Agades PQC Gym RL Environment",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "public_track": {
+    "allows_private_datasets": false,
+    "allows_security_claims": false,
+    "dataset_roots": [
+      "hf/dataset",
+      "prime_intellect/verifiers_environment/data"
+    ],
+    "purpose": "train_or_evaluate_agents_to_produce_valid_attackplans",
+    "requires_public_redaction": true,
+    "uses_toy_or_schema_only_tasks": true
+  },
+  "release_gates": [
+    "uv run pytest tests/test_rl_environment_contract.py -q",
+    "uv run agades-pqc rl-environment-contract --out docs/rl_environment_contract.json",
+    "uv run agades-pqc rl-environment-contract-verify --contract docs/rl_environment_contract.json",
+    "uv run agades-pqc private-run-policy-verify --policy docs/private_run_policy.json",
+    "uv run agades-pqc formal-proof-artifact-verify --artifact docs/formal_lattice_primal_usvp_proof_artifact.json"
+  ],
+  "reward_model": {
+    "range": [
+      0.0,
+      1.0
+    ],
+    "requires_no_security_claim": true,
+    "requires_reviewer_quality_signal": true,
+    "terms": [
+      "formal_validity",
+      "cryptographic_applicability",
+      "no_security_overclaim",
+      "student_readability",
+      "reproducibility",
+      "reviewer_quality",
+      "task_match",
+      "proof_obligation_coverage"
+    ],
+    "type": "pedagogical_multi_term_reward"
+  },
+  "schema_version": "agades.pqc.rl_environment_contract.v1",
+  "surfaces": {
+    "huggingface_agent_environment": {
+      "category": "agent-environment",
+      "private_trace_publication_allowed": false,
+      "public_visibility_allowed": true,
+      "rollout_examples": "hf/dataset/verifier_outputs.jsonl",
+      "sdk": "gradio",
+      "space_id_template": "agades/agades-pqc-gym-agent-env",
+      "task_dataset": "hf/dataset/task_metadata.jsonl"
+    },
+    "prime_verifiers_environment": {
+      "environment": "agades-pqc-verifier-env",
+      "environment_hub_handoff": true,
+      "eval_command": "prime eval run agades-pqc-verifier-env",
+      "hosted_training_handoff": true,
+      "private_trace_publication_allowed": false,
+      "training_stack": "prime-rl"
+    }
+  }
+}
