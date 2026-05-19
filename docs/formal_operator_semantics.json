@@ -1,0 +1,533 @@
+{
+  "backend": {
+    "library": "mathlib",
+    "primary": "lean4",
+    "smt_assist": "z3_optional_finite_decidable_obligations_only"
+  },
+  "claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+  "linked_artifacts": {
+    "family_operator_catalog": {
+      "path": "docs/family_operator_catalog.json",
+      "sha256": "37594fa76194d271d80e7f2d227179feb0dc207ca0db135f451e1a29bae12d32"
+    },
+    "family_plugin_manifest": {
+      "path": "docs/family_plugin_manifest.json",
+      "sha256": "c6fca7e84e9abcb06772f866e47f7b19dc0713e3a8b2dbdbea26dc97a2386745"
+    }
+  },
+  "operators": [
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "4d12327b70a39e859b9dc5a67ed58528b8d4293f79eba15a33225071c93bbb86",
+      "lean_namespace": "AgadesPQC.Lattice.PrimalUSVP",
+      "operator": "primal_usvp",
+      "required_params": {
+        "beta": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.primal_usvp.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "59bd32906b2787843f5e242e08f375463b55704def584a78f9bb6ec7c838084a",
+      "lean_namespace": "AgadesPQC.Lattice.BDD",
+      "operator": "bounded_distance_decoding",
+      "required_params": {
+        "beta": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.bdd.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "df77473b6ecacc13a90eff53d12ce5c0c982a9ae550a5df25d68cea590ff937c",
+      "lean_namespace": "AgadesPQC.Lattice.DualAttack",
+      "operator": "dual_attack",
+      "required_params": {
+        "beta": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.dual_attack.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "65fa5bc5aaacd955f4a132d34bcf0ee9ade6c271eb03c9e2d4bdd0b85bf4cb8f",
+      "lean_namespace": "AgadesPQC.Lattice.DualHybrid",
+      "operator": "dual_hybrid",
+      "required_params": {
+        "beta": "int",
+        "zeta": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.dual_hybrid.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "5c802254ec0a21f0a91f72080d077bce010747aad1b2d599f628128b4e599b94",
+      "lean_namespace": "AgadesPQC.Lattice.BKW",
+      "operator": "bkw",
+      "required_params": {
+        "block_size": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.bkw.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "f912d7ddd756c2f0cabe236dea7c2b8b43424d08b8fc75369b94f42b0acf38ed",
+      "lean_namespace": "AgadesPQC.Lattice.ModulusSwitching",
+      "operator": "modulus_switching",
+      "required_params": {
+        "q_prime": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.modulus_switching.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "cb1e7042ba9430bcb6e2c8ad8e85b7dc241e22921c084c39380e61b759e6724a",
+      "lean_namespace": "AgadesPQC.Lattice.SampleSelection",
+      "operator": "sample_selection",
+      "required_params": {
+        "sample_count": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.sample_selection.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "09a322abf2ebeec8e0ca65b2c1c33e01085452c70aacca37245c0116c5d9bd8d",
+      "lean_namespace": "AgadesPQC.Lattice.SecretGuessing",
+      "operator": "secret_guessing",
+      "required_params": {
+        "guess_dimension": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.secret_guessing.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "77174273716691676f8d4a285608cb930760e6a6fb4a8633bb4491fb1e73af0f",
+      "lean_namespace": "AgadesPQC.Lattice.MeetInTheMiddle",
+      "operator": "meet_in_the_middle",
+      "required_params": {
+        "split_dimension": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.meet_in_the_middle.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "dc913b494285ddab8177248fc214506b1cd73d19017bfe8ff96f305d93b7633f",
+      "lean_namespace": "AgadesPQC.Lattice.NormalFormTransform",
+      "operator": "normal_form_transform",
+      "required_params": {},
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.normal_form_transform.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "875e182569e61b56216f07f366a8841a0279825344c9a8ced5e886f3d3a6c691",
+      "lean_namespace": "AgadesPQC.Lattice.BKZParameterSweep",
+      "operator": "bkz_parameter_sweep",
+      "required_params": {
+        "beta_max": "int",
+        "beta_min": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.bkz_parameter_sweep.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "2a11fdbe18265a2f05dd494d08e5b3ef9a350ee8979d46890ce8e8df536332b9",
+      "lean_namespace": "AgadesPQC.Lattice.ModuleReductionHypothesis",
+      "operator": "module_lattice_reduction_hypothesis",
+      "required_params": {
+        "model": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.module_reduction_hypothesis.v1"
+    },
+    {
+      "attackplan_families": [
+        "CODE_BASED"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "b47e88bd50df26d0761950052ee05b5ffa469740b1232e48129efd1cd9e9419e",
+      "lean_namespace": "AgadesPQC.CodeBased.DecodingFixtureCheck",
+      "operator": "decoding_fixture_check",
+      "required_params": {
+        "variant": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.code_based.decoding_fixture_check.v1"
+    },
+    {
+      "attackplan_families": [
+        "CODE_BASED"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "49a76bc04446ac2a242a89bc4bdc13caaeacac8c3af9a77f67c4f89cb1771405",
+      "lean_namespace": "AgadesPQC.CodeBased.ISD",
+      "operator": "information_set_decoding",
+      "required_params": {
+        "variant": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.code_based.isd.v1"
+    },
+    {
+      "attackplan_families": [
+        "MULTIVARIATE"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "18844d1db2e2f540bb0cf2ff458ed2988af6ab030009861586ceb802c510de35",
+      "lean_namespace": "AgadesPQC.Multivariate.MinRank",
+      "operator": "minrank_attack",
+      "required_params": {
+        "model": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.multivariate.minrank_attack.v1"
+    },
+    {
+      "attackplan_families": [
+        "MULTIVARIATE"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "96cb5c9c6ea2066e6274a0b27fa0e2618602bdca11cde8e17389363cc7ab1913",
+      "lean_namespace": "AgadesPQC.Multivariate.GroebnerBasis",
+      "operator": "groebner_basis",
+      "required_params": {
+        "model": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.multivariate.groebner_basis.v1"
+    },
+    {
+      "attackplan_families": [
+        "MULTIVARIATE"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "f3e5b61f77c4a471d85ed751279ce0c911a25c2606b16a683408f0c4dee1bac0",
+      "lean_namespace": "AgadesPQC.Multivariate.SignatureFixtureCheck",
+      "operator": "signature_fixture_check",
+      "required_params": {
+        "signature_model": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.multivariate.signature_fixture_check.v1"
+    },
+    {
+      "attackplan_families": [
+        "HASH_BASED"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "e686b27a5dbb1b8677a4cc79a83b26851485415ec782031a1406b6ebd0ab4d2e",
+      "lean_namespace": "AgadesPQC.HashBased.SecurityBoundCheck",
+      "operator": "security_bound_check",
+      "required_params": {
+        "bound_model": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.hash_based.security_bound_check.v1"
+    },
+    {
+      "attackplan_families": [
+        "HASH_BASED"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "693d541fad708cfbc02c72619788250aaaa7d2cf923c5ec90f86bf0cdec6771e",
+      "lean_namespace": "AgadesPQC.HashBased.SignatureVerification",
+      "operator": "hash_signature_verification",
+      "required_params": {
+        "signature_model": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.hash_based.signature_verification.v1"
+    },
+    {
+      "attackplan_families": [
+        "HASH_BASED"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "43d5c38aa19deca277473cf411f9f71fa09534ce196b5b57aea8e6003dff8472",
+      "lean_namespace": "AgadesPQC.HashBased.MisuseCheck",
+      "operator": "misuse_check",
+      "required_params": {
+        "fixture": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.hash_based.misuse_check.v1"
+    },
+    {
+      "attackplan_families": [
+        "ISOGENY_HISTORICAL"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "a237cebfcc4c93b719724b999115597b821b5775469ed3594e9d07107fb2eb3e",
+      "lean_namespace": "AgadesPQC.IsogenyHistorical.Reconstruction",
+      "operator": "historical_isogeny_reconstruction",
+      "required_params": {
+        "case": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.isogeny_historical.reconstruction.v1"
+    },
+    {
+      "attackplan_families": [
+        "IMPLEMENTATION_SECURITY"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "747712ae10b473f60a288ad1466aa71db383b793d87630b21f347932189789a1",
+      "lean_namespace": "AgadesPQC.ImplementationSecurity.KATConformance",
+      "operator": "kat_conformance",
+      "required_params": {
+        "suite": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.implementation_security.kat_conformance.v1"
+    },
+    {
+      "attackplan_families": [
+        "IMPLEMENTATION_SECURITY"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "0d053568aa9ef59e5978d4e7bba08fa7389634f84079aa8003ac2ee926dc967c",
+      "lean_namespace": "AgadesPQC.ImplementationSecurity.ConstantTimeCheck",
+      "operator": "constant_time_check",
+      "required_params": {
+        "tool": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.implementation_security.constant_time_check.v1"
+    },
+    {
+      "attackplan_families": [
+        "IMPLEMENTATION_SECURITY"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "6315fbc22e9bfaa57633ac147f0e78b115f2c692a06ba2f74fd518b767af4126",
+      "lean_namespace": "AgadesPQC.ImplementationSecurity.BenchmarkHarness",
+      "operator": "benchmark_harness",
+      "required_params": {
+        "metric": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.implementation_security.benchmark_harness.v1"
+    }
+  ],
+  "project": {
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "release_gates": [
+    "uv run pytest tests/test_formal_operator_semantics.py -q",
+    "uv run agades-pqc formal-operator-semantics --out docs/formal_operator_semantics.json",
+    "uv run agades-pqc formal-operator-semantics-verify --semantics docs/formal_operator_semantics.json",
+    "uv run agades-pqc family-operator-catalog-verify --catalog docs/family_operator_catalog.json"
+  ],
+  "schema_version": "agades.pqc.formal.operator_semantics.v1",
+  "semantics_sha256": "3cbf26bfca31f0b09c40b4440e887bba2cc4d3d6b13b9ba3d2be38b9f1b95ea8",
+  "summary": {
+    "attackplan_family_bindings": 60,
+    "lattice_operators": 12,
+    "non_lattice_operators": 12,
+    "operators": 24,
+    "required_param_fields": 25,
+    "security_claim_allowed_without_review": 0
+  }
+}

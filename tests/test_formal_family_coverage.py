@@ -109,7 +109,7 @@ def test_formal_family_coverage_verify_accepts_committed_artifact() -> None:
                 "family_invariants": 12,
                 "proof_obligations": 22,
                 "operator_semantics": 10,
-                "linked_artifacts": 2,
+                "linked_artifacts": 3,
                 "failure_count": 0,
             },
         "failures": [],

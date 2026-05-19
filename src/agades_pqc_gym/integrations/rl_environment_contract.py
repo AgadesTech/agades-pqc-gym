@@ -43,6 +43,7 @@ LINKED_ARTIFACT_PATHS = {
     "private_qwen_prime_rl.template.toml",
     "formal_estimator_model": "docs/formal_estimator_model.json",
     "formal_family_coverage": "docs/formal_family_coverage.json",
+    "formal_operator_semantics": "docs/formal_operator_semantics.json",
     "formal_proof_artifact": "docs/formal_lattice_primal_usvp_proof_artifact.json",
     "reviewer_governance": "docs/reviewer_governance.json",
     "prime_schema_manifest": "prime_intellect/schemas/schema_manifest.json",
