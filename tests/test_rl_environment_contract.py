@@ -98,6 +98,9 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
     assert contract["linked_artifacts"]["reviewer_governance"]["path"] == (
         "docs/reviewer_governance.json"
     )
+    assert contract["linked_artifacts"]["formal_family_coverage"]["path"] == (
+        "docs/formal_family_coverage.json"
+    )
     assert len(contract["linked_artifacts"]["formal_proof_artifact"]["sha256"]) == 64
 
 
@@ -121,7 +124,7 @@ def test_rl_environment_contract_verify_accepts_committed_contract() -> None:
             "surfaces": 2,
             "reward_terms": 8,
             "private_dataset_sources": 3,
-            "linked_artifacts": 9,
+            "linked_artifacts": 10,
             "failure_count": 0,
         },
         "failures": [],

@@ -22,6 +22,10 @@
     }
   },
   "linked_artifacts": {
+    "formal_family_coverage": {
+      "path": "docs/formal_family_coverage.json",
+      "sha256": "0011cc483c3c7d837ec83e9322a42a545b3de16100f4aa3fc7504b3592ccb68b"
+    },
     "formal_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
       "sha256": "db7b0ae13027881bf4421b19e34c164faa564c9629290f1546231503d4159705"
@@ -56,7 +60,7 @@
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "acdbc1656af880b8e4ce38e8c25110365aeba7d0a2b7d9f19ec3b99abde8354e"
+      "sha256": "d5c4021d5b33c8c7255d4d8e5457685905d2da516a571b2481be3d3f72db49ae"
     }
   },
   "private_track": {

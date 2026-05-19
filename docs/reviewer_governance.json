@@ -161,6 +161,7 @@
   ],
   "formal_artifact_binding": {
     "claim_boundary_contains": "not PQC break claims",
+    "formal_family_coverage_path": "docs/formal_family_coverage.json",
     "formal_lattice_proof_artifact_path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
     "required_reviewers_by_family": {
       "CODE_BASED": [
@@ -227,6 +228,10 @@
       "path": "docs/external_publication_review_packet.json",
       "sha256": "053fbae7bfce5ab9d2feab4f35ecf34446a5218751b3ac01d4843eb3cb4155b0"
     },
+    "formal_family_coverage": {
+      "path": "docs/formal_family_coverage.json",
+      "sha256": "0011cc483c3c7d837ec83e9322a42a545b3de16100f4aa3fc7504b3592ccb68b"
+    },
     "formal_lattice_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
       "sha256": "db7b0ae13027881bf4421b19e34c164faa564c9629290f1546231503d4159705"
@@ -245,7 +250,7 @@
     },
     "release_audit": {
       "path": "public/release_audit.json",
-      "sha256": "e339464d65aa90b1705c6f151862bc4d2a3c25c40c653c1b55be36f621441a82"
+      "sha256": "a1e5d9139cbdc6f3bfc24c8c4ab8e183688714e579e52f71f5b27f69e251df3d"
     }
   },
   "private_training_review": {
