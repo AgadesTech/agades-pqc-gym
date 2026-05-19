@@ -22,13 +22,17 @@
     }
   },
   "linked_artifacts": {
+    "formal_estimator_model": {
+      "path": "docs/formal_estimator_model.json",
+      "sha256": "dc89b918d3392ed67b415339cb3005e8fb732b3683105e5e9d5502c3348a4d68"
+    },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "0011cc483c3c7d837ec83e9322a42a545b3de16100f4aa3fc7504b3592ccb68b"
+      "sha256": "340cc9f9987b549436e4fe7bf8c0833ca3afd2321cc350378698b4d2b21b079b"
     },
     "formal_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "db7b0ae13027881bf4421b19e34c164faa564c9629290f1546231503d4159705"
+      "sha256": "2512d120077d8efb9aab414adedbaa4413df6fb8100d4b6f6e7d9129b02ee1fd"
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",
@@ -56,11 +60,11 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "7a3dd28bd33545fcc94bf708ef87c0277768a18d0260cdaad2699fe985f7b0ac"
+      "sha256": "2f236e8e97ec3594e2f00ad6c2c35a57950fb11c8612d01b740fe6550212d248"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "d5c4021d5b33c8c7255d4d8e5457685905d2da516a571b2481be3d3f72db49ae"
+      "sha256": "84ca298687802722fb452791220bc8d36e9b258758c68391692619f543c3966e"
     }
   },
   "private_track": {

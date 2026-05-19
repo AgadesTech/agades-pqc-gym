@@ -161,6 +161,7 @@
   ],
   "formal_artifact_binding": {
     "claim_boundary_contains": "not PQC break claims",
+    "formal_estimator_model_path": "docs/formal_estimator_model.json",
     "formal_family_coverage_path": "docs/formal_family_coverage.json",
     "formal_lattice_proof_artifact_path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
     "required_reviewers_by_family": {
@@ -228,13 +229,17 @@
       "path": "docs/external_publication_review_packet.json",
       "sha256": "053fbae7bfce5ab9d2feab4f35ecf34446a5218751b3ac01d4843eb3cb4155b0"
     },
+    "formal_estimator_model": {
+      "path": "docs/formal_estimator_model.json",
+      "sha256": "dc89b918d3392ed67b415339cb3005e8fb732b3683105e5e9d5502c3348a4d68"
+    },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "0011cc483c3c7d837ec83e9322a42a545b3de16100f4aa3fc7504b3592ccb68b"
+      "sha256": "340cc9f9987b549436e4fe7bf8c0833ca3afd2321cc350378698b4d2b21b079b"
     },
     "formal_lattice_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "db7b0ae13027881bf4421b19e34c164faa564c9629290f1546231503d4159705"
+      "sha256": "2512d120077d8efb9aab414adedbaa4413df6fb8100d4b6f6e7d9129b02ee1fd"
     },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
@@ -242,7 +247,7 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "7a3dd28bd33545fcc94bf708ef87c0277768a18d0260cdaad2699fe985f7b0ac"
+      "sha256": "2f236e8e97ec3594e2f00ad6c2c35a57950fb11c8612d01b740fe6550212d248"
     },
     "publication_manifest": {
       "path": "docs/publication_manifest.json",
@@ -250,7 +255,7 @@
     },
     "release_audit": {
       "path": "public/release_audit.json",
-      "sha256": "a1e5d9139cbdc6f3bfc24c8c4ab8e183688714e579e52f71f5b27f69e251df3d"
+      "sha256": "6aad72606073093522c702ee00efe2dada485120c0b6a8e04cf8d6a9fe99f933"
     }
   },
   "private_training_review": {

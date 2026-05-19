@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "486a10b82407eb3d1c3c50fc17dc9b1a3fdcdf4730ae3ba211128a46de986d8d",
+  "artifact_sha256": "1a9d3a251e35a6a79a115822b53bf2667343a221b321647b51cd4dd235030305",
   "attack_plan": {
     "canonical_sha256": "c06ca5ddc67e4a09af1cece6b5a368129068fef091b77f785694324028111d60",
     "id": "lattice_primal_usvp_toy_v1",
@@ -106,11 +106,11 @@
       "lean_source": {
         "declaration": "no_security_claim",
         "path": "formal/lean/AgadesPQC/Evaluator.lean",
-        "sha256": "3ec5782f5d3e250aa558cbd0ea6c9c6ff50690c6fddf4f4c49d3c2c1d600a7cc"
+        "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "obligation_id": "estimator.boundary.no_security_claim",
-      "obligation_sha256": "f706e7441b7d1825ea40cdb4e539c1d2e2ea62cfaae650d7476a5e934a4a5d70",
+      "obligation_sha256": "35be46d3ad737517f74cb36fb56cb6e0c41f231643fba487e1c02abfebd13ef4",
       "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
       "status": "pending_review"
     }
