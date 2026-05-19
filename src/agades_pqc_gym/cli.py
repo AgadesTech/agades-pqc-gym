@@ -49,6 +49,10 @@ from agades_pqc_gym.formal.artifacts import (
     verify_attack_plan_proof_artifact,
     write_attack_plan_proof_artifact,
 )
+from agades_pqc_gym.formal.estimator_model import (
+    verify_formal_estimator_model,
+    write_formal_estimator_model,
+)
 from agades_pqc_gym.formal.family_coverage import (
     verify_formal_family_coverage,
     write_formal_family_coverage,
@@ -1755,6 +1759,32 @@ def formal_family_coverage_verify(
 ) -> None:
     """Verify multi-family formal coverage, Lean bindings, and reviewers."""
     result = verify_formal_family_coverage(coverage)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("formal-estimator-model", hidden=True)
+def formal_estimator_model(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("docs/formal_estimator_model.json"),
+) -> None:
+    """Write the formal estimator model and no-overclaim policy artifact."""
+    write_formal_estimator_model(out)
+    typer.echo(f"formal_estimator_model={out}")
+
+
+@app.command("formal-estimator-model-verify", hidden=True)
+def formal_estimator_model_verify(
+    model: Annotated[
+        Path,
+        typer.Option("--model"),
+    ] = Path("docs/formal_estimator_model.json"),
+) -> None:
+    """Verify estimator model bindings, Lean theorem links, and claim policy."""
+    result = verify_formal_estimator_model(model)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)

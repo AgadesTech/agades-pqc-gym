@@ -22,7 +22,7 @@
   "linked_artifacts": {
     "formal_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "db7b0ae13027881bf4421b19e34c164faa564c9629290f1546231503d4159705"
+      "sha256": "2512d120077d8efb9aab414adedbaa4413df6fb8100d4b6f6e7d9129b02ee1fd"
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",

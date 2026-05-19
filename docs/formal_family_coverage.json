@@ -5,12 +5,12 @@
     "smt_assist": "z3_optional_finite_decidable_obligations_only"
   },
   "claim_boundary": "formal family coverage proves AttackPlan applicability bindings, not PQC break claims",
-  "coverage_sha256": "f3973d4fb7c66341ab88a6e13a54ff2d021d823d02dec928ae3646e9e8c4a5ad",
+  "coverage_sha256": "a6d6be7e6522921059e935c3d4ccbe859dfc90de5f87abcad0a0a13a3b4f7f9f",
   "families": [
     {
       "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "0efe9e2746e60980c7a8b68b4692e48b51eefeabec5894fa8fd8ea1d74ea5eba",
+      "entry_sha256": "53f16944ab86afd995c285f9b3fd7ccbbd8e79d5ce4f60e215a0e3e3a2b80802",
       "estimator_model": {
         "model_id": "agades.pqc.evaluator_model.boundary.v1",
         "no_fake_estimate": true,
@@ -26,7 +26,7 @@
           "declaration": "no_security_claim",
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "path": "formal/lean/AgadesPQC/Evaluator.lean",
-          "sha256": "3ec5782f5d3e250aa558cbd0ea6c9c6ff50690c6fddf4f4c49d3c2c1d600a7cc"
+          "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
         },
         {
           "declaration": "beta_valid_range",
@@ -84,7 +84,7 @@
     {
       "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "851cfa09136400cdba2b0a4edf9eeb7304fd82baf3bd8d107dfc8732b6ddb39c",
+      "entry_sha256": "6cdf025ae0b9fd9475dc6171848c09e26bd3e58ee32148930116aa59393da0a9",
       "estimator_model": {
         "model_id": "agades.pqc.evaluator_model.boundary.v1",
         "no_fake_estimate": true,
@@ -101,7 +101,7 @@
           "declaration": "no_security_claim",
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "path": "formal/lean/AgadesPQC/Evaluator.lean",
-          "sha256": "3ec5782f5d3e250aa558cbd0ea6c9c6ff50690c6fddf4f4c49d3c2c1d600a7cc"
+          "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
         },
         {
           "declaration": "dimension_modulus_positive",
@@ -164,7 +164,7 @@
     {
       "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "4b359a919cc2ef029f791499ecec321d0c67384ac5b2ea9c767cd21f986893ce",
+      "entry_sha256": "d964c191e8223da2d8a9284300e4257fe80eeba24647146c8be2df1f5c78bce2",
       "estimator_model": {
         "model_id": "schema_only_no_estimator",
         "no_fake_estimate": true,
@@ -179,7 +179,7 @@
           "declaration": "no_security_claim",
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "path": "formal/lean/AgadesPQC/Evaluator.lean",
-          "sha256": "3ec5782f5d3e250aa558cbd0ea6c9c6ff50690c6fddf4f4c49d3c2c1d600a7cc"
+          "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
         },
         {
           "declaration": "ntru_schema_only_no_estimate",
@@ -223,7 +223,7 @@
     {
       "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "c7de458abb836c92f44b99ecc00fe9cea28f49d7ada6adeec6b7758f4163a16c",
+      "entry_sha256": "c376d604afacc521e98efe4845822690b5f95a1ec974cb192444c702a58bcf5f",
       "estimator_model": {
         "model_id": "schema_only_no_estimator",
         "no_fake_estimate": true,
@@ -238,7 +238,7 @@
           "declaration": "no_security_claim",
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "path": "formal/lean/AgadesPQC/Evaluator.lean",
-          "sha256": "3ec5782f5d3e250aa558cbd0ea6c9c6ff50690c6fddf4f4c49d3c2c1d600a7cc"
+          "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
         },
         {
           "declaration": "sis_schema_only_no_estimate",
@@ -282,7 +282,7 @@
     {
       "applicability_validator": "agades_pqc_gym.families.code_based.validators.validate_code_based_plan",
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "1ddadd688f68c24e24828d9b407233d8c06692863d396f8d32eb0cc6d44f8f07",
+      "entry_sha256": "e17a7ffc970ad696da2719d78b4c36579b6df2c5f23668ec0f737de415147dad",
       "estimator_model": {
         "model_id": "schema_only_no_estimator",
         "no_fake_estimate": true,
@@ -309,7 +309,7 @@
           "declaration": "no_security_claim",
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "path": "formal/lean/AgadesPQC/Evaluator.lean",
-          "sha256": "3ec5782f5d3e250aa558cbd0ea6c9c6ff50690c6fddf4f4c49d3c2c1d600a7cc"
+          "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
         }
       ],
       "operator_semantics": [
@@ -341,7 +341,7 @@
     {
       "applicability_validator": "agades_pqc_gym.families.multivariate.validators.validate_multivariate_plan",
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "df4d341e9aa95edea45434e7bb90c89b6b1c7e5c10dc84237a8a0582c892ac91",
+      "entry_sha256": "ebf6b6964df22dde5b68b9af06d667f337b81a7ee0a1e9cc7039355511c118f1",
       "estimator_model": {
         "model_id": "agades.pqc.evaluator_model.boundary.v1",
         "no_fake_estimate": true,
@@ -356,7 +356,7 @@
           "declaration": "no_security_claim",
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "path": "formal/lean/AgadesPQC/Evaluator.lean",
-          "sha256": "3ec5782f5d3e250aa558cbd0ea6c9c6ff50690c6fddf4f4c49d3c2c1d600a7cc"
+          "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
         },
         {
           "declaration": "applicability_shape",
@@ -400,7 +400,7 @@
     {
       "applicability_validator": "agades_pqc_gym.families.hash_based.validators.validate_hash_based_plan",
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "ca87f6451fca5df2bebd70e4101b57a7bce5449169247f63c02a2463b7e78412",
+      "entry_sha256": "1c5abc7450fdab9db55cc8aa0ed72276952a3bf03fe74314d6e27c421d23b6d9",
       "estimator_model": {
         "model_id": "agades.pqc.evaluator_model.boundary.v1",
         "no_fake_estimate": true,
@@ -415,7 +415,7 @@
           "declaration": "no_security_claim",
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "path": "formal/lean/AgadesPQC/Evaluator.lean",
-          "sha256": "3ec5782f5d3e250aa558cbd0ea6c9c6ff50690c6fddf4f4c49d3c2c1d600a7cc"
+          "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
         },
         {
           "declaration": "bound_check_is_not_attack_claim",
@@ -459,7 +459,7 @@
     {
       "applicability_validator": "agades_pqc_gym.families.isogeny_historical.validators.validate_isogeny_historical_plan",
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "676354a41452e34caf18f3d5caf64475f41d185c7e5b47967e8bd60272b99d4a",
+      "entry_sha256": "25ddc870b2fedb915f199e68dd6584ecc697c07f820db593ad14ac3fc0458c94",
       "estimator_model": {
         "model_id": "agades.pqc.evaluator_model.boundary.v1",
         "no_fake_estimate": true,
@@ -474,7 +474,7 @@
           "declaration": "no_security_claim",
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "path": "formal/lean/AgadesPQC/Evaluator.lean",
-          "sha256": "3ec5782f5d3e250aa558cbd0ea6c9c6ff50690c6fddf4f4c49d3c2c1d600a7cc"
+          "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
         },
         {
           "declaration": "dimension_positive_historical_scope",
@@ -518,7 +518,7 @@
     {
       "applicability_validator": "agades_pqc_gym.families.implementation_security.validators.validate_implementation_security_plan",
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "9cf2b3690525137c8e210c18416f88be0cd8011cc1648c30e777023b122af95e",
+      "entry_sha256": "abf916e849a30f6f7b5601cc2f50f379a5775253409cc58a5d08491148a71362",
       "estimator_model": {
         "model_id": "agades.pqc.evaluator_model.boundary.v1",
         "no_fake_estimate": true,
@@ -533,7 +533,7 @@
           "declaration": "no_security_claim",
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "path": "formal/lean/AgadesPQC/Evaluator.lean",
-          "sha256": "3ec5782f5d3e250aa558cbd0ea6c9c6ff50690c6fddf4f4c49d3c2c1d600a7cc"
+          "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
         },
         {
           "declaration": "no_conformance_claim",
@@ -582,7 +582,7 @@
     },
     "formal_lattice_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "db7b0ae13027881bf4421b19e34c164faa564c9629290f1546231503d4159705"
+      "sha256": "2512d120077d8efb9aab414adedbaa4413df6fb8100d4b6f6e7d9129b02ee1fd"
     }
   },
   "project": {

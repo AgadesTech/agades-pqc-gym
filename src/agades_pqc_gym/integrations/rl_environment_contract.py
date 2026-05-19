@@ -41,6 +41,7 @@ LINKED_ARTIFACT_PATHS = {
     "private_training_manifest": "docs/private_training_config_manifest.json",
     "prime_rl_training_template": "prime_intellect/training/"
     "private_qwen_prime_rl.template.toml",
+    "formal_estimator_model": "docs/formal_estimator_model.json",
     "formal_family_coverage": "docs/formal_family_coverage.json",
     "formal_proof_artifact": "docs/formal_lattice_primal_usvp_proof_artifact.json",
     "reviewer_governance": "docs/reviewer_governance.json",

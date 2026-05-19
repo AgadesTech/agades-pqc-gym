@@ -85,6 +85,12 @@ LEAN_THEOREM_SOURCES = {
     "AgadesPQC.Evaluator.no_security_claim": (
         "formal/lean/AgadesPQC/Evaluator.lean"
     ),
+    "AgadesPQC.Evaluator.attached_unreviewed_no_security_claim": (
+        "formal/lean/AgadesPQC/Evaluator.lean"
+    ),
+    "AgadesPQC.Evaluator.schema_only_no_estimator_no_security_claim": (
+        "formal/lean/AgadesPQC/Evaluator.lean"
+    ),
     "AgadesPQC.Generic.Target.family_shape_validated": (
         "formal/lean/AgadesPQC/Generic/Target.lean"
     ),
