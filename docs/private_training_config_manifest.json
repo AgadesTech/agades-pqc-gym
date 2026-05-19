@@ -26,11 +26,11 @@
     },
     "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "d5433c4559b3dcd3c4bf65f3b8b95e188b8a4c126f6e982c502061f23ded4c20"
+      "sha256": "bb5149093e1425b8426b4ef7348a7a6f5d56fe090ce57fdaa3d2819dbd22e8de"
     },
     "formal_mlwe_proof_artifact": {
       "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
-      "sha256": "14c5d9f78433eac1f8536bbdb81187c479710d78b65be52f785eb6777a3033c0"
+      "sha256": "807a2859cee30b2aadb4755148060bafe9018e0314601d413b619efca45ef0be"
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",

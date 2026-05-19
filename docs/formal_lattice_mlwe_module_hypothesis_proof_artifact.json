@@ -1,9 +1,16 @@
 {
-  "artifact_sha256": "a59f4fd6bd628d3ee024d5311bd40e5ff798b29ee673f1d478d69cf23aa6a926",
+  "artifact_sha256": "4890abda8ce593ed91c5c840be210fe17a28698ecdbc8a90ae16390e32e27d2e",
   "attack_plan": {
     "canonical_sha256": "cd75f20024968e2d6bd6f019c623b23663aba3d1fff350d81770755c197e284d",
     "id": "lattice_mlwe_module_hypothesis_toy_v1",
     "path": "examples/attack_plans/lattice_mlwe_module_hypothesis_toy.json",
+    "schema_contract": {
+      "canonicalization": "json_sort_keys_minified_v1",
+      "json_schema_sha256": "051c5fea57fed0ec5ade9074b00e0dc119e8d295df342eb6e91ec70392659081",
+      "model": "agades_pqc_gym.core.attack_plan.AttackPlan",
+      "schema_version": "agades.pqc.attack_plan.schema_contract.v1",
+      "validation": "pydantic_v2_extra_forbid_family_cross_checks"
+    },
     "sha256": "14c62b76aef2b52e296e7de9e09e9b88e9d0f178161384c374de5d160325223a"
   },
   "backend": {
