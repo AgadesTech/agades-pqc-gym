@@ -701,12 +701,12 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
             "SIS",
         ],
         "hub_create_command_template": (
-            "hf repos create <owner>/pqc-gym --type=space "
+            "hf repos create AgadesTech/agades-pqc-gym-agent-env --type=space "
             "--space-sdk gradio --private --exist-ok"
         ),
         "hub_upload_command_template": (
-            "hf upload <owner>/pqc-gym hf . --repo-type=space "
-            '--commit-message "Sync Agades PQC Gym Space"'
+            "hf upload AgadesTech/agades-pqc-gym-agent-env hf . --repo-type=space "
+            '--commit-message "Sync Agades PQC Gym Agent Environment"'
         ),
         "labels_match_valid_dataset_rows": True,
     }

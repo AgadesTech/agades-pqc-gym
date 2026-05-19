@@ -196,12 +196,13 @@ EXPECTED_PUBLICATION_DRY_RUN_PLAN = [
         "artifact_count": 4,
         "command_templates": [
             (
-                "hf repos create <owner>/pqc-gym --type=space --space-sdk "
-                "gradio --private --exist-ok"
+                "hf repos create AgadesTech/agades-pqc-gym-agent-env "
+                "--type=space --space-sdk gradio --private --exist-ok"
             ),
             (
-                "hf upload <owner>/pqc-gym hf . --repo-type=space "
-                '--commit-message "Sync Agades PQC Gym Space"'
+                "hf upload AgadesTech/agades-pqc-gym-agent-env hf "
+                ". --repo-type=space --commit-message "
+                '"Sync Agades PQC Gym Agent Environment"'
             ),
         ],
         "contains_credentials": False,

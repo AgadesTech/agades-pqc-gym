@@ -1,8 +1,20 @@
 {
   "accepted": true,
+  "agent_environment": {
+    "claims_pqc_break": false,
+    "has_prompt": true,
+    "observation_schema": "agades.pqc.rl.observation.v1",
+    "private_fields_present": false,
+    "reward": 1.0,
+    "reward_report_schema": "agades.pqc.rl.reward_report.v1",
+    "rollout_trace_schema": "agades.pqc.rl.rollout_trace.v1",
+    "task_match": 1.0,
+    "trace_public_release_ok": true
+  },
   "app": {
     "app_path": "hf/app.py",
     "imports_without_gradio": true,
+    "uses_rl_environment": true,
     "uses_shared_verifier": true
   },
   "evaluation": {

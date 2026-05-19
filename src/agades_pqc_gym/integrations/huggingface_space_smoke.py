@@ -36,6 +36,7 @@ def build_huggingface_space_smoke_report(
     app = {
         "app_path": "hf/app.py",
         "imports_without_gradio": False,
+        "uses_rl_environment": False,
         "uses_shared_verifier": False,
     }
     examples = {
@@ -51,6 +52,17 @@ def build_huggingface_space_smoke_report(
         "summary_contains_not_security_claim": False,
         "target_family": None,
     }
+    agent_environment = {
+        "observation_schema": None,
+        "reward_report_schema": None,
+        "rollout_trace_schema": None,
+        "has_prompt": False,
+        "reward": None,
+        "task_match": None,
+        "trace_public_release_ok": False,
+        "private_fields_present": None,
+        "claims_pqc_break": None,
+    }
 
     try:
         module = _load_python_module(app_path, "agades_pqc_hf_space_smoke")
@@ -60,10 +72,20 @@ def build_huggingface_space_smoke_report(
         default_plan = module.load_example_plan(default_label)
         summary, payload = module.evaluate_attack_plan_json(default_plan)
         verifier_result = json.loads(payload)
+        observation_payload = module.load_environment_observation(default_label)
+        (
+            reward_summary,
+            reward_payload,
+            trace_payload,
+        ) = module.score_attack_plan_for_task(default_label, default_plan)
+        observation = json.loads(observation_payload)
+        reward_report = json.loads(reward_payload)
+        trace = json.loads(trace_payload)
     except Exception as exc:  # noqa: BLE001 - smoke report must capture app issues.
         failures.append(f"Hugging Face Space smoke failed: {exc}")
     else:
         app["uses_shared_verifier"] = True
+        app["uses_rl_environment"] = True
         examples = {
             "default_label": default_label,
             "default_is_selectable": default_label in choices,
@@ -78,13 +100,34 @@ def build_huggingface_space_smoke_report(
             "summary_contains_not_security_claim": "not a security claim" in summary,
             "target_family": verifier_result.get("target_family"),
         }
-        _validate_smoke_contract(app, examples, evaluation, failures)
+        agent_environment = {
+            "observation_schema": observation.get("schema_version"),
+            "reward_report_schema": reward_report.get("schema_version"),
+            "rollout_trace_schema": trace.get("schema_version"),
+            "has_prompt": bool(observation.get("prompt")),
+            "reward": reward_report.get("reward"),
+            "task_match": reward_report.get("terms", {}).get("task_match"),
+            "trace_public_release_ok": trace.get("public_release_ok"),
+            "private_fields_present": trace.get("private_fields_present"),
+            "claims_pqc_break": trace.get("claim_boundary", {}).get(
+                "claims_pqc_break"
+            ),
+        }
+        _validate_smoke_contract(
+            app,
+            examples,
+            evaluation,
+            agent_environment,
+            reward_summary,
+            failures,
+        )
 
     safety = dict.fromkeys(_FALSE_SAFETY_FLAGS, False)
     return {
         "schema_version": HF_SPACE_SMOKE_SCHEMA,
         "accepted": not failures,
         "app": app,
+        "agent_environment": agent_environment,
         "examples": examples,
         "evaluation": evaluation,
         "safety": safety,
@@ -122,6 +165,7 @@ def verify_huggingface_space_smoke_report(
         failures.append("Hugging Face Space smoke report is not in sync.")
     _verify_schema(report, failures)
     _verify_app(report, failures)
+    _verify_agent_environment(report, failures)
     _verify_examples(report, failures)
     _verify_evaluation(report, failures)
     _verify_safety(report, failures)
@@ -140,12 +184,16 @@ def _validate_smoke_contract(
     app: dict[str, Any],
     examples: dict[str, Any],
     evaluation: dict[str, Any],
+    agent_environment: dict[str, Any],
+    reward_summary: str,
     failures: list[str],
 ) -> None:
     if app["imports_without_gradio"] is not True:
         failures.append("Hugging Face Space app did not import without Gradio.")
     if app["uses_shared_verifier"] is not True:
         failures.append("Hugging Face Space app does not use the shared verifier.")
+    if app["uses_rl_environment"] is not True:
+        failures.append("Hugging Face Space app does not expose the RL environment.")
     if examples["example_count"] < 1:
         failures.append("Hugging Face Space exposes no public examples.")
     if examples["default_is_selectable"] is not True:
@@ -156,6 +204,26 @@ def _validate_smoke_contract(
         failures.append("Hugging Face Space verifier output makes a claim.")
     if evaluation["summary_contains_not_security_claim"] is not True:
         failures.append("Hugging Face Space summary lacks safety wording.")
+    if agent_environment["observation_schema"] != "agades.pqc.rl.observation.v1":
+        failures.append("Hugging Face Space Agent Environment observation drifted.")
+    if agent_environment["reward_report_schema"] != "agades.pqc.rl.reward_report.v1":
+        failures.append("Hugging Face Space Agent Environment reward schema drifted.")
+    if agent_environment["rollout_trace_schema"] != "agades.pqc.rl.rollout_trace.v1":
+        failures.append("Hugging Face Space Agent Environment trace schema drifted.")
+    if agent_environment["has_prompt"] is not True:
+        failures.append("Hugging Face Space Agent Environment lacks a task prompt.")
+    if agent_environment["reward"] != 1.0:
+        failures.append("Hugging Face Space Agent Environment default reward failed.")
+    if agent_environment["task_match"] != 1.0:
+        failures.append("Hugging Face Space Agent Environment task match failed.")
+    if agent_environment["trace_public_release_ok"] is not True:
+        failures.append("Hugging Face Space Agent Environment trace is not public.")
+    if agent_environment["private_fields_present"] is not False:
+        failures.append("Hugging Face Space Agent Environment exposes private fields.")
+    if agent_environment["claims_pqc_break"] is not False:
+        failures.append("Hugging Face Space Agent Environment claims a PQC break.")
+    if "not a security claim" not in reward_summary:
+        failures.append("Hugging Face Space Agent Environment summary lacks boundary.")
 
 
 def _read_report(path: Path, failures: list[str]) -> dict[str, Any]:
@@ -200,6 +268,32 @@ def _verify_app(report: dict[str, Any], failures: list[str]) -> None:
         failures.append(
             "Hugging Face Space smoke report does not use the shared verifier."
         )
+    if app.get("uses_rl_environment") is not True:
+        failures.append(
+            "Hugging Face Space smoke report does not expose the RL environment."
+        )
+
+
+def _verify_agent_environment(report: dict[str, Any], failures: list[str]) -> None:
+    agent_environment = report.get("agent_environment")
+    if not isinstance(agent_environment, dict):
+        failures.append(
+            "Hugging Face Space smoke report agent_environment must be an object."
+        )
+        return
+    expected = {
+        "observation_schema": "agades.pqc.rl.observation.v1",
+        "reward_report_schema": "agades.pqc.rl.reward_report.v1",
+        "rollout_trace_schema": "agades.pqc.rl.rollout_trace.v1",
+        "has_prompt": True,
+        "reward": 1.0,
+        "task_match": 1.0,
+        "trace_public_release_ok": True,
+        "private_fields_present": False,
+        "claims_pqc_break": False,
+    }
+    if agent_environment != expected:
+        failures.append("Hugging Face Space smoke report Agent Environment drifted.")
 
 
 def _verify_examples(report: dict[str, Any], failures: list[str]) -> None:
@@ -267,6 +361,7 @@ def _verification_summary(
     evaluation = (
         report.get("evaluation") if isinstance(report.get("evaluation"), dict) else {}
     )
+    app = report.get("app") if isinstance(report.get("app"), dict) else {}
     return {
         "default_label": examples.get("default_label"),
         "example_count": examples.get("example_count"),
@@ -275,6 +370,7 @@ def _verification_summary(
         "summary_contains_not_security_claim": evaluation.get(
             "summary_contains_not_security_claim"
         ),
+        "uses_rl_environment": app.get("uses_rl_environment"),
         "uses_shared_verifier": app.get("uses_shared_verifier"),
     }
 

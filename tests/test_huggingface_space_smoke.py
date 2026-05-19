@@ -27,6 +27,7 @@ def test_huggingface_space_smoke_report_exercises_public_demo(
     assert report["app"] == {
         "app_path": "hf/app.py",
         "imports_without_gradio": True,
+        "uses_rl_environment": True,
         "uses_shared_verifier": True,
     }
     assert report["examples"]["default_label"] == "LWE / lattice_primal_usvp_toy_v1"
@@ -39,6 +40,17 @@ def test_huggingface_space_smoke_report_exercises_public_demo(
         "summary_contains_not_security_claim": True,
         "target_family": "LWE",
         "security_claim": False,
+    }
+    assert report["agent_environment"] == {
+        "observation_schema": "agades.pqc.rl.observation.v1",
+        "reward_report_schema": "agades.pqc.rl.reward_report.v1",
+        "rollout_trace_schema": "agades.pqc.rl.rollout_trace.v1",
+        "has_prompt": True,
+        "reward": 1.0,
+        "task_match": 1.0,
+        "trace_public_release_ok": True,
+        "private_fields_present": False,
+        "claims_pqc_break": False,
     }
     assert report["safety"] == {
         "arbitrary_code_execution": False,
@@ -83,6 +95,7 @@ def test_huggingface_space_smoke_verify_accepts_committed_report() -> None:
             "failure_count": 0,
             "imports_without_gradio": True,
             "summary_contains_not_security_claim": True,
+            "uses_rl_environment": True,
             "uses_shared_verifier": True,
         },
         "failures": [],

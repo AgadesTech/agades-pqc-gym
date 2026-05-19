@@ -52,7 +52,7 @@
     },
     "hf_space_manifest": {
       "path": "hf/space_manifest.json",
-      "sha256": "df95cf04d618998377a3a6bf712dc8dad7cd500fb56c29d0898926250e1de58f"
+      "sha256": "2de86fe98df248c369b73ca28edeced73a8439cb9b1bf1fc67b57f25de5fc462"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
@@ -76,7 +76,7 @@
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "b94363a6bfa94d1260a663df695f2dfbff7cb5dab456537c15596eb86c3fdf62"
+      "sha256": "361bd1624cc0748815ff1671f4078bc7382433bf928667554057fed456fb6523"
     }
   },
   "private_track": {
