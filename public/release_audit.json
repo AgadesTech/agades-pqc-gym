@@ -91,6 +91,8 @@
           "check-whitespace",
           "generate-private-run-policy",
           "verify-private-run-policy",
+          "generate-private-dataset-curation",
+          "verify-private-dataset-curation",
           "verify-runbook-input-manifest",
           "generate-deepevolve-manifest",
           "verify-deepevolve-manifest",
@@ -1129,11 +1131,11 @@
       "blocking": true,
       "detail": "Checked-in release gates that depend on release-audit must first declare ecosystem-smoke-verify, including nested Hugging Face dataset metadata.",
       "evidence": {
-        "checked_release_gate_artifacts": 38,
-        "ecosystem_smoke_gate_artifacts": 26,
+        "checked_release_gate_artifacts": 39,
+        "ecosystem_smoke_gate_artifacts": 27,
         "late_ecosystem_smoke_gate": [],
         "missing_ecosystem_smoke_gate": [],
-        "release_audit_gate_artifacts": 24
+        "release_audit_gate_artifacts": 25
       },
       "failures": [],
       "id": "release-gate-closure",
@@ -1604,6 +1606,22 @@
       "status": "passed"
     },
     {
+      "artifact": "docs/private_dataset_curation.json",
+      "blocking": true,
+      "detail": "Private RL dataset curation is represented by a public manifest only: sources require license review, provenance, deduplication, redaction, contamination audit, and no private rows or prompts may be published.",
+      "evidence": {
+        "license_review_required": true,
+        "linked_artifacts": 3,
+        "pipeline_stages": 7,
+        "public_rows_allowed": false,
+        "required_controls": 5,
+        "sources": 3
+      },
+      "failures": [],
+      "id": "private-dataset-curation",
+      "status": "passed"
+    },
+    {
       "artifact": "prime_intellect/schemas",
       "blocking": true,
       "detail": "Prime/HF public verifier submission and result JSON Schemas are checked in, synchronized, and preserve the JSON-only/no-claim contract.",
@@ -1784,8 +1802,8 @@
   "schema_version": "agades.pqc.release_audit.v1",
   "summary": {
     "failed": 0,
-    "passed": 59,
-    "total": 60,
+    "passed": 60,
+    "total": 61,
     "warning": 1
   }
 }

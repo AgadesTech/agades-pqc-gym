@@ -158,6 +158,9 @@ from agades_pqc_gym.integrations.prime_speedrun_handoff import (
 from agades_pqc_gym.integrations.prime_verifier_schemas import (
     verify_prime_verifier_schemas,
 )
+from agades_pqc_gym.integrations.private_dataset_curation import (
+    verify_private_dataset_curation,
+)
 from agades_pqc_gym.integrations.private_run_policy import (
     build_private_run_policy,
     verify_private_run_policy,
@@ -397,7 +400,8 @@ GITHUB_ACTIONS_REQUIRED_COMMANDS = (
         "docs/nvidia_publication_handoff.json "
         "docs/publication_manifest.json "
         "docs/external_publication_review_packet.json "
-        "docs/private_run_policy.json docs/pedagogical_rl_method.json "
+        "docs/private_run_policy.json docs/private_dataset_curation.json "
+        "docs/pedagogical_rl_method.json "
         "docs/prime_publication_handoff.json docs/prime_speedrun_handoff.json "
         "docs/prime_eval_config_manifest.json "
         "prime_intellect/evals/agades_pqc_eval.template.toml "
@@ -421,6 +425,16 @@ GITHUB_ACTIONS_REQUIRED_COMMANDS = (
         "verify-private-run-policy",
         "uv run agades-pqc private-run-policy-verify --policy "
         "docs/private_run_policy.json",
+    ),
+    (
+        "generate-private-dataset-curation",
+        "uv run agades-pqc private-dataset-curation --out "
+        "docs/private_dataset_curation.json",
+    ),
+    (
+        "verify-private-dataset-curation",
+        "uv run agades-pqc private-dataset-curation-verify --curation "
+        "docs/private_dataset_curation.json",
     ),
     (
         "verify-runbook-input-manifest",
@@ -783,6 +797,7 @@ def build_release_audit(root: Path | None = None) -> dict[str, Any]:
         _prime_environment_manifest(project_root),
         _prime_eval_config(project_root),
         _pedagogical_rl_method(project_root),
+        _private_dataset_curation(project_root),
         _prime_verifier_schemas(project_root),
         _prime_publication_handoff(project_root),
         _prime_speedrun_handoff(project_root),
@@ -4902,6 +4917,48 @@ def _pedagogical_rl_method(root: Path) -> dict[str, Any]:
             ),
             "pedagogy_reward": reward_contract.get("pedagogy_reward"),
             "privacy_preserving": privacy_preserving,
+        },
+        failures=list(verification["failures"]),
+    )
+
+
+def _private_dataset_curation(root: Path) -> dict[str, Any]:
+    path = root / "docs" / "private_dataset_curation.json"
+    verification = verify_private_dataset_curation(path, root=root)
+    summary = verification["summary"]
+    artifact = _read_optional_json(path)
+    outputs = artifact.get("outputs", {})
+    if not isinstance(outputs, dict):
+        outputs = {}
+    sources = artifact.get("sources", {})
+    if not isinstance(sources, dict):
+        sources = {}
+
+    license_review_required = all(
+        isinstance(source, dict)
+        and source.get("license_review_status") == "required_unverified"
+        and source.get("ingestion_allowed_before_license_review") is False
+        for source in sources.values()
+    )
+
+    return _check(
+        check_id="private-dataset-curation",
+        status="failed" if verification["failures"] else "passed",
+        blocking=True,
+        artifact="docs/private_dataset_curation.json",
+        detail=(
+            "Private RL dataset curation is represented by a public manifest "
+            "only: sources require license review, provenance, deduplication, "
+            "redaction, contamination audit, and no private rows or prompts "
+            "may be published."
+        ),
+        evidence={
+            "sources": summary["sources"],
+            "pipeline_stages": summary["pipeline_stages"],
+            "required_controls": summary["required_controls"],
+            "linked_artifacts": summary["linked_artifacts"],
+            "public_rows_allowed": outputs.get("public_rows_allowed"),
+            "license_review_required": license_review_required,
         },
         failures=list(verification["failures"]),
     )

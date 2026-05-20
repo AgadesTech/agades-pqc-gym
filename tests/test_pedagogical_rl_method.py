@@ -80,6 +80,9 @@ def test_pedagogical_rl_method_defines_agades_teacher_student_pipeline(
         "sigmoid(kappa * (logp_student(a_t|x,prefix) - gamma))"
     )
     assert payload["assimilation"]["raw_logits_publication_allowed"] is False
+    assert payload["datasets"]["curation_manifest_path"] == (
+        "docs/private_dataset_curation.json"
+    )
     assert payload["privacy"]["raw_rollouts_publication_allowed"] is False
     assert payload["privacy"]["teacher_prompts_publication_allowed"] is False
     assert payload["publication_boundary"]["public_claims_allowed"] == [

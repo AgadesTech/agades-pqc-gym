@@ -47,6 +47,7 @@ PRIVATE_DATASET_CONTROLS = [
     "redaction",
     "contamination_audit",
 ]
+PRIVATE_DATASET_CURATION_MANIFEST_PATH = "docs/private_dataset_curation.json"
 LINKED_ARTIFACT_PATHS = {
     "formal_estimator_model": "docs/formal_estimator_model.json",
     "formal_family_coverage": "docs/formal_family_coverage.json",
@@ -184,6 +185,7 @@ def build_pedagogical_rl_method(root: Path | None = None) -> dict[str, Any]:
         },
         "datasets": {
             "sources": list(PRIVATE_DATASET_SOURCES),
+            "curation_manifest_path": PRIVATE_DATASET_CURATION_MANIFEST_PATH,
             "required_controls": list(PRIVATE_DATASET_CONTROLS),
             "private_roots": [
                 "private/datasets",
@@ -223,6 +225,8 @@ def build_pedagogical_rl_method(root: Path | None = None) -> dict[str, Any]:
             "docs/pedagogical_rl_method.json",
             "uv run agades-pqc pedagogical-rl-method-verify --method "
             "docs/pedagogical_rl_method.json",
+            "uv run agades-pqc private-dataset-curation-verify --curation "
+            f"{PRIVATE_DATASET_CURATION_MANIFEST_PATH}",
             "uv run agades-pqc private-training-config-verify --config "
             "prime_intellect/training/private_qwen_prime_rl.template.toml "
             "--manifest docs/private_training_config_manifest.json",
@@ -382,6 +386,10 @@ def _verify_datasets(method: dict[str, Any], failures: list[str]) -> None:
     datasets = _dict_or_empty(method.get("datasets"))
     if datasets.get("sources") != PRIVATE_DATASET_SOURCES:
         failures.append("Pedagogical RL dataset sources are incorrect.")
+    if datasets.get("curation_manifest_path") != (
+        PRIVATE_DATASET_CURATION_MANIFEST_PATH
+    ):
+        failures.append("Pedagogical RL datasets must bind curation manifest.")
     if datasets.get("required_controls") != PRIVATE_DATASET_CONTROLS:
         failures.append("Pedagogical RL dataset controls are incorrect.")
     if datasets.get("public_rows_allowed") is not False:

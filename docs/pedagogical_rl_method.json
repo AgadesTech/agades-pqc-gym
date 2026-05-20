@@ -8,6 +8,7 @@
     "token_weight": "sigmoid(kappa * (logp_student(a_t|x,prefix) - gamma))"
   },
   "datasets": {
+    "curation_manifest_path": "docs/private_dataset_curation.json",
     "private_roots": [
       "private/datasets",
       "private/traces",
@@ -106,6 +107,7 @@
     "uv run pytest tests/test_pedagogical_rl_method.py -q",
     "uv run agades-pqc pedagogical-rl-method --out docs/pedagogical_rl_method.json",
     "uv run agades-pqc pedagogical-rl-method-verify --method docs/pedagogical_rl_method.json",
+    "uv run agades-pqc private-dataset-curation-verify --curation docs/private_dataset_curation.json",
     "uv run agades-pqc private-training-config-verify --config prime_intellect/training/private_qwen_prime_rl.template.toml --manifest docs/private_training_config_manifest.json",
     "uv run agades-pqc rl-environment-contract-verify --contract docs/rl_environment_contract.json",
     "uv run agades-pqc reviewer-governance-verify --governance docs/reviewer_governance.json",

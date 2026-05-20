@@ -35,6 +35,7 @@ def test_private_training_manifest_defines_prime_rl_qwen_and_dataset_controls(
         "config_sha256": payload["prime_training"]["config_sha256"],
         "rl_environment_contract_path": "docs/rl_environment_contract.json",
         "eval_config_manifest_path": "docs/prime_eval_config_manifest.json",
+        "dataset_curation_manifest_path": "docs/private_dataset_curation.json",
         "launch_command_template": (
             f"prime train {config.as_posix()} "
             "--env-var HF_TOKEN --env-var WANDB_API_KEY"
@@ -88,6 +89,9 @@ def test_private_training_manifest_defines_prime_rl_qwen_and_dataset_controls(
         "facebook/TAPAS",
         "pq-code-package",
     ]
+    assert payload["datasets"]["curation_manifest_path"] == (
+        "docs/private_dataset_curation.json"
+    )
     assert payload["datasets"]["required_controls"] == [
         "license_review",
         "provenance_tracking",
@@ -109,6 +113,9 @@ def test_private_training_manifest_defines_prime_rl_qwen_and_dataset_controls(
     )
     assert payload["linked_artifacts"]["pedagogical_rl_method"]["path"] == (
         "docs/pedagogical_rl_method.json"
+    )
+    assert payload["linked_artifacts"]["private_dataset_curation"]["path"] == (
+        "docs/private_dataset_curation.json"
     )
 
 
@@ -132,6 +139,9 @@ def test_private_prime_rl_toml_template_is_sanitized_and_parseable(
     assert data["run_config"]["private_outputs_only"] is True
     assert data["run_config"]["publish_to_hf_public"] is False
     assert data["run_config"]["publish_to_prime_public"] is False
+    assert data["run_config"]["dataset_curation_manifest"] == (
+        "docs/private_dataset_curation.json"
+    )
     assert data["run_config"]["reward_terms"] == [
         "formal_validity",
         "cryptographic_applicability",
@@ -182,7 +192,7 @@ def test_private_training_config_verify_accepts_committed_artifacts() -> None:
             "dataset_sources": 3,
             "dataset_controls": 5,
             "reward_terms": 8,
-            "linked_artifacts": 9,
+            "linked_artifacts": 10,
             "failure_count": 0,
         },
         "failures": [],
