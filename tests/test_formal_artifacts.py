@@ -614,6 +614,40 @@ def test_verify_rejects_reviewed_status_without_reviewer_evidence(
     ) in result["failures"]
 
 
+def test_verify_rejects_reviewed_runtime_artifact_without_estimator_binding(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+    )
+    artifact["review"]["status"] = "reviewed"
+    artifact["review"]["evidence"] = {
+        "schema_version": "agades.pqc.formal.review_evidence.v1",
+        "status": "attached",
+        "covered_reviewer_roles": artifact["review"]["required_reviewers"],
+        "claim_allowed": False,
+        "notes": "unit test reviewer evidence",
+    }
+    artifact["artifact_sha256"] = stable_sha256(
+        {
+            key: value
+            for key, value in artifact.items()
+            if key != "artifact_sha256"
+        }
+    )
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Reviewed runtime-estimator proof artifacts require an attached "
+        "estimator result binding."
+    ) in result["failures"]
+
+
 def test_verify_rejects_stale_estimator_result_schema_contract(
     tmp_path: Path,
 ) -> None:
