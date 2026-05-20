@@ -39,11 +39,11 @@
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",
-      "sha256": "e1721928a80376faee646d9123ff1430f6e9f25e5970724747e91b52ffda5cb3"
+      "sha256": "e51b998a004d1091882d6967016977955bcd313dfa497ee4eaaa69b1e07b8210"
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "e84409a13b1b17e6c8697a66fcd7ddad77a22dcadae9b4bafde5fc38ab6564ef"
+      "sha256": "e118e24aac9e1aff0e459a793d9cac5f26b1bfbb19cb71682d929a517be0e56b"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
