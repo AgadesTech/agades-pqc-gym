@@ -29,7 +29,47 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "8f0b7d10b57adf69253aba7042abaf55dbb4746443267527c5576ebde41ce5fa",
+      "entry_sha256": "ed9c3a2d7a2727289a5a3cb70f6ef62e3803eab3b063946d61e101fe81a9062c",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_mvp"
+          ],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -80,7 +120,47 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "88765bd4126c429b4ce6366676a51a2036ac990c217c223a3e4c50f4e871bd9f",
+      "entry_sha256": "ae55a5583ae1bac22e60d94699bd5257098841c322e4a9554a9b77c90bc47eb1",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_mvp"
+          ],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -131,7 +211,47 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "45cc9ef95e14c600062cd681fa81fdc2e57da0fe55df5ee16db93b2e4308e567",
+      "entry_sha256": "2fef32fe7167334a075e89a90162b8974fddcbf41a4b8c9c56ba960529171142",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_mvp"
+          ],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -182,7 +302,47 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "24e0113a51e1b780a27bc1bf0f4ee459fa09aecbb9026db28b9bf5323e8010d5",
+      "entry_sha256": "9fff4aa8adab94e8bbb7765948d18502808d572bda3e82fb52b7f6dd202dfbbb",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_mvp"
+          ],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -234,7 +394,47 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "5d4156813a0df61a09c1bce2f4f3fb7198adb5d8db902a7d1ac95683367e9599",
+      "entry_sha256": "8789da7e24836f52fbbd8901d50f427fee1f65621282ca19c2574c6d1724cf06",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_mvp"
+          ],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -285,7 +485,45 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "e1aa6400904631cb12df3685058ba231409cf914655492d3fe526bd81b770442",
+      "entry_sha256": "c2eaacac10a6d9fc356ed41ea5cc72022c6cf6012e819242109e4fc67988cefe",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -336,7 +574,45 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "6452537722467f34a3e2b175c8b27ac7e3967907103db29fa6368732bd8f9228",
+      "entry_sha256": "7e91d5e8b705d40ec1739f3ba31575e46425ec78f13617ff0e15f1404fe1c590",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -387,7 +663,45 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "e400080f372f351c13a06fbeb649e5df20f96766b131aec3e7395c9903dd3dc1",
+      "entry_sha256": "54c7886c7c6ea16edb0c0313a4d6ab7a5dcb6b964dbd25f2d6e1d83e32c2f7ae",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -438,7 +752,45 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "6ff3de0fce6ca311d1c060abb23467a2d89f431634dd4414ffc2cbd38a495b3d",
+      "entry_sha256": "e7c7c748866ada1081e855f9f2fff59f8dac2ba95c52084b7620c1adb0fc6ba4",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -489,7 +841,45 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "9eeb407cb2a434876a99e8112a47567662d6e7e3d4a3974ad96ceefc6cff5747",
+      "entry_sha256": "d23443f22a2f07a943f36b52d16a27021b035e0b0ef16618f35635ea063037fc",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -538,7 +928,47 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "65a9924b582397a8e75306156ad5f099f7d1bee9f5bea89e6a47d00e5fff67ad",
+      "entry_sha256": "de1681575c8201e1a9b69bea1decda9405ba909c6d125e7e94b96388e731c989",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_mvp"
+          ],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -590,7 +1020,47 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "ae1834770817293cfbd67a7697c9b1502536279a760fec2362d2a1ce379f9960",
+      "entry_sha256": "dca1cdc570a863d6d085f38ba772e76695b992e079e0f5fa7959428d114a93f9",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_mvp"
+          ],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -638,7 +1108,20 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "0a5fc02a5c6efc55c7632b433d7d0eefa55ec893dd4b9dcf7ead40059d1f7469",
+      "entry_sha256": "ef2b7a83d336e6a0f7bd01ba05bbc53b212a6592517874b9cf52c5ce0c949843",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.code_based.validators.validate_code_based_plan",
+          "catalog_operator_entry_count": 11,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "CODE_BASED",
+          "plugin": "code_based",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -686,7 +1169,20 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "096bd1595935fd10cdac2c98f6ca92264cac125872d0251dc3dd59407bd99699",
+      "entry_sha256": "d59a2ae69fd7f07697750ec2de9c9da5c29e1233963fd09250be49cde446175d",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.code_based.validators.validate_code_based_plan",
+          "catalog_operator_entry_count": 6,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "CODE_BASED",
+          "plugin": "code_based",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -734,7 +1230,20 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "a04e75cc9f11afa3d4fe9af662718d32e0f42aaed014a87dd214a3afdca8f7d7",
+      "entry_sha256": "d24fb135926b8b66a215f259757a625b960de2815da2239859c542f8f70cbd7c",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.multivariate.validators.validate_multivariate_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "MULTIVARIATE",
+          "plugin": "multivariate",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -782,7 +1291,20 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "42bcb78cb65c713edb6af40263b9d3ff186a72f5936e9d79c67721bfcfbca9cc",
+      "entry_sha256": "bcddfb96fe09281533ccc2e23177121b74f652df59150a45986d8c6b07a289d8",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.multivariate.validators.validate_multivariate_plan",
+          "catalog_operator_entry_count": 3,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "MULTIVARIATE",
+          "plugin": "multivariate",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -830,7 +1352,20 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "44bad07f3df55c5ecb0c3660fc606c2a3473646cb4a1be2bd16ba94820faed54",
+      "entry_sha256": "b8265495f539876317b6c2ad1c2372ade502f3641d4a7c980beffe9cc4d4cc8c",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.multivariate.validators.validate_multivariate_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "MULTIVARIATE",
+          "plugin": "multivariate",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -878,7 +1413,20 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "e83e300f05fb187b397e2a6f70a1b47febccc3d7cc68ddbbbb651cdfa52ff3e4",
+      "entry_sha256": "603ce65ddb7cddc4f932257d4e6f0fd8590173899167069733f19be2b450c203",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.hash_based.validators.validate_hash_based_plan",
+          "catalog_operator_entry_count": 2,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "HASH_BASED",
+          "plugin": "hash_based",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -926,7 +1474,20 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "2c0b2c176fcb4b585afbec13dfb4defd674d545211f11be2a7fa5767ec0f18c2",
+      "entry_sha256": "f21748ace63f1735564cbb45c94516bc6413be24b94fa740c0d42e5f0efcdfa2",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.hash_based.validators.validate_hash_based_plan",
+          "catalog_operator_entry_count": 4,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "HASH_BASED",
+          "plugin": "hash_based",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -974,7 +1535,20 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "7c047d793506c32b635d2e82897efabbfe4d41d13c46ce38fb86b9bed0ce4869",
+      "entry_sha256": "735bc880ab51caeb64165937556d9bac08842c685ad481fcdde8a9f16b8ed62f",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.hash_based.validators.validate_hash_based_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "HASH_BASED",
+          "plugin": "hash_based",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -1022,7 +1596,20 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "2379bdb8c731ececc9c19bdc27f189dd43bfe13708eb042635a183d48416ecbf",
+      "entry_sha256": "8ed4a0d5e9a9d59632f54c9ed37b2a35f324c83cecb149078b4f8437c7df703f",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.isogeny_historical.validators.validate_isogeny_historical_plan",
+          "catalog_operator_entry_count": 3,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "ISOGENY_HISTORICAL",
+          "plugin": "isogeny_historical",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -1070,7 +1657,20 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "00bd3143a32a292936d73fdd0674b25fee506156bc4c02d2d119299184722342",
+      "entry_sha256": "057ecdc42a409f62955a9ced81d39ddea91b987eb823adcaaff3c588d6205761",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.implementation_security.validators.validate_implementation_security_plan",
+          "catalog_operator_entry_count": 2,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "IMPLEMENTATION_SECURITY",
+          "plugin": "implementation_security",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -1118,7 +1718,20 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "37a0042b7c682e33274765b372474e369a0a2b633cef405704b45e3d4cd82376",
+      "entry_sha256": "ade08e434fd17daa0561641f30c8d24031ce4cff8a37669dec247930e9d6147b",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.implementation_security.validators.validate_implementation_security_plan",
+          "catalog_operator_entry_count": 3,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "IMPLEMENTATION_SECURITY",
+          "plugin": "implementation_security",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -1166,7 +1779,20 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "83f3aa06df159c4dd20bf0a12d1ac455f5168d999e7f60ea5ce9530a8729d107",
+      "entry_sha256": "9c0fff1582cc9ebedf0f543cef06adf1588793de48e5629b7a8ee9e5412e166b",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.implementation_security.validators.validate_implementation_security_plan",
+          "catalog_operator_entry_count": 4,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "IMPLEMENTATION_SECURITY",
+          "plugin": "implementation_security",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
       "formal_rules": [
         {
           "lean_source": {
@@ -1217,13 +1843,15 @@
     "uv run agades-pqc family-operator-catalog-verify --catalog docs/family_operator_catalog.json"
   ],
   "schema_version": "agades.pqc.formal.operator_semantics.v1",
-  "semantics_sha256": "444d31567a28c74efd25692f2044f4a9a836fed27b3c1690d98ec20a4d9cf6a4",
+  "semantics_sha256": "25510109a5559ffa45fc92646eec0fccc6eb53bc7d3b6ac88094444da2adb7d2",
   "summary": {
+    "applicability_validator_bindings": 60,
     "attackplan_family_bindings": 60,
     "lattice_operators": 12,
     "non_lattice_operators": 12,
     "operators": 24,
     "required_param_fields": 25,
+    "schema_only_family_bindings": 24,
     "security_claim_allowed_without_review": 0
   }
 }

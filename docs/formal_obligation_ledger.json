@@ -2326,19 +2326,19 @@
       "statement": "implementation-security tasks declare a review-only scope"
     }
   ],
-  "ledger_sha256": "d5e93e5f58a62337e11b39873125a0132e40c81d26a05692eb729e410731a9e7",
+  "ledger_sha256": "e714e7c25aae68aeeba33a6f4553d3b9e7385db9a832d0a3b6c5844a73c76843",
   "linked_artifacts": {
     "formal_estimator_model": {
-      "canonical_sha256": "128ab0e62674538d36385db407de00eb81ec25fcfc7182a5695f9a275a9fda22",
+      "canonical_sha256": "2984c9c60b6df58d9bf3ad6acf84ff04a0fcbb4517d0ff06103b00c44012009e",
       "path": "docs/formal_estimator_model.json",
       "schema_version": "agades.pqc.formal.estimator_model.v1",
-      "sha256": "29f152fd77cbb26396747b3c651ec928dac477cc12f34aea73fc89c6cc7a506e"
+      "sha256": "66750e612cdbd3f86cc75a544826b847de6fb07893d853e66dc59f7a66a7fe21"
     },
     "formal_family_coverage": {
-      "canonical_sha256": "9fd0abb2c70c7c811d35da2bf9e1b818fe0f3cde4563cfec945e83e30f90acea",
+      "canonical_sha256": "cdaad8128cbea4a4f03c5751d01e657d6664305b33ce3969e8d41f0e2a02e944",
       "path": "docs/formal_family_coverage.json",
       "schema_version": "agades.pqc.formal.family_coverage.v1",
-      "sha256": "9b8ed0dde423052561a7be71ed14f94f0fb60b28d2a224af8fdc3d22b508430d"
+      "sha256": "e70f69d481a5d212e0105d0fba430db7cea9a7c2ba1d48130b6c947756e9a6fc"
     },
     "formal_lean_backend": {
       "canonical_sha256": "4118c0d7ca78911c5818277c9d26355e8428e869b6b7172c94a634979a846828",
@@ -2371,10 +2371,10 @@
       "sha256": "676b4eb2f2ee241fd58cb5ec21426163e8090d313bb1fe37e67748c400e28c16"
     },
     "formal_operator_semantics": {
-      "canonical_sha256": "cab72bb06f3f12cee884e3232166380d7a4065e162be0fb4b42b2bb13bc4cc72",
+      "canonical_sha256": "307e4b3b29ee15a234eece5266faa6b97b27adedc82be267b6ec3125c00ddc8b",
       "path": "docs/formal_operator_semantics.json",
       "schema_version": "agades.pqc.formal.operator_semantics.v1",
-      "sha256": "c124d9600abe722670710a585699b0a25019f5d80018c654361d4bb99ae0bc45"
+      "sha256": "55eaa380733195a754e47136267ddcb2a41f58528a2d162633f0318d3e6be810"
     }
   },
   "project": {
