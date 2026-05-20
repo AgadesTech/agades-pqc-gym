@@ -163,6 +163,7 @@
     "claim_boundary_contains": "not PQC break claims",
     "formal_estimator_model_path": "docs/formal_estimator_model.json",
     "formal_family_coverage_path": "docs/formal_family_coverage.json",
+    "formal_obligation_ledger_path": "docs/formal_obligation_ledger.json",
     "formal_operator_semantics_path": "docs/formal_operator_semantics.json",
     "mvp_vertical_proof_artifacts": {
       "LWE": "docs/formal_lattice_primal_usvp_proof_artifact.json",
@@ -253,6 +254,10 @@
       "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
       "sha256": "0c341b6318280d54e8248b4ea7ff12059800f4b77d220210f8becfe6d95ec6ae"
     },
+    "formal_obligation_ledger": {
+      "path": "docs/formal_obligation_ledger.json",
+      "sha256": "43e9e7557885758914e8d0b79a6cab53c946ab06d4ad581ad233ec71780e0a40"
+    },
     "formal_operator_semantics": {
       "path": "docs/formal_operator_semantics.json",
       "sha256": "19f7692ee88dc5b30092d7dfd7bded125f61a023f92967b996f7023bfdc93377"
@@ -263,7 +268,7 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "ac5520d5a4a04034c93a396196499a3c3b72ad72ff9758688fcab73e782d9854"
+      "sha256": "9afb14f6319b2c40195160ffdfd8f9352e18532e15abc7004d50782e4ef806c1"
     },
     "publication_manifest": {
       "path": "docs/publication_manifest.json",
@@ -271,7 +276,7 @@
     },
     "release_audit": {
       "path": "public/release_audit.json",
-      "sha256": "2899549edc1da321be7152d90ec2618e74edd6b6c685d31c731aa9efdc394c8a"
+      "sha256": "42e9978ece1bf268eb1e4799cafe92c2c547fc3b4d63b438c71dd0e932d8078a"
     }
   },
   "private_training_review": {

@@ -53,6 +53,10 @@
       "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
       "sha256": "0c341b6318280d54e8248b4ea7ff12059800f4b77d220210f8becfe6d95ec6ae"
     },
+    "formal_obligation_ledger": {
+      "path": "docs/formal_obligation_ledger.json",
+      "sha256": "43e9e7557885758914e8d0b79a6cab53c946ab06d4ad581ad233ec71780e0a40"
+    },
     "formal_operator_semantics": {
       "path": "docs/formal_operator_semantics.json",
       "sha256": "19f7692ee88dc5b30092d7dfd7bded125f61a023f92967b996f7023bfdc93377"
@@ -121,6 +125,7 @@
   "reward_contract": {
     "claim_boundary": {
       "allows_security_claims": false,
+      "formal_obligation_ledger_path": "docs/formal_obligation_ledger.json",
       "requires_formal_obligations": true,
       "requires_human_crypto_review": true
     },

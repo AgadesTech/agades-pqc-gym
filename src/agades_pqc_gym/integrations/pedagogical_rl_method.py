@@ -64,6 +64,7 @@ PRIVATE_DATASET_CONTROLS = [
 ]
 PRIVATE_DATASET_CURATION_MANIFEST_PATH = "docs/private_dataset_curation.json"
 LINKED_ARTIFACT_PATHS = {
+    "formal_obligation_ledger": "docs/formal_obligation_ledger.json",
     "formal_estimator_model": "docs/formal_estimator_model.json",
     "formal_family_coverage": "docs/formal_family_coverage.json",
     "formal_operator_semantics": "docs/formal_operator_semantics.json",
@@ -187,6 +188,9 @@ def build_pedagogical_rl_method(root: Path | None = None) -> dict[str, Any]:
             "claim_boundary": {
                 "allows_security_claims": False,
                 "requires_formal_obligations": True,
+                "formal_obligation_ledger_path": (
+                    "docs/formal_obligation_ledger.json"
+                ),
                 "requires_human_crypto_review": True,
             },
         },
@@ -385,6 +389,10 @@ def _verify_reward_contract(method: dict[str, Any], failures: list[str]) -> None
         failures.append("Pedagogical RL reward must forbid security claims.")
     if boundary.get("requires_formal_obligations") is not True:
         failures.append("Pedagogical RL reward must require formal obligations.")
+    if boundary.get("formal_obligation_ledger_path") != (
+        "docs/formal_obligation_ledger.json"
+    ):
+        failures.append("Pedagogical RL reward must bind the obligation ledger.")
     if boundary.get("requires_human_crypto_review") is not True:
         failures.append("Pedagogical RL reward must require human crypto review.")
 

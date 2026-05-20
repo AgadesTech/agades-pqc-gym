@@ -1,6 +1,7 @@
 {
   "claim_boundary": {
     "agent_task": "produce, critique, repair, or validate AttackPlan JSON and proof obligations",
+    "formal_obligation_ledger_path": "docs/formal_obligation_ledger.json",
     "formal_obligations_required_before_claim": true,
     "human_review_required_before_claim": true,
     "not_a_task": "claiming practical PQC breaks without formal/domain review"
@@ -42,6 +43,10 @@
       "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
       "sha256": "0c341b6318280d54e8248b4ea7ff12059800f4b77d220210f8becfe6d95ec6ae"
     },
+    "formal_obligation_ledger": {
+      "path": "docs/formal_obligation_ledger.json",
+      "sha256": "43e9e7557885758914e8d0b79a6cab53c946ab06d4ad581ad233ec71780e0a40"
+    },
     "formal_operator_semantics": {
       "path": "docs/formal_operator_semantics.json",
       "sha256": "19f7692ee88dc5b30092d7dfd7bded125f61a023f92967b996f7023bfdc93377"
@@ -56,7 +61,7 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "6b8e02d484ba8fc1af408c04313644d3af9b47f53ea98ad6a7cf11e2f113b1f4"
+      "sha256": "692d67055a643f82f0542be0e70c123d0f58b0a66528a2e3a24c8fb0e80bce0a"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
@@ -88,11 +93,11 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "ac5520d5a4a04034c93a396196499a3c3b72ad72ff9758688fcab73e782d9854"
+      "sha256": "9afb14f6319b2c40195160ffdfd8f9352e18532e15abc7004d50782e4ef806c1"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "6fa9e74fb5e489eb0b996de3eaf083fb940cf2affd323e57dc9cf9755057f997"
+      "sha256": "09c9805c5bf01f132c567f844870dfcdd50e07eede7f3352d60f6dc5f592cec8"
     }
   },
   "private_track": {
@@ -166,6 +171,7 @@
     "uv run agades-pqc private-dataset-curation-verify --curation docs/private_dataset_curation.json",
     "uv run agades-pqc formal-proof-artifact-verify --artifact docs/formal_lattice_primal_usvp_proof_artifact.json",
     "uv run agades-pqc formal-proof-artifact-verify --artifact docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
+    "uv run agades-pqc formal-obligation-ledger-verify --ledger docs/formal_obligation_ledger.json",
     "uv run agades-pqc reviewer-governance-verify --governance docs/reviewer_governance.json"
   ],
   "reward_model": {
