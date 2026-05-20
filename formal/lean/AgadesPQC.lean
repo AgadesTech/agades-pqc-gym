@@ -1,5 +1,6 @@
 import AgadesPQC.Lattice.Target
 import AgadesPQC.Lattice.PrimalUSVP
+import AgadesPQC.OperatorSemantics
 import AgadesPQC.CodeBased.Target
 import AgadesPQC.CodeBased.SchemaOnly
 import AgadesPQC.Evaluator
