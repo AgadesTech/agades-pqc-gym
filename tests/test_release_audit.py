@@ -977,9 +977,10 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "checked_config_synced": True,
         "config_path": "examples/openevolve/config.yaml",
         "example_config_synced": True,
+        "private_qwen_enabled": True,
         "python_candidates_executed": False,
         "security_claim": False,
-        "template_keys": 29,
+        "template_keys": 30,
     }
     assert checks["openevolve-evaluator-smoke"]["status"] == "passed"
     assert checks["openevolve-evaluator-smoke"]["blocking"] is True
@@ -1017,6 +1018,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "arbitrary_code_execution": False,
         "card_count": 8,
         "modifies_estimator_scores": False,
+        "private_qwen_bound": True,
         "proposal_count": 13,
         "research_claim": False,
         "review_required_before_implementation": True,

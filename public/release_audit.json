@@ -1377,9 +1377,10 @@
         "checked_config_synced": true,
         "config_path": "examples/openevolve/config.yaml",
         "example_config_synced": true,
+        "private_qwen_enabled": true,
         "python_candidates_executed": false,
         "security_claim": false,
-        "template_keys": 29
+        "template_keys": 30
       },
       "failures": [],
       "id": "openevolve-config-template",
@@ -1435,6 +1436,7 @@
         "arbitrary_code_execution": false,
         "card_count": 8,
         "modifies_estimator_scores": false,
+        "private_qwen_bound": true,
         "proposal_count": 13,
         "research_claim": false,
         "review_required_before_implementation": true

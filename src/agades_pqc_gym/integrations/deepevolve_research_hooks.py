@@ -34,6 +34,29 @@ _REQUIRED_FALSE_SAFETY_FLAGS = (
     "publishes_private_candidates",
     "research_claim",
 )
+PRIVATE_QWEN_PROPOSAL_ROLES = [
+    "generate_attackplan",
+    "mutate_attackplan",
+    "critique_attackplan",
+    "repair_attackplan",
+    "draft_proof_obligations",
+    "draft_family_invariants",
+    "propose_evaluation_strategy",
+]
+PRIVATE_QWEN_RESEARCH_BINDING = {
+    "model": "Qwen3.6-27B-private",
+    "training_manifest": "docs/private_training_config_manifest.json",
+    "pedagogical_rl_method": "docs/pedagogical_rl_method.json",
+    "dataset_curation_manifest": "docs/private_dataset_curation.json",
+    "proposal_roles": list(PRIVATE_QWEN_PROPOSAL_ROLES),
+    "proposal_gate": {
+        "attackplan_validation_required": True,
+        "proof_obligation_generation_required": True,
+        "estimator_compatibility_required": True,
+        "human_review_required_before_claim": True,
+    },
+    "public_publication_allowed": False,
+}
 
 
 def build_deepevolve_research_hooks_manifest(
@@ -79,6 +102,7 @@ def build_deepevolve_research_hooks_manifest(
             "research_claim": False,
             "review_required_before_implementation": True,
         },
+        "private_qwen_research_binding": PRIVATE_QWEN_RESEARCH_BINDING,
         "paper_cards": [_paper_card_entry(card) for card in cards],
         "hypothesis_proposals": [
             proposal.model_dump(mode="json") for proposal in proposals
@@ -138,6 +162,11 @@ def verify_deepevolve_research_hooks_manifest(
                 "safety.review_required_before_implementation must be true."
             )
 
+    _validate_private_qwen_binding(
+        manifest.get("private_qwen_research_binding"),
+        failures=failures,
+    )
+
     paper_cards = manifest.get("paper_cards")
     if not isinstance(paper_cards, list):
         failures.append("Manifest paper_cards must be a list.")
@@ -172,6 +201,37 @@ def verify_deepevolve_research_hooks_manifest(
         manifest=manifest,
         failures=failures,
     )
+
+
+def _validate_private_qwen_binding(
+    binding: object,
+    *,
+    failures: list[str],
+) -> None:
+    if not isinstance(binding, dict):
+        failures.append("private_qwen_research_binding must be a mapping.")
+        return
+    for key, expected_value in PRIVATE_QWEN_RESEARCH_BINDING.items():
+        if binding.get(key) != expected_value:
+            failures.append(f"private_qwen_research_binding.{key} is not synchronized.")
+
+    proposal_gate = binding.get("proposal_gate")
+    if not isinstance(proposal_gate, dict):
+        failures.append(
+            "private_qwen_research_binding.proposal_gate must be a mapping."
+        )
+    else:
+        for key in (
+            "attackplan_validation_required",
+            "proof_obligation_generation_required",
+            "estimator_compatibility_required",
+            "human_review_required_before_claim",
+        ):
+            if proposal_gate.get(key) is not True:
+                failures.append(f"private_qwen_research_binding.{key} must be true.")
+
+    if binding.get("public_publication_allowed") is not False:
+        failures.append("private_qwen_research_binding must not be public.")
 
 
 def _paper_card_entry(card: PaperCard) -> dict[str, Any]:
@@ -278,9 +338,16 @@ def _verification_result(
             "card_count": int(summary.get("card_count", 0) or 0),
             "failure_count": len(failures),
             "proposal_count": int(summary.get("proposal_count", 0) or 0),
+            "private_qwen_bound": _private_qwen_bound(manifest),
         },
         "failures": failures,
     }
+
+
+def _private_qwen_bound(manifest: dict[str, Any]) -> bool:
+    return (
+        manifest.get("private_qwen_research_binding") == PRIVATE_QWEN_RESEARCH_BINDING
+    )
 
 
 def _display_path(path: Path) -> str:

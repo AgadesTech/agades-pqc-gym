@@ -20,6 +20,37 @@ def test_default_config_template_exposes_archive_driven_private_loop() -> None:
     template = DEFAULT_CONFIG_TEMPLATE
 
     assert template["program_type"] == "json_attack_plan"
+    assert template["private_qwen_research_engine"] == {
+        "model": "Qwen3.6-27B-private",
+        "model_artifact_env": "AGADES_QWEN_BASE_MODEL",
+        "training_manifest": "docs/private_training_config_manifest.json",
+        "pedagogical_rl_method": "docs/pedagogical_rl_method.json",
+        "dataset_curation_manifest": "docs/private_dataset_curation.json",
+        "consumers": ["openevolve", "deepevolve"],
+        "research_roles": [
+            "generate_attackplan",
+            "mutate_attackplan",
+            "critique_attackplan",
+            "repair_attackplan",
+            "draft_proof_obligations",
+            "draft_family_invariants",
+            "propose_evaluation_strategy",
+        ],
+        "tracks": {
+            "public_toy_eval": {
+                "private_qwen_allowed": False,
+                "private_data_allowed": False,
+                "security_claims_allowed": False,
+            },
+            "private_serious_research": {
+                "private_qwen_allowed": True,
+                "publication_allowed": False,
+                "requires_formal_validation": True,
+                "requires_estimator_compatibility": True,
+                "requires_human_review_before_claim": True,
+            },
+        },
+    }
     assert template["candidate_roots"] == [
         "benchmarks/lattice_toy_lwe/lwe_n64_q257.json",
         "benchmarks/code_based_toy_isd",
@@ -156,11 +187,12 @@ def test_openevolve_config_template_verifier_accepts_synced_config(
         "archive_loop_key_count": 13,
         "checked_config_synced": True,
         "failure_count": 0,
+        "private_qwen_enabled": True,
         "program_type": "json_attack_plan",
         "publishes_private_candidates": False,
         "python_candidates_executed": False,
         "security_claim": False,
-        "template_keys": 29,
+        "template_keys": 30,
     }
     assert verification["failures"] == []
 
@@ -183,6 +215,27 @@ def test_openevolve_config_template_verifier_rejects_security_claim(
         in verification["failures"]
     )
     assert "OpenEvolve config security_claim must be false." in verification["failures"]
+
+
+def test_openevolve_config_template_verifier_rejects_public_private_qwen(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "config.yaml"
+    write_default_config_template(out)
+    config = yaml.safe_load(out.read_text(encoding="utf-8"))
+    config["private_qwen_research_engine"]["tracks"]["private_serious_research"][
+        "publication_allowed"
+    ] = True
+    out.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+
+    verification = verify_default_config_template(out)
+
+    assert verification["accepted"] is False
+    assert verification["summary"]["private_qwen_enabled"] is True
+    assert (
+        "OpenEvolve private Qwen research track must not be publishable."
+        in verification["failures"]
+    )
 
 
 def test_openevolve_smoke_report_is_importable_from_adapter_package() -> None:

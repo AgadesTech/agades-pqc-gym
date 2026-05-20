@@ -33,6 +33,28 @@ def test_deepevolve_manifest_describes_review_gated_paper_cards(
         "research_claim": False,
         "review_required_before_implementation": True,
     }
+    assert manifest["private_qwen_research_binding"] == {
+        "model": "Qwen3.6-27B-private",
+        "training_manifest": "docs/private_training_config_manifest.json",
+        "pedagogical_rl_method": "docs/pedagogical_rl_method.json",
+        "dataset_curation_manifest": "docs/private_dataset_curation.json",
+        "proposal_roles": [
+            "generate_attackplan",
+            "mutate_attackplan",
+            "critique_attackplan",
+            "repair_attackplan",
+            "draft_proof_obligations",
+            "draft_family_invariants",
+            "propose_evaluation_strategy",
+        ],
+        "proposal_gate": {
+            "attackplan_validation_required": True,
+            "proof_obligation_generation_required": True,
+            "estimator_compatibility_required": True,
+            "human_review_required_before_claim": True,
+        },
+        "public_publication_allowed": False,
+    }
     assert manifest["summary"] == {
         "all_cards_note_only": True,
         "all_proposals_review_required": True,
@@ -89,6 +111,7 @@ def test_deepevolve_manifest_verify_accepts_committed_manifest() -> None:
         "card_count": 8,
         "failure_count": 0,
         "proposal_count": 13,
+        "private_qwen_bound": True,
     }
 
 
