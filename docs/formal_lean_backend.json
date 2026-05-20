@@ -107,6 +107,21 @@
     },
     {
       "imports": [],
+      "path": "formal/lean/AgadesPQC/EstimatorModel.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "dbd283b471d5babbe14f8b050d48bc78e29285ccbab670a583621ca09b40be50",
+      "theorems": [
+        "AgadesPQC.EstimatorModel.operator_compatibility_declared",
+        "AgadesPQC.EstimatorModel.result_binding_required_before_claim",
+        "AgadesPQC.EstimatorModel.schema_only_no_estimator"
+      ]
+    },
+    {
+      "imports": [],
       "path": "formal/lean/AgadesPQC/Evaluator.lean",
       "placeholder_scan": {
         "contains_admit": false,
@@ -251,6 +266,7 @@
       "imports": [
         "AgadesPQC.Lattice.Target",
         "AgadesPQC.Lattice.PrimalUSVP",
+        "AgadesPQC.EstimatorModel",
         "AgadesPQC.OperatorSemantics",
         "AgadesPQC.CodeBased.Target",
         "AgadesPQC.CodeBased.SchemaOnly",
@@ -267,11 +283,11 @@
         "contains_axiom": false,
         "contains_sorry": false
       },
-      "sha256": "b2687abcbcdbbbf0fff417d26eef7e4486a22defa9bc0d29409bb29b12941ea8",
+      "sha256": "3d105d48eb781311d263ba4cc36ddb825a66bd85967e9580ca0baf7b803a0b22",
       "theorems": []
     }
   ],
-  "manifest_sha256": "b89c9ecf1576b6c68adfa0e8cf7afb3d4fdde9166014019abc4c398ffc849e86",
+  "manifest_sha256": "25f47a496ad71f6106e713ba6f01696b1c31bbe75472be3605f7b22ac685fc98",
   "placeholder_scan": {
     "contains_admit": false,
     "contains_axiom": false,
@@ -292,7 +308,7 @@
   "summary": {
     "ci_lean_build_gate": true,
     "placeholder_failures": 0,
-    "source_modules": 12,
-    "theorem_declarations": 26
+    "source_modules": 13,
+    "theorem_declarations": 29
   }
 }

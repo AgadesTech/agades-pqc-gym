@@ -60,7 +60,51 @@ def test_formal_estimator_model_binds_families_to_claim_policy(
         "AgadesPQC.Evaluator.attached_unreviewed_no_security_claim",
         "AgadesPQC.Evaluator.no_security_claim",
         "AgadesPQC.Evaluator.schema_only_no_estimator_no_security_claim",
+        "AgadesPQC.EstimatorModel.operator_compatibility_declared",
+        "AgadesPQC.EstimatorModel.result_binding_required_before_claim",
+        "AgadesPQC.EstimatorModel.schema_only_no_estimator",
     ]
+    assert model["estimator_formal_rules"] == [
+        {
+            "rule_id": "estimator.operator_compatibility_declared",
+            "statement": (
+                "A runtime estimator result is applicable only when its attack "
+                "type is explicitly compatible with the AttackPlan operator."
+            ),
+            "lean_theorem": (
+                "AgadesPQC.EstimatorModel.operator_compatibility_declared"
+            ),
+            "lean_source": model["estimator_formal_rules"][0]["lean_source"],
+        },
+        {
+            "rule_id": "estimator.result_binding_required_before_claim",
+            "statement": (
+                "Toy or mock estimator output must be bound into a proof "
+                "artifact before any reviewed claim can be considered."
+            ),
+            "lean_theorem": (
+                "AgadesPQC.EstimatorModel.result_binding_required_before_claim"
+            ),
+            "lean_source": model["estimator_formal_rules"][1]["lean_source"],
+        },
+        {
+            "rule_id": "estimator.schema_only_no_estimator",
+            "statement": (
+                "Schema-only families must remain explicitly marked as having "
+                "no runtime estimator."
+            ),
+            "lean_theorem": "AgadesPQC.EstimatorModel.schema_only_no_estimator",
+            "lean_source": model["estimator_formal_rules"][2]["lean_source"],
+        },
+    ]
+    for rule in model["estimator_formal_rules"]:
+        assert rule["lean_source"] == {
+            "path": "formal/lean/AgadesPQC/EstimatorModel.lean",
+            "sha256": model["estimator_formal_rules"][0]["lean_source"][
+                "sha256"
+            ],
+        }
+        assert len(rule["lean_source"]["sha256"]) == 64
     assert model["linked_artifacts"]["formal_lean_backend"]["path"] == (
         "docs/formal_lean_backend.json"
     )
@@ -79,6 +123,11 @@ def test_formal_estimator_model_binds_families_to_claim_policy(
         "security_claim_allowed_without_review": False,
         "toy_or_mock_result": False,
     }
+    assert by_family["NTRU"]["formal_rule_ids"] == [
+        "estimator.operator_compatibility_declared",
+        "estimator.result_binding_required_before_claim",
+        "estimator.schema_only_no_estimator",
+    ]
     assert by_family["SIS"]["runtime_operator_count"] == 0
     assert by_family["CODE_BASED"]["estimator_model"]["model_id"] == (
         "toy-code-based-isd-estimator"
@@ -155,6 +204,24 @@ def test_formal_estimator_model_rejects_schema_only_fake_estimator(
         "estimators."
         in result["failures"]
     )
+
+
+def test_formal_estimator_model_rejects_formal_rule_drift(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "formal_estimator_model.json"
+    model = build_formal_estimator_model()
+    model["estimator_formal_rules"][0]["lean_theorem"] = (
+        "AgadesPQC.EstimatorModel.missing"
+    )
+    path.write_text(json.dumps(model, indent=2, sort_keys=True) + "\n")
+
+    result = verify_formal_estimator_model(path)
+
+    assert result["accepted"] is False
+    assert "Formal estimator model formal rules are not in sync." in result[
+        "failures"
+    ]
 
 
 def test_formal_estimator_model_cli_round_trip(tmp_path: Path) -> None:

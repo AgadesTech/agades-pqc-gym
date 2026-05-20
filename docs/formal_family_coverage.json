@@ -5,7 +5,7 @@
     "smt_assist": "z3_optional_finite_decidable_obligations_only"
   },
   "claim_boundary": "formal family coverage proves AttackPlan applicability bindings, not PQC break claims",
-  "coverage_sha256": "98799534ce22c5d3be6798c2bb4696d7cc80ec375524baa9d343bfc5e2cb4339",
+  "coverage_sha256": "a2a5e4144cab75f57f0c42e0f1529f61f34e8da8bd14b45610d7ddd181ec9247",
   "families": [
     {
       "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
@@ -582,15 +582,15 @@
     },
     "formal_lean_backend": {
       "path": "docs/formal_lean_backend.json",
-      "sha256": "323771f11e2d186d0eabb5d81b1fc6f2e4b3efce25ee558847eff0b13b35272e"
+      "sha256": "493d35c4c7732ef0d10efb93b397923ac76fee8d6b267b175c8724012500b0b8"
     },
     "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "3866a045d4d4df3814e544227916bd804865df3b99834af4bee7f6033efa8240"
+      "sha256": "ab51dd773def1009446242ee4907ddbc767b059c8588d722473734467607ad5f"
     },
     "formal_mlwe_proof_artifact": {
       "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
-      "sha256": "a491f59222ab7aff74e497f9f5f0458458f8281ef3e01cd2364551c8c6fa8a2a"
+      "sha256": "3e10d45f9b279f20b9df2fe9a6c3f7fa586147768dfaed7078ab787e4863c2e8"
     },
     "formal_operator_semantics": {
       "path": "docs/formal_operator_semantics.json",
