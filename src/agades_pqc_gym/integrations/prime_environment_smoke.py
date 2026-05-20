@@ -59,9 +59,11 @@ def build_prime_environment_smoke_report(
     }
     scoring = {
         "accepted_score": None,
+        "accepted_rubric_scores": {},
         "invalid_json_score": None,
         "prefixed_json_score": None,
         "requires_single_json_object": False,
+        "rubric_terms": [],
         "unsupported_score": None,
     }
     optional_dependencies = {
@@ -80,11 +82,15 @@ def build_prime_environment_smoke_report(
         unsupported_json = (
             env_root / "data" / "code_based_isd_placeholder.json"
         ).read_text(encoding="utf-8")
-        accepted_score = module.score_attack_plan_completion(
-            _assistant_completion(accepted_json)
+        accepted_report = module.score_attack_plan_completion_report(
+            _assistant_completion(accepted_json),
+            info=_info_for_attack_plan_id(rows, _DEFAULT_ATTACK_PLAN_ID),
+            require_info=True,
         )
         unsupported_score = module.score_attack_plan_completion(
-            _assistant_completion(unsupported_json)
+            _assistant_completion(unsupported_json),
+            info=_info_for_attack_plan_id(rows, "code_based_isd_placeholder_v1"),
+            require_info=True,
         )
         invalid_json_score = module.score_attack_plan_completion(
             _assistant_completion('{"not": "an attack plan"}')
@@ -110,10 +116,12 @@ def build_prime_environment_smoke_report(
             "mirrors_packaged_data": _rows_mirror_packaged_data(rows, data_file_count),
         }
         scoring = {
-            "accepted_score": accepted_score,
+            "accepted_score": accepted_report["aggregate_reward"],
+            "accepted_rubric_scores": accepted_report["rubric_scores"],
             "invalid_json_score": invalid_json_score,
             "prefixed_json_score": prefixed_json_score,
             "requires_single_json_object": prefixed_json_score == 0.0,
+            "rubric_terms": list(module.PRIME_RUBRIC_TERMS),
             "unsupported_score": unsupported_score,
         }
         optional_dependencies = {
@@ -206,6 +214,25 @@ def _validate_smoke_contract(
         failures.append("Prime environment default AttackPlan id drifted.")
     if scoring["accepted_score"] != 1.0:
         failures.append("Prime environment rejects accepted toy plan.")
+    if scoring["rubric_terms"] != [
+        "accepted_attack_plan",
+        "formal_validity",
+        "cryptographic_applicability",
+        "no_security_overclaim",
+        "student_readability",
+        "reproducibility",
+        "reviewer_quality",
+        "task_match",
+        "proof_obligation_coverage",
+    ]:
+        failures.append("Prime environment rubric terms drifted.")
+    accepted_rubric_scores = scoring["accepted_rubric_scores"]
+    if (
+        not isinstance(accepted_rubric_scores, dict)
+        or set(accepted_rubric_scores) != set(scoring["rubric_terms"])
+        or any(score != 1.0 for score in accepted_rubric_scores.values())
+    ):
+        failures.append("Prime environment accepted rubric scores are incomplete.")
     if scoring["unsupported_score"] != 0.0:
         failures.append("Prime environment accepts unsupported plan.")
     if scoring["invalid_json_score"] != 0.0:
@@ -328,6 +355,30 @@ def _verify_scoring(report: dict[str, Any], failures: list[str]) -> None:
         return
     if scoring.get("accepted_score") != 1.0:
         failures.append("Prime environment smoke report accepted score is wrong.")
+    rubric_terms = scoring.get("rubric_terms")
+    accepted_rubric_scores = scoring.get("accepted_rubric_scores")
+    if rubric_terms != [
+        "accepted_attack_plan",
+        "formal_validity",
+        "cryptographic_applicability",
+        "no_security_overclaim",
+        "student_readability",
+        "reproducibility",
+        "reviewer_quality",
+        "task_match",
+        "proof_obligation_coverage",
+    ]:
+        failures.append("Prime environment smoke report rubric terms are wrong.")
+    if not isinstance(accepted_rubric_scores, dict) or set(
+        accepted_rubric_scores
+    ) != set(rubric_terms or []):
+        failures.append(
+            "Prime environment smoke report accepted rubric scores are invalid."
+        )
+    elif any(score != 1.0 for score in accepted_rubric_scores.values()):
+        failures.append(
+            "Prime environment smoke report accepted rubric scores are wrong."
+        )
     for key in ("unsupported_score", "invalid_json_score", "prefixed_json_score"):
         if scoring.get(key) != 0.0:
             failures.append(f"Prime environment smoke report {key} is wrong.")
@@ -406,12 +457,24 @@ def _verification_summary(
             "load_environment_boundary_ok"
         ),
         "prefixed_json_score": scoring.get("prefixed_json_score"),
+        "rubric_terms": len(scoring.get("rubric_terms", [])),
         "unsupported_score": scoring.get("unsupported_score"),
     }
 
 
 def _assistant_completion(content: str) -> list[dict[str, str]]:
     return [{"role": "assistant", "content": content}]
+
+
+def _info_for_attack_plan_id(
+    rows: list[dict[str, Any]],
+    attack_plan_id: str,
+) -> dict[str, Any]:
+    for row in rows:
+        info = row.get("info")
+        if isinstance(info, dict) and info.get("attack_plan_id") == attack_plan_id:
+            return info
+    raise ValueError(f"Prime environment task row is missing: {attack_plan_id}")
 
 
 def _load_python_module(path: Path, module_name: str) -> Any:
