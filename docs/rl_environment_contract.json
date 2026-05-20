@@ -97,7 +97,7 @@
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "35cf86021bbe2dd9163ca8479e0b9443aa82f529259c9c8038e3d79652640077"
+      "sha256": "b35b92398237a4a010ecd42fe96343dfd21b3611ffda56746ac58933e144b3a2"
     }
   },
   "private_track": {

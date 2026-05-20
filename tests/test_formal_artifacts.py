@@ -648,6 +648,56 @@ def test_verify_rejects_reviewed_runtime_artifact_without_estimator_binding(
     ) in result["failures"]
 
 
+def test_verify_rejects_review_evidence_that_allows_security_claims(
+    tmp_path: Path,
+) -> None:
+    result_path = _write_estimator_result(tmp_path)
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+        estimator_result_path=result_path,
+    )
+    _attach_review_evidence(artifact, claim_allowed=True)
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Attached proof artifact review evidence must not allow security claims."
+    ) in result["failures"]
+
+
+def test_verify_rejects_review_evidence_bound_to_stale_artifact_payload(
+    tmp_path: Path,
+) -> None:
+    result_path = _write_estimator_result(tmp_path)
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+        estimator_result_path=result_path,
+    )
+    _attach_review_evidence(artifact)
+    artifact["review"]["evidence"]["artifact_binding"][
+        "attack_plan_canonical_sha256"
+    ] = "0" * 64
+    artifact["review"]["evidence"]["evidence_sha256"] = _review_evidence_sha256(
+        artifact["review"]["evidence"]
+    )
+    artifact["artifact_sha256"] = _artifact_payload_sha256(artifact)
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Attached proof artifact review evidence binding does not match the "
+        "artifact."
+    ) in result["failures"]
+
+
 def test_verify_rejects_stale_estimator_result_schema_contract(
     tmp_path: Path,
 ) -> None:
@@ -866,3 +916,69 @@ def _valid_estimator_result_payload() -> dict[str, object]:
         "raw_output": {"source": "unit-test"},
         "warnings": ["Mock estimator output is not cryptanalytic evidence."],
     }
+
+
+def _attach_review_evidence(
+    artifact: dict[str, object],
+    *,
+    claim_allowed: bool = False,
+) -> None:
+    review = artifact["review"]
+    assert isinstance(review, dict)
+    review["status"] = "reviewed"
+    evidence = {
+        "schema_version": "agades.pqc.formal.review_evidence.v1",
+        "status": "attached",
+        "covered_reviewer_roles": review["required_reviewers"],
+        "claim_allowed": claim_allowed,
+        "artifact_binding": _review_artifact_binding(artifact),
+        "notes": "unit test reviewer evidence",
+    }
+    evidence["evidence_sha256"] = _review_evidence_sha256(evidence)
+    review["evidence"] = evidence
+    artifact["artifact_sha256"] = _artifact_payload_sha256(artifact)
+
+
+def _review_artifact_binding(artifact: dict[str, object]) -> dict[str, object]:
+    attack_plan = artifact["attack_plan"]
+    estimator_binding = artifact["estimator_result_binding"]
+    proof_obligations = artifact["proof_obligations"]
+    review = artifact["review"]
+    assert isinstance(attack_plan, dict)
+    assert isinstance(estimator_binding, dict)
+    assert isinstance(proof_obligations, list)
+    assert isinstance(review, dict)
+    return {
+        "attack_plan_id": attack_plan["id"],
+        "attack_plan_canonical_sha256": attack_plan["canonical_sha256"],
+        "family": artifact["family"],
+        "estimator_result_binding_status": estimator_binding["status"],
+        "review_status": review["status"],
+        "required_reviewers": review["required_reviewers"],
+        "proof_obligation_sha256": [
+            obligation["obligation_sha256"]
+            for obligation in proof_obligations
+            if isinstance(obligation, dict)
+        ],
+        "claim_boundary": review["claim_boundary"],
+    }
+
+
+def _review_evidence_sha256(evidence: dict[str, object]) -> str:
+    return stable_sha256(
+        {
+            key: value
+            for key, value in evidence.items()
+            if key != "evidence_sha256"
+        }
+    )
+
+
+def _artifact_payload_sha256(artifact: dict[str, object]) -> str:
+    return stable_sha256(
+        {
+            key: value
+            for key, value in artifact.items()
+            if key != "artifact_sha256"
+        }
+    )
