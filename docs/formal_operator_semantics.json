@@ -29,7 +29,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "4d12327b70a39e859b9dc5a67ed58528b8d4293f79eba15a33225071c93bbb86",
+      "entry_sha256": "8f0b7d10b57adf69253aba7042abaf55dbb4746443267527c5576ebde41ce5fa",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.Lattice.PrimalUSVP",
       "operator": "primal_usvp",
       "required_params": {
@@ -51,7 +80,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "59bd32906b2787843f5e242e08f375463b55704def584a78f9bb6ec7c838084a",
+      "entry_sha256": "88765bd4126c429b4ce6366676a51a2036ac990c217c223a3e4c50f4e871bd9f",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.Lattice.BDD",
       "operator": "bounded_distance_decoding",
       "required_params": {
@@ -73,7 +131,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "df77473b6ecacc13a90eff53d12ce5c0c982a9ae550a5df25d68cea590ff937c",
+      "entry_sha256": "45cc9ef95e14c600062cd681fa81fdc2e57da0fe55df5ee16db93b2e4308e567",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.Lattice.DualAttack",
       "operator": "dual_attack",
       "required_params": {
@@ -95,7 +182,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "65fa5bc5aaacd955f4a132d34bcf0ee9ade6c271eb03c9e2d4bdd0b85bf4cb8f",
+      "entry_sha256": "24e0113a51e1b780a27bc1bf0f4ee459fa09aecbb9026db28b9bf5323e8010d5",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.Lattice.DualHybrid",
       "operator": "dual_hybrid",
       "required_params": {
@@ -118,7 +234,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "5c802254ec0a21f0a91f72080d077bce010747aad1b2d599f628128b4e599b94",
+      "entry_sha256": "5d4156813a0df61a09c1bce2f4f3fb7198adb5d8db902a7d1ac95683367e9599",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.Lattice.BKW",
       "operator": "bkw",
       "required_params": {
@@ -140,7 +285,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "f912d7ddd756c2f0cabe236dea7c2b8b43424d08b8fc75369b94f42b0acf38ed",
+      "entry_sha256": "e1aa6400904631cb12df3685058ba231409cf914655492d3fe526bd81b770442",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.Lattice.ModulusSwitching",
       "operator": "modulus_switching",
       "required_params": {
@@ -162,7 +336,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "cb1e7042ba9430bcb6e2c8ad8e85b7dc241e22921c084c39380e61b759e6724a",
+      "entry_sha256": "6452537722467f34a3e2b175c8b27ac7e3967907103db29fa6368732bd8f9228",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.Lattice.SampleSelection",
       "operator": "sample_selection",
       "required_params": {
@@ -184,7 +387,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "09a322abf2ebeec8e0ca65b2c1c33e01085452c70aacca37245c0116c5d9bd8d",
+      "entry_sha256": "e400080f372f351c13a06fbeb649e5df20f96766b131aec3e7395c9903dd3dc1",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.Lattice.SecretGuessing",
       "operator": "secret_guessing",
       "required_params": {
@@ -206,7 +438,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "77174273716691676f8d4a285608cb930760e6a6fb4a8633bb4491fb1e73af0f",
+      "entry_sha256": "6ff3de0fce6ca311d1c060abb23467a2d89f431634dd4414ffc2cbd38a495b3d",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.Lattice.MeetInTheMiddle",
       "operator": "meet_in_the_middle",
       "required_params": {
@@ -228,7 +489,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "dc913b494285ddab8177248fc214506b1cd73d19017bfe8ff96f305d93b7633f",
+      "entry_sha256": "9eeb407cb2a434876a99e8112a47567662d6e7e3d4a3974ad96ceefc6cff5747",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.Lattice.NormalFormTransform",
       "operator": "normal_form_transform",
       "required_params": {},
@@ -248,7 +538,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "875e182569e61b56216f07f366a8841a0279825344c9a8ced5e886f3d3a6c691",
+      "entry_sha256": "65a9924b582397a8e75306156ad5f099f7d1bee9f5bea89e6a47d00e5fff67ad",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.Lattice.BKZParameterSweep",
       "operator": "bkz_parameter_sweep",
       "required_params": {
@@ -271,7 +590,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "2a11fdbe18265a2f05dd494d08e5b3ef9a350ee8979d46890ce8e8df536332b9",
+      "entry_sha256": "ae1834770817293cfbd67a7697c9b1502536279a760fec2362d2a1ce379f9960",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.Lattice.ModuleReductionHypothesis",
       "operator": "module_lattice_reduction_hypothesis",
       "required_params": {
@@ -290,7 +638,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "b47e88bd50df26d0761950052ee05b5ffa469740b1232e48129efd1cd9e9419e",
+      "entry_sha256": "0a5fc02a5c6efc55c7632b433d7d0eefa55ec893dd4b9dcf7ead40059d1f7469",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.CodeBased.DecodingFixtureCheck",
       "operator": "decoding_fixture_check",
       "required_params": {
@@ -309,7 +686,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "49a76bc04446ac2a242a89bc4bdc13caaeacac8c3af9a77f67c4f89cb1771405",
+      "entry_sha256": "096bd1595935fd10cdac2c98f6ca92264cac125872d0251dc3dd59407bd99699",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.CodeBased.ISD",
       "operator": "information_set_decoding",
       "required_params": {
@@ -328,7 +734,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "18844d1db2e2f540bb0cf2ff458ed2988af6ab030009861586ceb802c510de35",
+      "entry_sha256": "a04e75cc9f11afa3d4fe9af662718d32e0f42aaed014a87dd214a3afdca8f7d7",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.Multivariate.MinRank",
       "operator": "minrank_attack",
       "required_params": {
@@ -347,7 +782,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "96cb5c9c6ea2066e6274a0b27fa0e2618602bdca11cde8e17389363cc7ab1913",
+      "entry_sha256": "42bcb78cb65c713edb6af40263b9d3ff186a72f5936e9d79c67721bfcfbca9cc",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.Multivariate.GroebnerBasis",
       "operator": "groebner_basis",
       "required_params": {
@@ -366,7 +830,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "f3e5b61f77c4a471d85ed751279ce0c911a25c2606b16a683408f0c4dee1bac0",
+      "entry_sha256": "44bad07f3df55c5ecb0c3660fc606c2a3473646cb4a1be2bd16ba94820faed54",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.Multivariate.SignatureFixtureCheck",
       "operator": "signature_fixture_check",
       "required_params": {
@@ -385,7 +878,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "e686b27a5dbb1b8677a4cc79a83b26851485415ec782031a1406b6ebd0ab4d2e",
+      "entry_sha256": "e83e300f05fb187b397e2a6f70a1b47febccc3d7cc68ddbbbb651cdfa52ff3e4",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.HashBased.SecurityBoundCheck",
       "operator": "security_bound_check",
       "required_params": {
@@ -404,7 +926,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "693d541fad708cfbc02c72619788250aaaa7d2cf923c5ec90f86bf0cdec6771e",
+      "entry_sha256": "2c0b2c176fcb4b585afbec13dfb4defd674d545211f11be2a7fa5767ec0f18c2",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.HashBased.SignatureVerification",
       "operator": "hash_signature_verification",
       "required_params": {
@@ -423,7 +974,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "43d5c38aa19deca277473cf411f9f71fa09534ce196b5b57aea8e6003dff8472",
+      "entry_sha256": "7c047d793506c32b635d2e82897efabbfe4d41d13c46ce38fb86b9bed0ce4869",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.HashBased.MisuseCheck",
       "operator": "misuse_check",
       "required_params": {
@@ -442,7 +1022,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "a237cebfcc4c93b719724b999115597b821b5775469ed3594e9d07107fb2eb3e",
+      "entry_sha256": "2379bdb8c731ececc9c19bdc27f189dd43bfe13708eb042635a183d48416ecbf",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.IsogenyHistorical.Reconstruction",
       "operator": "historical_isogeny_reconstruction",
       "required_params": {
@@ -461,7 +1070,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "747712ae10b473f60a288ad1466aa71db383b793d87630b21f347932189789a1",
+      "entry_sha256": "00bd3143a32a292936d73fdd0674b25fee506156bc4c02d2d119299184722342",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.ImplementationSecurity.KATConformance",
       "operator": "kat_conformance",
       "required_params": {
@@ -480,7 +1118,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "0d053568aa9ef59e5978d4e7bba08fa7389634f84079aa8003ac2ee926dc967c",
+      "entry_sha256": "37a0042b7c682e33274765b372474e369a0a2b633cef405704b45e3d4cd82376",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.ImplementationSecurity.ConstantTimeCheck",
       "operator": "constant_time_check",
       "required_params": {
@@ -499,7 +1166,36 @@
         "proof_obligation_required_before_claim": true,
         "security_claim_allowed_without_review": false
       },
-      "entry_sha256": "6315fbc22e9bfaa57633ac147f0e78b115f2c692a06ba2f74fd518b767af4126",
+      "entry_sha256": "83f3aa06df159c4dd20bf0a12d1ac455f5168d999e7f60ea5ce9530a8729d107",
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
       "lean_namespace": "AgadesPQC.ImplementationSecurity.BenchmarkHarness",
       "operator": "benchmark_harness",
       "required_params": {
@@ -521,7 +1217,7 @@
     "uv run agades-pqc family-operator-catalog-verify --catalog docs/family_operator_catalog.json"
   ],
   "schema_version": "agades.pqc.formal.operator_semantics.v1",
-  "semantics_sha256": "3cbf26bfca31f0b09c40b4440e887bba2cc4d3d6b13b9ba3d2be38b9f1b95ea8",
+  "semantics_sha256": "444d31567a28c74efd25692f2044f4a9a836fed27b3c1690d98ec20a4d9cf6a4",
   "summary": {
     "attackplan_family_bindings": 60,
     "lattice_operators": 12,

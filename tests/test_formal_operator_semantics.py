@@ -43,6 +43,7 @@ def test_formal_operator_semantics_covers_all_attackplan_operators(
         "semantics_id": "agades.pqc.operator_semantics.lattice.primal_usvp.v1",
         "lean_namespace": "AgadesPQC.Lattice.PrimalUSVP",
         "required_params": {"beta": "int"},
+        "formal_rules": semantics["operators"][0]["formal_rules"],
         "attackplan_families": ["LWE", "MLWE", "NTRU", "SIS"],
         "runtime_claim_boundary": (
             "operator semantics define AttackPlan applicability and routing, "
@@ -56,8 +57,57 @@ def test_formal_operator_semantics_covers_all_attackplan_operators(
         },
         "entry_sha256": semantics["operators"][0]["entry_sha256"],
     }
+    assert semantics["operators"][0]["formal_rules"] == [
+        {
+            "rule_id": "operator.required_params_present",
+            "statement": (
+                "The AttackPlan operator is only applicable when every required "
+                "parameter declared by the operator schema is present."
+            ),
+            "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+            "lean_source": semantics["operators"][0]["formal_rules"][0][
+                "lean_source"
+            ],
+        },
+        {
+            "rule_id": "operator.family_binding_valid",
+            "statement": (
+                "The operator may only be routed through families listed in its "
+                "AttackPlan family binding."
+            ),
+            "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+            "lean_source": semantics["operators"][0]["formal_rules"][1][
+                "lean_source"
+            ],
+        },
+        {
+            "rule_id": "operator.unreviewed_security_claim_forbidden",
+            "statement": (
+                "Unreviewed operator semantics may support applicability and "
+                "routing checks, but cannot authorize a cryptographic security "
+                "claim."
+            ),
+            "lean_theorem": (
+                "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden"
+            ),
+            "lean_source": semantics["operators"][0]["formal_rules"][2][
+                "lean_source"
+            ],
+        },
+    ]
+    for rule in semantics["operators"][0]["formal_rules"]:
+        assert rule["lean_source"] == {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": semantics["operators"][0]["formal_rules"][0][
+                "lean_source"
+            ]["sha256"],
+        }
+        assert len(rule["lean_source"]["sha256"]) == 64
     assert semantics["operators"][-1]["operator"] == "benchmark_harness"
     assert semantics["operators"][-1]["required_params"] == {"metric": "str"}
+    assert semantics["operators"][-1]["formal_rules"] == semantics["operators"][0][
+        "formal_rules"
+    ]
 
     by_operator = {entry["operator"]: entry for entry in semantics["operators"]}
     assert by_operator["normal_form_transform"]["required_params"] == {}
@@ -132,6 +182,24 @@ def test_formal_operator_semantics_rejects_param_schema_drift(
         "Formal operator semantics parameter schemas are not in sync."
         in result["failures"]
     )
+
+
+def test_formal_operator_semantics_rejects_formal_rule_drift(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "formal_operator_semantics.json"
+    semantics = build_formal_operator_semantics()
+    semantics["operators"][0]["formal_rules"][0]["lean_theorem"] = (
+        "AgadesPQC.OperatorSemantics.missing"
+    )
+    path.write_text(json.dumps(semantics, indent=2, sort_keys=True) + "\n")
+
+    result = verify_formal_operator_semantics(path)
+
+    assert result["accepted"] is False
+    assert "Formal operator semantics formal rules are not in sync." in result[
+        "failures"
+    ]
 
 
 def test_formal_operator_semantics_rejects_unreviewed_security_claims(
