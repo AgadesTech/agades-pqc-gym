@@ -40,6 +40,10 @@ spike_penalty_beta = 5.0
 spike_penalty_lambda = 1.0
 surprisal_gate_kappa = 2.0
 surprisal_gate_gamma = -4.0
+reward_function = "agades_pqc_gym.rl.pedagogy.build_pedagogical_reward_report"
+learnability_function = "agades_pqc_gym.rl.pedagogy.spike_aware_learnability_score"
+assimilation_weight_function = "agades_pqc_gym.rl.pedagogy.surprisal_gated_token_weights"
+raw_private_signals_publication_allowed = false
 
 [[env]]
 id = "agades-pqc-verifier-env"

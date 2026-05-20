@@ -75,6 +75,17 @@ def test_pedagogical_rl_method_defines_agades_teacher_student_pipeline(
             "exp(-(lambda/beta) * log(mean_t(exp(beta * d_t))))"
         ),
     }
+    assert payload["reward_contract"]["runtime_binding"] == {
+        "reward_report_schema": "agades.pqc.rl.pedagogical_reward.v1",
+        "reward_function": "agades_pqc_gym.rl.pedagogy.build_pedagogical_reward_report",
+        "learnability_function": (
+            "agades_pqc_gym.rl.pedagogy.spike_aware_learnability_score"
+        ),
+        "assimilation_weight_function": (
+            "agades_pqc_gym.rl.pedagogy.surprisal_gated_token_weights"
+        ),
+        "raw_private_signals_publication_allowed": False,
+    }
     assert payload["assimilation"]["objective"] == "surprisal_gated_imitation"
     assert payload["assimilation"]["token_weight"] == (
         "sigmoid(kappa * (logp_student(a_t|x,prefix) - gamma))"
@@ -96,6 +107,9 @@ def test_pedagogical_rl_method_defines_agades_teacher_student_pipeline(
         "private_training_traces_or_reviewer_annotations",
         "private_dataset_rows_or_prompts",
     ]
+    assert payload["linked_artifacts"]["rl_pedagogy_runtime"]["path"] == (
+        "src/agades_pqc_gym/rl/pedagogy.py"
+    )
 
 
 def test_committed_pedagogical_rl_method_is_in_sync(tmp_path: Path) -> None:
@@ -116,7 +130,7 @@ def test_pedagogical_rl_method_verify_accepts_committed_artifact() -> None:
         "summary": {
             "stages": 4,
             "reward_terms": 8,
-            "linked_artifacts": 8,
+            "linked_artifacts": 9,
             "failure_count": 0,
         },
         "failures": [],

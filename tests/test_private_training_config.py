@@ -71,6 +71,16 @@ def test_private_training_manifest_defines_prime_rl_qwen_and_dataset_controls(
         ],
         "spike_aware_pedagogy_reward": True,
         "surprisal_gated_imitation": True,
+        "reward_function": (
+            "agades_pqc_gym.rl.pedagogy.build_pedagogical_reward_report"
+        ),
+        "learnability_function": (
+            "agades_pqc_gym.rl.pedagogy.spike_aware_learnability_score"
+        ),
+        "assimilation_weight_function": (
+            "agades_pqc_gym.rl.pedagogy.surprisal_gated_token_weights"
+        ),
+        "raw_private_signals_publication_allowed": False,
         "reward_terms": [
             "formal_validity",
             "cryptographic_applicability",
@@ -113,6 +123,9 @@ def test_private_training_manifest_defines_prime_rl_qwen_and_dataset_controls(
     )
     assert payload["linked_artifacts"]["pedagogical_rl_method"]["path"] == (
         "docs/pedagogical_rl_method.json"
+    )
+    assert payload["linked_artifacts"]["rl_pedagogy_runtime"]["path"] == (
+        "src/agades_pqc_gym/rl/pedagogy.py"
     )
     assert payload["linked_artifacts"]["private_dataset_curation"]["path"] == (
         "docs/private_dataset_curation.json"
@@ -165,6 +178,16 @@ def test_private_prime_rl_toml_template_is_sanitized_and_parseable(
         "spike_penalty_lambda": 1.0,
         "surprisal_gate_kappa": 2.0,
         "surprisal_gate_gamma": -4.0,
+        "reward_function": (
+            "agades_pqc_gym.rl.pedagogy.build_pedagogical_reward_report"
+        ),
+        "learnability_function": (
+            "agades_pqc_gym.rl.pedagogy.spike_aware_learnability_score"
+        ),
+        "assimilation_weight_function": (
+            "agades_pqc_gym.rl.pedagogy.surprisal_gated_token_weights"
+        ),
+        "raw_private_signals_publication_allowed": False,
     }
     assert data.get("env_files", []) == []
 
@@ -192,7 +215,7 @@ def test_private_training_config_verify_accepts_committed_artifacts() -> None:
             "dataset_sources": 3,
             "dataset_controls": 5,
             "reward_terms": 8,
-            "linked_artifacts": 10,
+            "linked_artifacts": 11,
             "failure_count": 0,
         },
         "failures": [],

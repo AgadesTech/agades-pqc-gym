@@ -59,7 +59,7 @@
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",
-      "sha256": "ca31008dbc6f1bf94a79580b7ff0698d3cb81fb84b1927454005fc6ea04a3c65"
+      "sha256": "e1721928a80376faee646d9123ff1430f6e9f25e5970724747e91b52ffda5cb3"
     },
     "prime_eval_config_manifest": {
       "path": "docs/prime_eval_config_manifest.json",
@@ -68,6 +68,10 @@
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
       "sha256": "a0992031eb7a4268e4813b4d5f02a9ca4dda078972c935ef829c8e981259d86a"
+    },
+    "rl_pedagogy_runtime": {
+      "path": "src/agades_pqc_gym/rl/pedagogy.py",
+      "sha256": "4d3a2f5ef7f12eaa06977cba10901e169ec8eb9584b7e982e7709af36dfaaa6c"
     }
   },
   "method": {
@@ -132,6 +136,13 @@
       0.0,
       1.0
     ],
+    "runtime_binding": {
+      "assimilation_weight_function": "agades_pqc_gym.rl.pedagogy.surprisal_gated_token_weights",
+      "learnability_function": "agades_pqc_gym.rl.pedagogy.spike_aware_learnability_score",
+      "raw_private_signals_publication_allowed": false,
+      "reward_function": "agades_pqc_gym.rl.pedagogy.build_pedagogical_reward_report",
+      "reward_report_schema": "agades.pqc.rl.pedagogical_reward.v1"
+    },
     "success_gate": {
       "good_answer_only_is_sufficient": false,
       "required_terms": [

@@ -491,10 +491,10 @@
         "docs/family_plugin_manifest.json": "c6fca7e84e9abcb06772f866e47f7b19dc0713e3a8b2dbdbea26dc97a2386745",
         "docs/family_registry_manifest.json": "d84193b0e5f2ad3fd82497d1bf59188f847fb43fcebffe9ae8f951fc2bd73b58",
         "docs/family_support_matrix.json": "60a981d8f32be7ce17613855c3b9655ffb22de6ffd24d09dbcc37c549653fd29",
-        "docs/huggingface_publication_handoff.json": "11c47d571964d3fe7fd352f038aff15c48d11b2ad1f255162adfda834690b33d",
+        "docs/huggingface_publication_handoff.json": "98160313d09a2bfb57fcf18e069e8662be8a104a66e92b547c628f6b57c7cbad",
         "docs/lattice_estimator_baseline_contracts.json": "09100e2ba4733daffee5c82e58153ed8585210589b2112467ff29e86ba2bf2a5",
         "docs/lattice_estimator_manifest.json": "0b52a47bd0217a194d1004ce3433ea5c9e0404f85e0a05415e8c37bbe240c2cb",
-        "docs/nvidia_publication_handoff.json": "0b661f296f39403d724977b3f84a9deb1668be2e33cc42c055470cc66ed38e8b",
+        "docs/nvidia_publication_handoff.json": "8303f07b9207dc0d5ecbad2d9ca1c21abee6218ea9cdd2f735904c88c3918191",
         "docs/prime_publication_handoff.json": "5ab3d0512173b1602206b8ad2cdb285030a695794958c304f08b539a37196e3f",
         "docs/prime_speedrun_handoff.json": "2cfe3d153e315c5b4c4519f26d836df4c97d2e8538878fa4e1c3f56bfc3591f7",
         "docs/private_run_policy.json": "a0992031eb7a4268e4813b4d5f02a9ca4dda078972c935ef829c8e981259d86a",
@@ -538,7 +538,7 @@
         "hf/dataset/MANIFEST.sha256"
       ],
       "artifact_sha256": {
-        "hf/dataset/MANIFEST.sha256": "91e9ed14387eb1f9996fca471268919955b5f1b90e5feaa26a8c927f94e8c200",
+        "hf/dataset/MANIFEST.sha256": "54b65aff9bfa3a4e74ed602dacbbc26752d4341f90698f8b2cf5c188c6a359b1",
         "hf/dataset/README.md": "e8e354eccacc48786080acf98b788eaea6670802617489bc55d3b7826cefb92d",
         "hf/dataset/attack_plans.jsonl": "2d6a3c4b8a11a1a891c238abc58a865833febbd72bcb8e0fe01af05b224bfa35",
         "hf/dataset/dataset_info.json": "3acba4d40ee207b7b43cac927c9758b8bc7580bd335b04e0cbfa8e8b3f730b17",
@@ -597,7 +597,7 @@
         "docs/huggingface_publication_handoff.json"
       ],
       "artifact_sha256": {
-        "docs/huggingface_publication_handoff.json": "11c47d571964d3fe7fd352f038aff15c48d11b2ad1f255162adfda834690b33d",
+        "docs/huggingface_publication_handoff.json": "98160313d09a2bfb57fcf18e069e8662be8a104a66e92b547c628f6b57c7cbad",
         "docs/public_benchmark_manifest.json": "c45741efde84f27edfd6feab0e3217f68c88a5be4d56a038b2973ea2296722f7",
         "docs/source_catalog.json": "9648bc812ae0465cf9bf28e410d3fcbdc63ec6d17060c35b4e05e98ea55dc058",
         "hf/benchmark_card.md": "e29827f9fe4e8bd4c45bab2a7238b6029a589aac9eda1701e43086c2e0fdbdef",
@@ -669,7 +669,7 @@
       ],
       "artifact_sha256": {
         "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md": "2c7ac9e3d7d2144f01524501c46162a0649fcdd035cc4973be682d8c87224e99",
-        "docs/nvidia_publication_handoff.json": "0b661f296f39403d724977b3f84a9deb1668be2e33cc42c055470cc66ed38e8b",
+        "docs/nvidia_publication_handoff.json": "8303f07b9207dc0d5ecbad2d9ca1c21abee6218ea9cdd2f735904c88c3918191",
         "nvidia/README.md": "18568265697f8a33eef8fab9d0d1b1312d32c9d1f365eae588fbc35a1c194f62",
         "nvidia/accelerator_manifest.json": "4220fb49bd07624af90e5be1dfe2fbd8a72a7c4a968782d46e3ccc12f15b04cc"
       },

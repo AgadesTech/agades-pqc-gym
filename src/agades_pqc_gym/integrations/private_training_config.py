@@ -10,7 +10,10 @@ from agades_pqc_gym.core.target import TargetFamily
 from agades_pqc_gym.formal.artifacts import MVP_VERTICAL_PROOF_ARTIFACT_PATHS
 from agades_pqc_gym.integrations.pedagogical_rl_method import (
     ASSIMILATION_OBJECTIVE,
+    ASSIMILATION_WEIGHT_FUNCTION,
+    LEARNABILITY_FUNCTION,
     LEARNABILITY_SCORE,
+    PEDAGOGICAL_REWARD_FUNCTION,
     PEDAGOGY_REWARD,
     STAGE_SEQUENCE,
     TEACHER_STUDENT_PATTERN,
@@ -71,6 +74,7 @@ LINKED_ARTIFACT_PATHS = {
         TargetFamily.MLWE.value
     ],
     "formal_lean_backend": "docs/formal_lean_backend.json",
+    "rl_pedagogy_runtime": "src/agades_pqc_gym/rl/pedagogy.py",
 }
 FORBIDDEN_ENV_FILE_NAMES = {
     ".env",
@@ -134,6 +138,10 @@ def build_prime_rl_training_template() -> str:
         "spike_penalty_lambda = 1.0\n"
         "surprisal_gate_kappa = 2.0\n"
         "surprisal_gate_gamma = -4.0\n"
+        f'reward_function = "{PEDAGOGICAL_REWARD_FUNCTION}"\n'
+        f'learnability_function = "{LEARNABILITY_FUNCTION}"\n'
+        f'assimilation_weight_function = "{ASSIMILATION_WEIGHT_FUNCTION}"\n'
+        "raw_private_signals_publication_allowed = false\n"
         "\n"
         "[[env]]\n"
         'id = "agades-pqc-verifier-env"\n'
@@ -235,6 +243,10 @@ def build_private_training_manifest(
             "stage_sequence": list(STAGE_SEQUENCE),
             "spike_aware_pedagogy_reward": True,
             "surprisal_gated_imitation": True,
+            "reward_function": PEDAGOGICAL_REWARD_FUNCTION,
+            "learnability_function": LEARNABILITY_FUNCTION,
+            "assimilation_weight_function": ASSIMILATION_WEIGHT_FUNCTION,
+            "raw_private_signals_publication_allowed": False,
             "reward_terms": list(REWARD_TERMS),
             "requires_reviewer_quality_signal": True,
             "requires_no_security_overclaim": True,
@@ -424,6 +436,16 @@ def _verify_training_toml(
         failures.append("Prime RL config surprisal kappa is incorrect.")
     if pedagogical_rl.get("surprisal_gate_gamma") != -4.0:
         failures.append("Prime RL config surprisal gamma is incorrect.")
+    if pedagogical_rl.get("reward_function") != PEDAGOGICAL_REWARD_FUNCTION:
+        failures.append("Prime RL config reward function is incorrect.")
+    if pedagogical_rl.get("learnability_function") != LEARNABILITY_FUNCTION:
+        failures.append("Prime RL config learnability function is incorrect.")
+    if pedagogical_rl.get("assimilation_weight_function") != (
+        ASSIMILATION_WEIGHT_FUNCTION
+    ):
+        failures.append("Prime RL config assimilation weight function is incorrect.")
+    if pedagogical_rl.get("raw_private_signals_publication_allowed") is not False:
+        failures.append("Prime RL config must not publish raw private signals.")
 
     env = config.get("env", [])
     first_env = env[0] if isinstance(env, list) and env else {}
@@ -513,6 +535,16 @@ def _verify_training_manifest(
         failures.append("Private training stage sequence is incorrect.")
     if pedagogical_rl.get("reward_terms") != REWARD_TERMS:
         failures.append("Private training reward terms are incorrect.")
+    if pedagogical_rl.get("reward_function") != PEDAGOGICAL_REWARD_FUNCTION:
+        failures.append("Private training reward function is incorrect.")
+    if pedagogical_rl.get("learnability_function") != LEARNABILITY_FUNCTION:
+        failures.append("Private training learnability function is incorrect.")
+    if pedagogical_rl.get("assimilation_weight_function") != (
+        ASSIMILATION_WEIGHT_FUNCTION
+    ):
+        failures.append("Private training assimilation weight function is incorrect.")
+    if pedagogical_rl.get("raw_private_signals_publication_allowed") is not False:
+        failures.append("Private training must not publish raw private signals.")
 
     datasets = _dict_or_empty(manifest.get("datasets"))
     if datasets.get("sources") != PRIVATE_DATASET_SOURCES:
