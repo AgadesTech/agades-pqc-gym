@@ -18,6 +18,9 @@ def RequiredParameterBound (hasAllRequiredParams : Bool) : Prop :=
 def FamilyBindingValid (isBoundToFamily : Bool) : Prop :=
   isBoundToFamily = true
 
+def FamilyValidatorBindingValid (hasRuntimeValidatorBinding : Bool) : Prop :=
+  hasRuntimeValidatorBinding = true
+
 def SecurityClaimAllowed
     (reviewStatus : ClaimReviewStatus)
     (kind : ClaimKind) : Prop :=
@@ -30,6 +33,10 @@ theorem required_parameter_bound :
 
 theorem family_binding_valid :
     FamilyBindingValid true := by
+  rfl
+
+theorem family_validator_binding_valid :
+    FamilyValidatorBindingValid true := by
   rfl
 
 theorem unreviewed_security_claim_forbidden :

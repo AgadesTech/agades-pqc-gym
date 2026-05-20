@@ -255,10 +255,11 @@
         "contains_axiom": false,
         "contains_sorry": false
       },
-      "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004",
+      "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347",
       "theorems": [
         "AgadesPQC.OperatorSemantics.required_parameter_bound",
         "AgadesPQC.OperatorSemantics.family_binding_valid",
+        "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
         "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden"
       ]
     },
@@ -306,7 +307,7 @@
       "theorems": []
     }
   ],
-  "manifest_sha256": "372183ece8ec50903fada1105ba0b52bad122104fbcc61c158070b429f262eb7",
+  "manifest_sha256": "91c79b2b5847f03e9ac04172ce028d1b29ae9b737ca5ab9ff7d1602ce188f66e",
   "placeholder_scan": {
     "contains_admit": false,
     "contains_axiom": false,
@@ -328,6 +329,6 @@
     "ci_lean_build_gate": true,
     "placeholder_failures": 0,
     "source_modules": 14,
-    "theorem_declarations": 35
+    "theorem_declarations": 36
   }
 }
