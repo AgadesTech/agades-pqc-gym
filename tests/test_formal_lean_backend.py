@@ -94,7 +94,7 @@ def test_formal_lean_backend_manifest_binds_sources_and_ci(
         "contains_admit": False,
         "contains_axiom": False,
     }
-    assert manifest["summary"]["source_modules"] == 13
+    assert manifest["summary"]["source_modules"] == 14
     assert manifest["summary"]["theorem_declarations"] >= 20
     assert manifest["summary"]["ci_lean_build_gate"] is True
     assert manifest["summary"]["placeholder_failures"] == 0
@@ -104,6 +104,7 @@ def test_formal_lean_backend_manifest_binds_sources_and_ci(
     assert "formal/lean/AgadesPQC/EstimatorModel.lean" in source_paths
     assert "formal/lean/AgadesPQC/Evaluator.lean" in source_paths
     assert "formal/lean/AgadesPQC/OperatorSemantics.lean" in source_paths
+    assert "formal/lean/AgadesPQC/ProofObligation.lean" in source_paths
     for source in manifest["lean_sources"]:
         path = Path(source["path"])
         assert path.is_file()
@@ -126,6 +127,17 @@ def test_formal_lean_backend_manifest_binds_sources_and_ci(
     assert "AgadesPQC.OperatorSemantics.family_binding_valid" in theorem_names
     assert (
         "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden"
+        in theorem_names
+    )
+    assert "AgadesPQC.ProofObligation.target_invariant_typed" in theorem_names
+    assert "AgadesPQC.ProofObligation.operator_precondition_typed" in theorem_names
+    assert "AgadesPQC.ProofObligation.schema_only_boundary_typed" in theorem_names
+    assert (
+        "AgadesPQC.ProofObligation.family_applicability_boundary_typed"
+        in theorem_names
+    )
+    assert (
+        "AgadesPQC.ProofObligation.estimator_claim_boundary_typed"
         in theorem_names
     )
 
@@ -168,7 +180,7 @@ def test_formal_lean_backend_verify_accepts_committed_artifact() -> None:
         "backend_path": BACKEND_PATH.as_posix(),
         "accepted": True,
         "summary": {
-            "source_modules": 13,
+            "source_modules": 14,
             "theorem_declarations": result["summary"]["theorem_declarations"],
             "ci_lean_build_gate": True,
             "placeholder_failures": 0,

@@ -236,27 +236,27 @@
     },
     "formal_estimator_model": {
       "path": "docs/formal_estimator_model.json",
-      "sha256": "122180b23208b03241111fa4af5767f2534669827661a8aa160d9df584eb5e01"
+      "sha256": "29f152fd77cbb26396747b3c651ec928dac477cc12f34aea73fc89c6cc7a506e"
     },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "b62df1bd13038cf4ebd56471c9b297144dbfc46b51f5158628b882188b9fead7"
+      "sha256": "9b8ed0dde423052561a7be71ed14f94f0fb60b28d2a224af8fdc3d22b508430d"
     },
     "formal_lean_backend": {
       "path": "docs/formal_lean_backend.json",
-      "sha256": "493d35c4c7732ef0d10efb93b397923ac76fee8d6b267b175c8724012500b0b8"
+      "sha256": "7bd1125ecc9edd8bf35a04128c07b602e8966a749c8b4dd75316eafde72ac5b0"
     },
     "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "ab51dd773def1009446242ee4907ddbc767b059c8588d722473734467607ad5f"
+      "sha256": "d13615c6e80c5602b28a54a76be55291bb59797febd17f9a264749eccb50d9db"
     },
     "formal_mlwe_proof_artifact": {
       "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
-      "sha256": "3e10d45f9b279f20b9df2fe9a6c3f7fa586147768dfaed7078ab787e4863c2e8"
+      "sha256": "676b4eb2f2ee241fd58cb5ec21426163e8090d313bb1fe37e67748c400e28c16"
     },
     "formal_obligation_ledger": {
       "path": "docs/formal_obligation_ledger.json",
-      "sha256": "3533770fd769c11474c3e5882e87358eef25d3a7fff592f7ce734a6b9460be85"
+      "sha256": "e05d911038bc22bde964e5006e035133317f711233b913dbd88f54bc571a30bb"
     },
     "formal_operator_semantics": {
       "path": "docs/formal_operator_semantics.json",
@@ -268,7 +268,7 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "c9e86d4c99c553aca5d60a1fcdbbef3fabe932a907ede259185c69446bb8db22"
+      "sha256": "0242e7b5a9df5469c1002aa2be9108167405f1d7e20d1d461f91d77762991a0b"
     },
     "publication_manifest": {
       "path": "docs/publication_manifest.json",
