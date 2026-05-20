@@ -1596,8 +1596,29 @@ def _verify_review_binding(
     if review.get("required_reviewers") != required_reviewers_for_family(family):
         failures.append("Proof artifact required reviewers are incorrect.")
     _verify_review_evidence(review, failures)
+    _verify_reviewed_runtime_estimator_binding(artifact, failures)
     if "not PQC break claims" not in review.get("claim_boundary", ""):
         failures.append("Proof artifact must state the no-overclaim boundary.")
+
+
+def _verify_reviewed_runtime_estimator_binding(
+    artifact: dict[str, Any],
+    failures: list[str],
+) -> None:
+    review = artifact.get("review", {})
+    if not isinstance(review, dict) or review.get("status") == "pending_review":
+        return
+    estimator_model = artifact.get("estimator_model", {})
+    if not isinstance(estimator_model, dict):
+        return
+    if estimator_model.get("status") != "result_binding_required_before_claim":
+        return
+    binding = artifact.get("estimator_result_binding", {})
+    if not isinstance(binding, dict) or binding.get("status") != "attached_unreviewed":
+        failures.append(
+            "Reviewed runtime-estimator proof artifacts require an attached "
+            "estimator result binding."
+        )
 
 
 def _verify_review_evidence(
