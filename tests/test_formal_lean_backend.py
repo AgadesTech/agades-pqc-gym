@@ -94,13 +94,14 @@ def test_formal_lean_backend_manifest_binds_sources_and_ci(
         "contains_admit": False,
         "contains_axiom": False,
     }
-    assert manifest["summary"]["source_modules"] == 12
+    assert manifest["summary"]["source_modules"] == 13
     assert manifest["summary"]["theorem_declarations"] >= 20
     assert manifest["summary"]["ci_lean_build_gate"] is True
     assert manifest["summary"]["placeholder_failures"] == 0
 
     source_paths = {source["path"] for source in manifest["lean_sources"]}
     assert "formal/lean/AgadesPQC.lean" in source_paths
+    assert "formal/lean/AgadesPQC/EstimatorModel.lean" in source_paths
     assert "formal/lean/AgadesPQC/Evaluator.lean" in source_paths
     assert "formal/lean/AgadesPQC/OperatorSemantics.lean" in source_paths
     for source in manifest["lean_sources"]:
@@ -114,6 +115,12 @@ def test_formal_lean_backend_manifest_binds_sources_and_ci(
         for theorem in source["theorems"]
     }
     assert "AgadesPQC.Evaluator.no_security_claim" in theorem_names
+    assert "AgadesPQC.EstimatorModel.operator_compatibility_declared" in theorem_names
+    assert (
+        "AgadesPQC.EstimatorModel.result_binding_required_before_claim"
+        in theorem_names
+    )
+    assert "AgadesPQC.EstimatorModel.schema_only_no_estimator" in theorem_names
     assert "AgadesPQC.Lattice.Target.parameters_positive" in theorem_names
     assert "AgadesPQC.OperatorSemantics.required_parameter_bound" in theorem_names
     assert "AgadesPQC.OperatorSemantics.family_binding_valid" in theorem_names
@@ -161,7 +168,7 @@ def test_formal_lean_backend_verify_accepts_committed_artifact() -> None:
         "backend_path": BACKEND_PATH.as_posix(),
         "accepted": True,
         "summary": {
-            "source_modules": 12,
+            "source_modules": 13,
             "theorem_declarations": result["summary"]["theorem_declarations"],
             "ci_lean_build_gate": True,
             "placeholder_failures": 0,
