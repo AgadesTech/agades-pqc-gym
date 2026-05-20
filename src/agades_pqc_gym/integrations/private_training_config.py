@@ -67,6 +67,7 @@ LINKED_ARTIFACT_PATHS = {
     "prime_eval_config_manifest": "docs/prime_eval_config_manifest.json",
     "prime_eval_template": "prime_intellect/evals/agades_pqc_eval.template.toml",
     "pedagogical_rl_method": "docs/pedagogical_rl_method.json",
+    "formal_obligation_ledger": "docs/formal_obligation_ledger.json",
     "formal_lwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
         TargetFamily.LWE.value
     ],
@@ -250,6 +251,7 @@ def build_private_training_manifest(
             "reward_terms": list(REWARD_TERMS),
             "requires_reviewer_quality_signal": True,
             "requires_no_security_overclaim": True,
+            "formal_obligation_ledger_path": "docs/formal_obligation_ledger.json",
         },
         "datasets": {
             "sources": list(PRIVATE_DATASET_SOURCES),

@@ -110,6 +110,9 @@ def test_pedagogical_rl_method_defines_agades_teacher_student_pipeline(
     assert payload["linked_artifacts"]["rl_pedagogy_runtime"]["path"] == (
         "src/agades_pqc_gym/rl/pedagogy.py"
     )
+    assert payload["linked_artifacts"]["formal_obligation_ledger"]["path"] == (
+        "docs/formal_obligation_ledger.json"
+    )
 
 
 def test_committed_pedagogical_rl_method_is_in_sync(tmp_path: Path) -> None:
@@ -130,7 +133,7 @@ def test_pedagogical_rl_method_verify_accepts_committed_artifact() -> None:
         "summary": {
             "stages": 4,
             "reward_terms": 8,
-            "linked_artifacts": 9,
+            "linked_artifacts": 10,
             "failure_count": 0,
         },
         "failures": [],

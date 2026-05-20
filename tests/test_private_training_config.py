@@ -93,6 +93,7 @@ def test_private_training_manifest_defines_prime_rl_qwen_and_dataset_controls(
         ],
         "requires_reviewer_quality_signal": True,
         "requires_no_security_overclaim": True,
+        "formal_obligation_ledger_path": "docs/formal_obligation_ledger.json",
     }
     assert payload["datasets"]["sources"] == [
         "facebookresearch/LWE-benchmarking",
@@ -123,6 +124,9 @@ def test_private_training_manifest_defines_prime_rl_qwen_and_dataset_controls(
     )
     assert payload["linked_artifacts"]["pedagogical_rl_method"]["path"] == (
         "docs/pedagogical_rl_method.json"
+    )
+    assert payload["linked_artifacts"]["formal_obligation_ledger"]["path"] == (
+        "docs/formal_obligation_ledger.json"
     )
     assert payload["linked_artifacts"]["rl_pedagogy_runtime"]["path"] == (
         "src/agades_pqc_gym/rl/pedagogy.py"
@@ -215,7 +219,7 @@ def test_private_training_config_verify_accepts_committed_artifacts() -> None:
             "dataset_sources": 3,
             "dataset_controls": 5,
             "reward_terms": 8,
-            "linked_artifacts": 11,
+            "linked_artifacts": 12,
             "failure_count": 0,
         },
         "failures": [],

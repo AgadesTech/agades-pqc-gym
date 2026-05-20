@@ -56,6 +56,7 @@ LINKED_ARTIFACT_PATHS = {
     "prime_rl_training_template": "prime_intellect/training/"
     "private_qwen_prime_rl.template.toml",
     "pedagogical_rl_method": "docs/pedagogical_rl_method.json",
+    "formal_obligation_ledger": "docs/formal_obligation_ledger.json",
     "formal_estimator_model": "docs/formal_estimator_model.json",
     "formal_family_coverage": "docs/formal_family_coverage.json",
     "formal_operator_semantics": "docs/formal_operator_semantics.json",
@@ -168,6 +169,7 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
             "not_a_task": "claiming practical PQC breaks without formal/domain review",
             "human_review_required_before_claim": True,
             "formal_obligations_required_before_claim": True,
+            "formal_obligation_ledger_path": "docs/formal_obligation_ledger.json",
         },
         "evolution_loops": {
             "public_toy_eval": {
@@ -200,6 +202,8 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
             f"{MVP_VERTICAL_PROOF_ARTIFACT_PATHS[TargetFamily.LWE.value]}",
             "uv run agades-pqc formal-proof-artifact-verify --artifact "
             f"{MVP_VERTICAL_PROOF_ARTIFACT_PATHS[TargetFamily.MLWE.value]}",
+            "uv run agades-pqc formal-obligation-ledger-verify --ledger "
+            "docs/formal_obligation_ledger.json",
             "uv run agades-pqc reviewer-governance-verify --governance "
             "docs/reviewer_governance.json",
         ],
@@ -415,6 +419,10 @@ def _verify_claim_boundary(contract: dict[str, Any], failures: list[str]) -> Non
         failures.append("RL claims must require human review.")
     if claim_boundary.get("formal_obligations_required_before_claim") is not True:
         failures.append("RL claims must require formal obligations.")
+    if claim_boundary.get("formal_obligation_ledger_path") != (
+        "docs/formal_obligation_ledger.json"
+    ):
+        failures.append("RL contract must bind the formal obligation ledger.")
     if "PQC breaks" not in claim_boundary.get("not_a_task", ""):
         failures.append("RL contract must forbid unreviewed PQC break claims.")
 
