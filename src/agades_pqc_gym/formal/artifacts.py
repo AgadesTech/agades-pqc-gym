@@ -92,6 +92,15 @@ LEAN_THEOREM_SOURCES = {
     "AgadesPQC.Lattice.PrimalUSVP.beta_valid_range": (
         "formal/lean/AgadesPQC/Lattice/PrimalUSVP.lean"
     ),
+    "AgadesPQC.EstimatorModel.operator_compatibility_declared": (
+        "formal/lean/AgadesPQC/EstimatorModel.lean"
+    ),
+    "AgadesPQC.EstimatorModel.result_binding_required_before_claim": (
+        "formal/lean/AgadesPQC/EstimatorModel.lean"
+    ),
+    "AgadesPQC.EstimatorModel.schema_only_no_estimator": (
+        "formal/lean/AgadesPQC/EstimatorModel.lean"
+    ),
     "AgadesPQC.OperatorSemantics.required_parameter_bound": (
         "formal/lean/AgadesPQC/OperatorSemantics.lean"
     ),
