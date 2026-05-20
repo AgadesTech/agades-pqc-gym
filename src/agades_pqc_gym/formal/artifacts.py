@@ -1595,7 +1595,7 @@ def _verify_review_binding(
         return
     if review.get("required_reviewers") != required_reviewers_for_family(family):
         failures.append("Proof artifact required reviewers are incorrect.")
-    _verify_review_evidence(review, failures)
+    _verify_review_evidence(artifact, review, failures)
     _verify_reviewed_runtime_estimator_binding(artifact, failures)
     if "not PQC break claims" not in review.get("claim_boundary", ""):
         failures.append("Proof artifact must state the no-overclaim boundary.")
@@ -1622,6 +1622,7 @@ def _verify_reviewed_runtime_estimator_binding(
 
 
 def _verify_review_evidence(
+    artifact: dict[str, Any],
     review: dict[str, Any],
     failures: list[str],
 ) -> None:
@@ -1638,6 +1639,8 @@ def _verify_review_evidence(
             "evidence covering all required reviewers."
         )
         return
+    if evidence.get("schema_version") != REVIEW_EVIDENCE_SCHEMA:
+        failures.append("Attached proof artifact review evidence schema mismatch.")
     required_reviewers = review.get("required_reviewers", [])
     covered_roles = evidence.get("covered_reviewer_roles", [])
     if sorted(covered_roles) != sorted(required_reviewers):
@@ -1645,3 +1648,53 @@ def _verify_review_evidence(
             "Attached proof artifact review evidence must cover all required "
             "reviewer roles."
         )
+    if evidence.get("claim_allowed") is not False:
+        failures.append(
+            "Attached proof artifact review evidence must not allow security claims."
+        )
+    if evidence.get("artifact_binding") != _review_artifact_binding(artifact):
+        failures.append(
+            "Attached proof artifact review evidence binding does not match the "
+            "artifact."
+        )
+    if evidence.get("evidence_sha256") != _review_evidence_sha256(evidence):
+        failures.append("Attached proof artifact review evidence hash mismatch.")
+
+
+def _review_artifact_binding(artifact: dict[str, Any]) -> dict[str, Any]:
+    attack_plan = artifact.get("attack_plan", {})
+    if not isinstance(attack_plan, dict):
+        attack_plan = {}
+    estimator_binding = artifact.get("estimator_result_binding", {})
+    if not isinstance(estimator_binding, dict):
+        estimator_binding = {}
+    proof_obligations = artifact.get("proof_obligations", [])
+    if not isinstance(proof_obligations, list):
+        proof_obligations = []
+    review = artifact.get("review", {})
+    if not isinstance(review, dict):
+        review = {}
+    return {
+        "attack_plan_id": attack_plan.get("id"),
+        "attack_plan_canonical_sha256": attack_plan.get("canonical_sha256"),
+        "family": artifact.get("family"),
+        "estimator_result_binding_status": estimator_binding.get("status"),
+        "review_status": review.get("status"),
+        "required_reviewers": review.get("required_reviewers"),
+        "proof_obligation_sha256": [
+            obligation.get("obligation_sha256")
+            for obligation in proof_obligations
+            if isinstance(obligation, dict)
+        ],
+        "claim_boundary": review.get("claim_boundary"),
+    }
+
+
+def _review_evidence_sha256(evidence: dict[str, Any]) -> str:
+    return stable_sha256(
+        {
+            key: value
+            for key, value in evidence.items()
+            if key != "evidence_sha256"
+        }
+    )
