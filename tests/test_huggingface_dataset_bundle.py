@@ -62,7 +62,7 @@ def test_huggingface_dataset_bundle_contains_public_examples_and_outputs(
     assert info["attack_plan_count"] == 80
     assert info["valid_attack_plan_count"] == 79
     assert info["invalid_attack_plan_count"] == 1
-    assert info["rl_rollout_count"] == 2
+    assert info["rl_rollout_count"] == 9
     assert info["task_metadata_count"] == 79
     assert info["prime_task_eligible_count"] == 79
     assert info["task_metadata_summary"] == EXPECTED_TASK_METADATA_SUMMARY
@@ -1013,7 +1013,7 @@ def test_hf_dataset_verify_accepts_committed_bundle() -> None:
             "prime_task_eligible_count": 79,
             "public_run_bundle_count": 18,
             "release_gate_count": 7,
-            "rl_rollout_rows": 2,
+            "rl_rollout_rows": 9,
             "security_claim": False,
             "task_metadata_rows": 79,
             "task_metadata_rows_match_attack_plans": True,

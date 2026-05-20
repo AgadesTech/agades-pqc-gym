@@ -8,9 +8,11 @@ from typing import Any
 from pydantic import ValidationError
 
 from agades_pqc_gym.core.attack_plan import AttackPlan
+from agades_pqc_gym.core.target import TargetFamily
 from agades_pqc_gym.formal.artifacts import (
     build_attack_plan_proof_artifact_from_json,
 )
+from agades_pqc_gym.formal.family_coverage import REPRESENTATIVE_ATTACK_PLANS
 from agades_pqc_gym.integrations.task_metadata import (
     attack_plan_matches_task_metadata,
     normalize_task_metadata,
@@ -34,8 +36,7 @@ REWARD_TERMS = (
     "proof_obligation_coverage",
 )
 DEFAULT_ROLLOUT_PLANS = [
-    Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
-    Path("examples/attack_plans/code_based_prange_toy.json"),
+    REPRESENTATIVE_ATTACK_PLANS[family] for family in TargetFamily
 ]
 
 
@@ -458,6 +459,7 @@ def _rollout_trace(
         "schema_version": ROLLOUT_TRACE_SCHEMA,
         "task": task,
         "candidate": candidate,
+        "formal_artifact_binding": _formal_artifact_binding(candidate_json),
         "reward_report": reward_report,
         "public_release_ok": True,
         "private_fields_present": False,
@@ -482,6 +484,66 @@ def _candidate_summary(candidate_json: str) -> dict[str, Any]:
         "attack_plan_id": plan.attack_plan_id,
         "target_family": plan.target.family.value,
         "sha256": sha256,
+    }
+
+
+def _formal_artifact_binding(candidate_json: str) -> dict[str, Any]:
+    schema = "agades.pqc.rl.formal_artifact_binding.v1"
+    try:
+        artifact = build_attack_plan_proof_artifact_from_json(
+            candidate_json,
+            source_label="<rl-candidate>",
+        )
+    except (json.JSONDecodeError, ValidationError, ValueError):
+        return {
+            "schema_version": schema,
+            "status": "unavailable",
+            "attack_plan_id": None,
+            "family": None,
+            "artifact_sha256": None,
+            "family_invariant_ids": [],
+            "proof_obligation_ids": [],
+            "proof_obligation_sha256": [],
+            "proof_obligation_type_rule_sha256": [],
+            "review_status": None,
+            "required_reviewers": [],
+            "claim_allowed": False,
+            "claim_boundary": (
+                "formal artifact unavailable for invalid candidate; no claim "
+                "is allowed"
+            ),
+            "error_code": "formal_artifact_unavailable",
+        }
+
+    proof_obligations = artifact["proof_obligations"]
+    type_rules = artifact["proof_obligation_type_rules"]
+    review = artifact["review"]
+    return {
+        "schema_version": schema,
+        "status": "attached",
+        "attack_plan_id": artifact["attack_plan"]["id"],
+        "attack_plan_canonical_sha256": artifact["attack_plan"][
+            "canonical_sha256"
+        ],
+        "family": artifact["family"],
+        "artifact_sha256": artifact["artifact_sha256"],
+        "family_invariant_ids": [
+            invariant["invariant_id"]
+            for invariant in artifact["family_invariants"]
+        ],
+        "proof_obligation_ids": [
+            obligation["obligation_id"] for obligation in proof_obligations
+        ],
+        "proof_obligation_sha256": [
+            obligation["obligation_sha256"] for obligation in proof_obligations
+        ],
+        "proof_obligation_type_rule_sha256": [
+            rule["type_rule_sha256"] for rule in type_rules
+        ],
+        "review_status": review["status"],
+        "required_reviewers": review["required_reviewers"],
+        "claim_allowed": False,
+        "claim_boundary": review["claim_boundary"],
     }
 
 
