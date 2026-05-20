@@ -33,6 +33,8 @@ def test_formal_operator_semantics_covers_all_attackplan_operators(
         "non_lattice_operators": 12,
         "required_param_fields": 25,
         "attackplan_family_bindings": 60,
+        "applicability_validator_bindings": 60,
+        "schema_only_family_bindings": 24,
         "security_claim_allowed_without_review": 0,
     }
     assert {entry["operator"] for entry in semantics["operators"]} == set(
@@ -45,6 +47,56 @@ def test_formal_operator_semantics_covers_all_attackplan_operators(
         "required_params": {"beta": "int"},
         "formal_rules": semantics["operators"][0]["formal_rules"],
         "attackplan_families": ["LWE", "MLWE", "NTRU", "SIS"],
+        "family_bindings": [
+            {
+                "family": "LWE",
+                "plugin": "lattice",
+                "support_level": "implemented",
+                "applicability_validator": (
+                    "agades_pqc_gym.families.lattice.validators."
+                    "validate_lattice_plan"
+                ),
+                "catalog_operator_entry_count": 1,
+                "catalog_support_statuses": ["implemented_mvp"],
+                "schema_only": False,
+            },
+            {
+                "family": "MLWE",
+                "plugin": "lattice",
+                "support_level": "implemented",
+                "applicability_validator": (
+                    "agades_pqc_gym.families.lattice.validators."
+                    "validate_lattice_plan"
+                ),
+                "catalog_operator_entry_count": 0,
+                "catalog_support_statuses": [],
+                "schema_only": False,
+            },
+            {
+                "family": "NTRU",
+                "plugin": "lattice",
+                "support_level": "schema_only",
+                "applicability_validator": (
+                    "agades_pqc_gym.families.lattice.validators."
+                    "validate_lattice_plan"
+                ),
+                "catalog_operator_entry_count": 0,
+                "catalog_support_statuses": [],
+                "schema_only": True,
+            },
+            {
+                "family": "SIS",
+                "plugin": "lattice",
+                "support_level": "schema_only",
+                "applicability_validator": (
+                    "agades_pqc_gym.families.lattice.validators."
+                    "validate_lattice_plan"
+                ),
+                "catalog_operator_entry_count": 0,
+                "catalog_support_statuses": [],
+                "schema_only": True,
+            },
+        ],
         "runtime_claim_boundary": (
             "operator semantics define AttackPlan applicability and routing, "
             "not cryptographic break evidence"
@@ -180,6 +232,25 @@ def test_formal_operator_semantics_rejects_param_schema_drift(
     assert result["accepted"] is False
     assert (
         "Formal operator semantics parameter schemas are not in sync."
+        in result["failures"]
+    )
+
+
+def test_formal_operator_semantics_rejects_family_binding_drift(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "formal_operator_semantics.json"
+    semantics = build_formal_operator_semantics()
+    semantics["operators"][0]["family_bindings"][0]["applicability_validator"] = (
+        "agades_pqc_gym.families.fake.validators.validate_fake_plan"
+    )
+    path.write_text(json.dumps(semantics, indent=2, sort_keys=True) + "\n")
+
+    result = verify_formal_operator_semantics(path)
+
+    assert result["accepted"] is False
+    assert (
+        "Formal operator semantics family validator bindings are not in sync."
         in result["failures"]
     )
 

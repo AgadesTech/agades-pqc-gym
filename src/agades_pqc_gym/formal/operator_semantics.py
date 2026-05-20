@@ -17,6 +17,9 @@ from agades_pqc_gym.formal.artifacts import (
     LEAN_THEOREM_SOURCES,
     OPERATOR_SEMANTICS,
 )
+from agades_pqc_gym.integrations.family_operator_catalog import (
+    build_family_operator_catalog,
+)
 from agades_pqc_gym.utils.hashing import stable_sha256
 
 FORMAL_OPERATOR_SEMANTICS_SCHEMA = "agades.pqc.formal.operator_semantics.v1"
@@ -72,8 +75,13 @@ FORMAL_RULE_SPECS = (
 
 def build_formal_operator_semantics(root: Path | None = None) -> dict[str, Any]:
     project_root = (root or ROOT).resolve()
+    family_catalog = build_family_operator_catalog(root=project_root)
     operators = [
-        _operator_entry(operator, root=project_root)
+        _operator_entry(
+            operator,
+            root=project_root,
+            family_catalog=family_catalog,
+        )
         for operator in OPERATOR_SEMANTICS
     ]
     semantics = {
@@ -170,7 +178,13 @@ def operator_semantics_entry(operator_type: str) -> dict[str, str]:
     }
 
 
-def _operator_entry(operator_type: str, *, root: Path = ROOT) -> dict[str, Any]:
+def _operator_entry(
+    operator_type: str,
+    *,
+    root: Path = ROOT,
+    family_catalog: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    catalog = family_catalog or build_family_operator_catalog(root=root)
     entry = {
         **operator_semantics_entry(operator_type),
         "required_params": operator_required_param_schema(operator_type),
@@ -180,6 +194,7 @@ def _operator_entry(operator_type: str, *, root: Path = ROOT) -> dict[str, Any]:
             for family in TargetFamily
             if operator_type in supported_operators_for_family(family)
         ],
+        "family_bindings": _family_bindings(operator_type, catalog),
         "runtime_claim_boundary": RUNTIME_CLAIM_BOUNDARY,
         "claim_policy": dict(CLAIM_POLICY),
     }
@@ -197,15 +212,27 @@ def _summary(operators: list[dict[str, Any]]) -> dict[str, Any]:
             1 for entry in operators if entry["operator"] not in LATTICE_OPERATORS
         ),
         "required_param_fields": sum(
-            len(entry["required_params"]) for entry in operators
+            len(_dict_or_empty(entry.get("required_params"))) for entry in operators
         ),
         "attackplan_family_bindings": sum(
-            len(entry["attackplan_families"]) for entry in operators
+            len(_list_or_empty(entry.get("attackplan_families")))
+            for entry in operators
+        ),
+        "applicability_validator_bindings": sum(
+            len(_list_or_empty(entry.get("family_bindings"))) for entry in operators
+        ),
+        "schema_only_family_bindings": sum(
+            1
+            for entry in operators
+            for binding in _list_or_empty(entry.get("family_bindings"))
+            if isinstance(binding, dict) and binding.get("schema_only") is True
         ),
         "security_claim_allowed_without_review": sum(
             1
             for entry in operators
-            if entry["claim_policy"]["security_claim_allowed_without_review"]
+            if _dict_or_empty(entry.get("claim_policy")).get(
+                "security_claim_allowed_without_review"
+            )
         ),
     }
 
@@ -284,6 +311,10 @@ def _verify_operator_entry(
         failures.append("Formal operator semantics formal rules are not in sync.")
     if entry.get("attackplan_families") != expected["attackplan_families"]:
         failures.append("Formal operator semantics family bindings are not in sync.")
+    if entry.get("family_bindings") != expected["family_bindings"]:
+        failures.append(
+            "Formal operator semantics family validator bindings are not in sync."
+        )
     if entry.get("runtime_claim_boundary") != RUNTIME_CLAIM_BOUNDARY:
         failures.append("Formal operator semantics claim boundary is incorrect.")
     claim_policy = _dict_or_empty(entry.get("claim_policy"))
@@ -374,6 +405,52 @@ def _formal_rules(root: Path) -> list[dict[str, Any]]:
             }
         )
     return rules
+
+
+def _family_bindings(
+    operator_type: str,
+    family_catalog: dict[str, Any],
+) -> list[dict[str, Any]]:
+    catalog_entries = {
+        entry["family"]: entry
+        for entry in _list_or_empty(family_catalog.get("families"))
+        if isinstance(entry, dict) and isinstance(entry.get("family"), str)
+    }
+    bindings: list[dict[str, Any]] = []
+    for family in TargetFamily:
+        if operator_type not in supported_operators_for_family(family):
+            continue
+        catalog_entry = catalog_entries[family.value]
+        operators = [
+            operator
+            for operator in _list_or_empty(catalog_entry.get("operators"))
+            if (
+                isinstance(operator, dict)
+                and operator.get("operator_type") == operator_type
+            )
+        ]
+        support_statuses = sorted(
+            {
+                status
+                for operator in operators
+                if isinstance(status := operator.get("support_status"), str)
+            }
+        )
+        support_level = catalog_entry["support_level"]
+        bindings.append(
+            {
+                "family": family.value,
+                "plugin": catalog_entry["plugin"],
+                "support_level": support_level,
+                "applicability_validator": catalog_entry[
+                    "applicability_validator"
+                ],
+                "catalog_operator_entry_count": len(operators),
+                "catalog_support_statuses": support_statuses,
+                "schema_only": support_level == "schema_only",
+            }
+        )
+    return bindings
 
 
 def _read_json_object(
