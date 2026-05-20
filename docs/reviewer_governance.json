@@ -236,31 +236,31 @@
     },
     "formal_estimator_model": {
       "path": "docs/formal_estimator_model.json",
-      "sha256": "66750e612cdbd3f86cc75a544826b847de6fb07893d853e66dc59f7a66a7fe21"
+      "sha256": "71fd50f7bc4651d2b4ff80cf5f7a8f46c8ce513e8ad9e875ae6b391d207408c2"
     },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "e70f69d481a5d212e0105d0fba430db7cea9a7c2ba1d48130b6c947756e9a6fc"
+      "sha256": "244aece8209436e7113279d8d63b9266b8f2e7502852e0adfb2ecced15e11333"
     },
     "formal_lean_backend": {
       "path": "docs/formal_lean_backend.json",
-      "sha256": "7bd1125ecc9edd8bf35a04128c07b602e8966a749c8b4dd75316eafde72ac5b0"
+      "sha256": "e06c1d1107a57abb6203f8343e7135f2e9931a2ff7affbd2738b1bc6025ea8aa"
     },
     "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "d13615c6e80c5602b28a54a76be55291bb59797febd17f9a264749eccb50d9db"
+      "sha256": "fc87c4ccd8afcc308bd847020dfdc44a2ddd42398febeb21f30451e61d9ae004"
     },
     "formal_mlwe_proof_artifact": {
       "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
-      "sha256": "676b4eb2f2ee241fd58cb5ec21426163e8090d313bb1fe37e67748c400e28c16"
+      "sha256": "8ae91212c526a1e77b86f6d28dd1a90631d6186a30e589135a269cb7c642a0dd"
     },
     "formal_obligation_ledger": {
       "path": "docs/formal_obligation_ledger.json",
-      "sha256": "0c2ea27b942fffe106d8d32fe132cfe5dcdb8df715453e0abc4845160996bc13"
+      "sha256": "4599de5b004e29f8122237b7f726e3a725e1fd1685039b23717e6ed0da4e4185"
     },
     "formal_operator_semantics": {
       "path": "docs/formal_operator_semantics.json",
-      "sha256": "55eaa380733195a754e47136267ddcb2a41f58528a2d162633f0318d3e6be810"
+      "sha256": "9fa0bc4ee4cd2f5229d9352a2e9e490df323819bbfea5c6cf446a34fab2d231c"
     },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
@@ -268,7 +268,7 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "9bc67f0a6663be07194dff4787ba2c4b9a2b767f744cc39a0c0eddbbb0bb1182"
+      "sha256": "c6b5becc0d7fb6a84fec1305ff14228fb861d501f0cabc54d82978caa2f3d859"
     },
     "publication_manifest": {
       "path": "docs/publication_manifest.json",

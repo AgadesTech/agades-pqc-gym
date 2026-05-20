@@ -126,6 +126,10 @@ def test_formal_lean_backend_manifest_binds_sources_and_ci(
     assert "AgadesPQC.OperatorSemantics.required_parameter_bound" in theorem_names
     assert "AgadesPQC.OperatorSemantics.family_binding_valid" in theorem_names
     assert (
+        "AgadesPQC.OperatorSemantics.family_validator_binding_valid"
+        in theorem_names
+    )
+    assert (
         "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden"
         in theorem_names
     )

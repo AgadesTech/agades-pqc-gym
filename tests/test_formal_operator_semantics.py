@@ -133,6 +133,20 @@ def test_formal_operator_semantics_covers_all_attackplan_operators(
             ],
         },
         {
+            "rule_id": "operator.family_validator_binding_valid",
+            "statement": (
+                "Every AttackPlan family route declared by the operator "
+                "semantics must be bound to the corresponding runtime family "
+                "applicability validator."
+            ),
+            "lean_theorem": (
+                "AgadesPQC.OperatorSemantics.family_validator_binding_valid"
+            ),
+            "lean_source": semantics["operators"][0]["formal_rules"][2][
+                "lean_source"
+            ],
+        },
+        {
             "rule_id": "operator.unreviewed_security_claim_forbidden",
             "statement": (
                 "Unreviewed operator semantics may support applicability and "
@@ -142,7 +156,7 @@ def test_formal_operator_semantics_covers_all_attackplan_operators(
             "lean_theorem": (
                 "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden"
             ),
-            "lean_source": semantics["operators"][0]["formal_rules"][2][
+            "lean_source": semantics["operators"][0]["formal_rules"][3][
                 "lean_source"
             ],
         },
