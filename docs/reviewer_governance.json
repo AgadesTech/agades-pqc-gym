@@ -308,13 +308,35 @@
     "uv run agades-pqc reviewer-governance-verify --governance docs/reviewer_governance.json"
   ],
   "review_artifact_format": {
+    "attached_evidence_contract": {
+      "artifact_binding_fields": [
+        "attack_plan_id",
+        "attack_plan_canonical_sha256",
+        "family",
+        "estimator_result_binding_status",
+        "review_status",
+        "required_reviewers",
+        "proof_obligation_sha256",
+        "claim_boundary"
+      ],
+      "claim_allowed": false,
+      "hash": "stable_sha256_without_evidence_sha256",
+      "schema_version": "agades.pqc.formal.review_evidence.v1",
+      "status": "attached"
+    },
     "required_fields": [
       "artifact_path",
       "artifact_sha256",
       "target_family",
       "review.status",
       "review.required_reviewers",
-      "review.claim_boundary"
+      "review.claim_boundary",
+      "review.evidence.schema_version",
+      "review.evidence.status",
+      "review.evidence.covered_reviewer_roles",
+      "review.evidence.claim_allowed",
+      "review.evidence.artifact_binding",
+      "review.evidence.evidence_sha256"
     ],
     "schema_version": "agades.pqc.review_artifact.v1",
     "status_before_domain_claim": "reviewed",

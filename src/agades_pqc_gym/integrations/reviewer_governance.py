@@ -6,7 +6,10 @@ from pathlib import Path
 from typing import Any
 
 from agades_pqc_gym.core.target import TargetFamily
-from agades_pqc_gym.formal.artifacts import MVP_VERTICAL_PROOF_ARTIFACT_PATHS
+from agades_pqc_gym.formal.artifacts import (
+    MVP_VERTICAL_PROOF_ARTIFACT_PATHS,
+    REVIEW_EVIDENCE_SCHEMA,
+)
 from agades_pqc_gym.formal.review import (
     FAMILY_REVIEWER_ROLE_IDS,
     REVIEW_STATUSES,
@@ -58,6 +61,30 @@ FAMILY_REVIEW_COMPETENCIES = {
         "no conformance or production-security claim boundary",
     ],
 }
+REVIEW_ARTIFACT_REQUIRED_FIELDS = [
+    "artifact_path",
+    "artifact_sha256",
+    "target_family",
+    "review.status",
+    "review.required_reviewers",
+    "review.claim_boundary",
+    "review.evidence.schema_version",
+    "review.evidence.status",
+    "review.evidence.covered_reviewer_roles",
+    "review.evidence.claim_allowed",
+    "review.evidence.artifact_binding",
+    "review.evidence.evidence_sha256",
+]
+ATTACHED_REVIEW_EVIDENCE_BINDING_FIELDS = [
+    "attack_plan_id",
+    "attack_plan_canonical_sha256",
+    "family",
+    "estimator_result_binding_status",
+    "review_status",
+    "required_reviewers",
+    "proof_obligation_sha256",
+    "claim_boundary",
+]
 LINKED_ARTIFACT_PATHS = {
     "formal_estimator_model": "docs/formal_estimator_model.json",
     "formal_family_coverage": "docs/formal_family_coverage.json",
@@ -128,21 +155,7 @@ def build_reviewer_governance(root: Path | None = None) -> dict[str, Any]:
             },
         },
         "approval_gates": _approval_gates(),
-        "review_artifact_format": {
-            "schema_version": "agades.pqc.review_artifact.v1",
-            "status_field": "review.status",
-            "supported_statuses": list(REVIEW_STATUSES),
-            "required_fields": [
-                "artifact_path",
-                "artifact_sha256",
-                "target_family",
-                "review.status",
-                "review.required_reviewers",
-                "review.claim_boundary",
-            ],
-            "status_before_domain_claim": "reviewed",
-            "unassigned_role_status": "role_required_unassigned",
-        },
+        "review_artifact_format": _review_artifact_format(),
         "formal_artifact_binding": {
             "formal_estimator_model_path": "docs/formal_estimator_model.json",
             "formal_family_coverage_path": "docs/formal_family_coverage.json",
@@ -223,6 +236,7 @@ def verify_reviewer_governance(
         _verify_family_reviewers(governance, failures)
         _verify_formal_backend_policy(governance, failures)
         _verify_approval_gates(governance, failures)
+        _verify_review_artifact_format(governance, failures)
         _verify_private_training_review(governance, failures)
         _verify_formal_artifact_binding(governance, project_root, failures)
         _verify_linked_artifacts(governance, expected, project_root, failures)
@@ -286,6 +300,26 @@ def _approval_gates() -> dict[str, dict[str, Any]]:
             "requires_human_review_before_claim": True,
             "security_claim_allowed_without_review": False,
         },
+    }
+
+
+def _review_artifact_format() -> dict[str, Any]:
+    return {
+        "schema_version": "agades.pqc.review_artifact.v1",
+        "status_field": "review.status",
+        "supported_statuses": list(REVIEW_STATUSES),
+        "required_fields": list(REVIEW_ARTIFACT_REQUIRED_FIELDS),
+        "attached_evidence_contract": {
+            "schema_version": REVIEW_EVIDENCE_SCHEMA,
+            "status": "attached",
+            "claim_allowed": False,
+            "hash": "stable_sha256_without_evidence_sha256",
+            "artifact_binding_fields": list(
+                ATTACHED_REVIEW_EVIDENCE_BINDING_FIELDS
+            ),
+        },
+        "status_before_domain_claim": "reviewed",
+        "unassigned_role_status": "role_required_unassigned",
     }
 
 
@@ -424,6 +458,14 @@ def _verify_approval_gates(
             continue
         if gate.get("security_claim_allowed_without_review") is not False:
             failures.append(f"Approval gate allows unreviewed claims: {gate_id}.")
+
+
+def _verify_review_artifact_format(
+    governance: dict[str, Any],
+    failures: list[str],
+) -> None:
+    if governance.get("review_artifact_format") != _review_artifact_format():
+        failures.append("Reviewer governance review artifact format is incorrect.")
 
 
 def _verify_private_training_review(
