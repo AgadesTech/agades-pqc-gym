@@ -232,7 +232,7 @@
   "linked_artifacts": {
     "external_publication_review_packet": {
       "path": "docs/external_publication_review_packet.json",
-      "sha256": "932c4610a671342afe96bc22757590924a7aa19d94edce054ff1585e9b804799"
+      "sha256": "f1799b42e8617ffacf7e4c5e26b4a9c8186b5c20d502f1363c3aa501ab6139ff"
     },
     "formal_estimator_model": {
       "path": "docs/formal_estimator_model.json",
@@ -272,7 +272,7 @@
     },
     "publication_manifest": {
       "path": "docs/publication_manifest.json",
-      "sha256": "8b9e81090eec45936f75469e1aeab0e63574b3cb48d56d33ecab8f7b5b176f3b"
+      "sha256": "7d2cda82ca59a8e4504d9c4ad37793ae7c494a265900bc8a2b80f0739d9ed599"
     },
     "release_audit": {
       "path": "public/release_audit.json",
