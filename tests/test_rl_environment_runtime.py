@@ -3,10 +3,14 @@ from __future__ import annotations
 import json
 import math
 from pathlib import Path
+from typing import Any
 
+import pytest
 from typer.testing import CliRunner
 
+import agades_pqc_gym.rl.environment as rl_environment
 from agades_pqc_gym.cli import app
+from agades_pqc_gym.formal.artifacts import build_attack_plan_proof_artifact_from_json
 from agades_pqc_gym.rl.environment import (
     RL_REWARD_REPORT_SCHEMA,
     ROLLOUT_TRACE_SCHEMA,
@@ -48,7 +52,104 @@ def test_pedagogical_reward_scores_all_terms_for_matching_seed() -> None:
         "requires_human_review_before_claim": True,
     }
     assert report["formal_summary"]["proof_obligations"] == 4
+    assert report["formal_summary"]["typed_proof_obligations"] == 4
+    assert report["formal_summary"]["proof_obligation_type_rules"] == 5
+    assert report["formal_summary"]["type_rule_kinds"] == [
+        "estimator_claim_boundary",
+        "family_applicability_boundary",
+        "operator_precondition",
+        "schema_only_boundary",
+        "target_invariant",
+    ]
     assert report["formal_summary"]["family_invariants"] == 2
+
+
+def test_pedagogical_reward_blocks_untyped_formal_obligations(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task_info = _task_info(LATTICE_PLAN)
+
+    def build_untyped_artifact(
+        raw_json: str,
+        *,
+        source_label: str,
+        estimator_result_path: Path | None = None,
+        review_status: str = "pending_review",
+        root: Path | None = None,
+    ) -> dict[str, Any]:
+        artifact = build_attack_plan_proof_artifact_from_json(
+            raw_json,
+            source_label=source_label,
+            estimator_result_path=estimator_result_path,
+            review_status=review_status,
+            root=root,
+        )
+        artifact["proof_obligations"][0].pop("type_rule")
+        return artifact
+
+    monkeypatch.setattr(
+        rl_environment,
+        "build_attack_plan_proof_artifact_from_json",
+        build_untyped_artifact,
+    )
+
+    report = score_attack_plan_candidate(
+        LATTICE_PLAN.read_text(encoding="utf-8"),
+        task_info=task_info,
+        require_task_match=True,
+    )
+
+    assert report["reward"] == 0.0
+    assert report["accepted"] is False
+    assert report["blocked"] is True
+    assert report["terms"]["proof_obligation_coverage"] == 0.0
+    assert "proof_obligation_coverage" in report["blocking_reasons"]
+    assert report["formal_summary"]["typed_proof_obligations"] == 3
+
+
+def test_pedagogical_reward_blocks_forged_formal_type_rules(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task_info = _task_info(LATTICE_PLAN)
+
+    def build_forged_type_rule_artifact(
+        raw_json: str,
+        *,
+        source_label: str,
+        estimator_result_path: Path | None = None,
+        review_status: str = "pending_review",
+        root: Path | None = None,
+    ) -> dict[str, Any]:
+        artifact = build_attack_plan_proof_artifact_from_json(
+            raw_json,
+            source_label=source_label,
+            estimator_result_path=estimator_result_path,
+            review_status=review_status,
+            root=root,
+        )
+        forged_type_rule = dict(artifact["proof_obligations"][0]["type_rule"])
+        forged_type_rule["lean_theorem"] = (
+            "AgadesPQC.ProofObligation.forged_target_invariant_typed"
+        )
+        artifact["proof_obligations"][0]["type_rule"] = forged_type_rule
+        return artifact
+
+    monkeypatch.setattr(
+        rl_environment,
+        "build_attack_plan_proof_artifact_from_json",
+        build_forged_type_rule_artifact,
+    )
+
+    report = score_attack_plan_candidate(
+        LATTICE_PLAN.read_text(encoding="utf-8"),
+        task_info=task_info,
+        require_task_match=True,
+    )
+
+    assert report["reward"] == 0.0
+    assert report["accepted"] is False
+    assert report["terms"]["proof_obligation_coverage"] == 0.0
+    assert report["formal_summary"]["typed_proof_obligations"] == 3
 
 
 def test_pedagogical_reward_applies_spike_aware_private_signal_multiplier() -> None:

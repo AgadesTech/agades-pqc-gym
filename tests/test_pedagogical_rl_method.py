@@ -64,6 +64,12 @@ def test_pedagogical_rl_method_defines_agades_teacher_student_pipeline(
         "task_match",
         "proof_obligation_coverage",
     ]
+    assert payload["reward_contract"]["success_gate"]["term_definitions"][
+        "proof_obligation_coverage"
+    ] == (
+        "candidate proof artifact has family invariants, proof obligations, "
+        "and every proof obligation is bound to a Lean-backed type_rule"
+    )
     assert payload["reward_contract"]["learnability_score"] == {
         "type": "spike_aware_logsumexp_surprise_gap",
         "surprise_gap": (

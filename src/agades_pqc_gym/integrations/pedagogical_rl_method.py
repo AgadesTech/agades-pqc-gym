@@ -50,6 +50,37 @@ REWARD_TERMS = [
     "task_match",
     "proof_obligation_coverage",
 ]
+REWARD_TERM_DEFINITIONS = {
+    "formal_validity": (
+        "candidate parses as an AttackPlan and produces a proof artifact"
+    ),
+    "cryptographic_applicability": (
+        "candidate passes the public verifier for its target family and operator"
+    ),
+    "no_security_overclaim": (
+        "candidate does not publish unreviewed estimates, success probability, "
+        "external claims, or PQC break claims"
+    ),
+    "student_readability": (
+        "candidate is a single readable JSON object with notes that state the "
+        "no-security-claim boundary"
+    ),
+    "reproducibility": (
+        "candidate satisfies the task reproducibility requirement when present"
+    ),
+    "reviewer_quality": (
+        "candidate proof artifact names required reviewer roles and preserves "
+        "the release claim boundary"
+    ),
+    "task_match": (
+        "candidate target family, target name, support level, and operator "
+        "sequence match the task metadata"
+    ),
+    "proof_obligation_coverage": (
+        "candidate proof artifact has family invariants, proof obligations, "
+        "and every proof obligation is bound to a Lean-backed type_rule"
+    ),
+}
 PRIVATE_DATASET_SOURCES = [
     "facebookresearch/LWE-benchmarking",
     "facebook/TAPAS",
@@ -170,6 +201,7 @@ def build_pedagogical_rl_method(root: Path | None = None) -> dict[str, Any]:
             "success_gate": {
                 "type": "agades_verifier_and_reviewer_gate",
                 "required_terms": list(REWARD_TERMS),
+                "term_definitions": dict(REWARD_TERM_DEFINITIONS),
                 "good_answer_only_is_sufficient": False,
             },
             "learnability_score": {
@@ -375,6 +407,8 @@ def _verify_reward_contract(method: dict[str, Any], failures: list[str]) -> None
     success_gate = _dict_or_empty(reward.get("success_gate"))
     if success_gate.get("required_terms") != REWARD_TERMS:
         failures.append("Pedagogical reward terms are incorrect.")
+    if success_gate.get("term_definitions") != REWARD_TERM_DEFINITIONS:
+        failures.append("Pedagogical reward term definitions are incorrect.")
     if success_gate.get("good_answer_only_is_sufficient") is not False:
         failures.append("Good answer alone must not be sufficient.")
     learnability = _dict_or_empty(reward.get("learnability_score"))
