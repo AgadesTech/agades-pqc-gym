@@ -53,7 +53,7 @@
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",
-      "sha256": "e51b998a004d1091882d6967016977955bcd313dfa497ee4eaaa69b1e07b8210"
+      "sha256": "f86ba527102140e3023c9d58931d4a1c4595982ff67fee32be09a126697b2749"
     },
     "hf_space_manifest": {
       "path": "hf/space_manifest.json",
@@ -61,7 +61,7 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "677f4013f794fc08e967b02c61830bc30287c988bf664714351cb3a85e750fb6"
+      "sha256": "2bc9d13876553faf994706896ff2b8a4c518a0b286da4521d8e4169b35ebf34f"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
@@ -93,11 +93,11 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "c6b5becc0d7fb6a84fec1305ff14228fb861d501f0cabc54d82978caa2f3d859"
+      "sha256": "4f6f8bcb4e6645999852b24c08a42d20df0bb34adc4af20471abb02ec6858c95"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "82acb7eda902ab55d24403a13daffe611b3c549f6d66458ad8418cbcba8e9b8a"
+      "sha256": "e14e4154aa4fb1c7df20d55b347849af1f538b940ee8f45d4af3d2a081be8e60"
     }
   },
   "private_track": {

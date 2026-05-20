@@ -63,7 +63,7 @@
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",
-      "sha256": "e51b998a004d1091882d6967016977955bcd313dfa497ee4eaaa69b1e07b8210"
+      "sha256": "f86ba527102140e3023c9d58931d4a1c4595982ff67fee32be09a126697b2749"
     },
     "prime_eval_config_manifest": {
       "path": "docs/prime_eval_config_manifest.json",
