@@ -23,19 +23,19 @@
   "linked_artifacts": {
     "formal_lean_backend": {
       "path": "docs/formal_lean_backend.json",
-      "sha256": "323771f11e2d186d0eabb5d81b1fc6f2e4b3efce25ee558847eff0b13b35272e"
+      "sha256": "493d35c4c7732ef0d10efb93b397923ac76fee8d6b267b175c8724012500b0b8"
     },
     "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "3866a045d4d4df3814e544227916bd804865df3b99834af4bee7f6033efa8240"
+      "sha256": "ab51dd773def1009446242ee4907ddbc767b059c8588d722473734467607ad5f"
     },
     "formal_mlwe_proof_artifact": {
       "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
-      "sha256": "a491f59222ab7aff74e497f9f5f0458458f8281ef3e01cd2364551c8c6fa8a2a"
+      "sha256": "3e10d45f9b279f20b9df2fe9a6c3f7fa586147768dfaed7078ab787e4863c2e8"
     },
     "formal_obligation_ledger": {
       "path": "docs/formal_obligation_ledger.json",
-      "sha256": "d2aed491839f1b799037a7f73f7d47e51abed744f2f75ee762057e5238d07096"
+      "sha256": "3533770fd769c11474c3e5882e87358eef25d3a7fff592f7ce734a6b9460be85"
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",
@@ -43,7 +43,7 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "74fb123b498435dff0292bf8e0fa21af2c2ea1348dc9f4c73e41006d8aa5b797"
+      "sha256": "903a6c45f6bc006818e0fdf17d5f4dc9b024c5d74456d75bb9c727c9540fb143"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",

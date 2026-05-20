@@ -41,6 +41,43 @@ NO_SECURITY_CLAIM_THEOREMS = [
     "AgadesPQC.Evaluator.no_security_claim",
     "AgadesPQC.Evaluator.schema_only_no_estimator_no_security_claim",
 ]
+ESTIMATOR_MODEL_RULE_THEOREMS = [
+    "AgadesPQC.EstimatorModel.operator_compatibility_declared",
+    "AgadesPQC.EstimatorModel.result_binding_required_before_claim",
+    "AgadesPQC.EstimatorModel.schema_only_no_estimator",
+]
+ESTIMATOR_MODEL_LEAN_THEOREMS = [
+    *NO_SECURITY_CLAIM_THEOREMS,
+    *ESTIMATOR_MODEL_RULE_THEOREMS,
+]
+ESTIMATOR_FORMAL_RULE_SPECS = (
+    {
+        "rule_id": "estimator.operator_compatibility_declared",
+        "statement": (
+            "A runtime estimator result is applicable only when its attack "
+            "type is explicitly compatible with the AttackPlan operator."
+        ),
+        "lean_theorem": "AgadesPQC.EstimatorModel.operator_compatibility_declared",
+    },
+    {
+        "rule_id": "estimator.result_binding_required_before_claim",
+        "statement": (
+            "Toy or mock estimator output must be bound into a proof "
+            "artifact before any reviewed claim can be considered."
+        ),
+        "lean_theorem": (
+            "AgadesPQC.EstimatorModel.result_binding_required_before_claim"
+        ),
+    },
+    {
+        "rule_id": "estimator.schema_only_no_estimator",
+        "statement": (
+            "Schema-only families must remain explicitly marked as having "
+            "no runtime estimator."
+        ),
+        "lean_theorem": "AgadesPQC.EstimatorModel.schema_only_no_estimator",
+    },
+)
 LINKED_ARTIFACT_PATHS = {
     "family_plugin_manifest": "docs/family_plugin_manifest.json",
     "formal_family_coverage": "docs/formal_family_coverage.json",
@@ -111,6 +148,7 @@ def build_formal_estimator_model(root: Path | None = None) -> dict[str, Any]:
             ],
             "claim_allowed_before_review": False,
         },
+        "estimator_formal_rules": _estimator_formal_rules(project_root),
         "lean_bindings": _lean_bindings(project_root),
         "families": families,
         "summary": _summary(families),
@@ -161,7 +199,7 @@ def verify_formal_estimator_model(
     if model and model != expected:
         failures.append("Formal estimator model is not in sync.")
     if model:
-        _verify_model_shape(model, failures)
+        _verify_model_shape(model, project_root, failures)
         _verify_model_hash(model, failures)
         _verify_lean_bindings(model, project_root, failures)
         _verify_family_entries(model, failures)
@@ -213,6 +251,9 @@ def _family_models() -> list[dict[str, Any]]:
                 "proof_artifact_binding_required": True,
                 "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
             },
+            "formal_rule_ids": [
+                spec["rule_id"] for spec in ESTIMATOR_FORMAL_RULE_SPECS
+            ],
             "required_reviewers": required_reviewers_for_family(family),
         }
         entry["entry_sha256"] = _entry_sha256(entry)
@@ -268,7 +309,7 @@ def _summary(families: list[dict[str, Any]]) -> dict[str, Any]:
 def _lean_bindings(root: Path) -> list[dict[str, str]]:
     return [
         _lean_binding(lean_theorem, root)
-        for lean_theorem in NO_SECURITY_CLAIM_THEOREMS
+        for lean_theorem in ESTIMATOR_MODEL_LEAN_THEOREMS
     ]
 
 
@@ -284,7 +325,11 @@ def _lean_binding(lean_theorem: str, root: Path) -> dict[str, str]:
     }
 
 
-def _verify_model_shape(model: dict[str, Any], failures: list[str]) -> None:
+def _verify_model_shape(
+    model: dict[str, Any],
+    root: Path,
+    failures: list[str],
+) -> None:
     if model.get("schema_version") != FORMAL_ESTIMATOR_MODEL_SCHEMA:
         failures.append(
             "Formal estimator model schema_version must be "
@@ -310,6 +355,8 @@ def _verify_model_shape(model: dict[str, Any], failures: list[str]) -> None:
     ]
     if model.get("summary") != _summary(families):
         failures.append("Formal estimator model summary is inconsistent.")
+    if model.get("estimator_formal_rules") != _estimator_formal_rules(root):
+        failures.append("Formal estimator model formal rules are not in sync.")
 
 
 def _verify_model_hash(model: dict[str, Any], failures: list[str]) -> None:
@@ -328,7 +375,7 @@ def _verify_lean_bindings(
         for binding in bindings
         if isinstance(binding, dict)
     ]
-    if observed_theorems != NO_SECURITY_CLAIM_THEOREMS:
+    if observed_theorems != ESTIMATOR_MODEL_LEAN_THEOREMS:
         failures.append("Formal estimator model Lean bindings are incomplete.")
     for binding in bindings:
         if not isinstance(binding, dict):
@@ -406,6 +453,11 @@ def _verify_family_entry(entry: dict[str, Any], failures: list[str]) -> None:
         failures.append(
             f"Formal estimator model reviewers are incorrect: {family.value}."
         )
+    expected_rule_ids = [spec["rule_id"] for spec in ESTIMATOR_FORMAL_RULE_SPECS]
+    if entry.get("formal_rule_ids") != expected_rule_ids:
+        failures.append(
+            f"Formal estimator model rule IDs are incorrect: {family.value}."
+        )
     if entry.get("adapter_support_level") == "schema_only":
         if estimator_model.get("model_id") != "schema_only_no_estimator":
             failures.append(
@@ -477,6 +529,23 @@ def _file_sha256(path: Path) -> str | None:
         return hashlib.sha256(path.read_bytes()).hexdigest()
     except FileNotFoundError:
         return None
+
+
+def _estimator_formal_rules(root: Path) -> list[dict[str, Any]]:
+    rules: list[dict[str, Any]] = []
+    for spec in ESTIMATOR_FORMAL_RULE_SPECS:
+        theorem = spec["lean_theorem"]
+        source_path = LEAN_THEOREM_SOURCES[theorem]
+        rules.append(
+            {
+                **spec,
+                "lean_source": {
+                    "path": source_path,
+                    "sha256": _file_sha256(root / source_path),
+                },
+            }
+        )
+    return rules
 
 
 def _read_json_object(
