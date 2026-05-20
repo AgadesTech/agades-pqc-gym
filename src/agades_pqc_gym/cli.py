@@ -63,6 +63,10 @@ from agades_pqc_gym.formal.lean_backend import (
     verify_formal_lean_backend,
     write_formal_lean_backend,
 )
+from agades_pqc_gym.formal.obligation_ledger import (
+    verify_formal_obligation_ledger,
+    write_formal_obligation_ledger,
+)
 from agades_pqc_gym.formal.operator_semantics import (
     verify_formal_operator_semantics,
     write_formal_operator_semantics,
@@ -1834,6 +1838,32 @@ def formal_family_coverage_verify(
 ) -> None:
     """Verify multi-family formal coverage, Lean bindings, and reviewers."""
     result = verify_formal_family_coverage(coverage)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("formal-obligation-ledger", hidden=True)
+def formal_obligation_ledger(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("docs/formal_obligation_ledger.json"),
+) -> None:
+    """Write the typed ledger of generated proof obligations and invariants."""
+    write_formal_obligation_ledger(out)
+    typer.echo(f"formal_obligation_ledger={out}")
+
+
+@app.command("formal-obligation-ledger-verify", hidden=True)
+def formal_obligation_ledger_verify(
+    ledger: Annotated[
+        Path,
+        typer.Option("--ledger"),
+    ] = Path("docs/formal_obligation_ledger.json"),
+) -> None:
+    """Verify the formal obligation ledger and linked proof artifacts."""
+    result = verify_formal_obligation_ledger(ledger)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)

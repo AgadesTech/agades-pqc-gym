@@ -60,6 +60,9 @@ def test_reviewer_governance_defines_family_roles_and_review_gates(
     assert governance["formal_artifact_binding"]["formal_family_coverage_path"] == (
         "docs/formal_family_coverage.json"
     )
+    assert governance["formal_artifact_binding"][
+        "formal_obligation_ledger_path"
+    ] == "docs/formal_obligation_ledger.json"
     assert governance["formal_artifact_binding"]["formal_estimator_model_path"] == (
         "docs/formal_estimator_model.json"
     )
@@ -75,6 +78,9 @@ def test_reviewer_governance_defines_family_roles_and_review_gates(
     )
     assert governance["linked_artifacts"]["formal_estimator_model"]["path"] == (
         "docs/formal_estimator_model.json"
+    )
+    assert governance["linked_artifacts"]["formal_obligation_ledger"]["path"] == (
+        "docs/formal_obligation_ledger.json"
     )
     assert governance["linked_artifacts"]["formal_operator_semantics"]["path"] == (
         "docs/formal_operator_semantics.json"
@@ -106,7 +112,7 @@ def test_reviewer_governance_verify_accepts_committed_artifact() -> None:
             "family_reviewers": 9,
             "role_groups": 3,
             "approval_gates": 4,
-            "linked_artifacts": 11,
+            "linked_artifacts": 12,
             "failure_count": 0,
         },
         "failures": [],

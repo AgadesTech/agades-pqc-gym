@@ -61,6 +61,7 @@ FAMILY_REVIEW_COMPETENCIES = {
 LINKED_ARTIFACT_PATHS = {
     "formal_estimator_model": "docs/formal_estimator_model.json",
     "formal_family_coverage": "docs/formal_family_coverage.json",
+    "formal_obligation_ledger": "docs/formal_obligation_ledger.json",
     "formal_operator_semantics": "docs/formal_operator_semantics.json",
     "formal_lean_backend": "docs/formal_lean_backend.json",
     "formal_lwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
@@ -145,6 +146,9 @@ def build_reviewer_governance(root: Path | None = None) -> dict[str, Any]:
         "formal_artifact_binding": {
             "formal_estimator_model_path": "docs/formal_estimator_model.json",
             "formal_family_coverage_path": "docs/formal_family_coverage.json",
+            "formal_obligation_ledger_path": (
+                "docs/formal_obligation_ledger.json"
+            ),
             "formal_operator_semantics_path": (
                 "docs/formal_operator_semantics.json"
             ),
@@ -457,6 +461,10 @@ def _verify_formal_artifact_binding(
 ) -> None:
     binding = _dict_or_empty(governance.get("formal_artifact_binding"))
     proof_artifacts = binding.get("mvp_vertical_proof_artifacts")
+    if binding.get("formal_obligation_ledger_path") != (
+        "docs/formal_obligation_ledger.json"
+    ):
+        failures.append("Formal artifact binding must include the obligation ledger.")
     if proof_artifacts != MVP_VERTICAL_PROOF_ARTIFACT_PATHS:
         failures.append("Formal artifact binding must include LWE and MLWE artifacts.")
         return

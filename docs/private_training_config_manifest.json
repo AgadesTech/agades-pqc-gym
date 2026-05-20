@@ -33,13 +33,17 @@
       "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
       "sha256": "0c341b6318280d54e8248b4ea7ff12059800f4b77d220210f8becfe6d95ec6ae"
     },
+    "formal_obligation_ledger": {
+      "path": "docs/formal_obligation_ledger.json",
+      "sha256": "43e9e7557885758914e8d0b79a6cab53c946ab06d4ad581ad233ec71780e0a40"
+    },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",
       "sha256": "e1721928a80376faee646d9123ff1430f6e9f25e5970724747e91b52ffda5cb3"
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "6b8e02d484ba8fc1af408c04313644d3af9b47f53ea98ad6a7cf11e2f113b1f4"
+      "sha256": "692d67055a643f82f0542be0e70c123d0f58b0a66528a2e3a24c8fb0e80bce0a"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
@@ -81,6 +85,7 @@
   "pedagogical_rl": {
     "assimilation_objective": "surprisal_gated_imitation",
     "assimilation_weight_function": "agades_pqc_gym.rl.pedagogy.surprisal_gated_token_weights",
+    "formal_obligation_ledger_path": "docs/formal_obligation_ledger.json",
     "learnability_function": "agades_pqc_gym.rl.pedagogy.spike_aware_learnability_score",
     "learnability_score": "spike_aware_logsumexp_surprise_gap",
     "method": "pedagogical_rl",

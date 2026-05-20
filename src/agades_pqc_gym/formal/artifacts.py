@@ -240,13 +240,19 @@ def build_attack_plan_proof_artifact(
     *,
     estimator_result_path: Path | None = None,
     review_status: str = "pending_review",
+    root: Path | None = None,
 ) -> dict[str, Any]:
-    raw = plan_path.read_text(encoding="utf-8")
+    project_root = root.resolve() if root is not None else None
+    resolved_plan_path = plan_path
+    if project_root is not None and not resolved_plan_path.is_absolute():
+        resolved_plan_path = project_root / resolved_plan_path
+    raw = resolved_plan_path.read_text(encoding="utf-8")
     return build_attack_plan_proof_artifact_from_json(
         raw,
         source_label=plan_path.as_posix(),
         estimator_result_path=estimator_result_path,
         review_status=review_status,
+        root=project_root,
     )
 
 
@@ -256,9 +262,11 @@ def build_attack_plan_proof_artifact_from_json(
     source_label: str,
     estimator_result_path: Path | None = None,
     review_status: str = "pending_review",
+    root: Path | None = None,
 ) -> dict[str, Any]:
     plan = AttackPlan.model_validate_json(raw_json)
     plan_payload = json.loads(raw_json)
+    project_root = root.resolve() if root is not None else ROOT
     if review_status not in REVIEW_STATUSES:
         raise ValueError(
             "review_status must be one of: " + ", ".join(sorted(REVIEW_STATUSES))
@@ -271,7 +279,7 @@ def build_attack_plan_proof_artifact_from_json(
     artifact: dict[str, Any] = {
         "schema_version": PROOF_ARTIFACT_SCHEMA,
         "backend": BACKEND,
-        "formal_backend": _formal_backend_binding(ROOT),
+        "formal_backend": _formal_backend_binding(project_root),
         "attack_plan": {
             "id": plan.attack_plan_id,
             "path": source_label,
@@ -288,6 +296,7 @@ def build_attack_plan_proof_artifact_from_json(
         "estimator_result_binding": _estimator_result_binding(
             plan,
             estimator_result_path,
+            root=project_root,
         ),
         "proof_obligations": _proof_obligations(plan),
         "review": {
@@ -309,11 +318,13 @@ def write_attack_plan_proof_artifact(
     *,
     estimator_result_path: Path | None = None,
     review_status: str = "pending_review",
+    root: Path | None = None,
 ) -> dict[str, Any]:
     artifact = build_attack_plan_proof_artifact(
         plan_path,
         estimator_result_path=estimator_result_path,
         review_status=review_status,
+        root=root,
     )
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(
@@ -579,6 +590,8 @@ def _estimator_model(plan: AttackPlan) -> dict[str, Any]:
 def _estimator_result_binding(
     plan: AttackPlan,
     estimator_result_path: Path | None,
+    *,
+    root: Path | None = None,
 ) -> dict[str, Any]:
     if estimator_result_path is None:
         return {
@@ -593,7 +606,10 @@ def _estimator_result_binding(
             ),
         }
 
-    raw = estimator_result_path.read_bytes()
+    resolved_result_path = estimator_result_path
+    if root is not None and not resolved_result_path.is_absolute():
+        resolved_result_path = root / resolved_result_path
+    raw = resolved_result_path.read_bytes()
     try:
         canonical_payload: Any = json.loads(raw.decode("utf-8"))
     except json.JSONDecodeError as exc:

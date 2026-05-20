@@ -1131,7 +1131,7 @@
       "blocking": true,
       "detail": "Checked-in release gates that depend on release-audit must first declare ecosystem-smoke-verify, including nested Hugging Face dataset metadata.",
       "evidence": {
-        "checked_release_gate_artifacts": 39,
+        "checked_release_gate_artifacts": 40,
         "ecosystem_smoke_gate_artifacts": 27,
         "late_ecosystem_smoke_gate": [],
         "missing_ecosystem_smoke_gate": [],
@@ -1596,7 +1596,7 @@
       "blocking": true,
       "detail": "Pedagogical RL is captured as a verifiable private method contract with teacher/student roles, spike-aware reward, surprisal-gated assimilation, and publication boundaries.",
       "evidence": {
-        "linked_artifacts": 9,
+        "linked_artifacts": 10,
         "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
         "privacy_preserving": true,
         "reward_terms": 8,

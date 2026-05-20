@@ -54,7 +54,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert checks["release-gate-closure"]["status"] == "passed"
     assert checks["release-gate-closure"]["blocking"] is True
     assert checks["release-gate-closure"]["evidence"] == {
-        "checked_release_gate_artifacts": 39,
+        "checked_release_gate_artifacts": 40,
         "release_audit_gate_artifacts": 25,
         "ecosystem_smoke_gate_artifacts": 27,
         "missing_ecosystem_smoke_gate": [],
@@ -685,7 +685,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert checks["pedagogical-rl-method"]["evidence"] == {
         "stages": 4,
         "reward_terms": 8,
-        "linked_artifacts": 9,
+        "linked_artifacts": 10,
         "teacher_student_pattern": "privileged_self_teacher_student",
         "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
         "privacy_preserving": True,
