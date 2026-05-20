@@ -56,7 +56,7 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "0f2dd4a1255df1a3c1996d39bc85002f03d85ce2aba6c89410fa67c765388998"
+      "sha256": "9ae4ad1640d19278df9c7bbfc1819c64f21de1b6431b166dbad0b555ff71b04e"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
@@ -72,11 +72,15 @@
     },
     "prime_rl_training_template": {
       "path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
-      "sha256": "762d24e9da5a7afd6f98c9f9922bce3ebb780a70763568e3bf3050560151eea1"
+      "sha256": "e95968dacb8ac6c4d58635082f15f70258b24a4224371584774ac26756c4e4fc"
     },
     "prime_schema_manifest": {
       "path": "prime_intellect/schemas/schema_manifest.json",
       "sha256": "f448d41c640e6dc02a462af1bf695a93045676a191cee53403a121cab833fbeb"
+    },
+    "private_dataset_curation": {
+      "path": "docs/private_dataset_curation.json",
+      "sha256": "68b6deaa764fa827b36d4b73b5d40eaf51aca89ccb8d7fbe01a4e7f15f44509f"
     },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
@@ -84,15 +88,16 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "fd6d092ff38283f397c66bf62730636fdd8a1e38d93dee3c8975f72c21966d98"
+      "sha256": "b3d8c30bf0295337683c0bc35a3b49bb3829c56015ef17580e71b1d41c09dc0e"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "1d6ad15f8291a297d2b19205686d53c3830714ce0e19790ee8bea7cf819a4e1b"
+      "sha256": "46b36e2ac13b1842b81b0c08072e6440847b24819ff9a0bfc7e15ae59253e81c"
     }
   },
   "private_track": {
     "datasets": {
+      "curation_manifest_path": "docs/private_dataset_curation.json",
       "private_roots": [
         "private/datasets",
         "private/traces",
@@ -158,6 +163,7 @@
     "uv run agades-pqc rl-environment-contract --out docs/rl_environment_contract.json",
     "uv run agades-pqc rl-environment-contract-verify --contract docs/rl_environment_contract.json",
     "uv run agades-pqc private-run-policy-verify --policy docs/private_run_policy.json",
+    "uv run agades-pqc private-dataset-curation-verify --curation docs/private_dataset_curation.json",
     "uv run agades-pqc formal-proof-artifact-verify --artifact docs/formal_lattice_primal_usvp_proof_artifact.json",
     "uv run agades-pqc formal-proof-artifact-verify --artifact docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
     "uv run agades-pqc reviewer-governance-verify --governance docs/reviewer_governance.json"

@@ -47,6 +47,7 @@ PRIVATE_DATASET_CONTROLS = [
     "redaction",
     "contamination_audit",
 ]
+PRIVATE_DATASET_CURATION_MANIFEST_PATH = "docs/private_dataset_curation.json"
 PRIVATE_ROOTS = [
     "private/datasets",
     "private/models",
@@ -56,6 +57,7 @@ PRIVATE_ROOTS = [
 ]
 LINKED_ARTIFACT_PATHS = {
     "private_run_policy": "docs/private_run_policy.json",
+    "private_dataset_curation": PRIVATE_DATASET_CURATION_MANIFEST_PATH,
     "hf_rl_rollout_examples": "hf/dataset/rl_rollouts.jsonl",
     "prime_environment_manifest": "prime_intellect/verifiers_environment/"
     "prime_manifest.json",
@@ -107,6 +109,7 @@ def build_prime_rl_training_template() -> str:
         "requires_provenance_review = true\n"
         "publish_to_hf_public = false\n"
         "publish_to_prime_public = false\n"
+        f'dataset_curation_manifest = "{PRIVATE_DATASET_CURATION_MANIFEST_PATH}"\n'
         'student_model = "Qwen3.6-27B-private"\n'
         'preferred_user_artifact = "private GGUF OTQ 5-bit"\n'
         "gguf_direct_training_allowed = false\n"
@@ -200,6 +203,7 @@ def build_private_training_manifest(
             "config_sha256": _file_sha256(_resolve_path(config_path, project_root)),
             "rl_environment_contract_path": "docs/rl_environment_contract.json",
             "eval_config_manifest_path": "docs/prime_eval_config_manifest.json",
+            "dataset_curation_manifest_path": PRIVATE_DATASET_CURATION_MANIFEST_PATH,
             "launch_command_template": (
                 f"prime train {config_path.as_posix()} "
                 "--env-var HF_TOKEN --env-var WANDB_API_KEY"
@@ -237,6 +241,7 @@ def build_private_training_manifest(
         },
         "datasets": {
             "sources": list(PRIVATE_DATASET_SOURCES),
+            "curation_manifest_path": PRIVATE_DATASET_CURATION_MANIFEST_PATH,
             "required_controls": list(PRIVATE_DATASET_CONTROLS),
             "private_roots": ["private/datasets"],
             "publication_allowed": False,
@@ -273,6 +278,8 @@ def build_private_training_manifest(
             "uv run agades-pqc private-training-config-verify --config "
             "prime_intellect/training/private_qwen_prime_rl.template.toml "
             "--manifest docs/private_training_config_manifest.json",
+            "uv run agades-pqc private-dataset-curation-verify --curation "
+            f"{PRIVATE_DATASET_CURATION_MANIFEST_PATH}",
         ],
     }
 
@@ -386,6 +393,10 @@ def _verify_training_toml(
         failures.append("Prime RL config must not publish to public HF.")
     if run_config.get("publish_to_prime_public") is not False:
         failures.append("Prime RL config must not publish to public Prime.")
+    if run_config.get("dataset_curation_manifest") != (
+        PRIVATE_DATASET_CURATION_MANIFEST_PATH
+    ):
+        failures.append("Prime RL config must bind the dataset curation manifest.")
     if run_config.get("reward_terms") != REWARD_TERMS:
         failures.append("Prime RL config reward terms are incorrect.")
     if run_config.get("dataset_sources") != PRIVATE_DATASET_SOURCES:
@@ -460,6 +471,12 @@ def _verify_training_manifest(
         "docs/prime_eval_config_manifest.json"
     ):
         failures.append("Private training must bind the Prime eval config manifest.")
+    if prime_training.get("dataset_curation_manifest_path") != (
+        PRIVATE_DATASET_CURATION_MANIFEST_PATH
+    ):
+        failures.append(
+            "Private training must bind the dataset curation manifest."
+        )
     if prime_training.get("launch_readiness") != (
         "blocked_until_private_model_and_dataset_review"
     ):
@@ -500,6 +517,10 @@ def _verify_training_manifest(
     datasets = _dict_or_empty(manifest.get("datasets"))
     if datasets.get("sources") != PRIVATE_DATASET_SOURCES:
         failures.append("Private training dataset sources are incorrect.")
+    if datasets.get("curation_manifest_path") != (
+        PRIVATE_DATASET_CURATION_MANIFEST_PATH
+    ):
+        failures.append("Private training datasets must bind curation manifest.")
     if datasets.get("required_controls") != PRIVATE_DATASET_CONTROLS:
         failures.append("Private training dataset controls are incorrect.")
     if datasets.get("publication_allowed") is not False:

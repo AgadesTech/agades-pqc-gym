@@ -87,6 +87,9 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
         "facebook/TAPAS",
         "pq-code-package",
     ]
+    assert contract["private_track"]["datasets"]["curation_manifest_path"] == (
+        "docs/private_dataset_curation.json"
+    )
     assert contract["reward_model"] == {
         "type": "pedagogical_multi_term_reward",
         "range": [0.0, 1.0],
@@ -123,6 +126,9 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
     )
     assert contract["linked_artifacts"]["pedagogical_rl_method"]["path"] == (
         "docs/pedagogical_rl_method.json"
+    )
+    assert contract["linked_artifacts"]["private_dataset_curation"]["path"] == (
+        "docs/private_dataset_curation.json"
     )
     assert contract["linked_artifacts"]["reviewer_governance"]["path"] == (
         "docs/reviewer_governance.json"
@@ -169,7 +175,7 @@ def test_rl_environment_contract_verify_accepts_committed_contract() -> None:
             "surfaces": 2,
             "reward_terms": 8,
             "private_dataset_sources": 3,
-            "linked_artifacts": 17,
+            "linked_artifacts": 18,
             "failure_count": 0,
         },
         "failures": [],

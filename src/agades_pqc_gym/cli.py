@@ -185,6 +185,10 @@ from agades_pqc_gym.integrations.prime_verifier_schemas import (
     verify_prime_verifier_schemas,
     write_prime_verifier_schemas,
 )
+from agades_pqc_gym.integrations.private_dataset_curation import (
+    verify_private_dataset_curation,
+    write_private_dataset_curation,
+)
 from agades_pqc_gym.integrations.private_run_policy import (
     verify_private_run_policy,
     write_private_run_policy,
@@ -1676,6 +1680,32 @@ def private_run_policy_verify(
 ) -> None:
     """Verify the private evolution trace and moat holdback policy."""
     result = verify_private_run_policy(policy)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("private-dataset-curation", hidden=True)
+def private_dataset_curation(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("docs/private_dataset_curation.json"),
+) -> None:
+    """Write the private dataset curation and publication-boundary manifest."""
+    write_private_dataset_curation(out)
+    typer.echo(f"private_dataset_curation={out}")
+
+
+@app.command("private-dataset-curation-verify", hidden=True)
+def private_dataset_curation_verify(
+    curation: Annotated[
+        Path,
+        typer.Option("--curation"),
+    ] = Path("docs/private_dataset_curation.json"),
+) -> None:
+    """Verify the private dataset curation and publication-boundary manifest."""
+    result = verify_private_dataset_curation(curation)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)

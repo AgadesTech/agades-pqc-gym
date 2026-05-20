@@ -42,6 +42,7 @@ PRIVATE_DATASET_CONTROLS = [
     "redaction",
     "contamination_audit",
 ]
+PRIVATE_DATASET_CURATION_MANIFEST_PATH = "docs/private_dataset_curation.json"
 LINKED_ARTIFACT_PATHS = {
     "hf_space_manifest": "hf/space_manifest.json",
     "hf_rl_rollout_examples": "hf/dataset/rl_rollouts.jsonl",
@@ -50,6 +51,7 @@ LINKED_ARTIFACT_PATHS = {
     "prime_eval_config_manifest": "docs/prime_eval_config_manifest.json",
     "prime_eval_template": "prime_intellect/evals/agades_pqc_eval.template.toml",
     "private_run_policy": "docs/private_run_policy.json",
+    "private_dataset_curation": PRIVATE_DATASET_CURATION_MANIFEST_PATH,
     "private_training_manifest": "docs/private_training_config_manifest.json",
     "prime_rl_training_template": "prime_intellect/training/"
     "private_qwen_prime_rl.template.toml",
@@ -126,6 +128,7 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
             "publish_finetuned_model_publicly": False,
             "datasets": {
                 "sources": list(PRIVATE_DATASET_SOURCES),
+                "curation_manifest_path": PRIVATE_DATASET_CURATION_MANIFEST_PATH,
                 "required_controls": list(PRIVATE_DATASET_CONTROLS),
                 "private_roots": [
                     "private/datasets",
@@ -191,6 +194,8 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
             "docs/rl_environment_contract.json",
             "uv run agades-pqc private-run-policy-verify --policy "
             "docs/private_run_policy.json",
+            "uv run agades-pqc private-dataset-curation-verify --curation "
+            f"{PRIVATE_DATASET_CURATION_MANIFEST_PATH}",
             "uv run agades-pqc formal-proof-artifact-verify --artifact "
             f"{MVP_VERTICAL_PROOF_ARTIFACT_PATHS[TargetFamily.LWE.value]}",
             "uv run agades-pqc formal-proof-artifact-verify --artifact "
@@ -363,6 +368,10 @@ def _verify_private_track(contract: dict[str, Any], failures: list[str]) -> None
     datasets = private_track.get("datasets", {})
     if datasets.get("sources") != PRIVATE_DATASET_SOURCES:
         failures.append("Private RL dataset sources are incorrect.")
+    if datasets.get("curation_manifest_path") != (
+        PRIVATE_DATASET_CURATION_MANIFEST_PATH
+    ):
+        failures.append("Private RL datasets must bind curation manifest.")
     if datasets.get("required_controls") != PRIVATE_DATASET_CONTROLS:
         failures.append("Private RL dataset controls are incorrect.")
     if datasets.get("publication_allowed") is not False:

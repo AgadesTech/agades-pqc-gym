@@ -1,5 +1,6 @@
 {
   "datasets": {
+    "curation_manifest_path": "docs/private_dataset_curation.json",
     "private_roots": [
       "private/datasets"
     ],
@@ -38,7 +39,7 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "0f2dd4a1255df1a3c1996d39bc85002f03d85ce2aba6c89410fa67c765388998"
+      "sha256": "9ae4ad1640d19278df9c7bbfc1819c64f21de1b6431b166dbad0b555ff71b04e"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
@@ -51,6 +52,10 @@
     "prime_eval_template": {
       "path": "prime_intellect/evals/agades_pqc_eval.template.toml",
       "sha256": "8a653d4d2258e3e51561676c479edd30ef756b4f66c09ef24f3be1b461e4e152"
+    },
+    "private_dataset_curation": {
+      "path": "docs/private_dataset_curation.json",
+      "sha256": "68b6deaa764fa827b36d4b73b5d40eaf51aca89ccb8d7fbe01a4e7f15f44509f"
     },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
@@ -99,7 +104,8 @@
   },
   "prime_training": {
     "config_path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
-    "config_sha256": "762d24e9da5a7afd6f98c9f9922bce3ebb780a70763568e3bf3050560151eea1",
+    "config_sha256": "e95968dacb8ac6c4d58635082f15f70258b24a4224371584774ac26756c4e4fc",
+    "dataset_curation_manifest_path": "docs/private_dataset_curation.json",
     "eval_command": "prime eval run agades-pqc-verifier-env",
     "eval_config_manifest_path": "docs/prime_eval_config_manifest.json",
     "launch_command_template": "prime train prime_intellect/training/private_qwen_prime_rl.template.toml --env-var HF_TOKEN --env-var WANDB_API_KEY",
@@ -143,7 +149,8 @@
   "release_gates": [
     "uv run pytest tests/test_private_training_config.py -q",
     "uv run agades-pqc private-training-config --config prime_intellect/training/private_qwen_prime_rl.template.toml --manifest docs/private_training_config_manifest.json",
-    "uv run agades-pqc private-training-config-verify --config prime_intellect/training/private_qwen_prime_rl.template.toml --manifest docs/private_training_config_manifest.json"
+    "uv run agades-pqc private-training-config-verify --config prime_intellect/training/private_qwen_prime_rl.template.toml --manifest docs/private_training_config_manifest.json",
+    "uv run agades-pqc private-dataset-curation-verify --curation docs/private_dataset_curation.json"
   ],
   "schema_version": "agades.pqc.private_training_config.v1"
 }

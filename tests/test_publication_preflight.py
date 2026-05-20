@@ -325,10 +325,10 @@ def test_publication_preflight_blocks_external_publication_without_review() -> N
     assert preflight["audit"] == {
         "accepted": True,
         "failed": 0,
-        "passed": 59,
+        "passed": 60,
         "warning": 1,
         "warning_check_ids": ["prime-hub-publication"],
-        "total": 60,
+        "total": 61,
     }
     assert preflight["external_review"] == EXPECTED_EXTERNAL_REVIEW
     assert preflight["blockers"] == [

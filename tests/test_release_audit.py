@@ -44,19 +44,19 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert audit["schema_version"] == "agades.pqc.release_audit.v1"
     assert audit["accepted"] is True
     assert audit["summary"] == {
-        "passed": 59,
+        "passed": 60,
         "failed": 0,
         "warning": 1,
-        "total": 60,
+        "total": 61,
     }
 
     checks = {check["id"]: check for check in audit["checks"]}
     assert checks["release-gate-closure"]["status"] == "passed"
     assert checks["release-gate-closure"]["blocking"] is True
     assert checks["release-gate-closure"]["evidence"] == {
-        "checked_release_gate_artifacts": 38,
-        "release_audit_gate_artifacts": 24,
-        "ecosystem_smoke_gate_artifacts": 26,
+        "checked_release_gate_artifacts": 39,
+        "release_audit_gate_artifacts": 25,
+        "ecosystem_smoke_gate_artifacts": 27,
         "missing_ecosystem_smoke_gate": [],
         "late_ecosystem_smoke_gate": [],
     }
@@ -690,6 +690,16 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
         "privacy_preserving": True,
     }
+    assert checks["private-dataset-curation"]["status"] == "passed"
+    assert checks["private-dataset-curation"]["blocking"] is True
+    assert checks["private-dataset-curation"]["evidence"] == {
+        "sources": 3,
+        "pipeline_stages": 7,
+        "required_controls": 5,
+        "linked_artifacts": 3,
+        "public_rows_allowed": False,
+        "license_review_required": True,
+    }
     assert checks["hf-space-smoke"]["status"] == "passed"
     assert checks["hf-space-smoke"]["blocking"] is True
     assert checks["hf-space-smoke"]["evidence"] == {
@@ -842,6 +852,8 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "check-whitespace",
         "generate-private-run-policy",
         "verify-private-run-policy",
+        "generate-private-dataset-curation",
+        "verify-private-dataset-curation",
         "verify-runbook-input-manifest",
         "generate-deepevolve-manifest",
         "verify-deepevolve-manifest",

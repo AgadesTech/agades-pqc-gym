@@ -1,0 +1,196 @@
+{
+  "contamination_audit": {
+    "public_reference_roots": [
+      "examples/attack_plans",
+      "hf/dataset",
+      "prime_intellect/verifiers_environment/data"
+    ],
+    "reject_exact_public_overlap": true,
+    "reject_prompt_or_reviewer_annotation_leakage": true,
+    "requires_hash_and_similarity_report": true,
+    "requires_manual_review": true
+  },
+  "deduplication": {
+    "cross_source_deduplication": true,
+    "exact_hash_deduplication": true,
+    "near_duplicate_review_required": true,
+    "normalized_text_deduplication": true
+  },
+  "linked_artifacts": {
+    "benchmark_source_contracts": {
+      "path": "docs/benchmark_source_contracts.json",
+      "sha256": "bba24a17efc45917619df008a822e816f41cd9a7d3c4e95b1e3d7f139e5f74a1"
+    },
+    "private_run_policy": {
+      "path": "docs/private_run_policy.json",
+      "sha256": "a0992031eb7a4268e4813b4d5f02a9ca4dda078972c935ef829c8e981259d86a"
+    },
+    "source_catalog": {
+      "path": "docs/source_catalog.json",
+      "sha256": "9648bc812ae0465cf9bf28e410d3fcbdc63ec6d17060c35b4e05e98ea55dc058"
+    }
+  },
+  "outputs": {
+    "contamination_report_path": "private/reports/dataset_curation/contamination_audit.json",
+    "curated_dataset_path": "private/datasets/agades_pedagogical_rl/curated_attackplan_traces.jsonl",
+    "private_roots": [
+      "private/datasets/agades_pedagogical_rl",
+      "private/reports/dataset_curation",
+      "private/traces/pedagogical_rl"
+    ],
+    "provenance_manifest_path": "private/reports/dataset_curation/provenance_manifest.json",
+    "public_finetuning_corpus_allowed": false,
+    "public_manifest_only": true,
+    "public_prompts_allowed": false,
+    "public_reviewer_annotations_allowed": false,
+    "public_rows_allowed": false
+  },
+  "pipeline": [
+    {
+      "blocks_ingestion": true,
+      "id": "source_license_review",
+      "private_output": "private/reports/dataset_curation/license_review.json",
+      "required_control": "license_review"
+    },
+    {
+      "blocks_training": true,
+      "id": "source_provenance_capture",
+      "private_output": "private/reports/dataset_curation/provenance_manifest.json",
+      "required_control": "provenance_tracking"
+    },
+    {
+      "id": "raw_ingest_to_private_storage",
+      "private_output": "private/datasets/agades_pedagogical_rl/raw",
+      "public_output_allowed": false,
+      "required_control": "provenance_tracking"
+    },
+    {
+      "blocks_training": true,
+      "id": "deduplicate_and_normalize",
+      "private_output": "private/reports/dataset_curation/deduplication_report.json",
+      "required_control": "deduplication"
+    },
+    {
+      "blocks_training": true,
+      "id": "redact_sensitive_material",
+      "private_output": "private/reports/dataset_curation/redaction_report.json",
+      "required_control": "redaction"
+    },
+    {
+      "blocks_training": true,
+      "id": "contamination_audit",
+      "private_output": "private/reports/dataset_curation/contamination_audit.json",
+      "required_control": "contamination_audit"
+    },
+    {
+      "blocks_training": true,
+      "id": "curated_trace_export_gate",
+      "private_output": "private/datasets/agades_pedagogical_rl/curated_attackplan_traces.jsonl",
+      "required_control": "license_review"
+    }
+  ],
+  "project": {
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "provenance_tracking": {
+    "required_fields": [
+      "source",
+      "upstream_url",
+      "revision_or_commit",
+      "retrieved_at_utc",
+      "raw_content_sha256",
+      "normalized_content_sha256",
+      "private_storage_path",
+      "license_review_id"
+    ],
+    "requires_hash_manifest": true,
+    "requires_per_row_source_map": true,
+    "requires_reproducible_transform_config": true
+  },
+  "publication_boundary": {
+    "allowed_public_artifacts": [
+      "sanitized_curation_manifest",
+      "aggregate_counts_after_review",
+      "metadata_cards_without_rows_or_prompts"
+    ],
+    "forbidden_public_artifacts": [
+      "private_dataset_rows",
+      "raw_source_rows",
+      "derived_training_rows",
+      "pedagogical_rl_rollouts",
+      "reviewer_annotations",
+      "teacher_prompts",
+      "student_prompts",
+      "fine_tuning_corpora"
+    ],
+    "public_artifact": "docs/private_dataset_curation.json",
+    "public_artifact_contains_private_rows": false
+  },
+  "purpose": {
+    "claim_boundary": "curates private training traces for AttackPlan generation, validation, proof-obligation review, and critique; it does not publish data rows or assert cryptographic breaks",
+    "method": "pedagogical_rl",
+    "target": "private_qwen3_6_27b_attackplan_trace_quality"
+  },
+  "redaction": {
+    "remove_credentials": true,
+    "remove_personal_data": true,
+    "remove_unlicensed_text_spans": true,
+    "requires_redaction_report": true,
+    "strip_private_paths_from_public_metadata": true
+  },
+  "release_gates": [
+    "uv run pytest tests/test_private_dataset_curation.py -q",
+    "uv run agades-pqc private-dataset-curation --out docs/private_dataset_curation.json",
+    "uv run agades-pqc private-dataset-curation-verify --curation docs/private_dataset_curation.json",
+    "uv run agades-pqc source-catalog-verify --catalog docs/source_catalog.json",
+    "uv run agades-pqc benchmark-source-verify --contracts docs/benchmark_source_contracts.json",
+    "uv run agades-pqc private-run-policy-verify --policy docs/private_run_policy.json",
+    "uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json",
+    "uv run agades-pqc release-audit --out public/release_audit.json"
+  ],
+  "required_controls": [
+    "license_review",
+    "provenance_tracking",
+    "deduplication",
+    "redaction",
+    "contamination_audit"
+  ],
+  "review": {
+    "launch_readiness": "blocked_until_license_provenance_redaction_and_contamination_review",
+    "required_reviewers": [
+      "dataset_license_reviewer",
+      "cryptography_domain_reviewer",
+      "privacy_release_reviewer"
+    ],
+    "review_status": "required_unassigned"
+  },
+  "schema_version": "agades.pqc.private_dataset_curation.v1",
+  "sources": {
+    "facebook_tapas": {
+      "ingestion_allowed_before_license_review": false,
+      "intended_private_use": "lwe_trace_pedagogy_and_student_curriculum",
+      "kind": "lwe_learning_dataset",
+      "license_review_status": "required_unverified",
+      "source": "facebook/TAPAS",
+      "upstream_url": "https://huggingface.co/datasets/facebook/TAPAS"
+    },
+    "facebookresearch_lwe_benchmarking": {
+      "ingestion_allowed_before_license_review": false,
+      "intended_private_use": "lwe_mlwe_task_generation_and_teacher_context",
+      "kind": "lwe_benchmark_source",
+      "license_review_status": "required_unverified",
+      "source": "facebookresearch/LWE-benchmarking",
+      "upstream_url": "https://github.com/facebookresearch/LWE-benchmarking"
+    },
+    "pq_code_package": {
+      "ingestion_allowed_before_license_review": false,
+      "intended_private_use": "implementation_security_attackplan_context_after_review",
+      "kind": "implementation_security_source_corpus",
+      "license_review_status": "required_unverified",
+      "source": "pq-code-package",
+      "upstream_url": "https://github.com/pq-code-package"
+    }
+  }
+}
