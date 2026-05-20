@@ -1,0 +1,15 @@
+title: "Breaking Rainbow Takes a Weekend on a Laptop"
+authors:
+  - "Ward Beullens"
+year: 2022
+url: "https://eprint.iacr.org/2022/214"
+family: "MULTIVARIATE"
+relevance: "Future multivariate adapters should represent MinRank and algebraic-solver hypotheses as review-gated operators."
+key_ideas:
+  - "Multivariate schemes need applicability validators for variables, equations, fields, and algebraic attack models."
+  - "Historical Rainbow-style lessons should be represented as benchmarks, not generalized to unrelated schemes."
+operators_suggested:
+  - "minrank_attack"
+  - "groebner_basis"
+implementation_status: "note_only"
+risk: "Algebraic cost models are family-specific and require review; schema-only placeholders must not emit fake estimates."

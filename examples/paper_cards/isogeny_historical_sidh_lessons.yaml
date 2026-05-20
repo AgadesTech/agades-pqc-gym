@@ -1,0 +1,16 @@
+title: "An efficient key recovery attack on SIDH"
+authors:
+  - "Wouter Castryck"
+  - "Thomas Decru"
+year: 2022
+url: "https://eprint.iacr.org/2022/975"
+family: "ISOGENY_HISTORICAL"
+relevance: "Future historical-isogeny adapters should represent SIDH/SIKE lessons as bounded historical reconstruction fixtures, not as current PQC security claims."
+key_ideas:
+  - "Historical isogeny attacks belong in a separate plugin with explicit non-current-standard boundaries."
+  - "Toy path reconstruction fixtures can test routing and reporting without solving real isogeny problems."
+  - "Reports must prevent historical break narratives from being projected onto unrelated current standards."
+operators_suggested:
+  - "historical_isogeny_reconstruction"
+implementation_status: "note_only"
+risk: "Requires isogeny expert review before any historical reconstruction adapter is expanded beyond bounded public toy fixtures."

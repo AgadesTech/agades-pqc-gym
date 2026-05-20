@@ -1,0 +1,76 @@
+{
+  "entries": [
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_lwe_n64_q257_primal_seed",
+      "attack_type": "primal_usvp",
+      "candidate_id": "toy_lwe_n64_q257_primal_seed-0",
+      "combined_score": -67.4696,
+      "estimated_memory_bits": 17.36,
+      "estimated_time_bits": 63.5296,
+      "estimator_name": "mock-lattice-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "lattice_toy_lwe",
+      "target_family": "LWE",
+      "trace_id": "a475be6e8e83a4ae284f9c7b0c391bb14153cff017e158181a2d73b7acc08c39",
+      "warnings": [
+        "Mock estimator output is for plumbing tests only; it is not cryptanalytic evidence."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_lwe_n96_q769_primal_seed",
+      "attack_type": "primal_usvp",
+      "candidate_id": "toy_lwe_n96_q769_primal_seed-1",
+      "combined_score": -97.0376,
+      "estimated_memory_bits": 25.04,
+      "estimated_time_bits": 91.1776,
+      "estimator_name": "mock-lattice-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "lattice_toy_lwe",
+      "target_family": "LWE",
+      "trace_id": "6743b0ae37ac3d81549b69a4c496bd8bff051aa4fb3ebd15afc86503fed629de",
+      "warnings": [
+        "Mock estimator output is for plumbing tests only; it is not cryptanalytic evidence."
+      ]
+    }
+  ],
+  "ledger_version": "0.1.0",
+  "safety": {
+    "arbitrary_code_execution": false,
+    "live_targeting": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.public_run_ledger.v1",
+  "source_trace": {
+    "artifact": "trace_public.jsonl",
+    "public_sha256": "443b0f474596310f916fed2f8f958e166a52ea52f6b1ea36a0d32e7f74035d2a",
+    "record_count": 2
+  },
+  "summary": {
+    "accepted_records": 2,
+    "by_estimator": {
+      "mock-lattice-estimator": 2
+    },
+    "by_evaluation_status": {
+      "ok": 2
+    },
+    "by_family": {
+      "LWE": 2
+    },
+    "redacted_records": 0,
+    "total_records": 2
+  }
+}

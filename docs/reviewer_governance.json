@@ -1,0 +1,358 @@
+{
+  "approval_gates": {
+    "evolution_research_gate": {
+      "required_role_groups": [
+        "family_cryptography_reviewer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "requires_formal_obligations": true,
+      "requires_human_review_before_claim": true,
+      "requires_validator_pass": true,
+      "security_claim_allowed_without_review": false
+    },
+    "formal_artifact_review_gate": {
+      "required_role_groups": [
+        "family_cryptography_reviewer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "security_claim_allowed_without_review": false,
+      "security_claim_requires_review": true,
+      "unreviewed_proof_artifact_status": "pending_review"
+    },
+    "private_training_gate": {
+      "public_model_or_trace_publication_allowed": false,
+      "required_role_groups": [
+        "family_cryptography_reviewer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "requires_private_dataset_controls": true,
+      "security_claim_allowed_without_review": false
+    },
+    "public_release_gate": {
+      "private_data_publication_allowed": false,
+      "required_role_groups": [
+        "release_boundary_reviewer"
+      ],
+      "requires_public_redaction": true,
+      "security_claim_allowed_without_review": false
+    }
+  },
+  "family_reviewers": [
+    {
+      "assignment_status": "role_required_unassigned",
+      "family": "LWE",
+      "minimum_reviewers": 1,
+      "required_before_family_release_claim": true,
+      "required_before_security_claim": true,
+      "required_expertise": [
+        "LWE/BDD/SIS reductions and lattice attack applicability",
+        "Lattice Estimator assumptions and cost-model boundaries"
+      ],
+      "role_group": "family_cryptography_reviewer",
+      "role_id": "lattice_cryptographer"
+    },
+    {
+      "assignment_status": "role_required_unassigned",
+      "family": "MLWE",
+      "minimum_reviewers": 1,
+      "required_before_family_release_claim": true,
+      "required_before_security_claim": true,
+      "required_expertise": [
+        "module lattice assumptions and parameter shape",
+        "MLWE-to-LWE modelling limits and estimator caveats"
+      ],
+      "role_group": "family_cryptography_reviewer",
+      "role_id": "lattice_cryptographer"
+    },
+    {
+      "assignment_status": "role_required_unassigned",
+      "family": "NTRU",
+      "minimum_reviewers": 1,
+      "required_before_family_release_claim": true,
+      "required_before_security_claim": true,
+      "required_expertise": [
+        "NTRU target shape and secret/error distribution constraints",
+        "schema-only placeholder boundary review"
+      ],
+      "role_group": "family_cryptography_reviewer",
+      "role_id": "lattice_cryptographer"
+    },
+    {
+      "assignment_status": "role_required_unassigned",
+      "family": "SIS",
+      "minimum_reviewers": 1,
+      "required_before_family_release_claim": true,
+      "required_before_security_claim": true,
+      "required_expertise": [
+        "SIS target shape and norm-bound constraints",
+        "schema-only placeholder boundary review"
+      ],
+      "role_group": "family_cryptography_reviewer",
+      "role_id": "lattice_cryptographer"
+    },
+    {
+      "assignment_status": "role_required_unassigned",
+      "family": "CODE_BASED",
+      "minimum_reviewers": 1,
+      "required_before_family_release_claim": true,
+      "required_before_security_claim": true,
+      "required_expertise": [
+        "syndrome decoding and code parameter invariants",
+        "information-set-decoding toy-vs-real boundary"
+      ],
+      "role_group": "family_cryptography_reviewer",
+      "role_id": "code_based_cryptographer"
+    },
+    {
+      "assignment_status": "role_required_unassigned",
+      "family": "MULTIVARIATE",
+      "minimum_reviewers": 1,
+      "required_before_family_release_claim": true,
+      "required_before_security_claim": true,
+      "required_expertise": [
+        "MQ/minrank/UOV parameter invariants",
+        "finite-field and equation/variable applicability"
+      ],
+      "role_group": "family_cryptography_reviewer",
+      "role_id": "multivariate_cryptographer"
+    },
+    {
+      "assignment_status": "role_required_unassigned",
+      "family": "HASH_BASED",
+      "minimum_reviewers": 1,
+      "required_before_family_release_claim": true,
+      "required_before_security_claim": true,
+      "required_expertise": [
+        "hash/preimage/collision/security-bound semantics",
+        "signature/authentication-path misuse boundaries"
+      ],
+      "role_group": "family_cryptography_reviewer",
+      "role_id": "hash_based_signature_reviewer"
+    },
+    {
+      "assignment_status": "role_required_unassigned",
+      "family": "ISOGENY_HISTORICAL",
+      "minimum_reviewers": 1,
+      "required_before_family_release_claim": true,
+      "required_before_security_claim": true,
+      "required_expertise": [
+        "historical isogeny attack scope",
+        "non-current-claim and educational-fixture boundary"
+      ],
+      "role_group": "family_cryptography_reviewer",
+      "role_id": "isogeny_historical_reviewer"
+    },
+    {
+      "assignment_status": "role_required_unassigned",
+      "family": "IMPLEMENTATION_SECURITY",
+      "minimum_reviewers": 1,
+      "required_before_family_release_claim": true,
+      "required_before_security_claim": true,
+      "required_expertise": [
+        "side-channel/KAT/benchmark review scope",
+        "no conformance or production-security claim boundary"
+      ],
+      "role_group": "family_cryptography_reviewer",
+      "role_id": "implementation_security_reviewer"
+    }
+  ],
+  "formal_artifact_binding": {
+    "claim_boundary_contains": "not PQC break claims",
+    "formal_estimator_model_path": "docs/formal_estimator_model.json",
+    "formal_family_coverage_path": "docs/formal_family_coverage.json",
+    "formal_operator_semantics_path": "docs/formal_operator_semantics.json",
+    "mvp_vertical_proof_artifacts": {
+      "LWE": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+      "MLWE": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json"
+    },
+    "required_reviewers_by_family": {
+      "CODE_BASED": [
+        "code_based_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "HASH_BASED": [
+        "hash_based_signature_reviewer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "IMPLEMENTATION_SECURITY": [
+        "implementation_security_reviewer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "ISOGENY_HISTORICAL": [
+        "isogeny_historical_reviewer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "LWE": [
+        "lattice_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "MLWE": [
+        "lattice_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "MULTIVARIATE": [
+        "multivariate_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "NTRU": [
+        "lattice_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "SIS": [
+        "lattice_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ]
+    }
+  },
+  "formal_backend_policy": {
+    "primary": {
+      "backend": "lean4",
+      "library": "mathlib",
+      "required_for_security_claims": true
+    },
+    "smt_assist": {
+      "backend": "z3",
+      "may_replace_primary_backend": false,
+      "scope": "optional_finite_decidable_obligations_only"
+    }
+  },
+  "linked_artifacts": {
+    "external_publication_review_packet": {
+      "path": "docs/external_publication_review_packet.json",
+      "sha256": "f7430de7e3178be29a115b97586ebb68bc47561e9192217849940ba767bd819f"
+    },
+    "formal_estimator_model": {
+      "path": "docs/formal_estimator_model.json",
+      "sha256": "ada31b0a1891467b8e6433e1cdcedcf4b96cc4e1deb10be09ece77abb8925989"
+    },
+    "formal_family_coverage": {
+      "path": "docs/formal_family_coverage.json",
+      "sha256": "1b6c3a8ad2cd83c79b898c227df0a95bc5a3205b7774579f48a69a1d6ceab40a"
+    },
+    "formal_lean_backend": {
+      "path": "docs/formal_lean_backend.json",
+      "sha256": "50b3f223a3ddc2ea13fe29b31783364552ee666ff0e667c169eb62928dcc940b"
+    },
+    "formal_lwe_proof_artifact": {
+      "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+      "sha256": "46ba81f60ed96fe0d316ee3137a5d5e2de72592c1f56da50c919151965fd9b4e"
+    },
+    "formal_mlwe_proof_artifact": {
+      "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
+      "sha256": "0c341b6318280d54e8248b4ea7ff12059800f4b77d220210f8becfe6d95ec6ae"
+    },
+    "formal_operator_semantics": {
+      "path": "docs/formal_operator_semantics.json",
+      "sha256": "19f7692ee88dc5b30092d7dfd7bded125f61a023f92967b996f7023bfdc93377"
+    },
+    "private_run_policy": {
+      "path": "docs/private_run_policy.json",
+      "sha256": "a0992031eb7a4268e4813b4d5f02a9ca4dda078972c935ef829c8e981259d86a"
+    },
+    "private_training_manifest": {
+      "path": "docs/private_training_config_manifest.json",
+      "sha256": "ac5520d5a4a04034c93a396196499a3c3b72ad72ff9758688fcab73e782d9854"
+    },
+    "publication_manifest": {
+      "path": "docs/publication_manifest.json",
+      "sha256": "29a79adefc3d120fcfc8b041a8092e7c059df7a11c81eebb488e605e065d3edd"
+    },
+    "release_audit": {
+      "path": "public/release_audit.json",
+      "sha256": "2899549edc1da321be7152d90ec2618e74edd6b6c685d31c731aa9efdc394c8a"
+    }
+  },
+  "private_training_review": {
+    "finetuned_qwen_publication_allowed": false,
+    "publication_allowed": false,
+    "required_controls": [
+      "license_review",
+      "provenance_tracking",
+      "deduplication",
+      "redaction",
+      "contamination_audit"
+    ],
+    "reviewer_annotations_publication_allowed": false,
+    "sources": [
+      "facebookresearch/LWE-benchmarking",
+      "facebook/TAPAS",
+      "pq-code-package"
+    ],
+    "train_traces_publication_allowed": false
+  },
+  "project": {
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "release_gates": [
+    "uv run pytest tests/test_reviewer_governance.py -q",
+    "uv run agades-pqc reviewer-governance --out docs/reviewer_governance.json",
+    "uv run agades-pqc reviewer-governance-verify --governance docs/reviewer_governance.json"
+  ],
+  "review_artifact_format": {
+    "required_fields": [
+      "artifact_path",
+      "artifact_sha256",
+      "target_family",
+      "review.status",
+      "review.required_reviewers",
+      "review.claim_boundary"
+    ],
+    "schema_version": "agades.pqc.review_artifact.v1",
+    "status_before_domain_claim": "reviewed",
+    "status_field": "review.status",
+    "supported_statuses": [
+      "pending_review",
+      "reviewed",
+      "rejected"
+    ],
+    "unassigned_role_status": "role_required_unassigned"
+  },
+  "rl_environment_contract_path": "docs/rl_environment_contract.json",
+  "role_groups": {
+    "family_cryptography_reviewer": {
+      "assignment_status": "role_required_unassigned",
+      "minimum_reviewers_per_family_artifact": 1,
+      "role_ids": [
+        "code_based_cryptographer",
+        "hash_based_signature_reviewer",
+        "implementation_security_reviewer",
+        "isogeny_historical_reviewer",
+        "lattice_cryptographer",
+        "multivariate_cryptographer"
+      ]
+    },
+    "formal_methods_reviewer": {
+      "minimum_reviewers": 1,
+      "required_expertise": [
+        "Lean 4 theorem and source binding review",
+        "Mathlib-backed proof obligation typing",
+        "artifact hash and source-path binding review",
+        "SMT/Z3 finite-obligation audit when used"
+      ]
+    },
+    "release_boundary_reviewer": {
+      "minimum_reviewers": 1,
+      "required_expertise": [
+        "OSS redaction and no-secret publication review",
+        "no-public-PQC-break-claim review",
+        "private dataset/model/trace holdback review",
+        "Hugging Face, Prime Intellect, and NVIDIA metadata review"
+      ]
+    }
+  },
+  "schema_version": "agades.pqc.reviewer_governance.v1"
+}

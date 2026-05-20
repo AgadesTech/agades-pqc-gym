@@ -1,0 +1,149 @@
+{
+  "entries": [
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_acvp_mldsa_vector_set_fixture_verify_seed",
+      "attack_type": "kat_conformance",
+      "candidate_id": "toy_acvp_mldsa_vector_set_fixture_verify_seed-0",
+      "combined_score": -13.2758,
+      "estimated_memory_bits": 8.5314,
+      "estimated_time_bits": 8.543,
+      "estimator_name": "toy-implementation-security-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "implementation_security_toy_kat",
+      "target_family": "IMPLEMENTATION_SECURITY",
+      "trace_id": "b2e4757bee9920a464394b45ad6a03e28c005f9f97bd8f11a14b5990b5c570aa",
+      "warnings": [
+        "Toy implementation-security ACVP vector-set output is for public verifier plumbing only; it is not an ACVP certificate, not a conformance result, and not a security claim.",
+        "Verified a public JSON-only toy ACVP vector-set fixture without executing artifacts; this is reproducibility plumbing, not an ACVP certificate, conformance, side-channel, or security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_acvp_mlkem_vector_set_fixture_verify_seed",
+      "attack_type": "kat_conformance",
+      "candidate_id": "toy_acvp_mlkem_vector_set_fixture_verify_seed-1",
+      "combined_score": -12.8023,
+      "estimated_memory_bits": 8.1497,
+      "estimated_time_bits": 8.1649,
+      "estimator_name": "toy-implementation-security-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "implementation_security_toy_kat",
+      "target_family": "IMPLEMENTATION_SECURITY",
+      "trace_id": "0de5b645ff46f3d3a44e274477ec0358ecfcc0c60d769fa25433a3b2208645e0",
+      "warnings": [
+        "Toy implementation-security ACVP vector-set output is for public verifier plumbing only; it is not an ACVP certificate, not a conformance result, and not a security claim.",
+        "Verified a public JSON-only toy ACVP vector-set fixture without executing artifacts; this is reproducibility plumbing, not an ACVP certificate, conformance, side-channel, or security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_mldsa_kat_digest_fixture_verify_seed",
+      "attack_type": "kat_conformance",
+      "candidate_id": "toy_mldsa_kat_digest_fixture_verify_seed-2",
+      "combined_score": -10.9893,
+      "estimated_memory_bits": 6.7004,
+      "estimated_time_bits": 6.7142,
+      "estimator_name": "toy-implementation-security-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "implementation_security_toy_kat",
+      "target_family": "IMPLEMENTATION_SECURITY",
+      "trace_id": "36bffd464f654a4449f22174999258538d6c657ad5a95f610f0b209c434aab05",
+      "warnings": [
+        "Toy implementation-security KAT output is for public verifier plumbing only; it is not a security claim.",
+        "Verified a public JSON-only toy KAT digest fixture without executing artifacts; this is reproducibility plumbing, not a conformance, side-channel, or security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_mlkem_kat_digest_kat_seed",
+      "attack_type": "kat_conformance",
+      "candidate_id": "toy_mlkem_kat_digest_kat_seed-3",
+      "combined_score": -12.424,
+      "estimated_memory_bits": 6.2288,
+      "estimated_time_bits": 6.2668,
+      "estimator_name": "toy-implementation-security-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "implementation_security_toy_kat",
+      "target_family": "IMPLEMENTATION_SECURITY",
+      "trace_id": "530f399e2357e3720f32f4824843b7d2750ad8cc7a0beb01817d8e53af619933",
+      "warnings": [
+        "Toy implementation-security KAT output is for public verifier plumbing only; it is not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_mlkem_kat_digest_fixture_verify_seed",
+      "attack_type": "kat_conformance",
+      "candidate_id": "toy_mlkem_kat_digest_fixture_verify_seed-4",
+      "combined_score": -10.424,
+      "estimated_memory_bits": 6.2288,
+      "estimated_time_bits": 6.2668,
+      "estimator_name": "toy-implementation-security-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "implementation_security_toy_kat",
+      "target_family": "IMPLEMENTATION_SECURITY",
+      "trace_id": "0d451a5633af20184e6b02f8ba376dda8931804828b406d3f7381cae83d2c523",
+      "warnings": [
+        "Toy implementation-security KAT output is for public verifier plumbing only; it is not a security claim.",
+        "Verified a public JSON-only toy KAT digest fixture without executing artifacts; this is reproducibility plumbing, not a conformance, side-channel, or security claim."
+      ]
+    }
+  ],
+  "ledger_version": "0.1.0",
+  "safety": {
+    "arbitrary_code_execution": false,
+    "live_targeting": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.public_run_ledger.v1",
+  "source_trace": {
+    "artifact": "trace_public.jsonl",
+    "public_sha256": "84670b7d18ccc29126646742fe76d038ef68bb5d11d96857b3078fd2f723dd04",
+    "record_count": 5
+  },
+  "summary": {
+    "accepted_records": 5,
+    "by_estimator": {
+      "toy-implementation-security-estimator": 5
+    },
+    "by_evaluation_status": {
+      "ok": 5
+    },
+    "by_family": {
+      "IMPLEMENTATION_SECURITY": 5
+    },
+    "redacted_records": 0,
+    "total_records": 5
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": "agades.pqc.implementation_security_toy_benchmark.v1",
+  "family": "IMPLEMENTATION_SECURITY",
+  "target_name": "toy_mlkem_benchmark_summary",
+  "suite": "toy_mlkem_benchmark",
+  "metric": "toy_cycles_per_operation",
+  "model": "toy_benchmark_summary_check",
+  "samples": [1200, 1210, 1190, 1205, 1195],
+  "max_median_cycles": 1250.0,
+  "artifact_execution": false,
+  "public": true,
+  "security_claim": false
+}

@@ -1,0 +1,528 @@
+{
+  "accepted": true,
+  "checks": [
+    {
+      "artifact": "runbook deliverables",
+      "detail": "Runbook-required docs, collaboration briefs, ecosystem cards, machine-readable manifests, and MVP reports are checked in.",
+      "evidence": {
+        "artifact_count": 47,
+        "groups": {
+          "architecture_docs": 7,
+          "collaboration_briefs": 3,
+          "community_and_ecosystem": 9,
+          "github_oss_onboarding": 4,
+          "machine_readable_artifacts": 20,
+          "mvp_reports": 1,
+          "safety_and_moat": 3
+        }
+      },
+      "failures": [],
+      "id": "runbook-deliverable-artifacts",
+      "status": "passed"
+    },
+    {
+      "artifact": "README.md + docs + package metadata",
+      "detail": "Public positioning uses Agades PQC Gym naming and rejects legacy cryptanalysis and generic package names that could confuse the project with unrelated digital-asset tooling.",
+      "evidence": {
+        "current_name_paths": 6,
+        "legacy_name_patterns": 7,
+        "primary_package": "agades_pqc_gym",
+        "repository_slug": "agades-pqc-gym"
+      },
+      "failures": [],
+      "id": "runbook-positioning-boundaries",
+      "status": "passed"
+    },
+    {
+      "artifact": "family-agnostic core and family plugin modules",
+      "detail": "Family-agnostic runtime symbols and every planned family plugin module are present, with lattice kept as the first implemented vertical instead of the product boundary.",
+      "evidence": {
+        "core_symbol_count": 14,
+        "core_symbol_import_count": 14,
+        "core_symbol_imports": {
+          "AssumptionSet": "agades_pqc_gym.core.AssumptionSet",
+          "AttackOperator": "agades_pqc_gym.core.AttackOperator",
+          "AttackPlan": "agades_pqc_gym.core.AttackPlan",
+          "EvaluatorResult": "agades_pqc_gym.core.EvaluatorResult",
+          "FamilyAdapter": "agades_pqc_gym.core.FamilyAdapter",
+          "FamilyPluginDescriptor": "agades_pqc_gym.core.FamilyPluginDescriptor",
+          "FamilyPluginEntry": "agades_pqc_gym.core.FamilyPluginEntry",
+          "FamilyRegistry": "agades_pqc_gym.core.FamilyRegistry",
+          "FitnessReport": "agades_pqc_gym.core.FitnessReport",
+          "ReportGenerator": "agades_pqc_gym.core.ReportGenerator",
+          "TargetSpec": "agades_pqc_gym.core.TargetSpec",
+          "TraceRecord": "agades_pqc_gym.core.TraceRecord",
+          "default_family_registry": "agades_pqc_gym.core.default_family_registry",
+          "redact_trace_record": "agades_pqc_gym.core.redact_trace_record"
+        },
+        "core_symbols": {
+          "AssumptionSet": "src/agades_pqc_gym/core/assumptions.py",
+          "AttackOperator": "src/agades_pqc_gym/core/attack_plan.py",
+          "AttackPlan": "src/agades_pqc_gym/core/attack_plan.py",
+          "EvaluatorResult": "src/agades_pqc_gym/core/evaluator_result.py",
+          "FamilyAdapter": "src/agades_pqc_gym/core/family_adapter.py",
+          "FamilyPluginDescriptor": "src/agades_pqc_gym/core/family_plugin.py",
+          "FamilyPluginEntry": "src/agades_pqc_gym/core/family_plugin.py",
+          "FamilyRegistry": "src/agades_pqc_gym/core/registry.py",
+          "FitnessReport": "src/agades_pqc_gym/core/fitness.py",
+          "ReportGenerator": "src/agades_pqc_gym/reporting/generator.py",
+          "TargetSpec": "src/agades_pqc_gym/core/target.py",
+          "TraceRecord": "src/agades_pqc_gym/core/trace_record.py",
+          "default_family_registry": "src/agades_pqc_gym/core/registry.py",
+          "redact_trace_record": "src/agades_pqc_gym/traces/redaction.py"
+        },
+        "family_plugin_count": 6,
+        "family_plugin_module_digest_count": 55,
+        "family_plugin_module_digests": {
+          "code_based": {
+            "src/agades_pqc_gym/families/code_based/adapter.py": "be956fa0c79f82a059a8e14914de3f8e20988f9164ae5195fc91f221e4e290b0",
+            "src/agades_pqc_gym/families/code_based/bit_flip_estimator.py": "698aae468c393b7dd265370733015258adaf8c6f9b58131f8e28eb0f8d90cf61",
+            "src/agades_pqc_gym/families/code_based/bit_flip_fixture.py": "b70982132b8dc3e7716d94fdad9c28feba0f5df2f9b76a473335516dd8c57d23",
+            "src/agades_pqc_gym/families/code_based/classic_mceliece_fixture_decoder.py": "ad8b0cacfb8fdaa3a6ea0477be910ab6fdc1f5273dac105ca9407ee4775a1889",
+            "src/agades_pqc_gym/families/code_based/classic_mceliece_fixture_estimator.py": "5ec38e7aa508ed134f289c8bdfc369b6d57673f06be6184475940fcc6101e5c6",
+            "src/agades_pqc_gym/families/code_based/hqc_fixture_decoder.py": "1d9e39da59884483b62b39eca60a054440d425902f455b7467288b43fa556a4b",
+            "src/agades_pqc_gym/families/code_based/hqc_fixture_estimator.py": "8c1b7fa0b9696f389252a754fad068ea75e17cdfa25323f81b0d7d94894786b6",
+            "src/agades_pqc_gym/families/code_based/isd_estimator.py": "6d2b713bf379050e29697cc1f6db296a21128d9a172de5bb0aa532c7144b13fb",
+            "src/agades_pqc_gym/families/code_based/operators.py": "fef65a7442537e4e2fd0b125c57af18acb9cd5585693ffe663d96c1e7e3c1eb5",
+            "src/agades_pqc_gym/families/code_based/plugin.py": "fcf43d0584e172eb73d877a24bd717d2b0a76709e7d6bffc86f0e24325186793",
+            "src/agades_pqc_gym/families/code_based/syndrome_solver.py": "ce6fcdf5be20b0c92dc9ec85a939387da7bf486bf1795c907d75ae797fe06a65",
+            "src/agades_pqc_gym/families/code_based/targets.py": "87b216ffd3d57a18d0200f2db4357794f082c71b1d83dd07441a6fa4b1564b91",
+            "src/agades_pqc_gym/families/code_based/validators.py": "6c4f50905cd03ef12a908025b52bd145ab2296a359dac58ac116a3499fb7dc7a"
+          },
+          "hash_based": {
+            "src/agades_pqc_gym/families/hash_based/adapter.py": "19222b0b9c7c1e42a21ad40b8b5d0b03d7ebba3179f9755d0247fe26d6b264b4",
+            "src/agades_pqc_gym/families/hash_based/bound_estimator.py": "b3287e77ab10674004adab97890b0be33a74022b42fce198be40dc8f94a90ff8",
+            "src/agades_pqc_gym/families/hash_based/collision_fixture.py": "441c1a07ebc746c7dca2231598b3564c0b7ef09f4651da8e1823693dd0e9f563",
+            "src/agades_pqc_gym/families/hash_based/misuse_fixture.py": "eae596f2282dde0e1a04821831a735fdd44f373981aa12bb5ef05bdc5ee64344",
+            "src/agades_pqc_gym/families/hash_based/operators.py": "f17d7924cb1156f6711e12ccc99d3e953222b93672e71941239b1b7e47686a37",
+            "src/agades_pqc_gym/families/hash_based/plugin.py": "a2cdf218dae58c3120dbcbd854a8b4d9df6151784e8be37383b83b8a0ff957b7",
+            "src/agades_pqc_gym/families/hash_based/preimage_solver.py": "1e54a847658e54ebb4e1af41f1bec14e1c2e5580e81c50ff75bf05eb5146a73d",
+            "src/agades_pqc_gym/families/hash_based/signature_fixture.py": "a0c3429504445093d2f9504d7152719762778d12e2fbe16a5e428b8c5ec52b1b",
+            "src/agades_pqc_gym/families/hash_based/targets.py": "87b216ffd3d57a18d0200f2db4357794f082c71b1d83dd07441a6fa4b1564b91",
+            "src/agades_pqc_gym/families/hash_based/validators.py": "561fa5ab8764c30f4ba8b7daeaf98b9a69bdc274ef20b4ef8516aee21c7f6f62"
+          },
+          "implementation_security": {
+            "src/agades_pqc_gym/families/implementation_security/adapter.py": "6b68a453083b75d0499230f0b2635e98403fbb7adbbe7e8ff4969c1cf0dcba74",
+            "src/agades_pqc_gym/families/implementation_security/benchmark_fixture.py": "38a6902774cdb607595e60475a06006abe96faaba2556db31530a7526f24d2ab",
+            "src/agades_pqc_gym/families/implementation_security/kat_estimator.py": "f9a435b5c2d9f038cfab13bece00a1b82c3097bbc62c93561778e34b559286eb",
+            "src/agades_pqc_gym/families/implementation_security/kat_fixture.py": "f4ee3d70c185f770e5982584063d3a7ba95bd34f5aa09a9ca2ae7fb819044965",
+            "src/agades_pqc_gym/families/implementation_security/operators.py": "6f5b962abac592555ce6f0e47c7e8856a194f882412efa768b5ee6e372eeaba0",
+            "src/agades_pqc_gym/families/implementation_security/plugin.py": "4ef460e5f90e026401f1628f71ffbff39bf6bf87271a8ab3102e76213db10bbd",
+            "src/agades_pqc_gym/families/implementation_security/targets.py": "87b216ffd3d57a18d0200f2db4357794f082c71b1d83dd07441a6fa4b1564b91",
+            "src/agades_pqc_gym/families/implementation_security/timing_fixture.py": "e3d5d73f63e9eefabc148240e94c11cc44257b3d5e0aa409f7135d0223e30608",
+            "src/agades_pqc_gym/families/implementation_security/validators.py": "72861aa3c86c90d88c67bb4a4855d10ddbc88f5a1c7ca66f6e3be8b7a31edda6"
+          },
+          "isogeny_historical": {
+            "src/agades_pqc_gym/families/isogeny_historical/adapter.py": "fa5602ada5c10112caddc1aee75a129d5a2b4ce5d449bb021d1c89feebc3b7a2",
+            "src/agades_pqc_gym/families/isogeny_historical/operators.py": "b6476c40b926272f3978a05dab832c67cf5e2206a5e870b31bf233814d2db317",
+            "src/agades_pqc_gym/families/isogeny_historical/path_estimator.py": "e552ae456faf0652ab1f0d0ba52d791812b0ee2d36db14e3fa45e8763b26f9aa",
+            "src/agades_pqc_gym/families/isogeny_historical/path_fixture.py": "875530db0f50e2ad8cf2ecebdb278639ce664ba4626b1c60123d9637b2061fbb",
+            "src/agades_pqc_gym/families/isogeny_historical/plugin.py": "01d755117b96ee100bc9c2556fcc1811bb079193793a8a43334dcfa43cb69a46",
+            "src/agades_pqc_gym/families/isogeny_historical/targets.py": "87b216ffd3d57a18d0200f2db4357794f082c71b1d83dd07441a6fa4b1564b91",
+            "src/agades_pqc_gym/families/isogeny_historical/validators.py": "2449cd0cbb54f6818c51edf84f29acec4908ddc38181ab077e16519b05cc586d"
+          },
+          "lattice": {
+            "src/agades_pqc_gym/families/lattice/adapter.py": "376d82c7dc1f08a185f1dbc770a7e2d7bbfc5b5d2330473c4ca25041dba24f39",
+            "src/agades_pqc_gym/families/lattice/downscaled_solver.py": "934715be7e6a1b7960b0e9c1da31ba7558f9ee08cb26776b790033aeec82ae8d",
+            "src/agades_pqc_gym/families/lattice/lattice_estimator.py": "53d9db032e400f82e48f47b1d2aae0bb19ba6596955a823de5227e6c97791651",
+            "src/agades_pqc_gym/families/lattice/operators.py": "2b2283a0562cf344384b799fb3096be09230dae17d3e64760c4b5cc6b8f739ea",
+            "src/agades_pqc_gym/families/lattice/plugin.py": "3ea12c1e3436a79ec13df6164c52e1066874d67d711cea7999967efe33907ed3",
+            "src/agades_pqc_gym/families/lattice/targets.py": "e1cf9048dbfab11da48a43938aac82325e4dc59edca4adafd0f033d18b5f9d68",
+            "src/agades_pqc_gym/families/lattice/validators.py": "4e6098fa9b758ad5ecca3403f8137bf1b10ccfb0c8113e0bd5c698944bd6aebc"
+          },
+          "multivariate": {
+            "src/agades_pqc_gym/families/multivariate/adapter.py": "4382d4546e647cd50a7359c3489f4be2edb52835b9311d388800bfb3fc6e500d",
+            "src/agades_pqc_gym/families/multivariate/minrank_solver.py": "ba6ad6d0ae1052f46634d052a54ddfaaaaba9ab83ce14e8f651b7610b9fc535f",
+            "src/agades_pqc_gym/families/multivariate/mq_estimator.py": "8fc8def74572456a91814914c1c29ee0eb4af3a2a0fcac1a3fec486b47762834",
+            "src/agades_pqc_gym/families/multivariate/mq_solver.py": "aab552480c86360021c505f42c3342eb12b4b2131d308b18349d65a73d6ab320",
+            "src/agades_pqc_gym/families/multivariate/operators.py": "a261bb2794cc591a4649568eea2d66c6635c65b771388081b602b02971e46ec8",
+            "src/agades_pqc_gym/families/multivariate/plugin.py": "27df9009f5676ff08d60c66aa76edff0a581e7248778388e9e426e537f8ded4e",
+            "src/agades_pqc_gym/families/multivariate/targets.py": "87b216ffd3d57a18d0200f2db4357794f082c71b1d83dd07441a6fa4b1564b91",
+            "src/agades_pqc_gym/families/multivariate/uov_fixture.py": "7ad87c44055f74853594218cd6d31468ae0b9b9d8077e4ab7d46b3f23d9ebbbb",
+            "src/agades_pqc_gym/families/multivariate/validators.py": "6e412cb6ff7e5cb9bce3cad75388bdf9ac04498ac56d92f1975ea99936e461dc"
+          }
+        },
+        "family_plugin_module_import_count": 55,
+        "family_plugin_module_imports": {
+          "code_based": [
+            "agades_pqc_gym.families.code_based.adapter",
+            "agades_pqc_gym.families.code_based.bit_flip_estimator",
+            "agades_pqc_gym.families.code_based.bit_flip_fixture",
+            "agades_pqc_gym.families.code_based.classic_mceliece_fixture_decoder",
+            "agades_pqc_gym.families.code_based.classic_mceliece_fixture_estimator",
+            "agades_pqc_gym.families.code_based.hqc_fixture_decoder",
+            "agades_pqc_gym.families.code_based.hqc_fixture_estimator",
+            "agades_pqc_gym.families.code_based.isd_estimator",
+            "agades_pqc_gym.families.code_based.operators",
+            "agades_pqc_gym.families.code_based.plugin",
+            "agades_pqc_gym.families.code_based.syndrome_solver",
+            "agades_pqc_gym.families.code_based.targets",
+            "agades_pqc_gym.families.code_based.validators"
+          ],
+          "hash_based": [
+            "agades_pqc_gym.families.hash_based.adapter",
+            "agades_pqc_gym.families.hash_based.bound_estimator",
+            "agades_pqc_gym.families.hash_based.collision_fixture",
+            "agades_pqc_gym.families.hash_based.misuse_fixture",
+            "agades_pqc_gym.families.hash_based.operators",
+            "agades_pqc_gym.families.hash_based.plugin",
+            "agades_pqc_gym.families.hash_based.preimage_solver",
+            "agades_pqc_gym.families.hash_based.signature_fixture",
+            "agades_pqc_gym.families.hash_based.targets",
+            "agades_pqc_gym.families.hash_based.validators"
+          ],
+          "implementation_security": [
+            "agades_pqc_gym.families.implementation_security.adapter",
+            "agades_pqc_gym.families.implementation_security.benchmark_fixture",
+            "agades_pqc_gym.families.implementation_security.kat_estimator",
+            "agades_pqc_gym.families.implementation_security.kat_fixture",
+            "agades_pqc_gym.families.implementation_security.operators",
+            "agades_pqc_gym.families.implementation_security.plugin",
+            "agades_pqc_gym.families.implementation_security.targets",
+            "agades_pqc_gym.families.implementation_security.timing_fixture",
+            "agades_pqc_gym.families.implementation_security.validators"
+          ],
+          "isogeny_historical": [
+            "agades_pqc_gym.families.isogeny_historical.adapter",
+            "agades_pqc_gym.families.isogeny_historical.operators",
+            "agades_pqc_gym.families.isogeny_historical.path_estimator",
+            "agades_pqc_gym.families.isogeny_historical.path_fixture",
+            "agades_pqc_gym.families.isogeny_historical.plugin",
+            "agades_pqc_gym.families.isogeny_historical.targets",
+            "agades_pqc_gym.families.isogeny_historical.validators"
+          ],
+          "lattice": [
+            "agades_pqc_gym.families.lattice.adapter",
+            "agades_pqc_gym.families.lattice.downscaled_solver",
+            "agades_pqc_gym.families.lattice.lattice_estimator",
+            "agades_pqc_gym.families.lattice.operators",
+            "agades_pqc_gym.families.lattice.plugin",
+            "agades_pqc_gym.families.lattice.targets",
+            "agades_pqc_gym.families.lattice.validators"
+          ],
+          "multivariate": [
+            "agades_pqc_gym.families.multivariate.adapter",
+            "agades_pqc_gym.families.multivariate.minrank_solver",
+            "agades_pqc_gym.families.multivariate.mq_estimator",
+            "agades_pqc_gym.families.multivariate.mq_solver",
+            "agades_pqc_gym.families.multivariate.operators",
+            "agades_pqc_gym.families.multivariate.plugin",
+            "agades_pqc_gym.families.multivariate.targets",
+            "agades_pqc_gym.families.multivariate.uov_fixture",
+            "agades_pqc_gym.families.multivariate.validators"
+          ]
+        },
+        "family_plugin_modules": {
+          "code_based": [
+            "src/agades_pqc_gym/families/code_based/adapter.py",
+            "src/agades_pqc_gym/families/code_based/bit_flip_estimator.py",
+            "src/agades_pqc_gym/families/code_based/bit_flip_fixture.py",
+            "src/agades_pqc_gym/families/code_based/classic_mceliece_fixture_decoder.py",
+            "src/agades_pqc_gym/families/code_based/classic_mceliece_fixture_estimator.py",
+            "src/agades_pqc_gym/families/code_based/hqc_fixture_decoder.py",
+            "src/agades_pqc_gym/families/code_based/hqc_fixture_estimator.py",
+            "src/agades_pqc_gym/families/code_based/isd_estimator.py",
+            "src/agades_pqc_gym/families/code_based/operators.py",
+            "src/agades_pqc_gym/families/code_based/plugin.py",
+            "src/agades_pqc_gym/families/code_based/syndrome_solver.py",
+            "src/agades_pqc_gym/families/code_based/targets.py",
+            "src/agades_pqc_gym/families/code_based/validators.py"
+          ],
+          "hash_based": [
+            "src/agades_pqc_gym/families/hash_based/adapter.py",
+            "src/agades_pqc_gym/families/hash_based/bound_estimator.py",
+            "src/agades_pqc_gym/families/hash_based/collision_fixture.py",
+            "src/agades_pqc_gym/families/hash_based/misuse_fixture.py",
+            "src/agades_pqc_gym/families/hash_based/operators.py",
+            "src/agades_pqc_gym/families/hash_based/plugin.py",
+            "src/agades_pqc_gym/families/hash_based/preimage_solver.py",
+            "src/agades_pqc_gym/families/hash_based/signature_fixture.py",
+            "src/agades_pqc_gym/families/hash_based/targets.py",
+            "src/agades_pqc_gym/families/hash_based/validators.py"
+          ],
+          "implementation_security": [
+            "src/agades_pqc_gym/families/implementation_security/adapter.py",
+            "src/agades_pqc_gym/families/implementation_security/benchmark_fixture.py",
+            "src/agades_pqc_gym/families/implementation_security/kat_estimator.py",
+            "src/agades_pqc_gym/families/implementation_security/kat_fixture.py",
+            "src/agades_pqc_gym/families/implementation_security/operators.py",
+            "src/agades_pqc_gym/families/implementation_security/plugin.py",
+            "src/agades_pqc_gym/families/implementation_security/targets.py",
+            "src/agades_pqc_gym/families/implementation_security/timing_fixture.py",
+            "src/agades_pqc_gym/families/implementation_security/validators.py"
+          ],
+          "isogeny_historical": [
+            "src/agades_pqc_gym/families/isogeny_historical/adapter.py",
+            "src/agades_pqc_gym/families/isogeny_historical/operators.py",
+            "src/agades_pqc_gym/families/isogeny_historical/path_estimator.py",
+            "src/agades_pqc_gym/families/isogeny_historical/path_fixture.py",
+            "src/agades_pqc_gym/families/isogeny_historical/plugin.py",
+            "src/agades_pqc_gym/families/isogeny_historical/targets.py",
+            "src/agades_pqc_gym/families/isogeny_historical/validators.py"
+          ],
+          "lattice": [
+            "src/agades_pqc_gym/families/lattice/adapter.py",
+            "src/agades_pqc_gym/families/lattice/downscaled_solver.py",
+            "src/agades_pqc_gym/families/lattice/lattice_estimator.py",
+            "src/agades_pqc_gym/families/lattice/operators.py",
+            "src/agades_pqc_gym/families/lattice/plugin.py",
+            "src/agades_pqc_gym/families/lattice/targets.py",
+            "src/agades_pqc_gym/families/lattice/validators.py"
+          ],
+          "multivariate": [
+            "src/agades_pqc_gym/families/multivariate/adapter.py",
+            "src/agades_pqc_gym/families/multivariate/minrank_solver.py",
+            "src/agades_pqc_gym/families/multivariate/mq_estimator.py",
+            "src/agades_pqc_gym/families/multivariate/mq_solver.py",
+            "src/agades_pqc_gym/families/multivariate/operators.py",
+            "src/agades_pqc_gym/families/multivariate/plugin.py",
+            "src/agades_pqc_gym/families/multivariate/targets.py",
+            "src/agades_pqc_gym/families/multivariate/uov_fixture.py",
+            "src/agades_pqc_gym/families/multivariate/validators.py"
+          ]
+        },
+        "family_registry_family_count_matches_plugin_manifest": true,
+        "family_registry_plugin_count_matches_plugin_manifest": true,
+        "family_registry_plugin_manifest_module_digest_count": 55,
+        "family_registry_plugin_manifest_synced": true,
+        "family_registry_runtime_adapter_entries_match_plugin_manifest": true,
+        "lattice_is_first_implemented_plugin": true,
+        "planned_family_plugin_count": 5
+      },
+      "failures": [],
+      "id": "runbook-family-agnostic-core",
+      "status": "passed"
+    },
+    {
+      "artifact": "docs/runbook_input_manifest.json",
+      "detail": "The user-provided v3 runbook brief and project-context transcript are anchored by digest in a public manifest without storing local absolute paths or source text.",
+      "evidence": {
+        "input_count": 2,
+        "manifest_path": "docs/runbook_input_manifest.json",
+        "project_context_sha256": "bc5cdbb52c44a248564c2f75096706aaa740886b47a13dfd468bcf7acd870e9d",
+        "project_name_override": {
+          "name": "Agades PQC Gym",
+          "package": "agades_pqc_gym",
+          "repository_slug": "agades-pqc-gym"
+        },
+        "source_brief_sha256": "9d8b5652e4a9d7e554748175a6ea9d78830f2e4ca9bb2f0bfde9a82adcd3ffa3",
+        "source_input_ids": [
+          "project_context",
+          "source_brief"
+        ],
+        "stores_absolute_paths": false,
+        "stores_source_text": false
+      },
+      "failures": [],
+      "id": "runbook-source-input-manifest",
+      "status": "passed"
+    },
+    {
+      "artifact": "HF/Prime/NVIDIA/public benchmark manifests",
+      "detail": "Community-facing Hugging Face, Prime Intellect, NVIDIA, and public benchmark counts are cross-checked from committed manifests.",
+      "evidence": {
+        "hf_attack_plan_rows": 80,
+        "hf_invalid_attack_plan_rows": 1,
+        "hf_task_metadata_rows": 79,
+        "hf_valid_attack_plan_rows": 79,
+        "nvidia_workloads": 27,
+        "prime_tasks": 79,
+        "prime_tasks_match_hf_task_metadata_rows": true,
+        "public_records": 59,
+        "public_run_bundles": 18
+      },
+      "failures": [],
+      "id": "runbook-ecosystem-counts",
+      "status": "passed"
+    },
+    {
+      "artifact": "public/private boundary docs and manifests",
+      "detail": "Public docs and machine-readable manifests preserve the open-core boundary: no private traces, no private candidate publication, and no security claims from toy evidence.",
+      "evidence": {
+        "boundary_docs": 8,
+        "contains_private_traces": false,
+        "publishes_private_candidates": false,
+        "security_claim": false
+      },
+      "failures": [],
+      "id": "runbook-public-moat-boundary",
+      "status": "passed"
+    },
+    {
+      "artifact": "runbook milestone acceptance matrix",
+      "detail": "Runbook milestones 0-8 are mapped to committed implementation, evaluation, trace, reporting, ecosystem, collaboration, and smoke evidence so completion is auditable milestone by milestone.",
+      "evidence": {
+        "failed_milestones": 0,
+        "milestone_count": 9,
+        "milestone_ids": [
+          "milestone-0-repo-scaffold-and-runbook",
+          "milestone-1-dsl-and-validators",
+          "milestone-2-evaluator-suite",
+          "milestone-3-trace-logging-and-redaction",
+          "milestone-4-openevolve-adapter",
+          "milestone-5-report-generator",
+          "milestone-6-community-release-artifacts",
+          "milestone-7-collaboration-briefs",
+          "milestone-8-end-to-end-smoke-run"
+        ],
+        "milestones": [
+          {
+            "artifact_count": 7,
+            "artifacts": [
+              "pyproject.toml",
+              "README.md",
+              "docs/PLAN.md",
+              "docs/IMPLEMENT.md",
+              "docs/STATUS.md",
+              "docs/EVAL_LOG.md",
+              ".github/workflows/ci.yml"
+            ],
+            "id": "milestone-0-repo-scaffold-and-runbook",
+            "status": "passed",
+            "title": "Repo scaffold and Codex runbook"
+          },
+          {
+            "artifact_count": 7,
+            "artifacts": [
+              "src/agades_pqc_gym/core/target.py",
+              "src/agades_pqc_gym/core/attack_plan.py",
+              "src/agades_pqc_gym/core/operators.py",
+              "src/agades_pqc_gym/core/assumptions.py",
+              "src/agades_pqc_gym/validators/static.py",
+              "examples/attack_plans/lattice_primal_usvp_toy.json",
+              "examples/attack_plans/code_based_isd_placeholder.json"
+            ],
+            "id": "milestone-1-dsl-and-validators",
+            "status": "passed",
+            "title": "DSL and validators"
+          },
+          {
+            "artifact_count": 7,
+            "artifacts": [
+              "src/agades_pqc_gym/evaluators/router.py",
+              "src/agades_pqc_gym/evaluators/lattice_estimator.py",
+              "src/agades_pqc_gym/evaluators/mock_estimator.py",
+              "src/agades_pqc_gym/families/plugins.py",
+              "src/agades_pqc_gym/families/lattice/adapter.py",
+              "docs/family_plugin_manifest.json",
+              "docs/lattice_estimator_manifest.json"
+            ],
+            "id": "milestone-2-evaluator-suite",
+            "status": "passed",
+            "title": "Evaluator suite"
+          },
+          {
+            "artifact_count": 6,
+            "artifacts": [
+              "src/agades_pqc_gym/traces/schema.py",
+              "src/agades_pqc_gym/traces/writer.py",
+              "src/agades_pqc_gym/traces/redaction.py",
+              "src/agades_pqc_gym/traces/public_bundle.py",
+              "public/run_export/manifest.json",
+              "examples/public_runs/lattice_toy_lwe_v0/trace_public.jsonl"
+            ],
+            "id": "milestone-3-trace-logging-and-redaction",
+            "status": "passed",
+            "title": "Trace logging and redaction"
+          },
+          {
+            "artifact_count": 8,
+            "artifacts": [
+              "examples/openevolve/evaluator.py",
+              "src/agades_pqc_gym/openevolve_adapter/evaluator.py",
+              "src/agades_pqc_gym/openevolve_adapter/config_templates.py",
+              "src/agades_pqc_gym/evolution/campaign.py",
+              "src/agades_pqc_gym/evolution/archive.py",
+              "src/agades_pqc_gym/evolution/mutation.py",
+              "src/agades_pqc_gym/evolution/heldout.py",
+              "docs/deepevolve_research_hooks_manifest.json"
+            ],
+            "id": "milestone-4-openevolve-adapter",
+            "status": "passed",
+            "title": "OpenEvolve adapter"
+          },
+          {
+            "artifact_count": 4,
+            "artifacts": [
+              "src/agades_pqc_gym/reporting/generator.py",
+              "src/agades_pqc_gym/reporting/markdown.py",
+              "src/agades_pqc_gym/reporting/report.py",
+              "reports/AGADES_PQC_GYM_MVP_REPORT.md"
+            ],
+            "id": "milestone-5-report-generator",
+            "status": "passed",
+            "title": "Report generator"
+          },
+          {
+            "artifact_count": 11,
+            "artifacts": [
+              "hf/dataset/README.md",
+              "hf/dataset/dataset_info.json",
+              "hf/app.py",
+              "hf/collection_manifest.json",
+              "hf/space_manifest.json",
+              "prime_intellect/verifiers_environment/agades_pqc_verifier_env.py",
+              "prime_intellect/verifiers_environment/prime_manifest.json",
+              "reports/prime_environment_smoke.json",
+              "nvidia/accelerator_manifest.json",
+              "reports/nvidia_manifest_safety.json",
+              "docs/publication_manifest.json"
+            ],
+            "id": "milestone-6-community-release-artifacts",
+            "status": "passed",
+            "title": "Community release artifacts"
+          },
+          {
+            "artifact_count": 3,
+            "artifacts": [
+              "docs/ASI_LABS_COLLABORATION_BRIEF.md",
+              "docs/MARTIN_ALBRECHT_COLLABORATION_BRIEF.md",
+              "docs/LEO_DUCAS_COLLABORATION_BRIEF.md"
+            ],
+            "id": "milestone-7-collaboration-briefs",
+            "status": "passed",
+            "title": "Collaboration briefs"
+          },
+          {
+            "artifact_count": 9,
+            "artifacts": [
+              "docs/public_benchmark_manifest.json",
+              "public/run_export/runs.jsonl",
+              "hf/dataset/task_metadata.jsonl",
+              "hf/dataset/verifier_outputs.jsonl",
+              "prime_intellect/verifiers_environment/prime_manifest.json",
+              "reports/prime_environment_smoke.json",
+              "nvidia/accelerator_manifest.json",
+              "reports/nvidia_manifest_safety.json",
+              "reports/AGADES_PQC_GYM_MVP_REPORT.md"
+            ],
+            "id": "milestone-8-end-to-end-smoke-run",
+            "status": "passed",
+            "title": "End-to-end smoke run"
+          }
+        ],
+        "passed_milestones": 9
+      },
+      "failures": [],
+      "id": "runbook-milestone-coverage",
+      "status": "passed"
+    }
+  ],
+  "project": {
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "safety": {
+    "contains_private_traces": false,
+    "publishes_private_candidates": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.runbook_audit.v1",
+  "summary": {
+    "artifact_count": 47,
+    "failed": 0,
+    "passed": 7,
+    "total": 7
+  }
+}

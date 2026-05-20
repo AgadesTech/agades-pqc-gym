@@ -1,0 +1,38 @@
+{
+  "attack_plan_id": "toy_dudect_summary_fixture_verify_seed",
+  "target": {
+    "family": "IMPLEMENTATION_SECURITY",
+    "name": "toy_dudect_mlkem_summary",
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "constant_time_check",
+      "params": {
+        "tool": "toy_dudect_summary_check",
+        "model": "toy_dudect_summary_threshold_check",
+        "dudect_version": "dudect-toy-summary-v0",
+        "fixed_cycles": [210, 211, 209, 210, 212, 208, 211, 209],
+        "random_cycles": [211, 210, 210, 212, 209, 211, 210, 212],
+        "max_abs_t": 1.2
+      },
+      "assumptions": ["toy_dudect_summary_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/implementation_security_toy_timing/fixtures/toy_dudect_mlkem_summary_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated JSON-only toy dudect-style summary benchmark seed with a public reproduction fixture. It does not execute dudect and is not a constant-time, side-channel, or security claim."
+  }
+}

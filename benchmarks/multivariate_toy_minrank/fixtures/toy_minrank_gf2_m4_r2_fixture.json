@@ -1,0 +1,46 @@
+{
+  "schema_version": "agades.pqc.multivariate_toy_minrank.v1",
+  "family": "MULTIVARIATE",
+  "target_name": "toy_minrank_gf2_m4_r2",
+  "variables": 4,
+  "equations": 16,
+  "field": "GF(2)",
+  "matrix_rows": 4,
+  "matrix_cols": 4,
+  "target_rank": 2,
+  "base_matrix": [
+    [1, 1, 1, 1],
+    [0, 1, 1, 0],
+    [0, 1, 0, 0],
+    [0, 0, 1, 0]
+  ],
+  "coefficient_matrices": [
+    [
+      [0, 0, 0, 0],
+      [1, 1, 0, 0],
+      [1, 1, 1, 1],
+      [0, 0, 1, 0]
+    ],
+    [
+      [0, 1, 0, 1],
+      [0, 1, 0, 0],
+      [1, 0, 0, 1],
+      [0, 1, 1, 0]
+    ],
+    [
+      [1, 1, 0, 0],
+      [1, 0, 1, 1],
+      [0, 1, 0, 0],
+      [1, 0, 0, 0]
+    ],
+    [
+      [0, 0, 0, 0],
+      [0, 1, 1, 1],
+      [0, 0, 1, 0],
+      [0, 1, 1, 0]
+    ]
+  ],
+  "expected_solution": [1, 1, 0, 1],
+  "public": true,
+  "security_claim": false
+}

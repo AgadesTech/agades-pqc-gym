@@ -1,0 +1,49 @@
+name: Estimator integration
+description: Propose a reviewed estimator, benchmark, or reproduction adapter.
+title: "[estimator] "
+labels: ["estimator", "review-required"]
+body:
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Which family, targets, operators, and public source should this integration cover?
+    validations:
+      required: true
+  - type: dropdown
+    id: family
+    attributes:
+      label: Family
+      options:
+        - LWE
+        - MLWE
+        - NTRU
+        - SIS
+        - CODE_BASED
+        - MULTIVARIATE
+        - HASH_BASED
+        - ISOGENY_HISTORICAL
+        - IMPLEMENTATION_SECURITY
+    validations:
+      required: true
+  - type: textarea
+    id: applicability
+    attributes:
+      label: Applicability validator
+      description: What target/operator combinations must be accepted or rejected before estimation?
+    validations:
+      required: true
+  - type: textarea
+    id: provenance
+    attributes:
+      label: Source and versioning
+      description: Link the upstream estimator, dataset, benchmark, commit, release, or vector provenance.
+    validations:
+      required: true
+  - type: textarea
+    id: safety
+    attributes:
+      label: Safety and claim boundary
+      description: State why this is public, authorized, reproducible, and not a security claim.
+    validations:
+      required: true

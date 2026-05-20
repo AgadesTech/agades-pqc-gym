@@ -1,0 +1,8 @@
+{
+  "family": "HASH_BASED",
+  "name": "toy_hash_preimage_32",
+  "n": 32,
+  "hash_function": "SHAKE256",
+  "claimed_security_bits": 32.0,
+  "support_level": "implemented"
+}

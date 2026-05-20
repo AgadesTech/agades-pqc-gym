@@ -1,0 +1,43 @@
+{
+  "attack_plan_id": "hash_based_slh_dsa_hypertree_toy_v1",
+  "target": {
+    "family": "HASH_BASED",
+    "name": "toy_hash_slh_dsa_hypertree_24",
+    "support_level": "implemented",
+    "n": 24,
+    "hash_function": "SHAKE256",
+    "claimed_security_bits": 24.0
+  },
+  "operators": [
+    {
+      "type": "hash_signature_verification",
+      "params": {
+        "signature_model": "toy_slh_dsa_hypertree_verify",
+        "fors_tree_count": 2,
+        "fors_tree_height": 2,
+        "fors_selected_indices": [1, 2],
+        "wots_chain_count": 4,
+        "wots_max_chain_steps": 8,
+        "hypertree_height": 3,
+        "hypertree_leaf_index": 5
+      },
+      "assumptions": ["toy_hash_slh_dsa_hypertree_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/hash_based_toy_signature/fixtures/toy_hash_slh_dsa_hypertree_24_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Toy SLH-DSA-like hypertree signature verification baseline for public plumbing only. Not an SLH-DSA result and not a security claim."
+  }
+}

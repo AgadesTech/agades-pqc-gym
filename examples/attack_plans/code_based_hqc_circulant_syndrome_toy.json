@@ -1,0 +1,41 @@
+{
+  "attack_plan_id": "code_based_hqc_circulant_syndrome_toy_v1",
+  "target": {
+    "family": "CODE_BASED",
+    "name": "toy_hqc_circulant_syndrome_16_8_w2",
+    "n": 16,
+    "k": 8,
+    "w": 2,
+    "claimed_security_bits": 11.0,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "decoding_fixture_check",
+      "params": {
+        "variant": "hqc_circulant_syndrome_toy",
+        "block_size": 8,
+        "max_error_weight": 2
+      },
+      "assumptions": [
+        "toy_hqc_circulant_syndrome_decoder_model"
+      ]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/code_based_toy_hqc/fixtures/toy_hqc_circulant_syndrome_16_8_w2_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Toy HQC-inspired circulant syndrome decoder fixture for public plumbing only. Not an HQC result and not a security claim."
+  }
+}

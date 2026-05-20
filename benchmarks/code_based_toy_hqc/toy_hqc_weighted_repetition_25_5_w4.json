@@ -1,0 +1,39 @@
+{
+  "attack_plan_id": "toy_hqc_weighted_repetition_25_5_w4_decode_seed",
+  "target": {
+    "family": "CODE_BASED",
+    "name": "toy_hqc_weighted_repetition_25_5_w4",
+    "n": 25,
+    "k": 5,
+    "w": 4,
+    "claimed_security_bits": 13.0,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "decoding_fixture_check",
+      "params": {
+        "variant": "hqc_weighted_repetition_toy",
+        "repetition_factor": 5,
+        "max_reliability_weight": 3
+      },
+      "assumptions": ["toy_hqc_weighted_repetition_decoder_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/code_based_toy_hqc/fixtures/toy_hqc_weighted_repetition_25_5_w4_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated toy HQC-inspired weighted repetition decoder benchmark seed with a public fixture. Not an HQC result and not a security claim."
+  }
+}

@@ -1,10 +1,10 @@
 [project]
-name = "agades-lwe-gym"
+name = "agades-pqc-gym"
 version = "0.1.0"
-description = "Evaluator-driven evolutionary search workbench for LWE/MLWE attack strategies"
+description = "Family-agnostic evaluator-driven evolutionary search workbench for cryptanalytic attack strategies"
 readme = "README.md"
 requires-python = ">=3.11"
-license = {text = "Apache-2.0"}
+license = "Apache-2.0"
 authors = [{name = "Agades Technologies"}]
 dependencies = [
     "pydantic>=2.7,<3",
@@ -20,14 +20,24 @@ dev = [
 ]
 
 [project.scripts]
-agades-lwe = "agades_lwe_gym.cli:app"
+agades-pqc = "agades_pqc_gym.cli:app"
 
 [build-system]
-requires = ["setuptools>=69", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+agades_pqc_gym = [
+    "families/code_based/fixtures/*.json",
+    "families/hash_based/fixtures/*.json",
+    "families/implementation_security/fixtures/*.json",
+    "families/isogeny_historical/fixtures/*.json",
+    "families/lattice/fixtures/*.json",
+    "families/multivariate/fixtures/*.json",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

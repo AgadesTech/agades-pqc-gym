@@ -1,0 +1,38 @@
+{
+  "attack_plan_id": "isogeny_historical_toy_path_v1",
+  "target": {
+    "family": "ISOGENY_HISTORICAL",
+    "name": "toy_sidh_path_reconstruction",
+    "n": 64,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "historical_isogeny_reconstruction",
+      "params": {
+        "case": "toy_sidh_path_search",
+        "walk_length": 8,
+        "branching_factor": 4
+      },
+      "assumptions": [
+        "historical_not_current_standard",
+        "historical_toy_isogeny_path_model"
+      ]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": false
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Historical toy isogeny path baseline for public plumbing only. Not a current-standard or security claim."
+  }
+}

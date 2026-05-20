@@ -1,0 +1,38 @@
+{
+  "attack_plan_id": "code_based_bike_placeholder_v1",
+  "target": {
+    "family": "CODE_BASED",
+    "name": "bike_like_schema",
+    "n": 24646,
+    "k": 12323,
+    "w": 134,
+    "claimed_security_bits": 128.0,
+    "support_level": "schema_only"
+  },
+  "operators": [
+    {
+      "type": "information_set_decoding",
+      "params": {
+        "variant": "bike_qc_isd_schema_placeholder"
+      },
+      "assumptions": [
+        "schema_only_no_estimator"
+      ]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": false
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Schema-only BIKE-like quasi-cyclic code-based placeholder. No estimator is implemented and no security claim is made."
+  }
+}

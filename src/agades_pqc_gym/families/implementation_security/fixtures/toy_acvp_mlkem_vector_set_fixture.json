@@ -1,0 +1,39 @@
+{
+  "schema_version": "agades.pqc.implementation_security_toy_acvp.v1",
+  "family": "IMPLEMENTATION_SECURITY",
+  "target_name": "toy_acvp_mlkem_vector_set",
+  "suite": "toy_acvp_mlkem_encap",
+  "model": "toy_acvp_vector_set_match",
+  "algorithm": "ML-KEM",
+  "mode": "encapsulation",
+  "vector_set": {
+    "algorithm": "ML-KEM",
+    "mode": "encapsulation",
+    "revision": "FIPS203-toy",
+    "testGroups": [
+      {
+        "parameterSet": "ML-KEM-512",
+        "tests": [
+          {
+            "ciphertext": "aabbcc",
+            "seed": "00010203",
+            "sharedSecret": "010203",
+            "tcId": 1
+          },
+          {
+            "ciphertext": "ddeeff",
+            "seed": "04050607",
+            "sharedSecret": "102030",
+            "tcId": 2
+          }
+        ],
+        "tgId": 1
+      }
+    ]
+  },
+  "expected_vector_set_sha256": "d45a763b77db874c0382bc849f1e4edb8f662540a2e6b7a6bc9a10a87992f6cf",
+  "test_count": 2,
+  "artifact_execution": false,
+  "public": true,
+  "security_claim": false
+}

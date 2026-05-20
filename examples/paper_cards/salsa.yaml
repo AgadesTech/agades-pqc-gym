@@ -1,8 +1,11 @@
-title: "SALSA-style LWE attack benchmarking note"
+title: "SALSA: Attacking Lattice Cryptography with Transformers"
 authors:
-  - "Public literature placeholder"
+  - "Emily Wenger"
+  - "Mingjie Chen"
+  - "Francois Charton"
+  - "Kristin Lauter"
 year: 2022
-url: "https://github.com/facebookresearch/LWE-benchmarking"
+url: "https://eprint.iacr.org/2022/935"
 family: "LWE"
 relevance: "Future work should compare evolved strategy parameters against public LWE attack baselines."
 key_ideas:
@@ -13,4 +16,3 @@ operators_suggested:
   - "bkw"
 implementation_status: "note_only"
 risk: "Needs cryptographer review before implementation."
-

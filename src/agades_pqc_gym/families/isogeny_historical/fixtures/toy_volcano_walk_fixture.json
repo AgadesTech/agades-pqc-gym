@@ -1,0 +1,42 @@
+{
+  "schema_version": "agades.pqc.isogeny_historical_toy_path.v1",
+  "family": "ISOGENY_HISTORICAL",
+  "target_name": "toy_volcano_walk_reconstruction",
+  "n": 83,
+  "case": "toy_volcano_walk_search",
+  "walk_length": 5,
+  "branching_factor": 4,
+  "volcano_height": 3,
+  "start_node": "toy_surface_curve",
+  "end_node": "toy_floor_curve",
+  "path": [
+    "toy_surface_curve",
+    "toy_level_1_left",
+    "toy_level_2_left",
+    "toy_level_3_floor",
+    "toy_level_2_right",
+    "toy_floor_curve"
+  ],
+  "graph_edges": [
+    ["toy_surface_curve", "toy_level_1_left"],
+    ["toy_level_1_left", "toy_level_2_left"],
+    ["toy_level_2_left", "toy_level_3_floor"],
+    ["toy_level_3_floor", "toy_level_2_right"],
+    ["toy_level_2_right", "toy_floor_curve"],
+    ["toy_surface_curve", "toy_level_1_right"],
+    ["toy_level_1_right", "toy_level_2_right"]
+  ],
+  "node_levels": {
+    "toy_surface_curve": 0,
+    "toy_level_1_left": 1,
+    "toy_level_1_right": 1,
+    "toy_level_2_left": 2,
+    "toy_level_2_right": 2,
+    "toy_level_3_floor": 3,
+    "toy_floor_curve": 3
+  },
+  "historical_not_current": true,
+  "current_standard_claim": false,
+  "public": true,
+  "security_claim": false
+}

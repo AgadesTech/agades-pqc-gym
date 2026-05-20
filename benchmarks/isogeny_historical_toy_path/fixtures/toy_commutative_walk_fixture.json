@@ -1,0 +1,24 @@
+{
+  "schema_version": "agades.pqc.isogeny_historical_toy_path.v1",
+  "family": "ISOGENY_HISTORICAL",
+  "target_name": "toy_commutative_walk_reconstruction",
+  "n": 97,
+  "case": "toy_commutative_walk_search",
+  "walk_length": 6,
+  "branching_factor": 5,
+  "start_node": "toy_class_group_start",
+  "end_node": "toy_class_group_end",
+  "path": [
+    "toy_class_group_start",
+    "toy_prime_3_step",
+    "toy_prime_5_step",
+    "toy_prime_7_step",
+    "toy_prime_11_step",
+    "toy_prime_13_step",
+    "toy_class_group_end"
+  ],
+  "historical_not_current": true,
+  "current_standard_claim": false,
+  "public": true,
+  "security_claim": false
+}

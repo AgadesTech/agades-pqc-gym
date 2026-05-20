@@ -1,0 +1,34 @@
+{
+  "attack_plan_id": "hash_based_collision_toy_v1",
+  "target": {
+    "family": "HASH_BASED",
+    "name": "toy_hash_collision_32",
+    "n": 32,
+    "hash_function": "SHAKE256",
+    "claimed_security_bits": 16.0,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "security_bound_check",
+      "params": {"bound_model": "toy_collision_bound"},
+      "assumptions": ["toy_hash_collision_bound_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/hash_based_toy_bound/fixtures/toy_hash_collision_32_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Toy hash collision-bound fixture verification for public plumbing only. Not collision-finding evidence and not a security claim."
+  }
+}

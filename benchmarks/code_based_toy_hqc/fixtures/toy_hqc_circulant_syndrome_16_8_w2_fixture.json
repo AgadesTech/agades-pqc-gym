@@ -1,0 +1,16 @@
+{
+  "schema_version": "agades.pqc.code_based_toy_hqc_circulant_syndrome.v1",
+  "family": "CODE_BASED",
+  "target_name": "toy_hqc_circulant_syndrome_16_8_w2",
+  "n": 16,
+  "k": 8,
+  "w": 2,
+  "block_size": 8,
+  "multiplier_bits": [1, 0, 1, 1, 0, 0, 1, 0],
+  "syndrome_bits": [0, 0, 1, 1, 0, 0, 1, 0],
+  "first_block_error_positions": [0],
+  "second_block_error_positions": [0],
+  "expected_error_positions": [0, 8],
+  "public": true,
+  "security_claim": false
+}

@@ -3,15 +3,15 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from agades_lwe_gym.dsl.schema import AttackPlan, TargetFamily
+from agades_pqc_gym.core.attack_plan import AttackPlan, TargetFamily
 
 
 def test_valid_primal_plan_loads() -> None:
     plan = AttackPlan.model_validate_json(
-        Path("examples/attack_plans/primal_usvp_toy.json").read_text()
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json").read_text()
     )
 
-    assert plan.attack_plan_id == "primal_usvp_toy_v1"
+    assert plan.attack_plan_id == "lattice_primal_usvp_toy_v1"
     assert plan.target.family is TargetFamily.LWE
     assert plan.operators[0].type == "primal_usvp"
 
@@ -25,7 +25,7 @@ def test_module_hypothesis_requires_module_family() -> None:
 
 def test_claims_require_external_source_before_evaluation() -> None:
     data = AttackPlan.model_validate_json(
-        Path("examples/attack_plans/primal_usvp_toy.json").read_text()
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json").read_text()
     ).model_dump()
     data["claims"]["estimated_time_bits"] = 64.0
 

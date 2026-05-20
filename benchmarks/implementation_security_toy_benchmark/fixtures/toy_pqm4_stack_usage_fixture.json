@@ -1,0 +1,13 @@
+{
+  "schema_version": "agades.pqc.implementation_security_toy_benchmark.v1",
+  "family": "IMPLEMENTATION_SECURITY",
+  "target_name": "toy_pqm4_stack_usage",
+  "suite": "toy_pqm4_stack_usage",
+  "metric": "toy_stack_usage_bytes",
+  "model": "toy_stack_usage_check",
+  "stack_samples": [1536, 1600, 1584, 1616, 1568],
+  "max_stack_bytes": 2048,
+  "artifact_execution": false,
+  "public": true,
+  "security_claim": false
+}

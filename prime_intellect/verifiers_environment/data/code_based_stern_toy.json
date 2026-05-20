@@ -1,0 +1,34 @@
+{
+  "attack_plan_id": "code_based_stern_toy_v1",
+  "target": {
+    "family": "CODE_BASED",
+    "name": "toy_syndrome_31_16_w3",
+    "n": 31,
+    "k": 16,
+    "w": 3,
+    "claimed_security_bits": 32.0,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "information_set_decoding",
+      "params": {"variant": "stern_toy", "p": 1},
+      "assumptions": ["stern_isd_partition_collision_cost_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": false
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Toy Stern-style ISD baseline for public plumbing only. Not a security claim."
+  }
+}

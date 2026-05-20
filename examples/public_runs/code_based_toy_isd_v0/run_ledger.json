@@ -1,0 +1,198 @@
+{
+  "entries": [
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_qc_syndrome_21_12_w2_rotation_seed",
+      "attack_type": "information_set_decoding",
+      "candidate_id": "toy_qc_syndrome_21_12_w2_rotation_seed-0",
+      "combined_score": -12.4827,
+      "estimated_memory_bits": 4.3923,
+      "estimated_time_bits": 8.7846,
+      "estimator_name": "toy-code-based-isd-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "code_based_toy_isd",
+      "target_family": "CODE_BASED",
+      "trace_id": "74bfa2c866d2d852eb48dc5cd6215f53b2ac8654225382a11563c3ce7e1a4af4",
+      "warnings": [
+        "Toy quasi-cyclic rotation output is for public evaluator plumbing only; it is not an HQC result and not a security claim.",
+        "Solved a public toy quasi-cyclic syndrome rotation fixture with bounded rotation search; this is reproducibility plumbing, not an HQC result and not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_syndrome_15_7_w2_prange_seed",
+      "attack_type": "information_set_decoding",
+      "candidate_id": "toy_syndrome_15_7_w2_prange_seed-1",
+      "combined_score": -11.3717,
+      "estimated_memory_bits": 5.4919,
+      "estimated_time_bits": 7.3987,
+      "estimator_name": "toy-code-based-isd-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "code_based_toy_isd",
+      "target_family": "CODE_BASED",
+      "trace_id": "05ce3bfaec185f6a84770fc97ab7b340e90a5ee977924270ba48044d3a0a133b",
+      "warnings": [
+        "Toy Prange ISD output is for public evaluator plumbing only; it is not a security claim.",
+        "Solved a public toy binary syndrome-decoding fixture with bounded exhaustive search; this is reproducibility plumbing, not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_syndrome_31_16_w3_prange_seed",
+      "attack_type": "information_set_decoding",
+      "candidate_id": "toy_syndrome_31_16_w3_prange_seed-2",
+      "combined_score": -14.5971,
+      "estimated_memory_bits": 6.9542,
+      "estimated_time_bits": 10.2586,
+      "estimator_name": "toy-code-based-isd-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "code_based_toy_isd",
+      "target_family": "CODE_BASED",
+      "trace_id": "7a8a9b2844ff5279dd4420b2ad0135b12c6ffa8cbdb45361d854c29369f86cfd",
+      "warnings": [
+        "Toy Prange ISD output is for public evaluator plumbing only; it is not a security claim.",
+        "Solved a public toy binary syndrome-decoding fixture with bounded exhaustive search; this is reproducibility plumbing, not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_syndrome_31_16_w3_bjmm_seed",
+      "attack_type": "information_set_decoding",
+      "candidate_id": "toy_syndrome_31_16_w3_bjmm_seed-3",
+      "combined_score": -16.8082,
+      "estimated_memory_bits": 4.3219,
+      "estimated_time_bits": 13.1277,
+      "estimator_name": "toy-code-based-isd-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "code_based_toy_isd",
+      "target_family": "CODE_BASED",
+      "trace_id": "224154163e3b71ff042ff502c6f0be2a40feec28ed5590597a1df427e31434d4",
+      "warnings": [
+        "Toy BJMM-style ISD representation-merge output is for public evaluator plumbing only; it is not a security claim.",
+        "Solved a public toy binary syndrome-decoding fixture with bounded exhaustive search; this is reproducibility plumbing, not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_syndrome_31_16_w3_dumer_seed",
+      "attack_type": "information_set_decoding",
+      "candidate_id": "toy_syndrome_31_16_w3_dumer_seed-4",
+      "combined_score": -16.9777,
+      "estimated_memory_bits": 5.0,
+      "estimated_time_bits": 13.1277,
+      "estimator_name": "toy-code-based-isd-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "code_based_toy_isd",
+      "target_family": "CODE_BASED",
+      "trace_id": "3b8e507541b57dc3b9e3fff01ddc3158bc5bac2652e86c306aa4e1ba7d6e2b4c",
+      "warnings": [
+        "Toy Dumer-style ISD list-merging output is for public evaluator plumbing only; it is not a security claim.",
+        "Solved a public toy binary syndrome-decoding fixture with bounded exhaustive search; this is reproducibility plumbing, not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_syndrome_31_16_w3_lee_brickell_seed",
+      "attack_type": "information_set_decoding",
+      "candidate_id": "toy_syndrome_31_16_w3_lee_brickell_seed-5",
+      "combined_score": -18.3627,
+      "estimated_memory_bits": 5.5546,
+      "estimated_time_bits": 14.3741,
+      "estimator_name": "toy-code-based-isd-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "code_based_toy_isd",
+      "target_family": "CODE_BASED",
+      "trace_id": "84c9a6aa3a02ef5515fb8f7c752073e47a9b4cbe8cbdc61e3ec2a8b8991d2c2b",
+      "warnings": [
+        "Toy Lee-Brickell-style ISD output is for public evaluator plumbing only; it is not a security claim.",
+        "Solved a public toy binary syndrome-decoding fixture with bounded exhaustive search; this is reproducibility plumbing, not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_syndrome_31_16_w3_stern_seed",
+      "attack_type": "information_set_decoding",
+      "candidate_id": "toy_syndrome_31_16_w3_stern_seed-6",
+      "combined_score": -11.9203,
+      "estimated_memory_bits": 4.0,
+      "estimated_time_bits": 8.3203,
+      "estimator_name": "toy-code-based-isd-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "code_based_toy_isd",
+      "target_family": "CODE_BASED",
+      "trace_id": "588a05c8d2e61ec0cb3362c538ff1be8d2faccfcfb8c7da41c262c728d3b32ef",
+      "warnings": [
+        "Toy Stern-style ISD output is for public evaluator plumbing only; it is not a security claim.",
+        "Solved a public toy binary syndrome-decoding fixture with bounded exhaustive search; this is reproducibility plumbing, not a security claim."
+      ]
+    }
+  ],
+  "ledger_version": "0.1.0",
+  "safety": {
+    "arbitrary_code_execution": false,
+    "live_targeting": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.public_run_ledger.v1",
+  "source_trace": {
+    "artifact": "trace_public.jsonl",
+    "public_sha256": "4d1373fa9b7caaf2b34615dfa8ee599189d2afbda06258f2b8ca473d2ed67484",
+    "record_count": 7
+  },
+  "summary": {
+    "accepted_records": 7,
+    "by_estimator": {
+      "toy-code-based-isd-estimator": 7
+    },
+    "by_evaluation_status": {
+      "ok": 7
+    },
+    "by_family": {
+      "CODE_BASED": 7
+    },
+    "redacted_records": 0,
+    "total_records": 7
+  }
+}

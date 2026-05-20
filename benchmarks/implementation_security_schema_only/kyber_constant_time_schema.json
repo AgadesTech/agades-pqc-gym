@@ -1,0 +1,5 @@
+{
+  "family": "IMPLEMENTATION_SECURITY",
+  "name": "kyber_reference_constant_time_schema",
+  "support_level": "schema_only"
+}

@@ -1,0 +1,38 @@
+{
+  "attack_plan_id": "multivariate_mq_degree_bound_toy_v1",
+  "target": {
+    "family": "MULTIVARIATE",
+    "name": "toy_mq_degree_bound_gf16_v8_e6",
+    "variables": 8,
+    "equations": 6,
+    "field": "GF(16)",
+    "claimed_security_bits": 32.0,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "groebner_basis",
+      "params": {
+        "model": "toy_mq_degree_bound",
+        "degree_bound": 3,
+        "linear_algebra_omega": 2.8
+      },
+      "assumptions": ["toy_mq_degree_bound_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": false
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Toy multivariate MQ degree-bound baseline for public plumbing only. Not a Groebner proof, UOV, MAYO, Rainbow, or security claim."
+  }
+}

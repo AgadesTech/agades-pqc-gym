@@ -1,0 +1,13 @@
+{
+  "schema_version": "agades.pqc.hash_based_toy_collision.v1",
+  "family": "HASH_BASED",
+  "target_name": "toy_hash_collision_32",
+  "digest_bits": 32,
+  "hash_function": "SHAKE256",
+  "message_encoding": "utf8",
+  "left_message": "agades-hash-collision-v0:22252",
+  "right_message": "agades-hash-collision-v0:26349",
+  "digest_hex": "f4fb02c8",
+  "public": true,
+  "security_claim": false
+}

@@ -1,0 +1,9 @@
+{
+  "family": "MULTIVARIATE",
+  "name": "toy_mq_gf16_v8_e6",
+  "variables": 8,
+  "equations": 6,
+  "field": "GF(16)",
+  "claimed_security_bits": 32.0,
+  "support_level": "implemented"
+}

@@ -16,9 +16,8 @@ A cascade of schema validation, static consistency checks, analytical estimation
 
 ## Differentiator
 
-The project combines a typed cryptanalytic DSL, Lattice Estimator integration boundary, downscaled validation hooks, MAP-Elites features, and trace separation between public artifacts and private evolution data.
+The project combines a typed cryptanalytic DSL, Lattice Estimator integration boundary, multi-family PaperCard-to-hypothesis hooks, downscaled validation hooks, MAP-Elites features, and trace separation between public artifacts and private evolution data.
 
 ## Ask
 
 Collaborate on cascade evaluation design, feature dimensions, DeepEvolve-style paper-card injection, and a public toy benchmark or blog post. The public framing should emphasize reproducible scientific search, not claims of breaking deployed standards.
-

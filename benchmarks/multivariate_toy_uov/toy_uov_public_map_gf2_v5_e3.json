@@ -1,0 +1,39 @@
+{
+  "attack_plan_id": "toy_uov_public_map_gf2_v5_e3_seed",
+  "target": {
+    "family": "MULTIVARIATE",
+    "name": "toy_uov_public_map_gf2_v5_e3",
+    "variables": 5,
+    "equations": 3,
+    "field": "GF(2)",
+    "claimed_security_bits": 12.0,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "signature_fixture_check",
+      "params": {
+        "signature_model": "toy_uov_public_map_verify",
+        "oil_variables": 2,
+        "vinegar_variables": 3
+      },
+      "assumptions": ["toy_uov_public_map_verification_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/multivariate_toy_uov/fixtures/toy_uov_public_map_gf2_v5_e3_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated toy UOV-inspired public-map benchmark seed with a public GF(2) fixture. This is verifier plumbing only; it is not a UOV, MAYO, Rainbow, or security claim."
+  }
+}

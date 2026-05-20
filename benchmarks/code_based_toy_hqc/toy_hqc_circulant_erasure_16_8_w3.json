@@ -1,0 +1,43 @@
+{
+  "attack_plan_id": "toy_hqc_circulant_erasure_16_8_w3_decode_seed",
+  "target": {
+    "family": "CODE_BASED",
+    "name": "toy_hqc_circulant_erasure_16_8_w3",
+    "n": 16,
+    "k": 8,
+    "w": 3,
+    "claimed_security_bits": 12.0,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "decoding_fixture_check",
+      "params": {
+        "variant": "hqc_circulant_erasure_toy",
+        "block_size": 8,
+        "max_error_weight": 3,
+        "first_block_erasure_count": 3,
+        "second_block_erasure_count": 3
+      },
+      "assumptions": [
+        "toy_hqc_circulant_erasure_decoder_model"
+      ]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/code_based_toy_hqc/fixtures/toy_hqc_circulant_erasure_16_8_w3_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated toy HQC-inspired circulant-erasure benchmark seed with a public fixture. Not an HQC result and not a security claim."
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "attack_plan_id": "lattice_downscaled_mlwe_instance_solve_v1",
+  "target": {
+    "family": "MLWE",
+    "name": "toy_mlwe_k2_n3_q17_instance",
+    "n": 3,
+    "k": 2,
+    "q": 17,
+    "m": 8,
+    "secret_distribution": {"type": "ternary", "hamming_weight": null},
+    "error_distribution": {"type": "bounded", "sigma": null},
+    "claimed_security_bits": 9.0
+  },
+  "operators": [
+    {
+      "type": "module_lattice_reduction_hypothesis",
+      "params": {"model": "toy_linearized_module_fixture"},
+      "assumptions": ["public_downscaled_mlwe_fixture"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": 64.0,
+    "max_time_bits": 80.0,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/lattice_downscaled_mlwe_instances/toy_mlwe_k2_n3_q17_instance.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated toy linearized MLWE fixture-solving seed. Not a cryptanalytic or security claim."
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "attack_plan_id": "toy_mdpc_syndrome_weight_12_6_w2_seed",
+  "target": {
+    "family": "CODE_BASED",
+    "name": "toy_mdpc_syndrome_weight_12_6_w2",
+    "support_level": "implemented",
+    "n": 12,
+    "k": 6,
+    "w": 2,
+    "claimed_security_bits": 10.0
+  },
+  "operators": [
+    {
+      "type": "decoding_fixture_check",
+      "params": {
+        "variant": "mdpc_syndrome_weight_bit_flip_toy",
+        "min_syndrome_weight_drop": 1,
+        "max_iterations": 4
+      },
+      "assumptions": ["toy_mdpc_syndrome_weight_bit_flip_decoder_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/code_based_toy_mdpc/fixtures/toy_mdpc_syndrome_weight_12_6_w2_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated toy MDPC/BIKE-inspired syndrome-weight bit-flip decoder fixture for public plumbing only. Not a BIKE result and not a security claim."
+  }
+}

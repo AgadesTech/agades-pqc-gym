@@ -1,0 +1,34 @@
+{
+  "attack_plan_id": "toy_hash_preimage_24_solve_seed",
+  "target": {
+    "family": "HASH_BASED",
+    "name": "toy_hash_preimage_24",
+    "n": 24,
+    "hash_function": "SHAKE256",
+    "claimed_security_bits": 24.0,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "security_bound_check",
+      "params": {"bound_model": "toy_preimage_bound"},
+      "assumptions": ["toy_hash_preimage_bound_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/hash_based_toy_bound/fixtures/toy_hash_preimage_24_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated toy SHAKE256 preimage benchmark seed with a public reproduction fixture. Not a security claim."
+  }
+}

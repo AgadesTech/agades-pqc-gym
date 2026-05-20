@@ -1,0 +1,40 @@
+{
+  "attack_plan_id": "toy_minrank_gf2_m4_r2_verify_seed",
+  "target": {
+    "family": "MULTIVARIATE",
+    "name": "toy_minrank_gf2_m4_r2",
+    "variables": 4,
+    "equations": 16,
+    "field": "GF(2)",
+    "claimed_security_bits": 12.0,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "minrank_attack",
+      "params": {
+        "model": "toy_minrank_search",
+        "matrix_rows": 4,
+        "matrix_cols": 4,
+        "target_rank": 2
+      },
+      "assumptions": ["toy_minrank_exhaustive_search_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/multivariate_toy_minrank/fixtures/toy_minrank_gf2_m4_r2_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated toy binary MinRank rank-two benchmark seed with a public reproduction fixture. Not a UOV/MAYO/Rainbow or security claim."
+  }
+}

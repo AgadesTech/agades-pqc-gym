@@ -1,6 +1,6 @@
 # Responsible Research
 
-Agades LWE Strategy Gym is research tooling for authorized, public, toy, and downscaled settings.
+Agades PQC Gym is research tooling for authorized, public, toy, and downscaled settings.
 
 ## Boundaries
 

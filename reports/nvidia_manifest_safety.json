@@ -1,0 +1,59 @@
+{
+  "accepted": true,
+  "artifacts": {
+    "artifact_count": 18,
+    "public_run_bundle_count": 18,
+    "publication_manifest": "docs/publication_manifest.json",
+    "release_audit": "public/release_audit.json"
+  },
+  "failures": [],
+  "family_scope": {
+    "family_count": 9,
+    "non_lattice_toy_operator_security_claims": 0,
+    "raw_mapping_redaction_covered": true,
+    "report_redaction_records": 2,
+    "review_required_before_claims": true,
+    "typed_trace_redaction_covered": true
+  },
+  "manifest": {
+    "in_sync": true,
+    "manifest_path": "nvidia/accelerator_manifest.json",
+    "manifest_schema_version": "agades.pqc.nvidia_accelerator.v1",
+    "project_name": "Agades PQC Gym"
+  },
+  "release_gates": [
+    "uv run pytest tests/test_nvidia_manifest_safety.py -q",
+    "uv run agades-pqc nvidia-manifest --out nvidia/accelerator_manifest.json",
+    "uv run agades-pqc nvidia-manifest-verify --manifest nvidia/accelerator_manifest.json",
+    "uv run agades-pqc nvidia-manifest-safety --out reports/nvidia_manifest_safety.json",
+    "uv run agades-pqc nvidia-manifest-safety-verify --report reports/nvidia_manifest_safety.json",
+    "uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json",
+    "uv run agades-pqc release-audit --out public/release_audit.json"
+  ],
+  "runtime": {
+    "current_gpu_required": false,
+    "current_public_backend": "deterministic-python-verifier",
+    "gpu_status": "future_acceleration_surface"
+  },
+  "safety": {
+    "arbitrary_code_execution": false,
+    "contains_private_traces": false,
+    "live_targeting": false,
+    "publishes_private_candidates": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.nvidia_manifest_safety.v1",
+  "workloads": {
+    "all_current_workloads_cpu": true,
+    "cpu_workload_count": 26,
+    "current_gpu_required_workload_count": 0,
+    "current_workload_count": 26,
+    "gpu_future_workload_count": 1,
+    "no_current_workload_requires_gpu": true,
+    "public_run_bundle_count": 18,
+    "reserved_future_gpu_required_workload_count": 1,
+    "reserved_future_workload_count": 1,
+    "total_workload_count": 27,
+    "workload_count": 27
+  }
+}

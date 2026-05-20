@@ -1,12 +1,12 @@
 from pathlib import Path
 
-from agades_lwe_gym.dsl.schema import AttackPlan
-from agades_lwe_gym.validators.static import validate_attack_plan
+from agades_pqc_gym.core.attack_plan import AttackPlan
+from agades_pqc_gym.validators.static import validate_attack_plan
 
 
 def test_static_validator_accepts_valid_plan() -> None:
     plan = AttackPlan.model_validate_json(
-        Path("examples/attack_plans/dual_hybrid_toy.json").read_text()
+        Path("examples/attack_plans/lattice_dual_hybrid_toy.json").read_text()
     )
 
     result = validate_attack_plan(plan)
@@ -17,7 +17,7 @@ def test_static_validator_accepts_valid_plan() -> None:
 
 def test_static_validator_reports_budget_violation() -> None:
     data = AttackPlan.model_validate_json(
-        Path("examples/attack_plans/dual_hybrid_toy.json").read_text()
+        Path("examples/attack_plans/lattice_dual_hybrid_toy.json").read_text()
     ).model_dump()
     data["constraints"]["max_memory_bits"] = 1.0
     plan = AttackPlan.model_validate(data)

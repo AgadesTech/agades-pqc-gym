@@ -1,0 +1,32 @@
+{
+  "attack_plan_id": "hash_based_bound_placeholder_v1",
+  "target": {
+    "family": "HASH_BASED",
+    "name": "slh_dsa_like_schema",
+    "hash_function": "SHAKE256",
+    "claimed_security_bits": 128.0,
+    "support_level": "schema_only"
+  },
+  "operators": [
+    {
+      "type": "security_bound_check",
+      "params": {"bound_model": "generic_hash_bound_schema_placeholder"},
+      "assumptions": ["schema_only_no_estimator"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": false
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Schema-only hash-based placeholder. No estimator is implemented."
+  }
+}
