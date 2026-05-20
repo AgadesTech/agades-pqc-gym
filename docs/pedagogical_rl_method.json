@@ -39,11 +39,11 @@
   "linked_artifacts": {
     "formal_estimator_model": {
       "path": "docs/formal_estimator_model.json",
-      "sha256": "29f152fd77cbb26396747b3c651ec928dac477cc12f34aea73fc89c6cc7a506e"
+      "sha256": "66750e612cdbd3f86cc75a544826b847de6fb07893d853e66dc59f7a66a7fe21"
     },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "9b8ed0dde423052561a7be71ed14f94f0fb60b28d2a224af8fdc3d22b508430d"
+      "sha256": "e70f69d481a5d212e0105d0fba430db7cea9a7c2ba1d48130b6c947756e9a6fc"
     },
     "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
@@ -55,11 +55,11 @@
     },
     "formal_obligation_ledger": {
       "path": "docs/formal_obligation_ledger.json",
-      "sha256": "e05d911038bc22bde964e5006e035133317f711233b913dbd88f54bc571a30bb"
+      "sha256": "0c2ea27b942fffe106d8d32fe132cfe5dcdb8df715453e0abc4845160996bc13"
     },
     "formal_operator_semantics": {
       "path": "docs/formal_operator_semantics.json",
-      "sha256": "c124d9600abe722670710a585699b0a25019f5d80018c654361d4bb99ae0bc45"
+      "sha256": "55eaa380733195a754e47136267ddcb2a41f58528a2d162633f0318d3e6be810"
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",
