@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "c56b4785ebf9020a006b36952547d5823aca2b2497001621ebb19ce046a5ace9",
+  "artifact_sha256": "0f218134607f744cdc260548084bf9e992eada961ea80a1239c94cec92e8299c",
   "attack_plan": {
     "canonical_sha256": "cd75f20024968e2d6bd6f019c623b23663aba3d1fff350d81770755c197e284d",
     "id": "lattice_mlwe_module_hypothesis_toy_v1",
@@ -24,12 +24,39 @@
     "status": "result_binding_required_before_claim"
   },
   "estimator_result_binding": {
-    "canonical_sha256": null,
+    "attack_plan_compatibility": {
+      "attack_plan_id": "lattice_mlwe_module_hypothesis_toy_v1",
+      "compatibility_rule": "exact_operator_or_colon_variant_v1",
+      "compatible": true,
+      "evaluator_attack_type": "bkz_parameter_sweep",
+      "operator_types": [
+        "module_lattice_reduction_hypothesis",
+        "bkz_parameter_sweep"
+      ],
+      "target_family": "MLWE"
+    },
+    "canonical_sha256": "3c5c37b0cfb4461b1ef99d559bb88c81e23557a0399f4004d70fee5bd58c991a",
     "claim_allowed": false,
-    "notes": "No estimator result is attached; the artifact cannot support a security claim.",
-    "path": null,
-    "sha256": null,
-    "status": "not_attached"
+    "notes": "Estimator output is bound for reproducibility and reviewer inspection; it is not a reviewed cryptographic claim.",
+    "parsed_result": {
+      "attack_type": "bkz_parameter_sweep",
+      "claim_allowed": false,
+      "evaluation_status": "ok",
+      "evaluator_commit": null,
+      "evaluator_name": "mock-lattice-estimator",
+      "evaluator_version": "0.1.0",
+      "schema_version": "agades.pqc.evaluator_result.v1"
+    },
+    "path": "docs/formal_lattice_mlwe_module_hypothesis_evaluator_result.json",
+    "schema_contract": {
+      "canonicalization": "json_sort_keys_minified_v1",
+      "json_schema_sha256": "8eefc6ac6687f107f6d6936800af04f6f423a11470d180d5d4da0ccd22f05761",
+      "model": "agades_pqc_gym.core.evaluator_result.EvaluatorResult",
+      "schema_version": "agades.pqc.evaluator_result.schema_contract.v1",
+      "validation": "pydantic_v2_extra_forbid_status_payload_checks"
+    },
+    "sha256": "c9c4a7491a6049ef0cf49194841972f1ffbe7b8303403d6f23e8ae67f4e60f14",
+    "status": "attached_unreviewed"
   },
   "family": "MLWE",
   "family_invariants": [

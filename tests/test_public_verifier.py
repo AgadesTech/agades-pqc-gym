@@ -99,6 +99,23 @@ def test_public_verifier_preserves_unsupported_family_semantics() -> None:
     assert result["estimator"]["name"] == "code-based-placeholder-estimator"
 
 
+def test_public_verifier_validation_errors_are_dependency_version_stable() -> None:
+    result = verify_attack_plan_path(
+        Path("examples/attack_plans/invalid_plan_should_fail.json")
+    )
+
+    assert result["schema_valid"] is False
+    assert result["accepted"] is False
+    assert result["evaluation_status"] == "invalid"
+    assert result["validation_errors"]
+    assert "module_lattice_reduction_hypothesis requires an MLWE target" in (
+        " ".join(result["validation_errors"])
+    )
+    assert not any(
+        "errors.pydantic.dev" in error for error in result["validation_errors"]
+    )
+
+
 @pytest.mark.parametrize(
     ("path", "attack_plan_id", "attack_type", "placeholder_param"),
     [
