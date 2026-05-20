@@ -4309,6 +4309,7 @@ def _openevolve_config_template(root: Path) -> dict[str, Any]:
         "checked_config_synced": summary["checked_config_synced"],
         "config_path": config_path.as_posix(),
         "example_config_synced": summary["checked_config_synced"],
+        "private_qwen_enabled": summary["private_qwen_enabled"],
         "python_candidates_executed": summary["python_candidates_executed"],
         "security_claim": summary["security_claim"],
         "template_keys": len(DEFAULT_CONFIG_TEMPLATE),
@@ -4477,6 +4478,7 @@ def _deepevolve_research_hooks(root: Path) -> dict[str, Any]:
         "arbitrary_code_execution": True,
         "card_count": 0,
         "modifies_estimator_scores": True,
+        "private_qwen_bound": False,
         "proposal_count": 0,
         "research_claim": True,
         "review_required_before_implementation": False,
@@ -4498,6 +4500,9 @@ def _deepevolve_research_hooks(root: Path) -> dict[str, Any]:
 
             verification = verify_deepevolve_research_hooks_manifest(manifest_path)
             failures.extend(verification["failures"])
+            evidence["private_qwen_bound"] = verification["summary"][
+                "private_qwen_bound"
+            ]
             summary = committed.get("summary", {})
             safety = committed.get("safety", {})
             if isinstance(summary, dict):
@@ -4534,6 +4539,8 @@ def _deepevolve_research_hooks(root: Path) -> dict[str, Any]:
         failures.append("DeepEvolve paper card count drifted.")
     if evidence["proposal_count"] != 13:
         failures.append("DeepEvolve proposal count drifted.")
+    if evidence["private_qwen_bound"] is not True:
+        failures.append("DeepEvolve hooks are not bound to private Qwen.")
     if evidence["arbitrary_code_execution"] is not False:
         failures.append("DeepEvolve hooks allow arbitrary code execution.")
     if evidence["modifies_estimator_scores"] is not False:

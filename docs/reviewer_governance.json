@@ -271,7 +271,7 @@
     },
     "release_audit": {
       "path": "public/release_audit.json",
-      "sha256": "c0467e2443bfa2ba983e23845188485f64c8d9921f514be4dad07d0f2084ae8b"
+      "sha256": "46cf84c9e37d7ff8f0cd60a45a98f69d86e1fe6f3e20ad9ff729a9228ca87941"
     }
   },
   "private_training_review": {

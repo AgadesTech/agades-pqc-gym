@@ -316,6 +316,28 @@
       "year": 2023
     }
   ],
+  "private_qwen_research_binding": {
+    "dataset_curation_manifest": "docs/private_dataset_curation.json",
+    "model": "Qwen3.6-27B-private",
+    "pedagogical_rl_method": "docs/pedagogical_rl_method.json",
+    "proposal_gate": {
+      "attackplan_validation_required": true,
+      "estimator_compatibility_required": true,
+      "human_review_required_before_claim": true,
+      "proof_obligation_generation_required": true
+    },
+    "proposal_roles": [
+      "generate_attackplan",
+      "mutate_attackplan",
+      "critique_attackplan",
+      "repair_attackplan",
+      "draft_proof_obligations",
+      "draft_family_invariants",
+      "propose_evaluation_strategy"
+    ],
+    "public_publication_allowed": false,
+    "training_manifest": "docs/private_training_config_manifest.json"
+  },
   "project": {
     "name": "Agades PQC Gym",
     "package": "agades_pqc_gym",
