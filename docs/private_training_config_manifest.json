@@ -35,11 +35,11 @@
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",
-      "sha256": "ca31008dbc6f1bf94a79580b7ff0698d3cb81fb84b1927454005fc6ea04a3c65"
+      "sha256": "e1721928a80376faee646d9123ff1430f6e9f25e5970724747e91b52ffda5cb3"
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "9ae4ad1640d19278df9c7bbfc1819c64f21de1b6431b166dbad0b555ff71b04e"
+      "sha256": "0525d2696c086efa4f4220bbae00930877c5ff5ac0e8b79e41a53b724343900b"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
@@ -60,6 +60,10 @@
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
       "sha256": "a0992031eb7a4268e4813b4d5f02a9ca4dda078972c935ef829c8e981259d86a"
+    },
+    "rl_pedagogy_runtime": {
+      "path": "src/agades_pqc_gym/rl/pedagogy.py",
+      "sha256": "4d3a2f5ef7f12eaa06977cba10901e169ec8eb9584b7e982e7709af36dfaaa6c"
     }
   },
   "model_consumers": {
@@ -76,12 +80,16 @@
   },
   "pedagogical_rl": {
     "assimilation_objective": "surprisal_gated_imitation",
+    "assimilation_weight_function": "agades_pqc_gym.rl.pedagogy.surprisal_gated_token_weights",
+    "learnability_function": "agades_pqc_gym.rl.pedagogy.spike_aware_learnability_score",
     "learnability_score": "spike_aware_logsumexp_surprise_gap",
     "method": "pedagogical_rl",
     "method_manifest_path": "docs/pedagogical_rl_method.json",
     "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
+    "raw_private_signals_publication_allowed": false,
     "requires_no_security_overclaim": true,
     "requires_reviewer_quality_signal": true,
+    "reward_function": "agades_pqc_gym.rl.pedagogy.build_pedagogical_reward_report",
     "reward_terms": [
       "formal_validity",
       "cryptographic_applicability",
@@ -104,7 +112,7 @@
   },
   "prime_training": {
     "config_path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
-    "config_sha256": "e95968dacb8ac6c4d58635082f15f70258b24a4224371584774ac26756c4e4fc",
+    "config_sha256": "b3dadf71ff5a729b7eb27fcf80107e7db1687f9fa196d0521193332bbba1d4c2",
     "dataset_curation_manifest_path": "docs/private_dataset_curation.json",
     "eval_command": "prime eval run agades-pqc-verifier-env",
     "eval_config_manifest_path": "docs/prime_eval_config_manifest.json",

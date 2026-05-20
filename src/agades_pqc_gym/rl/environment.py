@@ -14,6 +14,7 @@ from agades_pqc_gym.integrations.task_metadata import (
     normalize_task_metadata,
     task_metadata_for_plan,
 )
+from agades_pqc_gym.rl.pedagogy import build_pedagogical_reward_report
 from agades_pqc_gym.verifier import verify_attack_plan_json
 
 RL_REWARD_REPORT_SCHEMA = "agades.pqc.rl.reward_report.v1"
@@ -105,6 +106,7 @@ def score_attack_plan_candidate(
     *,
     task_info: dict[str, Any] | str | None = None,
     require_task_match: bool = False,
+    pedagogical_signals: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     parsed_task = normalize_task_metadata(task_info)
     plan: AttackPlan | None = None
@@ -151,7 +153,14 @@ def score_attack_plan_candidate(
         require_task_match=require_task_match,
         task_info=parsed_task,
     )
-    reward = 0.0 if blocking_reasons else _mean_reward(terms)
+    base_reward = 0.0 if blocking_reasons else _mean_reward(terms)
+    pedagogical_reward = build_pedagogical_reward_report(
+        base_reward,
+        pedagogical_signals,
+    )
+    if pedagogical_reward["signal_error"]:
+        blocking_reasons.append("pedagogical_signals")
+    reward = 0.0 if blocking_reasons else pedagogical_reward["final_reward"]
     return {
         "schema_version": RL_REWARD_REPORT_SCHEMA,
         "reward": reward,
@@ -159,6 +168,7 @@ def score_attack_plan_candidate(
         "blocked": bool(blocking_reasons),
         "blocking_reasons": blocking_reasons,
         "terms": terms,
+        "pedagogical_reward": pedagogical_reward,
         "formal_summary": formal_summary,
         "verifier_summary": {
             "schema_valid": verifier_result["schema_valid"],

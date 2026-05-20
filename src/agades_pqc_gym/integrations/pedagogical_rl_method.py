@@ -7,6 +7,7 @@ from typing import Any
 
 from agades_pqc_gym.core.target import TargetFamily
 from agades_pqc_gym.formal.artifacts import MVP_VERTICAL_PROOF_ARTIFACT_PATHS
+from agades_pqc_gym.rl.pedagogy import PEDAGOGICAL_REWARD_REPORT_SCHEMA
 
 PEDAGOGICAL_RL_METHOD_SCHEMA = "agades.pqc.pedagogical_rl_method.v1"
 PEDAGOGICAL_RL_METHOD_VERIFICATION_SCHEMA = (
@@ -19,6 +20,20 @@ PEDAGOGY_REWARD = "R_agades(x,c,tau) * G_spike_student(tau|x)"
 LEARNABILITY_SCORE = "spike_aware_logsumexp_surprise_gap"
 ASSIMILATION_OBJECTIVE = "surprisal_gated_imitation"
 TEACHER_STUDENT_PATTERN = "privileged_self_teacher_student"
+PEDAGOGICAL_REWARD_FUNCTION = (
+    "agades_pqc_gym.rl.pedagogy.build_pedagogical_reward_report"
+)
+LEARNABILITY_FUNCTION = "agades_pqc_gym.rl.pedagogy.spike_aware_learnability_score"
+ASSIMILATION_WEIGHT_FUNCTION = (
+    "agades_pqc_gym.rl.pedagogy.surprisal_gated_token_weights"
+)
+RUNTIME_BINDING = {
+    "reward_report_schema": PEDAGOGICAL_REWARD_REPORT_SCHEMA,
+    "reward_function": PEDAGOGICAL_REWARD_FUNCTION,
+    "learnability_function": LEARNABILITY_FUNCTION,
+    "assimilation_weight_function": ASSIMILATION_WEIGHT_FUNCTION,
+    "raw_private_signals_publication_allowed": False,
+}
 STAGE_SEQUENCE = [
     "privileged_self_teacher_grpo",
     "spike_aware_trajectory_filter",
@@ -61,6 +76,7 @@ LINKED_ARTIFACT_PATHS = {
     "hf_rl_rollout_examples": "hf/dataset/rl_rollouts.jsonl",
     "prime_eval_config_manifest": "docs/prime_eval_config_manifest.json",
     "private_run_policy": "docs/private_run_policy.json",
+    "rl_pedagogy_runtime": "src/agades_pqc_gym/rl/pedagogy.py",
 }
 FORBIDDEN_PUBLIC_CLAIMS = [
     "unreviewed_pqc_break_claims",
@@ -167,6 +183,7 @@ def build_pedagogical_rl_method(root: Path | None = None) -> dict[str, Any]:
                     "exp(-(lambda/beta) * log(mean_t(exp(beta * d_t))))"
                 ),
             },
+            "runtime_binding": dict(RUNTIME_BINDING),
             "claim_boundary": {
                 "allows_security_claims": False,
                 "requires_formal_obligations": True,
@@ -361,6 +378,8 @@ def _verify_reward_contract(method: dict[str, Any], failures: list[str]) -> None
         failures.append("Learnability score must be spike-aware.")
     if learnability.get("beta") != 5.0 or learnability.get("lambda") != 1.0:
         failures.append("Spike-aware reward hyperparameters are incorrect.")
+    if reward.get("runtime_binding") != RUNTIME_BINDING:
+        failures.append("Pedagogical RL runtime binding is incorrect.")
     boundary = _dict_or_empty(reward.get("claim_boundary"))
     if boundary.get("allows_security_claims") is not False:
         failures.append("Pedagogical RL reward must forbid security claims.")

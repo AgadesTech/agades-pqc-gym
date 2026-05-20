@@ -48,7 +48,7 @@
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",
-      "sha256": "ca31008dbc6f1bf94a79580b7ff0698d3cb81fb84b1927454005fc6ea04a3c65"
+      "sha256": "e1721928a80376faee646d9123ff1430f6e9f25e5970724747e91b52ffda5cb3"
     },
     "hf_space_manifest": {
       "path": "hf/space_manifest.json",
@@ -56,7 +56,7 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "9ae4ad1640d19278df9c7bbfc1819c64f21de1b6431b166dbad0b555ff71b04e"
+      "sha256": "0525d2696c086efa4f4220bbae00930877c5ff5ac0e8b79e41a53b724343900b"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
@@ -72,7 +72,7 @@
     },
     "prime_rl_training_template": {
       "path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
-      "sha256": "e95968dacb8ac6c4d58635082f15f70258b24a4224371584774ac26756c4e4fc"
+      "sha256": "b3dadf71ff5a729b7eb27fcf80107e7db1687f9fa196d0521193332bbba1d4c2"
     },
     "prime_schema_manifest": {
       "path": "prime_intellect/schemas/schema_manifest.json",
@@ -88,11 +88,11 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "b3d8c30bf0295337683c0bc35a3b49bb3829c56015ef17580e71b1d41c09dc0e"
+      "sha256": "9edb32a1c47a8df8a5776c2dd9ad792da3c879050c48f5990f5a1e84d54c00ec"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "44fc21b7b032462662c2c3a20f0efcf21a67e1ee9df282de88dab65806b79975"
+      "sha256": "c9d687605f2b726a8a3985163d785dda057e5a75163029998c4bd323b09823f5"
     }
   },
   "private_track": {

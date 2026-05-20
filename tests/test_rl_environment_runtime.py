@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 
 from typer.testing import CliRunner
@@ -48,6 +49,57 @@ def test_pedagogical_reward_scores_all_terms_for_matching_seed() -> None:
     }
     assert report["formal_summary"]["proof_obligations"] == 4
     assert report["formal_summary"]["family_invariants"] == 2
+
+
+def test_pedagogical_reward_applies_spike_aware_private_signal_multiplier() -> None:
+    task_info = _task_info(LATTICE_PLAN)
+
+    report = score_attack_plan_candidate(
+        LATTICE_PLAN.read_text(encoding="utf-8"),
+        task_info=task_info,
+        require_task_match=True,
+        pedagogical_signals={
+            "surprise_gaps": [0.0, 2.0],
+            "student_token_logprobs": [-2.0, -8.0],
+        },
+    )
+
+    expected_learnability = math.exp(
+        -(1.0 / 5.0) * math.log((math.exp(5.0 * 0.0) + math.exp(5.0 * 2.0)) / 2.0)
+    )
+    pedagogy = report["pedagogical_reward"]
+    assert report["accepted"] is True
+    assert report["blocked"] is False
+    assert math.isclose(report["reward"], expected_learnability)
+    assert pedagogy["schema_version"] == "agades.pqc.rl.pedagogical_reward.v1"
+    assert pedagogy["applied"] is True
+    assert math.isclose(pedagogy["base_reward"], 1.0)
+    assert math.isclose(pedagogy["learnability_score"], expected_learnability)
+    assert math.isclose(pedagogy["final_reward"], expected_learnability)
+    assert pedagogy["raw_private_signals_included"] is False
+    assert pedagogy["assimilation_weights"]["count"] == 2
+    assert 0.0 < pedagogy["assimilation_weights"]["min"] < 1.0
+    assert 0.0 < pedagogy["assimilation_weights"]["max"] < 1.0
+    assert "student_token_logprobs" not in json.dumps(pedagogy)
+    assert "surprise_gaps" not in json.dumps(pedagogy)
+
+
+def test_pedagogical_reward_blocks_invalid_private_signal_payload() -> None:
+    task_info = _task_info(LATTICE_PLAN)
+
+    report = score_attack_plan_candidate(
+        LATTICE_PLAN.read_text(encoding="utf-8"),
+        task_info=task_info,
+        require_task_match=True,
+        pedagogical_signals={"surprise_gaps": [-0.1]},
+    )
+
+    assert report["reward"] == 0.0
+    assert report["accepted"] is False
+    assert report["blocked"] is True
+    assert "pedagogical_signals" in report["blocking_reasons"]
+    assert report["pedagogical_reward"]["applied"] is False
+    assert report["pedagogical_reward"]["signal_error"]
 
 
 def test_pedagogical_reward_blocks_task_mismatch_but_keeps_term_diagnostics() -> None:
