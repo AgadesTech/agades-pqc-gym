@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from pydantic import ValidationError
+
 from agades_pqc_gym.core.attack_plan import AttackPlan
 from agades_pqc_gym.formal.artifacts import (
     build_attack_plan_proof_artifact_from_json,
@@ -15,6 +17,7 @@ from agades_pqc_gym.integrations.task_metadata import (
     task_metadata_for_plan,
 )
 from agades_pqc_gym.rl.pedagogy import build_pedagogical_reward_report
+from agades_pqc_gym.utils.validation_errors import stable_validation_error_messages
 from agades_pqc_gym.verifier import verify_attack_plan_json
 
 RL_REWARD_REPORT_SCHEMA = "agades.pqc.rl.reward_report.v1"
@@ -113,6 +116,8 @@ def score_attack_plan_candidate(
     validation_errors: list[str] = []
     try:
         plan = AttackPlan.model_validate_json(candidate_json)
+    except ValidationError as exc:
+        validation_errors.extend(stable_validation_error_messages(exc))
     except ValueError as exc:
         validation_errors.append(str(exc))
 

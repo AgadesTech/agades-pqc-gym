@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from enum import StrEnum
 from pathlib import Path
 from typing import Annotated, Any
 
@@ -47,6 +48,7 @@ from agades_pqc_gym.evolution.scheduler import (
 from agades_pqc_gym.evolution.snapshot import write_private_archive_snapshot
 from agades_pqc_gym.formal.artifacts import (
     verify_attack_plan_proof_artifact,
+    write_attack_plan_evaluator_result,
     write_attack_plan_proof_artifact,
 )
 from agades_pqc_gym.formal.estimator_model import (
@@ -262,6 +264,7 @@ from agades_pqc_gym.verifier import EstimatorChoice, verify_attack_plan_path
 
 app = typer.Typer(
     no_args_is_help=True,
+    rich_markup_mode=None,
     help=(
         "Run Agades PQC Gym experiments. Start with `quickstart`, then use "
         "`validate`, `evaluate`, `benchmark`, and `report` for the core loop. "
@@ -282,6 +285,19 @@ QUICKSTART_UNSUPPORTED_PLAN = Path(
     "examples/attack_plans/code_based_isd_placeholder.json"
 )
 QUICKSTART_LATTICE_BENCHMARK = Path("benchmarks/lattice_toy_lwe")
+
+
+class EstimatorBackend(StrEnum):
+    mock = "mock"
+    lattice = "lattice"
+
+
+def _estimator_choice(
+    estimator: EstimatorChoice | EstimatorBackend,
+) -> EstimatorChoice:
+    if isinstance(estimator, EstimatorBackend):
+        return estimator.value
+    return estimator
 
 
 @app.command("quickstart")
@@ -374,7 +390,7 @@ def evaluate(
     plan_path: Path,
     out: Annotated[Path, typer.Option("--out")] = DEFAULT_EVAL_TRACE,
     estimator: Annotated[
-        EstimatorChoice,
+        EstimatorBackend,
         typer.Option(
             "--estimator",
             help="Lattice-family estimator backend to use.",
@@ -392,7 +408,7 @@ def evaluate(
     result = evaluate_attack_plan(
         plan_path=plan_path,
         out=out,
-        estimator=estimator,
+        estimator=_estimator_choice(estimator),
         estimator_cache=estimator_cache,
     )
     typer.echo(format_evaluation_summary(result, out))
@@ -404,7 +420,7 @@ def evaluate(
 def verify(
     plan_path: Path,
     estimator: Annotated[
-        EstimatorChoice,
+        EstimatorBackend,
         typer.Option(
             "--estimator",
             help="Lattice-family estimator backend to use.",
@@ -421,7 +437,7 @@ def verify(
     """Emit public verifier JSON for Prime/HF-style environments."""
     result = verify_attack_plan_path(
         plan_path,
-        estimator=estimator,
+        estimator=_estimator_choice(estimator),
         estimator_cache=estimator_cache,
     )
     console.print_json(data=result)
@@ -432,7 +448,7 @@ def benchmark(
     benchmark_path: Path,
     out: Annotated[Path, typer.Option("--out")] = DEFAULT_BENCHMARK_TRACE,
     estimator: Annotated[
-        EstimatorChoice,
+        EstimatorBackend,
         typer.Option(
             "--estimator",
             help="Lattice-family estimator backend to use.",
@@ -451,7 +467,7 @@ def benchmark(
         records = write_benchmark_trace(
             benchmark_path,
             out,
-            estimator=estimator,
+            estimator=_estimator_choice(estimator),
             estimator_cache=estimator_cache,
         )
     except ValueError as exc:
@@ -476,7 +492,7 @@ def evolve_batch(
         typer.Option("--run-id", help="Optional stable evolution run id."),
     ] = None,
     estimator: Annotated[
-        EstimatorChoice,
+        EstimatorBackend,
         typer.Option(
             "--estimator",
             help="Lattice-family estimator backend to use.",
@@ -504,7 +520,7 @@ def evolve_batch(
     writer = JsonlTraceWriter(trace_out)
     evaluator = CascadeEvaluator(
         estimator=build_lattice_estimator(
-            estimator=estimator,
+            estimator=_estimator_choice(estimator),
             estimator_cache=estimator_cache,
         )
     )
@@ -655,7 +671,7 @@ def heldout_batch(
         typer.Option("--run-id", help="Optional stable held-out run id."),
     ] = None,
     estimator: Annotated[
-        EstimatorChoice,
+        EstimatorBackend,
         typer.Option(
             "--estimator",
             help="Lattice-family estimator backend to use.",
@@ -693,7 +709,7 @@ def heldout_batch(
     writer = JsonlTraceWriter(trace_out)
     evaluator = CascadeEvaluator(
         estimator=build_lattice_estimator(
-            estimator=estimator,
+            estimator=_estimator_choice(estimator),
             estimator_cache=estimator_cache,
         )
     )
@@ -894,7 +910,7 @@ def heldout_run_schedule(
         "docs/private_run_policy.json"
     ),
     estimator: Annotated[
-        EstimatorChoice,
+        EstimatorBackend,
         typer.Option(
             "--estimator",
             help="Lattice-family estimator backend to use.",
@@ -920,7 +936,7 @@ def heldout_run_schedule(
             schedule_path,
             policy=policy_payload,
             estimator=build_lattice_estimator(
-                estimator=estimator,
+                estimator=_estimator_choice(estimator),
                 estimator_cache=estimator_cache,
             ),
             root=Path.cwd(),
@@ -1770,6 +1786,19 @@ def formal_proof_artifact(
     typer.echo(f"formal_proof_artifact={out}")
 
 
+@app.command("formal-evaluator-result", hidden=True)
+def formal_evaluator_result(
+    attack_plan: Annotated[Path, typer.Argument(help="AttackPlan JSON path.")],
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("docs/formal_evaluator_result.json"),
+) -> None:
+    """Write a claim-disabled evaluator result for formal artifact binding."""
+    write_attack_plan_evaluator_result(attack_plan, out)
+    typer.echo(f"formal_evaluator_result={out}")
+
+
 @app.command("formal-proof-artifact-verify", hidden=True)
 def formal_proof_artifact_verify(
     artifact: Annotated[
@@ -2598,7 +2627,7 @@ def lattice_estimator_baseline_run(
         typer.Option("--run-id", help="Optional stable private baseline run id."),
     ] = None,
     estimator: Annotated[
-        EstimatorChoice,
+        EstimatorBackend,
         typer.Option(
             "--estimator",
             help="Lattice-family estimator backend to use for private baselines.",
@@ -2656,7 +2685,7 @@ def lattice_estimator_baseline_run(
             contracts_path=contracts,
             policy=policy_payload,
             adapter=build_lattice_estimator(
-                estimator=estimator,
+                estimator=_estimator_choice(estimator),
                 estimator_cache=estimator_cache,
                 estimator_source=estimator_source,
                 sage_command=sage_command,
@@ -2921,7 +2950,7 @@ def evaluate_attack_plan(
 ) -> CascadeResult:
     evaluator = CascadeEvaluator(
         estimator=build_lattice_estimator(
-            estimator=estimator,
+            estimator=_estimator_choice(estimator),
             estimator_cache=estimator_cache,
         )
     )
@@ -2968,7 +2997,7 @@ def write_benchmark_trace(
     writer = JsonlTraceWriter(out)
     evaluator = CascadeEvaluator(
         estimator=build_lattice_estimator(
-            estimator=estimator,
+            estimator=_estimator_choice(estimator),
             estimator_cache=estimator_cache,
         )
     )

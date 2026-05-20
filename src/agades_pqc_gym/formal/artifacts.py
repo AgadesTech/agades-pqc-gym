@@ -56,6 +56,14 @@ MVP_VERTICAL_PROOF_ARTIFACT_PATHS = {
         "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json"
     ),
 }
+MVP_VERTICAL_ESTIMATOR_RESULT_PATHS = {
+    TargetFamily.LWE.value: (
+        "docs/formal_lattice_primal_usvp_evaluator_result.json"
+    ),
+    TargetFamily.MLWE.value: (
+        "docs/formal_lattice_mlwe_module_hypothesis_evaluator_result.json"
+    ),
+}
 LEAN_THEOREM_SOURCES = {
     "AgadesPQC.Lattice.Target.dimension_modulus_positive": (
         "formal/lean/AgadesPQC/Lattice/Target.lean"
@@ -313,6 +321,54 @@ def write_attack_plan_proof_artifact(
         encoding="utf-8",
     )
     return artifact
+
+
+def write_attack_plan_evaluator_result(
+    plan_path: Path,
+    out: Path,
+) -> dict[str, Any]:
+    from agades_pqc_gym.evaluators.cascade import CascadeEvaluator
+
+    raw = plan_path.read_text(encoding="utf-8")
+    plan = AttackPlan.model_validate_json(raw)
+    result = CascadeEvaluator().evaluate_plan(plan)
+    if result.estimator_result is None:
+        raise ValueError("AttackPlan evaluation did not produce an evaluator result")
+
+    payload = result.estimator_result.model_dump(mode="json")
+    raw_output = dict(payload.get("raw_output") or {})
+    raw_output.update(
+        {
+            "source": "agades_pqc_gym.evaluators.cascade.CascadeEvaluator",
+            "attack_plan_id": plan.attack_plan_id,
+            "claim_allowed": False,
+            "public_interpretation": (
+                "reproducibility_and_reviewer_binding_only"
+            ),
+        }
+    )
+    payload["raw_output"] = raw_output
+
+    warnings = list(payload.get("warnings") or [])
+    for warning in result.warnings:
+        if warning not in warnings:
+            warnings.append(warning)
+    binding_warning = (
+        "Evaluator result is bound for reproducibility and reviewer inspection; "
+        "it is not cryptanalytic evidence."
+    )
+    if binding_warning not in warnings:
+        warnings.append(binding_warning)
+    payload["warnings"] = warnings
+
+    validated = EvaluatorResult.model_validate(payload)
+    payload = validated.model_dump(mode="json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return payload
 
 
 def verify_attack_plan_proof_artifact(

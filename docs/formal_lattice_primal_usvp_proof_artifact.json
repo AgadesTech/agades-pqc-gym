@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "6e6dfebb48df705c9242e4fb79680fd98750737e90793b0922cd8c00c7c85b09",
+  "artifact_sha256": "7108a3c193a6c63d3ac4124172b3fc81822bbf2b9e7f2cd1b13a70e343a7f154",
   "attack_plan": {
     "canonical_sha256": "c06ca5ddc67e4a09af1cece6b5a368129068fef091b77f785694324028111d60",
     "id": "lattice_primal_usvp_toy_v1",
@@ -24,12 +24,38 @@
     "status": "result_binding_required_before_claim"
   },
   "estimator_result_binding": {
-    "canonical_sha256": null,
+    "attack_plan_compatibility": {
+      "attack_plan_id": "lattice_primal_usvp_toy_v1",
+      "compatibility_rule": "exact_operator_or_colon_variant_v1",
+      "compatible": true,
+      "evaluator_attack_type": "primal_usvp",
+      "operator_types": [
+        "primal_usvp"
+      ],
+      "target_family": "LWE"
+    },
+    "canonical_sha256": "19eeeda00bc0711436564712a14164fb5aed78dc1874cd2d7059453758b2be29",
     "claim_allowed": false,
-    "notes": "No estimator result is attached; the artifact cannot support a security claim.",
-    "path": null,
-    "sha256": null,
-    "status": "not_attached"
+    "notes": "Estimator output is bound for reproducibility and reviewer inspection; it is not a reviewed cryptographic claim.",
+    "parsed_result": {
+      "attack_type": "primal_usvp",
+      "claim_allowed": false,
+      "evaluation_status": "ok",
+      "evaluator_commit": null,
+      "evaluator_name": "mock-lattice-estimator",
+      "evaluator_version": "0.1.0",
+      "schema_version": "agades.pqc.evaluator_result.v1"
+    },
+    "path": "docs/formal_lattice_primal_usvp_evaluator_result.json",
+    "schema_contract": {
+      "canonicalization": "json_sort_keys_minified_v1",
+      "json_schema_sha256": "8eefc6ac6687f107f6d6936800af04f6f423a11470d180d5d4da0ccd22f05761",
+      "model": "agades_pqc_gym.core.evaluator_result.EvaluatorResult",
+      "schema_version": "agades.pqc.evaluator_result.schema_contract.v1",
+      "validation": "pydantic_v2_extra_forbid_status_payload_checks"
+    },
+    "sha256": "f84ad52b967ece51b4f9e165f469c55e5ba469b30d339ae81584352f102f3c3d",
+    "status": "attached_unreviewed"
   },
   "family": "LWE",
   "family_invariants": [

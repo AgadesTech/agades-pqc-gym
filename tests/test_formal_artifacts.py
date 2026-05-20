@@ -11,8 +11,10 @@ from agades_pqc_gym.cli import app
 from agades_pqc_gym.core.attack_plan import AttackPlan
 from agades_pqc_gym.core.evaluator_result import EvaluatorResult
 from agades_pqc_gym.formal.artifacts import (
+    MVP_VERTICAL_ESTIMATOR_RESULT_PATHS,
     build_attack_plan_proof_artifact,
     verify_attack_plan_proof_artifact,
+    write_attack_plan_evaluator_result,
     write_attack_plan_proof_artifact,
 )
 from agades_pqc_gym.utils.hashing import stable_sha256
@@ -20,6 +22,12 @@ from agades_pqc_gym.utils.hashing import stable_sha256
 LWE_PROOF_ARTIFACT_PATH = Path("docs/formal_lattice_primal_usvp_proof_artifact.json")
 MLWE_PROOF_ARTIFACT_PATH = Path(
     "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json"
+)
+LWE_EVALUATOR_RESULT_PATH = Path(
+    "docs/formal_lattice_primal_usvp_evaluator_result.json"
+)
+MLWE_EVALUATOR_RESULT_PATH = Path(
+    "docs/formal_lattice_mlwe_module_hypothesis_evaluator_result.json"
 )
 
 
@@ -389,15 +397,57 @@ def test_attached_estimator_result_binding_includes_evaluator_schema_contract(
     }
 
 
+def test_write_attack_plan_evaluator_result_exports_claim_disabled_binding(
+    tmp_path: Path,
+) -> None:
+    result_path = tmp_path / "evaluator_result.json"
+
+    payload = write_attack_plan_evaluator_result(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        result_path,
+    )
+
+    assert json.loads(result_path.read_text(encoding="utf-8")) == payload
+    assert payload["schema_version"] == "agades.pqc.evaluator_result.v1"
+    assert payload["evaluation_status"] == "ok"
+    assert payload["attack_type"] == "primal_usvp"
+    assert payload["time_bits"] is not None
+    assert payload["memory_bits"] is not None
+    assert payload["raw_output"]["claim_allowed"] is False
+    assert payload["raw_output"]["source"] == (
+        "agades_pqc_gym.evaluators.cascade.CascadeEvaluator"
+    )
+    assert "not cryptanalytic evidence" in " ".join(payload["warnings"])
+
+
+def test_mvp_vertical_evaluator_result_paths_are_declared() -> None:
+    assert MVP_VERTICAL_ESTIMATOR_RESULT_PATHS == {
+        "LWE": "docs/formal_lattice_primal_usvp_evaluator_result.json",
+        "MLWE": "docs/formal_lattice_mlwe_module_hypothesis_evaluator_result.json",
+    }
+
+
 def test_committed_lattice_proof_artifact_is_in_sync(tmp_path: Path) -> None:
     generated = tmp_path / "proof_artifact.json"
 
     write_attack_plan_proof_artifact(
         Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
         generated,
+        estimator_result_path=LWE_EVALUATOR_RESULT_PATH,
     )
 
     assert LWE_PROOF_ARTIFACT_PATH.read_bytes() == generated.read_bytes()
+
+
+def test_committed_lattice_evaluator_result_is_in_sync(tmp_path: Path) -> None:
+    generated = tmp_path / "evaluator_result.json"
+
+    write_attack_plan_evaluator_result(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        generated,
+    )
+
+    assert LWE_EVALUATOR_RESULT_PATH.read_bytes() == generated.read_bytes()
 
 
 def test_committed_mlwe_proof_artifact_is_in_sync_and_verifiable(
@@ -408,6 +458,7 @@ def test_committed_mlwe_proof_artifact_is_in_sync_and_verifiable(
     artifact = write_attack_plan_proof_artifact(
         Path("examples/attack_plans/lattice_mlwe_module_hypothesis_toy.json"),
         generated,
+        estimator_result_path=MLWE_EVALUATOR_RESULT_PATH,
     )
     result = verify_attack_plan_proof_artifact(MLWE_PROOF_ARTIFACT_PATH)
 
@@ -430,12 +481,23 @@ def test_committed_mlwe_proof_artifact_is_in_sync_and_verifiable(
             "family_invariants": 3,
             "proof_obligations": 4,
             "lean_theorems": 4,
-            "estimator_result_attached": False,
+            "estimator_result_attached": True,
             "required_reviewers": 3,
             "failure_count": 0,
         },
         "failures": [],
     }
+
+
+def test_committed_mlwe_evaluator_result_is_in_sync(tmp_path: Path) -> None:
+    generated = tmp_path / "evaluator_result.json"
+
+    write_attack_plan_evaluator_result(
+        Path("examples/attack_plans/lattice_mlwe_module_hypothesis_toy.json"),
+        generated,
+    )
+
+    assert MLWE_EVALUATOR_RESULT_PATH.read_bytes() == generated.read_bytes()
 
 
 def test_verify_attack_plan_proof_artifact_rejects_tampering(
@@ -661,6 +723,26 @@ def test_formal_proof_artifact_cli_round_trip(tmp_path: Path) -> None:
     assert f"formal_proof_artifact={out}" in write_result.output
     assert verify_result.exit_code == 0
     assert '"accepted": true' in verify_result.output
+
+
+def test_formal_evaluator_result_cli_round_trip(tmp_path: Path) -> None:
+    out = tmp_path / "evaluator_result.json"
+
+    write_result = CliRunner().invoke(
+        app,
+        [
+            "formal-evaluator-result",
+            "examples/attack_plans/lattice_primal_usvp_toy.json",
+            "--out",
+            str(out),
+        ],
+    )
+
+    assert write_result.exit_code == 0
+    assert f"formal_evaluator_result={out}" in write_result.output
+    payload = json.loads(out.read_text(encoding="utf-8"))
+    EvaluatorResult.model_validate(payload)
+    assert payload["raw_output"]["claim_allowed"] is False
 
 
 def _write_estimator_result(
