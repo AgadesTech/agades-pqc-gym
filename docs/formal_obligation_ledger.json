@@ -8,7 +8,7 @@
   "families": [
     {
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "d3b3bb4b3d38e72487de7c5f80dc66d7e8a826e8a4d5e3d49e744649d4a45226",
+      "entry_sha256": "012c434862e24554ce911110645c0d9347c056d8d7de6dcfab6ee304e1709d74",
       "estimator_model": {
         "model_id": "agades.pqc.evaluator_model.boundary.v1",
         "no_fake_estimate": true,
@@ -35,8 +35,8 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.dimension_modulus_positive",
           "ledger_entry_id": "LWE:lattice.dimension_modulus_positive",
-          "ledger_entry_sha256": "d8ad6cf34bbe542aa650d0ffbf4a23864527b0ff3b79c698c957a9a1d3a15302",
-          "representative_proof_artifact_sha256": "e77bb3f0f630f3d33a9582f8f6776bc93491b889832f132d8c60837a95e44ccb",
+          "ledger_entry_sha256": "f512206c4c926bffbba08ddd2360b5df089d2176dd2b9bdda8214dcd6b8ceb20",
+          "representative_proof_artifact_sha256": "f75bae98c00023d78c80f97a495a71ed3b16c4b7f2f6d28a9342b2a52861228c",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -64,8 +64,8 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
           "ledger_entry_id": "LWE:lattice.distributions_present",
-          "ledger_entry_sha256": "905f40ddfc9f3b265d5669c70429b523dba3014a3afc5dcf0c781688c64fbd11",
-          "representative_proof_artifact_sha256": "e77bb3f0f630f3d33a9582f8f6776bc93491b889832f132d8c60837a95e44ccb",
+          "ledger_entry_sha256": "196fec2eacbdd1923b5e6f607c7ec9888b6c6751d4abcb76911a77f76a8e51be",
+          "representative_proof_artifact_sha256": "f75bae98c00023d78c80f97a495a71ed3b16c4b7f2f6d28a9342b2a52861228c",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -96,9 +96,9 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.parameters_positive",
           "ledger_entry_id": "LWE:target.lwe.parameters.positive",
-          "ledger_entry_sha256": "70aa92dd7a4f5a332c9136ed8b2c06dfd3261b5aa24c63f224b3ea1bf81f0321",
+          "ledger_entry_sha256": "699a20b8eb9521709722fbbfa990bc38d7c8ef0b7957ea2544aecb9cac815d6e",
           "obligation_id": "target.lwe.parameters.positive",
-          "obligation_sha256": "c48e1abacf7aa2807544d797f92857e1b959e8b559be328a6390e3908d356ff2",
+          "obligation_sha256": "a1b1194c6f58c34f1f9b7c9d05d4e30dc09919f29dc9efd0de778aa4e28a7a33",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -113,7 +113,7 @@
               "target_family": "LWE"
             }
           },
-          "representative_proof_artifact_sha256": "e77bb3f0f630f3d33a9582f8f6776bc93491b889832f132d8c60837a95e44ccb",
+          "representative_proof_artifact_sha256": "f75bae98c00023d78c80f97a495a71ed3b16c4b7f2f6d28a9342b2a52861228c",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -121,7 +121,20 @@
           ],
           "review_required": true,
           "statement": "Target parameters satisfy n > 0, q > 1, and m/k bounds where present.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "target_invariant",
+            "lean_source": {
+              "declaration": "target_invariant_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.target_invariant_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Target invariant obligations are typed as target-scoped Lean obligations with reviewer-gated, non-security-claim semantics.",
+            "type_rule_sha256": "dd086c22a21fed95aea00f3ab5b5693c27e385f359eaa8126ee315637a1354f5"
+          }
         },
         {
           "attack_plan_canonical_sha256": "c06ca5ddc67e4a09af1cece6b5a368129068fef091b77f785694324028111d60",
@@ -136,9 +149,9 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
           "ledger_entry_id": "LWE:target.lwe.distributions.present",
-          "ledger_entry_sha256": "6c35c4a25ebbd885048531aa23a06a63caf531ee5176a3701a12cd0292880296",
+          "ledger_entry_sha256": "86108c6fa56ef51eed8e34d21fdc4e817b5338ab6dfeb695839a968e96ac366a",
           "obligation_id": "target.lwe.distributions.present",
-          "obligation_sha256": "a67a3fa79472296adc53dafa605903ff9134ded2aadf0efc88a314dd60f430b6",
+          "obligation_sha256": "876054832003e1cbdea7cab9e0e7a34ca68e377fe6df3f01f59d41a72b439520",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -153,7 +166,7 @@
               "target_family": "LWE"
             }
           },
-          "representative_proof_artifact_sha256": "e77bb3f0f630f3d33a9582f8f6776bc93491b889832f132d8c60837a95e44ccb",
+          "representative_proof_artifact_sha256": "f75bae98c00023d78c80f97a495a71ed3b16c4b7f2f6d28a9342b2a52861228c",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -161,7 +174,20 @@
           ],
           "review_required": true,
           "statement": "Secret and error distributions are specified for LWE/MLWE.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "target_invariant",
+            "lean_source": {
+              "declaration": "target_invariant_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.target_invariant_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Target invariant obligations are typed as target-scoped Lean obligations with reviewer-gated, non-security-claim semantics.",
+            "type_rule_sha256": "dd086c22a21fed95aea00f3ab5b5693c27e385f359eaa8126ee315637a1354f5"
+          }
         },
         {
           "attack_plan_canonical_sha256": "c06ca5ddc67e4a09af1cece6b5a368129068fef091b77f785694324028111d60",
@@ -176,9 +202,9 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.PrimalUSVP.beta_valid_range",
           "ledger_entry_id": "LWE:operator.primal_usvp.beta.valid_range",
-          "ledger_entry_sha256": "85565586350432a7970f5ae010b1d73443cd680db8247c2ff9731c8cf83350a4",
+          "ledger_entry_sha256": "88d24226915a331be4c8bf26c1e4716bf8784256495dcedb9d628196e8ee6dc8",
           "obligation_id": "operator.primal_usvp.beta.valid_range",
-          "obligation_sha256": "1a8b82cd74ead38548937841f876d62aaae2b369ae3ee29b7907c0e580e25db8",
+          "obligation_sha256": "b5acc8e22683aa71db608709acfa38a02f20bb7691b608c5318884b8e63dd4db",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -193,7 +219,7 @@
               "scope": "operator"
             }
           },
-          "representative_proof_artifact_sha256": "e77bb3f0f630f3d33a9582f8f6776bc93491b889832f132d8c60837a95e44ccb",
+          "representative_proof_artifact_sha256": "f75bae98c00023d78c80f97a495a71ed3b16c4b7f2f6d28a9342b2a52861228c",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -201,7 +227,20 @@
           ],
           "review_required": true,
           "statement": "primal_usvp beta is positive and bounded by the target dimension policy.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "operator_precondition",
+            "lean_source": {
+              "declaration": "operator_precondition_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.operator_precondition_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Operator precondition obligations are typed as operator-scoped Lean obligations with reviewer-gated, non-security-claim semantics.",
+            "type_rule_sha256": "68d856bc6e248e225cc7b2169a103a898825995d87bb620f04677bc3ee50041b"
+          }
         },
         {
           "attack_plan_canonical_sha256": "c06ca5ddc67e4a09af1cece6b5a368129068fef091b77f785694324028111d60",
@@ -216,9 +255,9 @@
           },
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "ledger_entry_id": "LWE:estimator.boundary.no_security_claim",
-          "ledger_entry_sha256": "2aba8751636ec69f77dce8fa632169cec5463a2eec67f378881749c9ea8a3eb3",
+          "ledger_entry_sha256": "8edf29710490ec294422562c5d83831530631c098c7a0c4d8641af0913d23d41",
           "obligation_id": "estimator.boundary.no_security_claim",
-          "obligation_sha256": "b88dd340d32891200b2002c34b28e1c7d2579145e27882ca6aa43aa3c01a4e83",
+          "obligation_sha256": "e2b8516d37b64d8b5cea07ae886f6e5c58a03b46c83cbbc194b4c8172f8ac595",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -233,7 +272,7 @@
               "scope": "estimator"
             }
           },
-          "representative_proof_artifact_sha256": "e77bb3f0f630f3d33a9582f8f6776bc93491b889832f132d8c60837a95e44ccb",
+          "representative_proof_artifact_sha256": "f75bae98c00023d78c80f97a495a71ed3b16c4b7f2f6d28a9342b2a52861228c",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -241,7 +280,20 @@
           ],
           "review_required": true,
           "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "estimator_claim_boundary",
+            "lean_source": {
+              "declaration": "estimator_claim_boundary_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+            "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+          }
         }
       ],
       "representative_attack_plan": {
@@ -258,7 +310,7 @@
         "sha256": "5cb2938a2b72024d50ab478d871c05446b92ec20c28f1971435499a12bf0a934"
       },
       "representative_proof_artifact": {
-        "artifact_sha256": "e77bb3f0f630f3d33a9582f8f6776bc93491b889832f132d8c60837a95e44ccb",
+        "artifact_sha256": "f75bae98c00023d78c80f97a495a71ed3b16c4b7f2f6d28a9342b2a52861228c",
         "estimator_result_binding_status": "attached_unreviewed",
         "required_reviewers": [
           "lattice_cryptographer",
@@ -276,7 +328,7 @@
     },
     {
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "60860acb57e8f9dc55e00fb21ddebd4189727eae27f18a0df6542b3b6b20c9ad",
+      "entry_sha256": "1b835909914ad31640842b1f9f6b1e0ad386fffafe40319b97a058d086563bb9",
       "estimator_model": {
         "model_id": "agades.pqc.evaluator_model.boundary.v1",
         "no_fake_estimate": true,
@@ -303,8 +355,8 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.dimension_modulus_positive",
           "ledger_entry_id": "MLWE:lattice.dimension_modulus_positive",
-          "ledger_entry_sha256": "a57a4a30367e6b84662a9df0f8d07827d1289aabccb317139dc297e2f1788dff",
-          "representative_proof_artifact_sha256": "ba293e785e1c756fb2829cccafba2f8a89ed946819127303f650c4360c7ac231",
+          "ledger_entry_sha256": "807717995d67dca288f810079c2415a13fd472855b7c0d1cfe054b23d18622d4",
+          "representative_proof_artifact_sha256": "05c45c8b8330cbdd2196915cec4d3c45baed637c2f0b0aadd8b97959282b04e3",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -332,8 +384,8 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
           "ledger_entry_id": "MLWE:lattice.distributions_present",
-          "ledger_entry_sha256": "877f6ec299b85bde77fad916ce5fccabebfcc88eb27fe437f2ad6f423568c94d",
-          "representative_proof_artifact_sha256": "ba293e785e1c756fb2829cccafba2f8a89ed946819127303f650c4360c7ac231",
+          "ledger_entry_sha256": "5dab65ea1cc7058681d5fc66101eb8666445f0c17fe58d0fedb0a91589dfdcbc",
+          "representative_proof_artifact_sha256": "05c45c8b8330cbdd2196915cec4d3c45baed637c2f0b0aadd8b97959282b04e3",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -361,8 +413,8 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.module_rank_present",
           "ledger_entry_id": "MLWE:lattice.mlwe.module_rank_present",
-          "ledger_entry_sha256": "b7d789196d09c007ddf405702e1f75fa6c955f7c7a0792f59f143694fb3cfa92",
-          "representative_proof_artifact_sha256": "ba293e785e1c756fb2829cccafba2f8a89ed946819127303f650c4360c7ac231",
+          "ledger_entry_sha256": "d84a6a1c6257572b6db648a8dd1fdb3925e5d2a4fbd635765e038ac61aa44833",
+          "representative_proof_artifact_sha256": "05c45c8b8330cbdd2196915cec4d3c45baed637c2f0b0aadd8b97959282b04e3",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -398,9 +450,9 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.parameters_positive",
           "ledger_entry_id": "MLWE:target.mlwe.parameters.positive",
-          "ledger_entry_sha256": "07bfbcfc86c6de54ad6ca2812239c79db0ac4ac7b8f69fc4262c57158dc4a69e",
+          "ledger_entry_sha256": "fcca5a182f6dfdc1cea523732abcc10aad0bdd72d809d304adb4bc8126dd1026",
           "obligation_id": "target.mlwe.parameters.positive",
-          "obligation_sha256": "e683592dc9ed803befb3ef87aae70a9d052209df66c531cf4d4e579535fd1324",
+          "obligation_sha256": "7f1b81036e2c287711e357c16aa9a0e7f8d275179d97b7aaa8e95bdb1ef27c1d",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -415,7 +467,7 @@
               "target_family": "MLWE"
             }
           },
-          "representative_proof_artifact_sha256": "ba293e785e1c756fb2829cccafba2f8a89ed946819127303f650c4360c7ac231",
+          "representative_proof_artifact_sha256": "05c45c8b8330cbdd2196915cec4d3c45baed637c2f0b0aadd8b97959282b04e3",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -423,7 +475,20 @@
           ],
           "review_required": true,
           "statement": "MLWE target parameters satisfy n > 0, q > 1, and module-rank bounds where present.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "target_invariant",
+            "lean_source": {
+              "declaration": "target_invariant_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.target_invariant_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Target invariant obligations are typed as target-scoped Lean obligations with reviewer-gated, non-security-claim semantics.",
+            "type_rule_sha256": "dd086c22a21fed95aea00f3ab5b5693c27e385f359eaa8126ee315637a1354f5"
+          }
         },
         {
           "attack_plan_canonical_sha256": "cd75f20024968e2d6bd6f019c623b23663aba3d1fff350d81770755c197e284d",
@@ -438,9 +503,9 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
           "ledger_entry_id": "MLWE:target.mlwe.distributions.present",
-          "ledger_entry_sha256": "5edbbc8595fc9d83558d4c302df04b9a7b2144493eb2486f461211fe437d49c2",
+          "ledger_entry_sha256": "55130112da423cb4e3c045fa871aca0c2adeb81d1910454305f78955bd38dc60",
           "obligation_id": "target.mlwe.distributions.present",
-          "obligation_sha256": "558c537342a0045e1c53fad168ec453b7a19949a56c0ab0e4e3dff5278d3b4ad",
+          "obligation_sha256": "9a0f200647cf0591e9d770cd4717703aae63e3c69b3a10c2f84c160b9a3574e0",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -455,7 +520,7 @@
               "target_family": "MLWE"
             }
           },
-          "representative_proof_artifact_sha256": "ba293e785e1c756fb2829cccafba2f8a89ed946819127303f650c4360c7ac231",
+          "representative_proof_artifact_sha256": "05c45c8b8330cbdd2196915cec4d3c45baed637c2f0b0aadd8b97959282b04e3",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -463,7 +528,20 @@
           ],
           "review_required": true,
           "statement": "Secret and error distributions are specified for MLWE.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "target_invariant",
+            "lean_source": {
+              "declaration": "target_invariant_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.target_invariant_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Target invariant obligations are typed as target-scoped Lean obligations with reviewer-gated, non-security-claim semantics.",
+            "type_rule_sha256": "dd086c22a21fed95aea00f3ab5b5693c27e385f359eaa8126ee315637a1354f5"
+          }
         },
         {
           "attack_plan_canonical_sha256": "cd75f20024968e2d6bd6f019c623b23663aba3d1fff350d81770755c197e284d",
@@ -478,9 +556,9 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.module_rank_present",
           "ledger_entry_id": "MLWE:target.mlwe.module_rank.present",
-          "ledger_entry_sha256": "a626f51dbef40bfdb35d596b6bf941d817ab6e317662354344877f8167f69a7c",
+          "ledger_entry_sha256": "bc9c9370602ca494072e6a63a00412f3ecf11c1abb8948f9c29e24494b3daf01",
           "obligation_id": "target.mlwe.module_rank.present",
-          "obligation_sha256": "4714ed1b498464c74ffcd8bc81a4f29ddee5b2d6bfbcb57627abdde9b75a5869",
+          "obligation_sha256": "53fd04b2d605efc8e60c3499f433d84336cc1a68bb7f105dc7d5b195f7553a34",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -495,7 +573,7 @@
               "target_family": "MLWE"
             }
           },
-          "representative_proof_artifact_sha256": "ba293e785e1c756fb2829cccafba2f8a89ed946819127303f650c4360c7ac231",
+          "representative_proof_artifact_sha256": "05c45c8b8330cbdd2196915cec4d3c45baed637c2f0b0aadd8b97959282b04e3",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -503,7 +581,20 @@
           ],
           "review_required": true,
           "statement": "MLWE module rank k is positive.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "target_invariant",
+            "lean_source": {
+              "declaration": "target_invariant_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.target_invariant_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Target invariant obligations are typed as target-scoped Lean obligations with reviewer-gated, non-security-claim semantics.",
+            "type_rule_sha256": "dd086c22a21fed95aea00f3ab5b5693c27e385f359eaa8126ee315637a1354f5"
+          }
         },
         {
           "attack_plan_canonical_sha256": "cd75f20024968e2d6bd6f019c623b23663aba3d1fff350d81770755c197e284d",
@@ -518,9 +609,9 @@
           },
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "ledger_entry_id": "MLWE:estimator.boundary.no_security_claim",
-          "ledger_entry_sha256": "e55a696a63734f9e5c994a116ab5556e252d5a673084f15d02d4801c7dbef4e1",
+          "ledger_entry_sha256": "0e7165a31e215ca0f3bb31fb0ba3f8f601f2faeba061daadf71bd6539e5883ec",
           "obligation_id": "estimator.boundary.no_security_claim",
-          "obligation_sha256": "14db4b7ab88c79cbdbbc784584ba3e4b9fd56cc522a04a157d16bc970512e76a",
+          "obligation_sha256": "4677331075f7eeff0e0e4fea72acec72b8a073e8239570f4908808aaff0b5cfc",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -535,7 +626,7 @@
               "scope": "estimator"
             }
           },
-          "representative_proof_artifact_sha256": "ba293e785e1c756fb2829cccafba2f8a89ed946819127303f650c4360c7ac231",
+          "representative_proof_artifact_sha256": "05c45c8b8330cbdd2196915cec4d3c45baed637c2f0b0aadd8b97959282b04e3",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -543,7 +634,20 @@
           ],
           "review_required": true,
           "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "estimator_claim_boundary",
+            "lean_source": {
+              "declaration": "estimator_claim_boundary_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+            "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+          }
         }
       ],
       "representative_attack_plan": {
@@ -560,7 +664,7 @@
         "sha256": "14c62b76aef2b52e296e7de9e09e9b88e9d0f178161384c374de5d160325223a"
       },
       "representative_proof_artifact": {
-        "artifact_sha256": "ba293e785e1c756fb2829cccafba2f8a89ed946819127303f650c4360c7ac231",
+        "artifact_sha256": "05c45c8b8330cbdd2196915cec4d3c45baed637c2f0b0aadd8b97959282b04e3",
         "estimator_result_binding_status": "attached_unreviewed",
         "required_reviewers": [
           "lattice_cryptographer",
@@ -578,7 +682,7 @@
     },
     {
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "193e95e124d466649c195dc8cceb941fa6809500730934c916e894ec860712f3",
+      "entry_sha256": "a4591ba7bb53387b4524bab8bcc2277e14251be15447a962c1bf1b145f0470b8",
       "estimator_model": {
         "model_id": "schema_only_no_estimator",
         "no_fake_estimate": true,
@@ -605,8 +709,8 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.ntru_schema_shape",
           "ledger_entry_id": "NTRU:lattice.ntru.schema_shape",
-          "ledger_entry_sha256": "579dc67f0e2e3917af11c0a7905c0ad3eacaaae7da30bdab506803b72bf47e47",
-          "representative_proof_artifact_sha256": "94596ac252371a48ecd531e5980e61c79344bb112bf975a2070e4095a55d7a2f",
+          "ledger_entry_sha256": "3fc52e278af09bc2e2d85e54519390e56a4d0b8ba4c250ed68a7e31b9ff5c027",
+          "representative_proof_artifact_sha256": "dfa5a964dfdbe26d7a189910864da0a950f1e97f8e15ad64cbc56c2edd58a199",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -637,9 +741,9 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.ntru_schema_only_no_estimate",
           "ledger_entry_id": "NTRU:family.ntru.schema_only.no_estimate",
-          "ledger_entry_sha256": "85dd017dd2e1c427369bcce02de09197069a16318a7b765518a2163b2df3e2e5",
+          "ledger_entry_sha256": "7bedb4ebc43b5f6f88895d2bd420d65a4c87cd1474e50a164ac57eeecd78d401",
           "obligation_id": "family.ntru.schema_only.no_estimate",
-          "obligation_sha256": "62973bb75e1b773c9fa245e5458a30f6331816231b35e19f2c507c7ef7ba2a5f",
+          "obligation_sha256": "20916392766d3a771a8834d7732a47ca99f385ec76ccfd55785af8fa4f356c09",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -654,7 +758,7 @@
               "support_level": "schema_only"
             }
           },
-          "representative_proof_artifact_sha256": "94596ac252371a48ecd531e5980e61c79344bb112bf975a2070e4095a55d7a2f",
+          "representative_proof_artifact_sha256": "dfa5a964dfdbe26d7a189910864da0a950f1e97f8e15ad64cbc56c2edd58a199",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -662,7 +766,20 @@
           ],
           "review_required": true,
           "statement": "Schema-only NTRU plans must not emit cryptanalytic estimates.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "schema_only_boundary",
+            "lean_source": {
+              "declaration": "schema_only_boundary_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.schema_only_boundary_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Schema-only boundary obligations are typed as estimator-boundary Lean obligations that forbid fake runtime estimates.",
+            "type_rule_sha256": "f0ffb02405adea7b368712f6e8e45d03c39f47ef12a3c4a2b97463f538d515f4"
+          }
         },
         {
           "attack_plan_canonical_sha256": "0dff5b504e3ec999aba795cabcadf0cce3e76f057851b3b4485ad3767e9401ef",
@@ -677,9 +794,9 @@
           },
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "ledger_entry_id": "NTRU:estimator.boundary.no_security_claim",
-          "ledger_entry_sha256": "ada4667f7132f36fb72e07cdcd45eaa77a714b1cb9effb202827f6c9e5259227",
+          "ledger_entry_sha256": "f69413e1a393d182ccc9ceefcd74640495d9ff8836ebc19d380809d98f0e666d",
           "obligation_id": "estimator.boundary.no_security_claim",
-          "obligation_sha256": "1ca6e1ab320d728ce7fd05a47b29260bfb5361e827c434d99c22ceac7f46a2da",
+          "obligation_sha256": "2c76aae7d7b931ec4352467d44b708a0c8c8d91f731ed5c09185cecc2ca0f6ac",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -694,7 +811,7 @@
               "scope": "estimator"
             }
           },
-          "representative_proof_artifact_sha256": "94596ac252371a48ecd531e5980e61c79344bb112bf975a2070e4095a55d7a2f",
+          "representative_proof_artifact_sha256": "dfa5a964dfdbe26d7a189910864da0a950f1e97f8e15ad64cbc56c2edd58a199",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -702,7 +819,20 @@
           ],
           "review_required": true,
           "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "estimator_claim_boundary",
+            "lean_source": {
+              "declaration": "estimator_claim_boundary_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+            "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+          }
         }
       ],
       "representative_attack_plan": {
@@ -719,7 +849,7 @@
         "sha256": "6afef23bcfc7b3031a476c6bd45e6a7afdcc736c36729cf3c26766a027e5d17a"
       },
       "representative_proof_artifact": {
-        "artifact_sha256": "94596ac252371a48ecd531e5980e61c79344bb112bf975a2070e4095a55d7a2f",
+        "artifact_sha256": "dfa5a964dfdbe26d7a189910864da0a950f1e97f8e15ad64cbc56c2edd58a199",
         "estimator_result_binding_status": "not_attached",
         "required_reviewers": [
           "lattice_cryptographer",
@@ -737,7 +867,7 @@
     },
     {
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "704b3be39ed4328c9f0e11234a8efb91a501a9fcb9715fe0bb62bfaef573ec3a",
+      "entry_sha256": "c461c649b9c0c8a75d2b04746f2b79281c1405b371de35da3feb1ab466a5699a",
       "estimator_model": {
         "model_id": "schema_only_no_estimator",
         "no_fake_estimate": true,
@@ -764,8 +894,8 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.sis_schema_shape",
           "ledger_entry_id": "SIS:lattice.sis.schema_shape",
-          "ledger_entry_sha256": "5fbfd7c8b1b2154a76a800aeb7ccf3f2e3b16ac60a75ec4eafd01aea02590a41",
-          "representative_proof_artifact_sha256": "9fc0e52ccfd435588c474bdcdb0dfae231ab35884bf05879f7d199c3a393462e",
+          "ledger_entry_sha256": "23ebba2ae4f576ca7c17876078f98b0853c52762c77e2a57fb4604b9638c997f",
+          "representative_proof_artifact_sha256": "d9bf365a322f0cfac690e7b32c4f368dda4bf1dfc47699fc448f59a4a5f8c49a",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -796,9 +926,9 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.sis_schema_only_no_estimate",
           "ledger_entry_id": "SIS:family.sis.schema_only.no_estimate",
-          "ledger_entry_sha256": "9a43d5fb9736f0d2ba1758c6207d41bef1db8619cdec337a236f35554e394460",
+          "ledger_entry_sha256": "dc61bde92414a263e335524f7a1535c371692637140d4a940342d2f22d619428",
           "obligation_id": "family.sis.schema_only.no_estimate",
-          "obligation_sha256": "2608dfb939f98596d05f2a370c67ead0e5ccefcba21af84d41d5d7dabd4e18d7",
+          "obligation_sha256": "f8a0781f173ba7b29c09ced08790c73ec777d630ee38042d8135b7a441daa900",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -813,7 +943,7 @@
               "support_level": "schema_only"
             }
           },
-          "representative_proof_artifact_sha256": "9fc0e52ccfd435588c474bdcdb0dfae231ab35884bf05879f7d199c3a393462e",
+          "representative_proof_artifact_sha256": "d9bf365a322f0cfac690e7b32c4f368dda4bf1dfc47699fc448f59a4a5f8c49a",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -821,7 +951,20 @@
           ],
           "review_required": true,
           "statement": "Schema-only SIS plans must not emit cryptanalytic estimates.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "schema_only_boundary",
+            "lean_source": {
+              "declaration": "schema_only_boundary_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.schema_only_boundary_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Schema-only boundary obligations are typed as estimator-boundary Lean obligations that forbid fake runtime estimates.",
+            "type_rule_sha256": "f0ffb02405adea7b368712f6e8e45d03c39f47ef12a3c4a2b97463f538d515f4"
+          }
         },
         {
           "attack_plan_canonical_sha256": "aa89fc54087336e25a2a5ed9d6c0dc95ed14986d621a54f6a769500970164321",
@@ -836,9 +979,9 @@
           },
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "ledger_entry_id": "SIS:estimator.boundary.no_security_claim",
-          "ledger_entry_sha256": "e30960a2449cd9882405adc65d498fd19e6d7d3fce2de117201f3729c28f0843",
+          "ledger_entry_sha256": "161fa6d24ac6a9c9e68fb527a28f64181e855820e901dad04a27b1373bdd2e82",
           "obligation_id": "estimator.boundary.no_security_claim",
-          "obligation_sha256": "fa47633f6333849343ed276bb25c71774059ef65b098657ad815720e3381fc36",
+          "obligation_sha256": "3c4d58e4adfd4069178f310fc29ac36fa943433646fe43a33392e55a28e79233",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -853,7 +996,7 @@
               "scope": "estimator"
             }
           },
-          "representative_proof_artifact_sha256": "9fc0e52ccfd435588c474bdcdb0dfae231ab35884bf05879f7d199c3a393462e",
+          "representative_proof_artifact_sha256": "d9bf365a322f0cfac690e7b32c4f368dda4bf1dfc47699fc448f59a4a5f8c49a",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -861,7 +1004,20 @@
           ],
           "review_required": true,
           "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "estimator_claim_boundary",
+            "lean_source": {
+              "declaration": "estimator_claim_boundary_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+            "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+          }
         }
       ],
       "representative_attack_plan": {
@@ -878,7 +1034,7 @@
         "sha256": "163730aecf9b5cdb1d14ae4aad5fbb62af29b2b4f35229e792d653542f032dd8"
       },
       "representative_proof_artifact": {
-        "artifact_sha256": "9fc0e52ccfd435588c474bdcdb0dfae231ab35884bf05879f7d199c3a393462e",
+        "artifact_sha256": "d9bf365a322f0cfac690e7b32c4f368dda4bf1dfc47699fc448f59a4a5f8c49a",
         "estimator_result_binding_status": "not_attached",
         "required_reviewers": [
           "lattice_cryptographer",
@@ -896,7 +1052,7 @@
     },
     {
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "450111bd38c6cccf302ed325e22bfc47afe796407863b62d308d77e350051539",
+      "entry_sha256": "f89168737cdc6bab435181e3cfc2e64446073488af57595a68b6c0304aa9aab4",
       "estimator_model": {
         "model_id": "schema_only_no_estimator",
         "no_fake_estimate": true,
@@ -923,8 +1079,8 @@
           },
           "lean_theorem": "AgadesPQC.CodeBased.Target.parameters_well_formed",
           "ledger_entry_id": "CODE_BASED:code_based.length_dimension_weight_positive",
-          "ledger_entry_sha256": "027768a5b94fa0f91a31e39223cb46563c358866ae42d668221b6007093e9d37",
-          "representative_proof_artifact_sha256": "755ad1e212210fc76734fcadd7aab333f145d8750148a4978328d0da423b0c14",
+          "ledger_entry_sha256": "9a9949a506318bf3984943cfe54d491a77916ea692a3bc33cc712eb5d21cce57",
+          "representative_proof_artifact_sha256": "b39aa12e1446922317a0894b9cc21e1072d2f393dd2df6a3b0b444c272c3222f",
           "required_reviewers": [
             "code_based_cryptographer",
             "formal_methods_reviewer",
@@ -955,9 +1111,9 @@
           },
           "lean_theorem": "AgadesPQC.CodeBased.SchemaOnly.no_estimate",
           "ledger_entry_id": "CODE_BASED:family.code_based.schema_only.no_estimate",
-          "ledger_entry_sha256": "6b0e3bf0a4aedca15c8e4d8c343c441045f1ba46a8cb6d33cd1b2d986cf1f918",
+          "ledger_entry_sha256": "a8fdfa2b24da59709fbcea4e271e9edf81f35e41d842a8478afbd58d95758570",
           "obligation_id": "family.code_based.schema_only.no_estimate",
-          "obligation_sha256": "cd4f123c97c7ab543084e0668b069afb9802050788fb1ad74d99935f4614188c",
+          "obligation_sha256": "d1e0bfd86f89ec09e7e8bdeddb16e91cc18c29c90a70818892f8b4264f7fd1be",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -972,7 +1128,7 @@
               "support_level": "schema_only"
             }
           },
-          "representative_proof_artifact_sha256": "755ad1e212210fc76734fcadd7aab333f145d8750148a4978328d0da423b0c14",
+          "representative_proof_artifact_sha256": "b39aa12e1446922317a0894b9cc21e1072d2f393dd2df6a3b0b444c272c3222f",
           "required_reviewers": [
             "code_based_cryptographer",
             "formal_methods_reviewer",
@@ -980,7 +1136,20 @@
           ],
           "review_required": true,
           "statement": "Schema-only code-based plans must not emit cryptanalytic estimates.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "schema_only_boundary",
+            "lean_source": {
+              "declaration": "schema_only_boundary_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.schema_only_boundary_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Schema-only boundary obligations are typed as estimator-boundary Lean obligations that forbid fake runtime estimates.",
+            "type_rule_sha256": "f0ffb02405adea7b368712f6e8e45d03c39f47ef12a3c4a2b97463f538d515f4"
+          }
         },
         {
           "attack_plan_canonical_sha256": "594699e2b1459c1986530a47972e439e02c5ae335131d5d72b29ad72392e7e05",
@@ -995,9 +1164,9 @@
           },
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "ledger_entry_id": "CODE_BASED:estimator.boundary.no_security_claim",
-          "ledger_entry_sha256": "2395f7d75dfdd6644da0857773049c0ca218031b9cf0645d2072a3013dbbd95b",
+          "ledger_entry_sha256": "41d85297469a23ac0ac9f07320a8bb8079ab8ee98c42ce241e327003ae524176",
           "obligation_id": "estimator.boundary.no_security_claim",
-          "obligation_sha256": "9227e61ae5f4c32e75ae681c980e1a4f38a684b66ae50cd068e906178872dcc1",
+          "obligation_sha256": "5eafbad5da7f002c7bc4f03b74ac7e0cd878eaca350bee01c3aa56e2eb6caa83",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -1012,7 +1181,7 @@
               "scope": "estimator"
             }
           },
-          "representative_proof_artifact_sha256": "755ad1e212210fc76734fcadd7aab333f145d8750148a4978328d0da423b0c14",
+          "representative_proof_artifact_sha256": "b39aa12e1446922317a0894b9cc21e1072d2f393dd2df6a3b0b444c272c3222f",
           "required_reviewers": [
             "code_based_cryptographer",
             "formal_methods_reviewer",
@@ -1020,7 +1189,20 @@
           ],
           "review_required": true,
           "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "estimator_claim_boundary",
+            "lean_source": {
+              "declaration": "estimator_claim_boundary_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+            "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+          }
         }
       ],
       "representative_attack_plan": {
@@ -1037,7 +1219,7 @@
         "sha256": "0d9583ca27cc8d1bf729e2275a572ac7cd61b4e3082c55f66c5e8efbbfcce35d"
       },
       "representative_proof_artifact": {
-        "artifact_sha256": "755ad1e212210fc76734fcadd7aab333f145d8750148a4978328d0da423b0c14",
+        "artifact_sha256": "b39aa12e1446922317a0894b9cc21e1072d2f393dd2df6a3b0b444c272c3222f",
         "estimator_result_binding_status": "not_attached",
         "required_reviewers": [
           "code_based_cryptographer",
@@ -1055,7 +1237,7 @@
     },
     {
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "6ad42335de5e94a36e2b25ddbdd1d82902cd1506ab0cdc4ce883dd5f07be9caf",
+      "entry_sha256": "30839b3d11fecae23f4d4e428e3769f4aafeee35114b4a22c88ec5f7cb9e2987",
       "estimator_model": {
         "model_id": "agades.pqc.evaluator_model.boundary.v1",
         "no_fake_estimate": true,
@@ -1082,8 +1264,8 @@
           },
           "lean_theorem": "AgadesPQC.Multivariate.Target.variables_equations_field_present",
           "ledger_entry_id": "MULTIVARIATE:multivariate.variables_equations_field_present",
-          "ledger_entry_sha256": "357a6a922aac29dd13f85174227115a739ba657200cbe839882b4bbb6230878f",
-          "representative_proof_artifact_sha256": "34f58d855d5bcbbc883c6bd3224f0b309a6b69537304992d9d108a0850ad749a",
+          "ledger_entry_sha256": "a22ddbde2291fe305aa3baf00279858584ccf06d9f4cf56ce4f735f41d2acec2",
+          "representative_proof_artifact_sha256": "f98ab7516eacacca20b0c3561e77e5fe3c77922fa14a7cb5b9b88990b55a5cc0",
           "required_reviewers": [
             "multivariate_cryptographer",
             "formal_methods_reviewer",
@@ -1114,9 +1296,9 @@
           },
           "lean_theorem": "AgadesPQC.Multivariate.Target.applicability_shape",
           "ledger_entry_id": "MULTIVARIATE:family.multivariate.applicability_shape",
-          "ledger_entry_sha256": "b31774995b6833cb21aa2055d8ca45388db69704bc212a1d56d984c9b1dc98d0",
+          "ledger_entry_sha256": "e744508bcacb21357c28ceb6e1b0632e963e6d9fb9cacc721ce3dac3efed29d0",
           "obligation_id": "family.multivariate.applicability_shape",
-          "obligation_sha256": "9b6d3680d7a96bdd5a0cee4d0b068d18b0f20b3540051eee57a61d840f324e60",
+          "obligation_sha256": "6d2d899f05601c805e32449ee6d0d4d3b23babdb43e3dec1e49cd294ac24843a",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -1131,7 +1313,7 @@
               "target_family": "MULTIVARIATE"
             }
           },
-          "representative_proof_artifact_sha256": "34f58d855d5bcbbc883c6bd3224f0b309a6b69537304992d9d108a0850ad749a",
+          "representative_proof_artifact_sha256": "f98ab7516eacacca20b0c3561e77e5fe3c77922fa14a7cb5b9b88990b55a5cc0",
           "required_reviewers": [
             "multivariate_cryptographer",
             "formal_methods_reviewer",
@@ -1139,7 +1321,20 @@
           ],
           "review_required": true,
           "statement": "Multivariate AttackPlans require positive variables, positive equations, and a declared finite field.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "family_applicability_boundary",
+            "lean_source": {
+              "declaration": "family_applicability_boundary_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.family_applicability_boundary_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Family applicability boundary obligations are typed as family-scoped Lean obligations with no public security claim.",
+            "type_rule_sha256": "307a59fe19e45af3f287ac51b220a53ef304c7256fdc2819a7d839a4c31a48dd"
+          }
         },
         {
           "attack_plan_canonical_sha256": "489e13747730ed83bbea70ad28fc335bdb893225d11bb25d675a5ed115a7a1d2",
@@ -1154,9 +1349,9 @@
           },
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "ledger_entry_id": "MULTIVARIATE:estimator.boundary.no_security_claim",
-          "ledger_entry_sha256": "22cb8f2ae03bd89e079b851b222c56cb9b23bf81b527a0be9168d839f2e816dc",
+          "ledger_entry_sha256": "13df95e65896e9b13ea2e99b410f76b7dd09e40b44c658b7534e8fbc0bc9660a",
           "obligation_id": "estimator.boundary.no_security_claim",
-          "obligation_sha256": "7c7ba522ccf7cd6514c2e29d790bacdf8d166ad86a449109dba263c3cc8c36bc",
+          "obligation_sha256": "509af6ec79eac7c4c38f8b5861dd5144176ae46df17b69108b82c07be912b116",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -1171,7 +1366,7 @@
               "scope": "estimator"
             }
           },
-          "representative_proof_artifact_sha256": "34f58d855d5bcbbc883c6bd3224f0b309a6b69537304992d9d108a0850ad749a",
+          "representative_proof_artifact_sha256": "f98ab7516eacacca20b0c3561e77e5fe3c77922fa14a7cb5b9b88990b55a5cc0",
           "required_reviewers": [
             "multivariate_cryptographer",
             "formal_methods_reviewer",
@@ -1179,7 +1374,20 @@
           ],
           "review_required": true,
           "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "estimator_claim_boundary",
+            "lean_source": {
+              "declaration": "estimator_claim_boundary_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+            "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+          }
         }
       ],
       "representative_attack_plan": {
@@ -1196,7 +1404,7 @@
         "sha256": "ad38b7027ff36d0e7af3445b36b6acf18fbf068a94184234d8ce7a9e4fc8f3a1"
       },
       "representative_proof_artifact": {
-        "artifact_sha256": "34f58d855d5bcbbc883c6bd3224f0b309a6b69537304992d9d108a0850ad749a",
+        "artifact_sha256": "f98ab7516eacacca20b0c3561e77e5fe3c77922fa14a7cb5b9b88990b55a5cc0",
         "estimator_result_binding_status": "not_attached",
         "required_reviewers": [
           "multivariate_cryptographer",
@@ -1214,7 +1422,7 @@
     },
     {
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "4e2e8ebbfe5b019bddc6bfe0dca462f49ffcadc0e358b750d7d249ee1e67acaf",
+      "entry_sha256": "f2b7eca8638832d634ff00fb8c93aa7647989613642c56f1055e4cb62fbe10e4",
       "estimator_model": {
         "model_id": "agades.pqc.evaluator_model.boundary.v1",
         "no_fake_estimate": true,
@@ -1241,8 +1449,8 @@
           },
           "lean_theorem": "AgadesPQC.HashBased.Target.hash_function_and_security_parameter_present",
           "ledger_entry_id": "HASH_BASED:hash_based.hash_function_and_security_parameter_present",
-          "ledger_entry_sha256": "8f6d7d9b438c6d2d8f6a3e6dd150aab08fe8a11b2a8107bdc2f26fc13e4b8199",
-          "representative_proof_artifact_sha256": "e663fa6b1027389175ae47bdc9d4c0c827c72dc0bfd7856e409ad0a52c3c88bb",
+          "ledger_entry_sha256": "d2bae3c7f311a3a6f88d7526e906e7a4818fb1c42274cdeb89c09ae2a3e2bc4b",
+          "representative_proof_artifact_sha256": "ed324382a698edcca8504053c5d6f23928965e51ee5d9e072a41320afd35934e",
           "required_reviewers": [
             "hash_based_signature_reviewer",
             "formal_methods_reviewer",
@@ -1273,9 +1481,9 @@
           },
           "lean_theorem": "AgadesPQC.HashBased.Target.bound_check_is_not_attack_claim",
           "ledger_entry_id": "HASH_BASED:family.hash_based.bound_check_is_not_attack_claim",
-          "ledger_entry_sha256": "33dc2c721c67039d6feb40e6ee080ddd85a147e83d3213ae7085a53a6e865728",
+          "ledger_entry_sha256": "7b4859b575e70e61c2216af813d1b9eaebb9ed4f977a239ed5a33507f4d4b000",
           "obligation_id": "family.hash_based.bound_check_is_not_attack_claim",
-          "obligation_sha256": "ddfbf18c792387e2845946e3c5a5919f6076aaa66f400d5188a4461cc91a36af",
+          "obligation_sha256": "0475aeb4ea2a639e38c57e060ffb3026449e42b18b21c33f92d20d1237df878c",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -1290,7 +1498,7 @@
               "target_family": "HASH_BASED"
             }
           },
-          "representative_proof_artifact_sha256": "e663fa6b1027389175ae47bdc9d4c0c827c72dc0bfd7856e409ad0a52c3c88bb",
+          "representative_proof_artifact_sha256": "ed324382a698edcca8504053c5d6f23928965e51ee5d9e072a41320afd35934e",
           "required_reviewers": [
             "hash_based_signature_reviewer",
             "formal_methods_reviewer",
@@ -1298,7 +1506,20 @@
           ],
           "review_required": true,
           "statement": "Hash-based bound checks are applicability/routing checks, not attack-success claims.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "family_applicability_boundary",
+            "lean_source": {
+              "declaration": "family_applicability_boundary_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.family_applicability_boundary_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Family applicability boundary obligations are typed as family-scoped Lean obligations with no public security claim.",
+            "type_rule_sha256": "307a59fe19e45af3f287ac51b220a53ef304c7256fdc2819a7d839a4c31a48dd"
+          }
         },
         {
           "attack_plan_canonical_sha256": "f3e97f0fa01ff1c3465d468bed62e93dd5b927c7ff906f27c9ec2dc0eee7471c",
@@ -1313,9 +1534,9 @@
           },
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "ledger_entry_id": "HASH_BASED:estimator.boundary.no_security_claim",
-          "ledger_entry_sha256": "c94fa5ad3d48bb8db6b9ee1684b9bb8f5a5207939ababf50f05e9a3efc99135d",
+          "ledger_entry_sha256": "9735ff5a0374e37b8f44770dfedf50b9ebf5cf9e8e8dd67ae0dc527980d7a731",
           "obligation_id": "estimator.boundary.no_security_claim",
-          "obligation_sha256": "f1798fec8864420795599f85c76374d3d08c715f53cf33d12aa2b20950354004",
+          "obligation_sha256": "b41adac9ccaf7497f3e41abcc98c68cd4ca60eceac6350040ff5993b5f6d5226",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -1330,7 +1551,7 @@
               "scope": "estimator"
             }
           },
-          "representative_proof_artifact_sha256": "e663fa6b1027389175ae47bdc9d4c0c827c72dc0bfd7856e409ad0a52c3c88bb",
+          "representative_proof_artifact_sha256": "ed324382a698edcca8504053c5d6f23928965e51ee5d9e072a41320afd35934e",
           "required_reviewers": [
             "hash_based_signature_reviewer",
             "formal_methods_reviewer",
@@ -1338,7 +1559,20 @@
           ],
           "review_required": true,
           "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "estimator_claim_boundary",
+            "lean_source": {
+              "declaration": "estimator_claim_boundary_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+            "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+          }
         }
       ],
       "representative_attack_plan": {
@@ -1355,7 +1589,7 @@
         "sha256": "8b1d9b8c8774392b551e9e0a4ebf0fd3f0836d45042ba045d4865c237bf2a668"
       },
       "representative_proof_artifact": {
-        "artifact_sha256": "e663fa6b1027389175ae47bdc9d4c0c827c72dc0bfd7856e409ad0a52c3c88bb",
+        "artifact_sha256": "ed324382a698edcca8504053c5d6f23928965e51ee5d9e072a41320afd35934e",
         "estimator_result_binding_status": "not_attached",
         "required_reviewers": [
           "hash_based_signature_reviewer",
@@ -1373,7 +1607,7 @@
     },
     {
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "6acba816967c1d8a53dbb97917145705deeeb50e24c4be4942d0f02784d904f8",
+      "entry_sha256": "fa0cb40512667f8a2815956cd99b20e3942e4b7ad160fe28f37d8f65048722c6",
       "estimator_model": {
         "model_id": "agades.pqc.evaluator_model.boundary.v1",
         "no_fake_estimate": true,
@@ -1400,8 +1634,8 @@
           },
           "lean_theorem": "AgadesPQC.IsogenyHistorical.Target.dimension_positive_historical_scope",
           "ledger_entry_id": "ISOGENY_HISTORICAL:isogeny_historical.dimension_positive_historical_scope",
-          "ledger_entry_sha256": "95e0f0ae6e55dd77c4c50fac49a37d7118b295a7c76d558f52cf91776aa4a918",
-          "representative_proof_artifact_sha256": "08bdd8f76e421096349f9692172abe073bf6c8eedbe77766dced105c8938bedd",
+          "ledger_entry_sha256": "b8ea7b2c6d90c75b1a8b57cda1448d3a1de809b24a433efc76220f177250de84",
+          "representative_proof_artifact_sha256": "667bcbbdecf2b146dd7442cbc16f4f630ef6a859e6db29f8f7e4dce2a10ce2ba",
           "required_reviewers": [
             "isogeny_historical_reviewer",
             "formal_methods_reviewer",
@@ -1432,9 +1666,9 @@
           },
           "lean_theorem": "AgadesPQC.IsogenyHistorical.Target.historical_only",
           "ledger_entry_id": "ISOGENY_HISTORICAL:family.isogeny_historical.historical_only",
-          "ledger_entry_sha256": "b2d0645bc2dee1db38da679973647ab359666ac46bd249e27f518ec61b90f8b0",
+          "ledger_entry_sha256": "49530c6d68825e822cc7a335eb5db24c5721a8fef4bf2e317278ed656e18b3a1",
           "obligation_id": "family.isogeny_historical.historical_only",
-          "obligation_sha256": "9e61e106ddfc4cddb33502ab4dbaa6aeff16746a3aff6b93cb849569693f218a",
+          "obligation_sha256": "991cdcb6ba251760c21e228a9dd44a158814cd36224f7e3650fcd8b018ec341f",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -1449,7 +1683,7 @@
               "target_family": "ISOGENY_HISTORICAL"
             }
           },
-          "representative_proof_artifact_sha256": "08bdd8f76e421096349f9692172abe073bf6c8eedbe77766dced105c8938bedd",
+          "representative_proof_artifact_sha256": "667bcbbdecf2b146dd7442cbc16f4f630ef6a859e6db29f8f7e4dce2a10ce2ba",
           "required_reviewers": [
             "isogeny_historical_reviewer",
             "formal_methods_reviewer",
@@ -1457,7 +1691,20 @@
           ],
           "review_required": true,
           "statement": "Historical isogeny tasks are toy/historical routing checks and cannot describe current-standard break claims.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "family_applicability_boundary",
+            "lean_source": {
+              "declaration": "family_applicability_boundary_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.family_applicability_boundary_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Family applicability boundary obligations are typed as family-scoped Lean obligations with no public security claim.",
+            "type_rule_sha256": "307a59fe19e45af3f287ac51b220a53ef304c7256fdc2819a7d839a4c31a48dd"
+          }
         },
         {
           "attack_plan_canonical_sha256": "57896d9d7a9ac2247ccd2a71223af147efafc916ba9c19c46495ad4985eeb5ea",
@@ -1472,9 +1719,9 @@
           },
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "ledger_entry_id": "ISOGENY_HISTORICAL:estimator.boundary.no_security_claim",
-          "ledger_entry_sha256": "15707885f5da2f2d33265a726f091bbb769d72bb7fba08f0ae26a9bd26acfad9",
+          "ledger_entry_sha256": "f08303f8e3530bb3702ba4ba2e3e61bbdebded93ca123e9424a9c12edd6e6d13",
           "obligation_id": "estimator.boundary.no_security_claim",
-          "obligation_sha256": "1b51450c06a9571c2a94b12f2ffd22587a8be62ec61aecfb19e84dcae1c8a81c",
+          "obligation_sha256": "d1833d3c3cd642fd063080acb4bb02d1ec1cde19792118b8b3ae45b2b5f1832c",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -1489,7 +1736,7 @@
               "scope": "estimator"
             }
           },
-          "representative_proof_artifact_sha256": "08bdd8f76e421096349f9692172abe073bf6c8eedbe77766dced105c8938bedd",
+          "representative_proof_artifact_sha256": "667bcbbdecf2b146dd7442cbc16f4f630ef6a859e6db29f8f7e4dce2a10ce2ba",
           "required_reviewers": [
             "isogeny_historical_reviewer",
             "formal_methods_reviewer",
@@ -1497,7 +1744,20 @@
           ],
           "review_required": true,
           "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "estimator_claim_boundary",
+            "lean_source": {
+              "declaration": "estimator_claim_boundary_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+            "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+          }
         }
       ],
       "representative_attack_plan": {
@@ -1514,7 +1774,7 @@
         "sha256": "91529eb1aee8d6dd7b9c3fa5360349cbb4ed8da9822b52b8b1f7e74bdada60b7"
       },
       "representative_proof_artifact": {
-        "artifact_sha256": "08bdd8f76e421096349f9692172abe073bf6c8eedbe77766dced105c8938bedd",
+        "artifact_sha256": "667bcbbdecf2b146dd7442cbc16f4f630ef6a859e6db29f8f7e4dce2a10ce2ba",
         "estimator_result_binding_status": "not_attached",
         "required_reviewers": [
           "isogeny_historical_reviewer",
@@ -1532,7 +1792,7 @@
     },
     {
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "bf26d2cadb1accd3c67e94af601106cf12646ca3121e146478af36c3c4e86db0",
+      "entry_sha256": "0b45a950d060353ccf0a6d1e7780876937d3e1fecef61cd1e937e6b75a30bc95",
       "estimator_model": {
         "model_id": "agades.pqc.evaluator_model.boundary.v1",
         "no_fake_estimate": true,
@@ -1559,8 +1819,8 @@
           },
           "lean_theorem": "AgadesPQC.ImplementationSecurity.Target.review_scope_declared",
           "ledger_entry_id": "IMPLEMENTATION_SECURITY:implementation_security.review_scope_declared",
-          "ledger_entry_sha256": "937299fab6548f884bb76791a2906ea4522a9f654de2c8b838fd155ecef15ef3",
-          "representative_proof_artifact_sha256": "52a9bb1a7d8fd3e0aa9afde39a5b5497b1264fc820adf89ab417799c6c7407b8",
+          "ledger_entry_sha256": "291f10ac7186788154529c0419be02c641564a9c6db609c9caa89dfae46bc1f6",
+          "representative_proof_artifact_sha256": "5e6bae03b295c21fe3572d8716250fa0ab20245dc7c168fa01c58c101ffd633b",
           "required_reviewers": [
             "implementation_security_reviewer",
             "formal_methods_reviewer",
@@ -1591,9 +1851,9 @@
           },
           "lean_theorem": "AgadesPQC.ImplementationSecurity.Target.no_conformance_claim",
           "ledger_entry_id": "IMPLEMENTATION_SECURITY:family.implementation_security.no_conformance_claim",
-          "ledger_entry_sha256": "1cf8a5c35b39b884a160e36cebc2ef70938f3d0d962015c7b7794aee0d01c654",
+          "ledger_entry_sha256": "e82cd7aeb48d358e0b3b35336ee5bd5eea2ae6ff779ef782f9a94fac6bc14214",
           "obligation_id": "family.implementation_security.no_conformance_claim",
-          "obligation_sha256": "17789b072efeef171ae64756b986602b70aed40af88cc16f525fe887b3e2019f",
+          "obligation_sha256": "48c926806a48bab5cb3ca796ccf1f72d8c7c6f435cb9d717d90b5f417117a14f",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -1608,7 +1868,7 @@
               "target_family": "IMPLEMENTATION_SECURITY"
             }
           },
-          "representative_proof_artifact_sha256": "52a9bb1a7d8fd3e0aa9afde39a5b5497b1264fc820adf89ab417799c6c7407b8",
+          "representative_proof_artifact_sha256": "5e6bae03b295c21fe3572d8716250fa0ab20245dc7c168fa01c58c101ffd633b",
           "required_reviewers": [
             "implementation_security_reviewer",
             "formal_methods_reviewer",
@@ -1616,7 +1876,20 @@
           ],
           "review_required": true,
           "statement": "Implementation-security toy checks do not establish conformance, side-channel resistance, or security claims.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "family_applicability_boundary",
+            "lean_source": {
+              "declaration": "family_applicability_boundary_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.family_applicability_boundary_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Family applicability boundary obligations are typed as family-scoped Lean obligations with no public security claim.",
+            "type_rule_sha256": "307a59fe19e45af3f287ac51b220a53ef304c7256fdc2819a7d839a4c31a48dd"
+          }
         },
         {
           "attack_plan_canonical_sha256": "474debf85c732c726feba7e96bddba966d74d582ac16503d4200dc0f00f1cbd0",
@@ -1631,9 +1904,9 @@
           },
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "ledger_entry_id": "IMPLEMENTATION_SECURITY:estimator.boundary.no_security_claim",
-          "ledger_entry_sha256": "a7658abf374df7c6b912f7ff6e115f973040ab5e90e65c43e85edcf149c7c67b",
+          "ledger_entry_sha256": "9343c492c279d5dea3651641ca5d8c787a767c81969e02ece30d0afc52366108",
           "obligation_id": "estimator.boundary.no_security_claim",
-          "obligation_sha256": "d01f7b710932206f84bdee69be9d391e001eb264638971ab6cd991eb5e35b841",
+          "obligation_sha256": "91b268e0855a063eda139a020a4c0163783bfe35693546ffd6cb36e7b8f91fd5",
           "obligation_type": {
             "claim_policy": {
               "public_interpretation": "applicability_check_only",
@@ -1648,7 +1921,7 @@
               "scope": "estimator"
             }
           },
-          "representative_proof_artifact_sha256": "52a9bb1a7d8fd3e0aa9afde39a5b5497b1264fc820adf89ab417799c6c7407b8",
+          "representative_proof_artifact_sha256": "5e6bae03b295c21fe3572d8716250fa0ab20245dc7c168fa01c58c101ffd633b",
           "required_reviewers": [
             "implementation_security_reviewer",
             "formal_methods_reviewer",
@@ -1656,7 +1929,20 @@
           ],
           "review_required": true,
           "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
-          "status": "pending_review"
+          "status": "pending_review",
+          "type_rule": {
+            "backend": "lean4",
+            "kind": "estimator_claim_boundary",
+            "lean_source": {
+              "declaration": "estimator_claim_boundary_typed",
+              "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+              "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+            },
+            "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+            "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+            "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+            "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+          }
         }
       ],
       "representative_attack_plan": {
@@ -1673,7 +1959,7 @@
         "sha256": "7bb5390d45c99a9baa4eee619771366b7db72540b315d9d581beee8e515d98c7"
       },
       "representative_proof_artifact": {
-        "artifact_sha256": "52a9bb1a7d8fd3e0aa9afde39a5b5497b1264fc820adf89ab417799c6c7407b8",
+        "artifact_sha256": "5e6bae03b295c21fe3572d8716250fa0ab20245dc7c168fa01c58c101ffd633b",
         "estimator_result_binding_status": "not_attached",
         "required_reviewers": [
           "implementation_security_reviewer",
@@ -1710,8 +1996,8 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.dimension_modulus_positive",
       "ledger_entry_id": "LWE:lattice.dimension_modulus_positive",
-      "ledger_entry_sha256": "d8ad6cf34bbe542aa650d0ffbf4a23864527b0ff3b79c698c957a9a1d3a15302",
-      "representative_proof_artifact_sha256": "e77bb3f0f630f3d33a9582f8f6776bc93491b889832f132d8c60837a95e44ccb",
+      "ledger_entry_sha256": "f512206c4c926bffbba08ddd2360b5df089d2176dd2b9bdda8214dcd6b8ceb20",
+      "representative_proof_artifact_sha256": "f75bae98c00023d78c80f97a495a71ed3b16c4b7f2f6d28a9342b2a52861228c",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -1739,8 +2025,8 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
       "ledger_entry_id": "LWE:lattice.distributions_present",
-      "ledger_entry_sha256": "905f40ddfc9f3b265d5669c70429b523dba3014a3afc5dcf0c781688c64fbd11",
-      "representative_proof_artifact_sha256": "e77bb3f0f630f3d33a9582f8f6776bc93491b889832f132d8c60837a95e44ccb",
+      "ledger_entry_sha256": "196fec2eacbdd1923b5e6f607c7ec9888b6c6751d4abcb76911a77f76a8e51be",
+      "representative_proof_artifact_sha256": "f75bae98c00023d78c80f97a495a71ed3b16c4b7f2f6d28a9342b2a52861228c",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -1768,8 +2054,8 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.dimension_modulus_positive",
       "ledger_entry_id": "MLWE:lattice.dimension_modulus_positive",
-      "ledger_entry_sha256": "a57a4a30367e6b84662a9df0f8d07827d1289aabccb317139dc297e2f1788dff",
-      "representative_proof_artifact_sha256": "ba293e785e1c756fb2829cccafba2f8a89ed946819127303f650c4360c7ac231",
+      "ledger_entry_sha256": "807717995d67dca288f810079c2415a13fd472855b7c0d1cfe054b23d18622d4",
+      "representative_proof_artifact_sha256": "05c45c8b8330cbdd2196915cec4d3c45baed637c2f0b0aadd8b97959282b04e3",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -1797,8 +2083,8 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
       "ledger_entry_id": "MLWE:lattice.distributions_present",
-      "ledger_entry_sha256": "877f6ec299b85bde77fad916ce5fccabebfcc88eb27fe437f2ad6f423568c94d",
-      "representative_proof_artifact_sha256": "ba293e785e1c756fb2829cccafba2f8a89ed946819127303f650c4360c7ac231",
+      "ledger_entry_sha256": "5dab65ea1cc7058681d5fc66101eb8666445f0c17fe58d0fedb0a91589dfdcbc",
+      "representative_proof_artifact_sha256": "05c45c8b8330cbdd2196915cec4d3c45baed637c2f0b0aadd8b97959282b04e3",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -1826,8 +2112,8 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.module_rank_present",
       "ledger_entry_id": "MLWE:lattice.mlwe.module_rank_present",
-      "ledger_entry_sha256": "b7d789196d09c007ddf405702e1f75fa6c955f7c7a0792f59f143694fb3cfa92",
-      "representative_proof_artifact_sha256": "ba293e785e1c756fb2829cccafba2f8a89ed946819127303f650c4360c7ac231",
+      "ledger_entry_sha256": "d84a6a1c6257572b6db648a8dd1fdb3925e5d2a4fbd635765e038ac61aa44833",
+      "representative_proof_artifact_sha256": "05c45c8b8330cbdd2196915cec4d3c45baed637c2f0b0aadd8b97959282b04e3",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -1855,8 +2141,8 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.ntru_schema_shape",
       "ledger_entry_id": "NTRU:lattice.ntru.schema_shape",
-      "ledger_entry_sha256": "579dc67f0e2e3917af11c0a7905c0ad3eacaaae7da30bdab506803b72bf47e47",
-      "representative_proof_artifact_sha256": "94596ac252371a48ecd531e5980e61c79344bb112bf975a2070e4095a55d7a2f",
+      "ledger_entry_sha256": "3fc52e278af09bc2e2d85e54519390e56a4d0b8ba4c250ed68a7e31b9ff5c027",
+      "representative_proof_artifact_sha256": "dfa5a964dfdbe26d7a189910864da0a950f1e97f8e15ad64cbc56c2edd58a199",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -1884,8 +2170,8 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.sis_schema_shape",
       "ledger_entry_id": "SIS:lattice.sis.schema_shape",
-      "ledger_entry_sha256": "5fbfd7c8b1b2154a76a800aeb7ccf3f2e3b16ac60a75ec4eafd01aea02590a41",
-      "representative_proof_artifact_sha256": "9fc0e52ccfd435588c474bdcdb0dfae231ab35884bf05879f7d199c3a393462e",
+      "ledger_entry_sha256": "23ebba2ae4f576ca7c17876078f98b0853c52762c77e2a57fb4604b9638c997f",
+      "representative_proof_artifact_sha256": "d9bf365a322f0cfac690e7b32c4f368dda4bf1dfc47699fc448f59a4a5f8c49a",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -1913,8 +2199,8 @@
       },
       "lean_theorem": "AgadesPQC.CodeBased.Target.parameters_well_formed",
       "ledger_entry_id": "CODE_BASED:code_based.length_dimension_weight_positive",
-      "ledger_entry_sha256": "027768a5b94fa0f91a31e39223cb46563c358866ae42d668221b6007093e9d37",
-      "representative_proof_artifact_sha256": "755ad1e212210fc76734fcadd7aab333f145d8750148a4978328d0da423b0c14",
+      "ledger_entry_sha256": "9a9949a506318bf3984943cfe54d491a77916ea692a3bc33cc712eb5d21cce57",
+      "representative_proof_artifact_sha256": "b39aa12e1446922317a0894b9cc21e1072d2f393dd2df6a3b0b444c272c3222f",
       "required_reviewers": [
         "code_based_cryptographer",
         "formal_methods_reviewer",
@@ -1942,8 +2228,8 @@
       },
       "lean_theorem": "AgadesPQC.Multivariate.Target.variables_equations_field_present",
       "ledger_entry_id": "MULTIVARIATE:multivariate.variables_equations_field_present",
-      "ledger_entry_sha256": "357a6a922aac29dd13f85174227115a739ba657200cbe839882b4bbb6230878f",
-      "representative_proof_artifact_sha256": "34f58d855d5bcbbc883c6bd3224f0b309a6b69537304992d9d108a0850ad749a",
+      "ledger_entry_sha256": "a22ddbde2291fe305aa3baf00279858584ccf06d9f4cf56ce4f735f41d2acec2",
+      "representative_proof_artifact_sha256": "f98ab7516eacacca20b0c3561e77e5fe3c77922fa14a7cb5b9b88990b55a5cc0",
       "required_reviewers": [
         "multivariate_cryptographer",
         "formal_methods_reviewer",
@@ -1971,8 +2257,8 @@
       },
       "lean_theorem": "AgadesPQC.HashBased.Target.hash_function_and_security_parameter_present",
       "ledger_entry_id": "HASH_BASED:hash_based.hash_function_and_security_parameter_present",
-      "ledger_entry_sha256": "8f6d7d9b438c6d2d8f6a3e6dd150aab08fe8a11b2a8107bdc2f26fc13e4b8199",
-      "representative_proof_artifact_sha256": "e663fa6b1027389175ae47bdc9d4c0c827c72dc0bfd7856e409ad0a52c3c88bb",
+      "ledger_entry_sha256": "d2bae3c7f311a3a6f88d7526e906e7a4818fb1c42274cdeb89c09ae2a3e2bc4b",
+      "representative_proof_artifact_sha256": "ed324382a698edcca8504053c5d6f23928965e51ee5d9e072a41320afd35934e",
       "required_reviewers": [
         "hash_based_signature_reviewer",
         "formal_methods_reviewer",
@@ -2000,8 +2286,8 @@
       },
       "lean_theorem": "AgadesPQC.IsogenyHistorical.Target.dimension_positive_historical_scope",
       "ledger_entry_id": "ISOGENY_HISTORICAL:isogeny_historical.dimension_positive_historical_scope",
-      "ledger_entry_sha256": "95e0f0ae6e55dd77c4c50fac49a37d7118b295a7c76d558f52cf91776aa4a918",
-      "representative_proof_artifact_sha256": "08bdd8f76e421096349f9692172abe073bf6c8eedbe77766dced105c8938bedd",
+      "ledger_entry_sha256": "b8ea7b2c6d90c75b1a8b57cda1448d3a1de809b24a433efc76220f177250de84",
+      "representative_proof_artifact_sha256": "667bcbbdecf2b146dd7442cbc16f4f630ef6a859e6db29f8f7e4dce2a10ce2ba",
       "required_reviewers": [
         "isogeny_historical_reviewer",
         "formal_methods_reviewer",
@@ -2029,8 +2315,8 @@
       },
       "lean_theorem": "AgadesPQC.ImplementationSecurity.Target.review_scope_declared",
       "ledger_entry_id": "IMPLEMENTATION_SECURITY:implementation_security.review_scope_declared",
-      "ledger_entry_sha256": "937299fab6548f884bb76791a2906ea4522a9f654de2c8b838fd155ecef15ef3",
-      "representative_proof_artifact_sha256": "52a9bb1a7d8fd3e0aa9afde39a5b5497b1264fc820adf89ab417799c6c7407b8",
+      "ledger_entry_sha256": "291f10ac7186788154529c0419be02c641564a9c6db609c9caa89dfae46bc1f6",
+      "representative_proof_artifact_sha256": "5e6bae03b295c21fe3572d8716250fa0ab20245dc7c168fa01c58c101ffd633b",
       "required_reviewers": [
         "implementation_security_reviewer",
         "formal_methods_reviewer",
@@ -2040,25 +2326,25 @@
       "statement": "implementation-security tasks declare a review-only scope"
     }
   ],
-  "ledger_sha256": "1045e2780be041e4ea13f58d68d7cb0a3b2dc8984e366124617a71232d863776",
+  "ledger_sha256": "d5e93e5f58a62337e11b39873125a0132e40c81d26a05692eb729e410731a9e7",
   "linked_artifacts": {
     "formal_estimator_model": {
-      "canonical_sha256": "661ffbb90c309cf6361e949becc7b8455b0486d30634d767eeb1953065c0d148",
+      "canonical_sha256": "128ab0e62674538d36385db407de00eb81ec25fcfc7182a5695f9a275a9fda22",
       "path": "docs/formal_estimator_model.json",
       "schema_version": "agades.pqc.formal.estimator_model.v1",
-      "sha256": "122180b23208b03241111fa4af5767f2534669827661a8aa160d9df584eb5e01"
+      "sha256": "29f152fd77cbb26396747b3c651ec928dac477cc12f34aea73fc89c6cc7a506e"
     },
     "formal_family_coverage": {
-      "canonical_sha256": "33a9aebd390f73df7b678b564363880b651e2d5601fcb3c93fcfc86bc71312d8",
+      "canonical_sha256": "9fd0abb2c70c7c811d35da2bf9e1b818fe0f3cde4563cfec945e83e30f90acea",
       "path": "docs/formal_family_coverage.json",
       "schema_version": "agades.pqc.formal.family_coverage.v1",
-      "sha256": "b62df1bd13038cf4ebd56471c9b297144dbfc46b51f5158628b882188b9fead7"
+      "sha256": "9b8ed0dde423052561a7be71ed14f94f0fb60b28d2a224af8fdc3d22b508430d"
     },
     "formal_lean_backend": {
-      "canonical_sha256": "88a16760977b7c501addf3199da020407dab681f634c3a0de7610b5fabfbe3fc",
+      "canonical_sha256": "4118c0d7ca78911c5818277c9d26355e8428e869b6b7172c94a634979a846828",
       "path": "docs/formal_lean_backend.json",
       "schema_version": "agades.pqc.formal.lean_backend.v1",
-      "sha256": "493d35c4c7732ef0d10efb93b397923ac76fee8d6b267b175c8724012500b0b8"
+      "sha256": "7bd1125ecc9edd8bf35a04128c07b602e8966a749c8b4dd75316eafde72ac5b0"
     },
     "formal_lwe_evaluator_result": {
       "canonical_sha256": "19eeeda00bc0711436564712a14164fb5aed78dc1874cd2d7059453758b2be29",
@@ -2067,10 +2353,10 @@
       "sha256": "f84ad52b967ece51b4f9e165f469c55e5ba469b30d339ae81584352f102f3c3d"
     },
     "formal_lwe_proof_artifact": {
-      "canonical_sha256": "f923c4c28a35698b059a56bd9cc7c339bfea1f275eb0deb43052761176ca3d5a",
+      "canonical_sha256": "b6c0a52c2baac0e7161c025673119c921c171676962aee13d729abb478ef4d6e",
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
       "schema_version": "agades.pqc.formal.proof_artifact.v1",
-      "sha256": "ab51dd773def1009446242ee4907ddbc767b059c8588d722473734467607ad5f"
+      "sha256": "d13615c6e80c5602b28a54a76be55291bb59797febd17f9a264749eccb50d9db"
     },
     "formal_mlwe_evaluator_result": {
       "canonical_sha256": "3c5c37b0cfb4461b1ef99d559bb88c81e23557a0399f4004d70fee5bd58c991a",
@@ -2079,10 +2365,10 @@
       "sha256": "c9c4a7491a6049ef0cf49194841972f1ffbe7b8303403d6f23e8ae67f4e60f14"
     },
     "formal_mlwe_proof_artifact": {
-      "canonical_sha256": "bda37aa7f635fda8658e9ffc9bf8d33742c1083bffaa23049967a316a60aca6c",
+      "canonical_sha256": "1e8efeab995b372bfcd6061e7004cd53aa9e9c31d0b284f033380a7f4a6b68a3",
       "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
       "schema_version": "agades.pqc.formal.proof_artifact.v1",
-      "sha256": "3e10d45f9b279f20b9df2fe9a6c3f7fa586147768dfaed7078ab787e4863c2e8"
+      "sha256": "676b4eb2f2ee241fd58cb5ec21426163e8090d313bb1fe37e67748c400e28c16"
     },
     "formal_operator_semantics": {
       "canonical_sha256": "cab72bb06f3f12cee884e3232166380d7a4065e162be0fb4b42b2bb13bc4cc72",
@@ -2096,6 +2382,73 @@
     "package": "agades_pqc_gym",
     "repository": "https://github.com/AgadesTech/agades-pqc-gym"
   },
+  "proof_obligation_type_rules": [
+    {
+      "backend": "lean4",
+      "kind": "target_invariant",
+      "lean_source": {
+        "declaration": "target_invariant_typed",
+        "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+        "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+      },
+      "lean_theorem": "AgadesPQC.ProofObligation.target_invariant_typed",
+      "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+      "statement": "Target invariant obligations are typed as target-scoped Lean obligations with reviewer-gated, non-security-claim semantics.",
+      "type_rule_sha256": "dd086c22a21fed95aea00f3ab5b5693c27e385f359eaa8126ee315637a1354f5"
+    },
+    {
+      "backend": "lean4",
+      "kind": "operator_precondition",
+      "lean_source": {
+        "declaration": "operator_precondition_typed",
+        "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+        "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+      },
+      "lean_theorem": "AgadesPQC.ProofObligation.operator_precondition_typed",
+      "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+      "statement": "Operator precondition obligations are typed as operator-scoped Lean obligations with reviewer-gated, non-security-claim semantics.",
+      "type_rule_sha256": "68d856bc6e248e225cc7b2169a103a898825995d87bb620f04677bc3ee50041b"
+    },
+    {
+      "backend": "lean4",
+      "kind": "schema_only_boundary",
+      "lean_source": {
+        "declaration": "schema_only_boundary_typed",
+        "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+        "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+      },
+      "lean_theorem": "AgadesPQC.ProofObligation.schema_only_boundary_typed",
+      "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+      "statement": "Schema-only boundary obligations are typed as estimator-boundary Lean obligations that forbid fake runtime estimates.",
+      "type_rule_sha256": "f0ffb02405adea7b368712f6e8e45d03c39f47ef12a3c4a2b97463f538d515f4"
+    },
+    {
+      "backend": "lean4",
+      "kind": "family_applicability_boundary",
+      "lean_source": {
+        "declaration": "family_applicability_boundary_typed",
+        "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+        "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+      },
+      "lean_theorem": "AgadesPQC.ProofObligation.family_applicability_boundary_typed",
+      "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+      "statement": "Family applicability boundary obligations are typed as family-scoped Lean obligations with no public security claim.",
+      "type_rule_sha256": "307a59fe19e45af3f287ac51b220a53ef304c7256fdc2819a7d839a4c31a48dd"
+    },
+    {
+      "backend": "lean4",
+      "kind": "estimator_claim_boundary",
+      "lean_source": {
+        "declaration": "estimator_claim_boundary_typed",
+        "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+        "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+      },
+      "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+      "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+      "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+      "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+    }
+  ],
   "proof_obligations": [
     {
       "attack_plan_canonical_sha256": "c06ca5ddc67e4a09af1cece6b5a368129068fef091b77f785694324028111d60",
@@ -2110,9 +2463,9 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.parameters_positive",
       "ledger_entry_id": "LWE:target.lwe.parameters.positive",
-      "ledger_entry_sha256": "70aa92dd7a4f5a332c9136ed8b2c06dfd3261b5aa24c63f224b3ea1bf81f0321",
+      "ledger_entry_sha256": "699a20b8eb9521709722fbbfa990bc38d7c8ef0b7957ea2544aecb9cac815d6e",
       "obligation_id": "target.lwe.parameters.positive",
-      "obligation_sha256": "c48e1abacf7aa2807544d797f92857e1b959e8b559be328a6390e3908d356ff2",
+      "obligation_sha256": "a1b1194c6f58c34f1f9b7c9d05d4e30dc09919f29dc9efd0de778aa4e28a7a33",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2127,7 +2480,7 @@
           "target_family": "LWE"
         }
       },
-      "representative_proof_artifact_sha256": "e77bb3f0f630f3d33a9582f8f6776bc93491b889832f132d8c60837a95e44ccb",
+      "representative_proof_artifact_sha256": "f75bae98c00023d78c80f97a495a71ed3b16c4b7f2f6d28a9342b2a52861228c",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2135,7 +2488,20 @@
       ],
       "review_required": true,
       "statement": "Target parameters satisfy n > 0, q > 1, and m/k bounds where present.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "target_invariant",
+        "lean_source": {
+          "declaration": "target_invariant_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.target_invariant_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Target invariant obligations are typed as target-scoped Lean obligations with reviewer-gated, non-security-claim semantics.",
+        "type_rule_sha256": "dd086c22a21fed95aea00f3ab5b5693c27e385f359eaa8126ee315637a1354f5"
+      }
     },
     {
       "attack_plan_canonical_sha256": "c06ca5ddc67e4a09af1cece6b5a368129068fef091b77f785694324028111d60",
@@ -2150,9 +2516,9 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
       "ledger_entry_id": "LWE:target.lwe.distributions.present",
-      "ledger_entry_sha256": "6c35c4a25ebbd885048531aa23a06a63caf531ee5176a3701a12cd0292880296",
+      "ledger_entry_sha256": "86108c6fa56ef51eed8e34d21fdc4e817b5338ab6dfeb695839a968e96ac366a",
       "obligation_id": "target.lwe.distributions.present",
-      "obligation_sha256": "a67a3fa79472296adc53dafa605903ff9134ded2aadf0efc88a314dd60f430b6",
+      "obligation_sha256": "876054832003e1cbdea7cab9e0e7a34ca68e377fe6df3f01f59d41a72b439520",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2167,7 +2533,7 @@
           "target_family": "LWE"
         }
       },
-      "representative_proof_artifact_sha256": "e77bb3f0f630f3d33a9582f8f6776bc93491b889832f132d8c60837a95e44ccb",
+      "representative_proof_artifact_sha256": "f75bae98c00023d78c80f97a495a71ed3b16c4b7f2f6d28a9342b2a52861228c",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2175,7 +2541,20 @@
       ],
       "review_required": true,
       "statement": "Secret and error distributions are specified for LWE/MLWE.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "target_invariant",
+        "lean_source": {
+          "declaration": "target_invariant_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.target_invariant_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Target invariant obligations are typed as target-scoped Lean obligations with reviewer-gated, non-security-claim semantics.",
+        "type_rule_sha256": "dd086c22a21fed95aea00f3ab5b5693c27e385f359eaa8126ee315637a1354f5"
+      }
     },
     {
       "attack_plan_canonical_sha256": "c06ca5ddc67e4a09af1cece6b5a368129068fef091b77f785694324028111d60",
@@ -2190,9 +2569,9 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.PrimalUSVP.beta_valid_range",
       "ledger_entry_id": "LWE:operator.primal_usvp.beta.valid_range",
-      "ledger_entry_sha256": "85565586350432a7970f5ae010b1d73443cd680db8247c2ff9731c8cf83350a4",
+      "ledger_entry_sha256": "88d24226915a331be4c8bf26c1e4716bf8784256495dcedb9d628196e8ee6dc8",
       "obligation_id": "operator.primal_usvp.beta.valid_range",
-      "obligation_sha256": "1a8b82cd74ead38548937841f876d62aaae2b369ae3ee29b7907c0e580e25db8",
+      "obligation_sha256": "b5acc8e22683aa71db608709acfa38a02f20bb7691b608c5318884b8e63dd4db",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2207,7 +2586,7 @@
           "scope": "operator"
         }
       },
-      "representative_proof_artifact_sha256": "e77bb3f0f630f3d33a9582f8f6776bc93491b889832f132d8c60837a95e44ccb",
+      "representative_proof_artifact_sha256": "f75bae98c00023d78c80f97a495a71ed3b16c4b7f2f6d28a9342b2a52861228c",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2215,7 +2594,20 @@
       ],
       "review_required": true,
       "statement": "primal_usvp beta is positive and bounded by the target dimension policy.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "operator_precondition",
+        "lean_source": {
+          "declaration": "operator_precondition_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.operator_precondition_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Operator precondition obligations are typed as operator-scoped Lean obligations with reviewer-gated, non-security-claim semantics.",
+        "type_rule_sha256": "68d856bc6e248e225cc7b2169a103a898825995d87bb620f04677bc3ee50041b"
+      }
     },
     {
       "attack_plan_canonical_sha256": "c06ca5ddc67e4a09af1cece6b5a368129068fef091b77f785694324028111d60",
@@ -2230,9 +2622,9 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "ledger_entry_id": "LWE:estimator.boundary.no_security_claim",
-      "ledger_entry_sha256": "2aba8751636ec69f77dce8fa632169cec5463a2eec67f378881749c9ea8a3eb3",
+      "ledger_entry_sha256": "8edf29710490ec294422562c5d83831530631c098c7a0c4d8641af0913d23d41",
       "obligation_id": "estimator.boundary.no_security_claim",
-      "obligation_sha256": "b88dd340d32891200b2002c34b28e1c7d2579145e27882ca6aa43aa3c01a4e83",
+      "obligation_sha256": "e2b8516d37b64d8b5cea07ae886f6e5c58a03b46c83cbbc194b4c8172f8ac595",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2247,7 +2639,7 @@
           "scope": "estimator"
         }
       },
-      "representative_proof_artifact_sha256": "e77bb3f0f630f3d33a9582f8f6776bc93491b889832f132d8c60837a95e44ccb",
+      "representative_proof_artifact_sha256": "f75bae98c00023d78c80f97a495a71ed3b16c4b7f2f6d28a9342b2a52861228c",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2255,7 +2647,20 @@
       ],
       "review_required": true,
       "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "estimator_claim_boundary",
+        "lean_source": {
+          "declaration": "estimator_claim_boundary_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+        "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+      }
     },
     {
       "attack_plan_canonical_sha256": "cd75f20024968e2d6bd6f019c623b23663aba3d1fff350d81770755c197e284d",
@@ -2270,9 +2675,9 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.parameters_positive",
       "ledger_entry_id": "MLWE:target.mlwe.parameters.positive",
-      "ledger_entry_sha256": "07bfbcfc86c6de54ad6ca2812239c79db0ac4ac7b8f69fc4262c57158dc4a69e",
+      "ledger_entry_sha256": "fcca5a182f6dfdc1cea523732abcc10aad0bdd72d809d304adb4bc8126dd1026",
       "obligation_id": "target.mlwe.parameters.positive",
-      "obligation_sha256": "e683592dc9ed803befb3ef87aae70a9d052209df66c531cf4d4e579535fd1324",
+      "obligation_sha256": "7f1b81036e2c287711e357c16aa9a0e7f8d275179d97b7aaa8e95bdb1ef27c1d",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2287,7 +2692,7 @@
           "target_family": "MLWE"
         }
       },
-      "representative_proof_artifact_sha256": "ba293e785e1c756fb2829cccafba2f8a89ed946819127303f650c4360c7ac231",
+      "representative_proof_artifact_sha256": "05c45c8b8330cbdd2196915cec4d3c45baed637c2f0b0aadd8b97959282b04e3",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2295,7 +2700,20 @@
       ],
       "review_required": true,
       "statement": "MLWE target parameters satisfy n > 0, q > 1, and module-rank bounds where present.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "target_invariant",
+        "lean_source": {
+          "declaration": "target_invariant_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.target_invariant_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Target invariant obligations are typed as target-scoped Lean obligations with reviewer-gated, non-security-claim semantics.",
+        "type_rule_sha256": "dd086c22a21fed95aea00f3ab5b5693c27e385f359eaa8126ee315637a1354f5"
+      }
     },
     {
       "attack_plan_canonical_sha256": "cd75f20024968e2d6bd6f019c623b23663aba3d1fff350d81770755c197e284d",
@@ -2310,9 +2728,9 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
       "ledger_entry_id": "MLWE:target.mlwe.distributions.present",
-      "ledger_entry_sha256": "5edbbc8595fc9d83558d4c302df04b9a7b2144493eb2486f461211fe437d49c2",
+      "ledger_entry_sha256": "55130112da423cb4e3c045fa871aca0c2adeb81d1910454305f78955bd38dc60",
       "obligation_id": "target.mlwe.distributions.present",
-      "obligation_sha256": "558c537342a0045e1c53fad168ec453b7a19949a56c0ab0e4e3dff5278d3b4ad",
+      "obligation_sha256": "9a0f200647cf0591e9d770cd4717703aae63e3c69b3a10c2f84c160b9a3574e0",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2327,7 +2745,7 @@
           "target_family": "MLWE"
         }
       },
-      "representative_proof_artifact_sha256": "ba293e785e1c756fb2829cccafba2f8a89ed946819127303f650c4360c7ac231",
+      "representative_proof_artifact_sha256": "05c45c8b8330cbdd2196915cec4d3c45baed637c2f0b0aadd8b97959282b04e3",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2335,7 +2753,20 @@
       ],
       "review_required": true,
       "statement": "Secret and error distributions are specified for MLWE.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "target_invariant",
+        "lean_source": {
+          "declaration": "target_invariant_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.target_invariant_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Target invariant obligations are typed as target-scoped Lean obligations with reviewer-gated, non-security-claim semantics.",
+        "type_rule_sha256": "dd086c22a21fed95aea00f3ab5b5693c27e385f359eaa8126ee315637a1354f5"
+      }
     },
     {
       "attack_plan_canonical_sha256": "cd75f20024968e2d6bd6f019c623b23663aba3d1fff350d81770755c197e284d",
@@ -2350,9 +2781,9 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.module_rank_present",
       "ledger_entry_id": "MLWE:target.mlwe.module_rank.present",
-      "ledger_entry_sha256": "a626f51dbef40bfdb35d596b6bf941d817ab6e317662354344877f8167f69a7c",
+      "ledger_entry_sha256": "bc9c9370602ca494072e6a63a00412f3ecf11c1abb8948f9c29e24494b3daf01",
       "obligation_id": "target.mlwe.module_rank.present",
-      "obligation_sha256": "4714ed1b498464c74ffcd8bc81a4f29ddee5b2d6bfbcb57627abdde9b75a5869",
+      "obligation_sha256": "53fd04b2d605efc8e60c3499f433d84336cc1a68bb7f105dc7d5b195f7553a34",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2367,7 +2798,7 @@
           "target_family": "MLWE"
         }
       },
-      "representative_proof_artifact_sha256": "ba293e785e1c756fb2829cccafba2f8a89ed946819127303f650c4360c7ac231",
+      "representative_proof_artifact_sha256": "05c45c8b8330cbdd2196915cec4d3c45baed637c2f0b0aadd8b97959282b04e3",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2375,7 +2806,20 @@
       ],
       "review_required": true,
       "statement": "MLWE module rank k is positive.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "target_invariant",
+        "lean_source": {
+          "declaration": "target_invariant_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.target_invariant_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Target invariant obligations are typed as target-scoped Lean obligations with reviewer-gated, non-security-claim semantics.",
+        "type_rule_sha256": "dd086c22a21fed95aea00f3ab5b5693c27e385f359eaa8126ee315637a1354f5"
+      }
     },
     {
       "attack_plan_canonical_sha256": "cd75f20024968e2d6bd6f019c623b23663aba3d1fff350d81770755c197e284d",
@@ -2390,9 +2834,9 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "ledger_entry_id": "MLWE:estimator.boundary.no_security_claim",
-      "ledger_entry_sha256": "e55a696a63734f9e5c994a116ab5556e252d5a673084f15d02d4801c7dbef4e1",
+      "ledger_entry_sha256": "0e7165a31e215ca0f3bb31fb0ba3f8f601f2faeba061daadf71bd6539e5883ec",
       "obligation_id": "estimator.boundary.no_security_claim",
-      "obligation_sha256": "14db4b7ab88c79cbdbbc784584ba3e4b9fd56cc522a04a157d16bc970512e76a",
+      "obligation_sha256": "4677331075f7eeff0e0e4fea72acec72b8a073e8239570f4908808aaff0b5cfc",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2407,7 +2851,7 @@
           "scope": "estimator"
         }
       },
-      "representative_proof_artifact_sha256": "ba293e785e1c756fb2829cccafba2f8a89ed946819127303f650c4360c7ac231",
+      "representative_proof_artifact_sha256": "05c45c8b8330cbdd2196915cec4d3c45baed637c2f0b0aadd8b97959282b04e3",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2415,7 +2859,20 @@
       ],
       "review_required": true,
       "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "estimator_claim_boundary",
+        "lean_source": {
+          "declaration": "estimator_claim_boundary_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+        "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+      }
     },
     {
       "attack_plan_canonical_sha256": "0dff5b504e3ec999aba795cabcadf0cce3e76f057851b3b4485ad3767e9401ef",
@@ -2430,9 +2887,9 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.ntru_schema_only_no_estimate",
       "ledger_entry_id": "NTRU:family.ntru.schema_only.no_estimate",
-      "ledger_entry_sha256": "85dd017dd2e1c427369bcce02de09197069a16318a7b765518a2163b2df3e2e5",
+      "ledger_entry_sha256": "7bedb4ebc43b5f6f88895d2bd420d65a4c87cd1474e50a164ac57eeecd78d401",
       "obligation_id": "family.ntru.schema_only.no_estimate",
-      "obligation_sha256": "62973bb75e1b773c9fa245e5458a30f6331816231b35e19f2c507c7ef7ba2a5f",
+      "obligation_sha256": "20916392766d3a771a8834d7732a47ca99f385ec76ccfd55785af8fa4f356c09",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2447,7 +2904,7 @@
           "support_level": "schema_only"
         }
       },
-      "representative_proof_artifact_sha256": "94596ac252371a48ecd531e5980e61c79344bb112bf975a2070e4095a55d7a2f",
+      "representative_proof_artifact_sha256": "dfa5a964dfdbe26d7a189910864da0a950f1e97f8e15ad64cbc56c2edd58a199",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2455,7 +2912,20 @@
       ],
       "review_required": true,
       "statement": "Schema-only NTRU plans must not emit cryptanalytic estimates.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "schema_only_boundary",
+        "lean_source": {
+          "declaration": "schema_only_boundary_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.schema_only_boundary_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Schema-only boundary obligations are typed as estimator-boundary Lean obligations that forbid fake runtime estimates.",
+        "type_rule_sha256": "f0ffb02405adea7b368712f6e8e45d03c39f47ef12a3c4a2b97463f538d515f4"
+      }
     },
     {
       "attack_plan_canonical_sha256": "0dff5b504e3ec999aba795cabcadf0cce3e76f057851b3b4485ad3767e9401ef",
@@ -2470,9 +2940,9 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "ledger_entry_id": "NTRU:estimator.boundary.no_security_claim",
-      "ledger_entry_sha256": "ada4667f7132f36fb72e07cdcd45eaa77a714b1cb9effb202827f6c9e5259227",
+      "ledger_entry_sha256": "f69413e1a393d182ccc9ceefcd74640495d9ff8836ebc19d380809d98f0e666d",
       "obligation_id": "estimator.boundary.no_security_claim",
-      "obligation_sha256": "1ca6e1ab320d728ce7fd05a47b29260bfb5361e827c434d99c22ceac7f46a2da",
+      "obligation_sha256": "2c76aae7d7b931ec4352467d44b708a0c8c8d91f731ed5c09185cecc2ca0f6ac",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2487,7 +2957,7 @@
           "scope": "estimator"
         }
       },
-      "representative_proof_artifact_sha256": "94596ac252371a48ecd531e5980e61c79344bb112bf975a2070e4095a55d7a2f",
+      "representative_proof_artifact_sha256": "dfa5a964dfdbe26d7a189910864da0a950f1e97f8e15ad64cbc56c2edd58a199",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2495,7 +2965,20 @@
       ],
       "review_required": true,
       "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "estimator_claim_boundary",
+        "lean_source": {
+          "declaration": "estimator_claim_boundary_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+        "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+      }
     },
     {
       "attack_plan_canonical_sha256": "aa89fc54087336e25a2a5ed9d6c0dc95ed14986d621a54f6a769500970164321",
@@ -2510,9 +2993,9 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.sis_schema_only_no_estimate",
       "ledger_entry_id": "SIS:family.sis.schema_only.no_estimate",
-      "ledger_entry_sha256": "9a43d5fb9736f0d2ba1758c6207d41bef1db8619cdec337a236f35554e394460",
+      "ledger_entry_sha256": "dc61bde92414a263e335524f7a1535c371692637140d4a940342d2f22d619428",
       "obligation_id": "family.sis.schema_only.no_estimate",
-      "obligation_sha256": "2608dfb939f98596d05f2a370c67ead0e5ccefcba21af84d41d5d7dabd4e18d7",
+      "obligation_sha256": "f8a0781f173ba7b29c09ced08790c73ec777d630ee38042d8135b7a441daa900",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2527,7 +3010,7 @@
           "support_level": "schema_only"
         }
       },
-      "representative_proof_artifact_sha256": "9fc0e52ccfd435588c474bdcdb0dfae231ab35884bf05879f7d199c3a393462e",
+      "representative_proof_artifact_sha256": "d9bf365a322f0cfac690e7b32c4f368dda4bf1dfc47699fc448f59a4a5f8c49a",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2535,7 +3018,20 @@
       ],
       "review_required": true,
       "statement": "Schema-only SIS plans must not emit cryptanalytic estimates.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "schema_only_boundary",
+        "lean_source": {
+          "declaration": "schema_only_boundary_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.schema_only_boundary_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Schema-only boundary obligations are typed as estimator-boundary Lean obligations that forbid fake runtime estimates.",
+        "type_rule_sha256": "f0ffb02405adea7b368712f6e8e45d03c39f47ef12a3c4a2b97463f538d515f4"
+      }
     },
     {
       "attack_plan_canonical_sha256": "aa89fc54087336e25a2a5ed9d6c0dc95ed14986d621a54f6a769500970164321",
@@ -2550,9 +3046,9 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "ledger_entry_id": "SIS:estimator.boundary.no_security_claim",
-      "ledger_entry_sha256": "e30960a2449cd9882405adc65d498fd19e6d7d3fce2de117201f3729c28f0843",
+      "ledger_entry_sha256": "161fa6d24ac6a9c9e68fb527a28f64181e855820e901dad04a27b1373bdd2e82",
       "obligation_id": "estimator.boundary.no_security_claim",
-      "obligation_sha256": "fa47633f6333849343ed276bb25c71774059ef65b098657ad815720e3381fc36",
+      "obligation_sha256": "3c4d58e4adfd4069178f310fc29ac36fa943433646fe43a33392e55a28e79233",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2567,7 +3063,7 @@
           "scope": "estimator"
         }
       },
-      "representative_proof_artifact_sha256": "9fc0e52ccfd435588c474bdcdb0dfae231ab35884bf05879f7d199c3a393462e",
+      "representative_proof_artifact_sha256": "d9bf365a322f0cfac690e7b32c4f368dda4bf1dfc47699fc448f59a4a5f8c49a",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2575,7 +3071,20 @@
       ],
       "review_required": true,
       "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "estimator_claim_boundary",
+        "lean_source": {
+          "declaration": "estimator_claim_boundary_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+        "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+      }
     },
     {
       "attack_plan_canonical_sha256": "594699e2b1459c1986530a47972e439e02c5ae335131d5d72b29ad72392e7e05",
@@ -2590,9 +3099,9 @@
       },
       "lean_theorem": "AgadesPQC.CodeBased.SchemaOnly.no_estimate",
       "ledger_entry_id": "CODE_BASED:family.code_based.schema_only.no_estimate",
-      "ledger_entry_sha256": "6b0e3bf0a4aedca15c8e4d8c343c441045f1ba46a8cb6d33cd1b2d986cf1f918",
+      "ledger_entry_sha256": "a8fdfa2b24da59709fbcea4e271e9edf81f35e41d842a8478afbd58d95758570",
       "obligation_id": "family.code_based.schema_only.no_estimate",
-      "obligation_sha256": "cd4f123c97c7ab543084e0668b069afb9802050788fb1ad74d99935f4614188c",
+      "obligation_sha256": "d1e0bfd86f89ec09e7e8bdeddb16e91cc18c29c90a70818892f8b4264f7fd1be",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2607,7 +3116,7 @@
           "support_level": "schema_only"
         }
       },
-      "representative_proof_artifact_sha256": "755ad1e212210fc76734fcadd7aab333f145d8750148a4978328d0da423b0c14",
+      "representative_proof_artifact_sha256": "b39aa12e1446922317a0894b9cc21e1072d2f393dd2df6a3b0b444c272c3222f",
       "required_reviewers": [
         "code_based_cryptographer",
         "formal_methods_reviewer",
@@ -2615,7 +3124,20 @@
       ],
       "review_required": true,
       "statement": "Schema-only code-based plans must not emit cryptanalytic estimates.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "schema_only_boundary",
+        "lean_source": {
+          "declaration": "schema_only_boundary_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.schema_only_boundary_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Schema-only boundary obligations are typed as estimator-boundary Lean obligations that forbid fake runtime estimates.",
+        "type_rule_sha256": "f0ffb02405adea7b368712f6e8e45d03c39f47ef12a3c4a2b97463f538d515f4"
+      }
     },
     {
       "attack_plan_canonical_sha256": "594699e2b1459c1986530a47972e439e02c5ae335131d5d72b29ad72392e7e05",
@@ -2630,9 +3152,9 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "ledger_entry_id": "CODE_BASED:estimator.boundary.no_security_claim",
-      "ledger_entry_sha256": "2395f7d75dfdd6644da0857773049c0ca218031b9cf0645d2072a3013dbbd95b",
+      "ledger_entry_sha256": "41d85297469a23ac0ac9f07320a8bb8079ab8ee98c42ce241e327003ae524176",
       "obligation_id": "estimator.boundary.no_security_claim",
-      "obligation_sha256": "9227e61ae5f4c32e75ae681c980e1a4f38a684b66ae50cd068e906178872dcc1",
+      "obligation_sha256": "5eafbad5da7f002c7bc4f03b74ac7e0cd878eaca350bee01c3aa56e2eb6caa83",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2647,7 +3169,7 @@
           "scope": "estimator"
         }
       },
-      "representative_proof_artifact_sha256": "755ad1e212210fc76734fcadd7aab333f145d8750148a4978328d0da423b0c14",
+      "representative_proof_artifact_sha256": "b39aa12e1446922317a0894b9cc21e1072d2f393dd2df6a3b0b444c272c3222f",
       "required_reviewers": [
         "code_based_cryptographer",
         "formal_methods_reviewer",
@@ -2655,7 +3177,20 @@
       ],
       "review_required": true,
       "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "estimator_claim_boundary",
+        "lean_source": {
+          "declaration": "estimator_claim_boundary_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+        "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+      }
     },
     {
       "attack_plan_canonical_sha256": "489e13747730ed83bbea70ad28fc335bdb893225d11bb25d675a5ed115a7a1d2",
@@ -2670,9 +3205,9 @@
       },
       "lean_theorem": "AgadesPQC.Multivariate.Target.applicability_shape",
       "ledger_entry_id": "MULTIVARIATE:family.multivariate.applicability_shape",
-      "ledger_entry_sha256": "b31774995b6833cb21aa2055d8ca45388db69704bc212a1d56d984c9b1dc98d0",
+      "ledger_entry_sha256": "e744508bcacb21357c28ceb6e1b0632e963e6d9fb9cacc721ce3dac3efed29d0",
       "obligation_id": "family.multivariate.applicability_shape",
-      "obligation_sha256": "9b6d3680d7a96bdd5a0cee4d0b068d18b0f20b3540051eee57a61d840f324e60",
+      "obligation_sha256": "6d2d899f05601c805e32449ee6d0d4d3b23babdb43e3dec1e49cd294ac24843a",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2687,7 +3222,7 @@
           "target_family": "MULTIVARIATE"
         }
       },
-      "representative_proof_artifact_sha256": "34f58d855d5bcbbc883c6bd3224f0b309a6b69537304992d9d108a0850ad749a",
+      "representative_proof_artifact_sha256": "f98ab7516eacacca20b0c3561e77e5fe3c77922fa14a7cb5b9b88990b55a5cc0",
       "required_reviewers": [
         "multivariate_cryptographer",
         "formal_methods_reviewer",
@@ -2695,7 +3230,20 @@
       ],
       "review_required": true,
       "statement": "Multivariate AttackPlans require positive variables, positive equations, and a declared finite field.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "family_applicability_boundary",
+        "lean_source": {
+          "declaration": "family_applicability_boundary_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.family_applicability_boundary_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Family applicability boundary obligations are typed as family-scoped Lean obligations with no public security claim.",
+        "type_rule_sha256": "307a59fe19e45af3f287ac51b220a53ef304c7256fdc2819a7d839a4c31a48dd"
+      }
     },
     {
       "attack_plan_canonical_sha256": "489e13747730ed83bbea70ad28fc335bdb893225d11bb25d675a5ed115a7a1d2",
@@ -2710,9 +3258,9 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "ledger_entry_id": "MULTIVARIATE:estimator.boundary.no_security_claim",
-      "ledger_entry_sha256": "22cb8f2ae03bd89e079b851b222c56cb9b23bf81b527a0be9168d839f2e816dc",
+      "ledger_entry_sha256": "13df95e65896e9b13ea2e99b410f76b7dd09e40b44c658b7534e8fbc0bc9660a",
       "obligation_id": "estimator.boundary.no_security_claim",
-      "obligation_sha256": "7c7ba522ccf7cd6514c2e29d790bacdf8d166ad86a449109dba263c3cc8c36bc",
+      "obligation_sha256": "509af6ec79eac7c4c38f8b5861dd5144176ae46df17b69108b82c07be912b116",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2727,7 +3275,7 @@
           "scope": "estimator"
         }
       },
-      "representative_proof_artifact_sha256": "34f58d855d5bcbbc883c6bd3224f0b309a6b69537304992d9d108a0850ad749a",
+      "representative_proof_artifact_sha256": "f98ab7516eacacca20b0c3561e77e5fe3c77922fa14a7cb5b9b88990b55a5cc0",
       "required_reviewers": [
         "multivariate_cryptographer",
         "formal_methods_reviewer",
@@ -2735,7 +3283,20 @@
       ],
       "review_required": true,
       "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "estimator_claim_boundary",
+        "lean_source": {
+          "declaration": "estimator_claim_boundary_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+        "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+      }
     },
     {
       "attack_plan_canonical_sha256": "f3e97f0fa01ff1c3465d468bed62e93dd5b927c7ff906f27c9ec2dc0eee7471c",
@@ -2750,9 +3311,9 @@
       },
       "lean_theorem": "AgadesPQC.HashBased.Target.bound_check_is_not_attack_claim",
       "ledger_entry_id": "HASH_BASED:family.hash_based.bound_check_is_not_attack_claim",
-      "ledger_entry_sha256": "33dc2c721c67039d6feb40e6ee080ddd85a147e83d3213ae7085a53a6e865728",
+      "ledger_entry_sha256": "7b4859b575e70e61c2216af813d1b9eaebb9ed4f977a239ed5a33507f4d4b000",
       "obligation_id": "family.hash_based.bound_check_is_not_attack_claim",
-      "obligation_sha256": "ddfbf18c792387e2845946e3c5a5919f6076aaa66f400d5188a4461cc91a36af",
+      "obligation_sha256": "0475aeb4ea2a639e38c57e060ffb3026449e42b18b21c33f92d20d1237df878c",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2767,7 +3328,7 @@
           "target_family": "HASH_BASED"
         }
       },
-      "representative_proof_artifact_sha256": "e663fa6b1027389175ae47bdc9d4c0c827c72dc0bfd7856e409ad0a52c3c88bb",
+      "representative_proof_artifact_sha256": "ed324382a698edcca8504053c5d6f23928965e51ee5d9e072a41320afd35934e",
       "required_reviewers": [
         "hash_based_signature_reviewer",
         "formal_methods_reviewer",
@@ -2775,7 +3336,20 @@
       ],
       "review_required": true,
       "statement": "Hash-based bound checks are applicability/routing checks, not attack-success claims.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "family_applicability_boundary",
+        "lean_source": {
+          "declaration": "family_applicability_boundary_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.family_applicability_boundary_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Family applicability boundary obligations are typed as family-scoped Lean obligations with no public security claim.",
+        "type_rule_sha256": "307a59fe19e45af3f287ac51b220a53ef304c7256fdc2819a7d839a4c31a48dd"
+      }
     },
     {
       "attack_plan_canonical_sha256": "f3e97f0fa01ff1c3465d468bed62e93dd5b927c7ff906f27c9ec2dc0eee7471c",
@@ -2790,9 +3364,9 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "ledger_entry_id": "HASH_BASED:estimator.boundary.no_security_claim",
-      "ledger_entry_sha256": "c94fa5ad3d48bb8db6b9ee1684b9bb8f5a5207939ababf50f05e9a3efc99135d",
+      "ledger_entry_sha256": "9735ff5a0374e37b8f44770dfedf50b9ebf5cf9e8e8dd67ae0dc527980d7a731",
       "obligation_id": "estimator.boundary.no_security_claim",
-      "obligation_sha256": "f1798fec8864420795599f85c76374d3d08c715f53cf33d12aa2b20950354004",
+      "obligation_sha256": "b41adac9ccaf7497f3e41abcc98c68cd4ca60eceac6350040ff5993b5f6d5226",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2807,7 +3381,7 @@
           "scope": "estimator"
         }
       },
-      "representative_proof_artifact_sha256": "e663fa6b1027389175ae47bdc9d4c0c827c72dc0bfd7856e409ad0a52c3c88bb",
+      "representative_proof_artifact_sha256": "ed324382a698edcca8504053c5d6f23928965e51ee5d9e072a41320afd35934e",
       "required_reviewers": [
         "hash_based_signature_reviewer",
         "formal_methods_reviewer",
@@ -2815,7 +3389,20 @@
       ],
       "review_required": true,
       "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "estimator_claim_boundary",
+        "lean_source": {
+          "declaration": "estimator_claim_boundary_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+        "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+      }
     },
     {
       "attack_plan_canonical_sha256": "57896d9d7a9ac2247ccd2a71223af147efafc916ba9c19c46495ad4985eeb5ea",
@@ -2830,9 +3417,9 @@
       },
       "lean_theorem": "AgadesPQC.IsogenyHistorical.Target.historical_only",
       "ledger_entry_id": "ISOGENY_HISTORICAL:family.isogeny_historical.historical_only",
-      "ledger_entry_sha256": "b2d0645bc2dee1db38da679973647ab359666ac46bd249e27f518ec61b90f8b0",
+      "ledger_entry_sha256": "49530c6d68825e822cc7a335eb5db24c5721a8fef4bf2e317278ed656e18b3a1",
       "obligation_id": "family.isogeny_historical.historical_only",
-      "obligation_sha256": "9e61e106ddfc4cddb33502ab4dbaa6aeff16746a3aff6b93cb849569693f218a",
+      "obligation_sha256": "991cdcb6ba251760c21e228a9dd44a158814cd36224f7e3650fcd8b018ec341f",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2847,7 +3434,7 @@
           "target_family": "ISOGENY_HISTORICAL"
         }
       },
-      "representative_proof_artifact_sha256": "08bdd8f76e421096349f9692172abe073bf6c8eedbe77766dced105c8938bedd",
+      "representative_proof_artifact_sha256": "667bcbbdecf2b146dd7442cbc16f4f630ef6a859e6db29f8f7e4dce2a10ce2ba",
       "required_reviewers": [
         "isogeny_historical_reviewer",
         "formal_methods_reviewer",
@@ -2855,7 +3442,20 @@
       ],
       "review_required": true,
       "statement": "Historical isogeny tasks are toy/historical routing checks and cannot describe current-standard break claims.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "family_applicability_boundary",
+        "lean_source": {
+          "declaration": "family_applicability_boundary_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.family_applicability_boundary_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Family applicability boundary obligations are typed as family-scoped Lean obligations with no public security claim.",
+        "type_rule_sha256": "307a59fe19e45af3f287ac51b220a53ef304c7256fdc2819a7d839a4c31a48dd"
+      }
     },
     {
       "attack_plan_canonical_sha256": "57896d9d7a9ac2247ccd2a71223af147efafc916ba9c19c46495ad4985eeb5ea",
@@ -2870,9 +3470,9 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "ledger_entry_id": "ISOGENY_HISTORICAL:estimator.boundary.no_security_claim",
-      "ledger_entry_sha256": "15707885f5da2f2d33265a726f091bbb769d72bb7fba08f0ae26a9bd26acfad9",
+      "ledger_entry_sha256": "f08303f8e3530bb3702ba4ba2e3e61bbdebded93ca123e9424a9c12edd6e6d13",
       "obligation_id": "estimator.boundary.no_security_claim",
-      "obligation_sha256": "1b51450c06a9571c2a94b12f2ffd22587a8be62ec61aecfb19e84dcae1c8a81c",
+      "obligation_sha256": "d1833d3c3cd642fd063080acb4bb02d1ec1cde19792118b8b3ae45b2b5f1832c",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2887,7 +3487,7 @@
           "scope": "estimator"
         }
       },
-      "representative_proof_artifact_sha256": "08bdd8f76e421096349f9692172abe073bf6c8eedbe77766dced105c8938bedd",
+      "representative_proof_artifact_sha256": "667bcbbdecf2b146dd7442cbc16f4f630ef6a859e6db29f8f7e4dce2a10ce2ba",
       "required_reviewers": [
         "isogeny_historical_reviewer",
         "formal_methods_reviewer",
@@ -2895,7 +3495,20 @@
       ],
       "review_required": true,
       "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "estimator_claim_boundary",
+        "lean_source": {
+          "declaration": "estimator_claim_boundary_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+        "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+      }
     },
     {
       "attack_plan_canonical_sha256": "474debf85c732c726feba7e96bddba966d74d582ac16503d4200dc0f00f1cbd0",
@@ -2910,9 +3523,9 @@
       },
       "lean_theorem": "AgadesPQC.ImplementationSecurity.Target.no_conformance_claim",
       "ledger_entry_id": "IMPLEMENTATION_SECURITY:family.implementation_security.no_conformance_claim",
-      "ledger_entry_sha256": "1cf8a5c35b39b884a160e36cebc2ef70938f3d0d962015c7b7794aee0d01c654",
+      "ledger_entry_sha256": "e82cd7aeb48d358e0b3b35336ee5bd5eea2ae6ff779ef782f9a94fac6bc14214",
       "obligation_id": "family.implementation_security.no_conformance_claim",
-      "obligation_sha256": "17789b072efeef171ae64756b986602b70aed40af88cc16f525fe887b3e2019f",
+      "obligation_sha256": "48c926806a48bab5cb3ca796ccf1f72d8c7c6f435cb9d717d90b5f417117a14f",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2927,7 +3540,7 @@
           "target_family": "IMPLEMENTATION_SECURITY"
         }
       },
-      "representative_proof_artifact_sha256": "52a9bb1a7d8fd3e0aa9afde39a5b5497b1264fc820adf89ab417799c6c7407b8",
+      "representative_proof_artifact_sha256": "5e6bae03b295c21fe3572d8716250fa0ab20245dc7c168fa01c58c101ffd633b",
       "required_reviewers": [
         "implementation_security_reviewer",
         "formal_methods_reviewer",
@@ -2935,7 +3548,20 @@
       ],
       "review_required": true,
       "statement": "Implementation-security toy checks do not establish conformance, side-channel resistance, or security claims.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "family_applicability_boundary",
+        "lean_source": {
+          "declaration": "family_applicability_boundary_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.family_applicability_boundary_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Family applicability boundary obligations are typed as family-scoped Lean obligations with no public security claim.",
+        "type_rule_sha256": "307a59fe19e45af3f287ac51b220a53ef304c7256fdc2819a7d839a4c31a48dd"
+      }
     },
     {
       "attack_plan_canonical_sha256": "474debf85c732c726feba7e96bddba966d74d582ac16503d4200dc0f00f1cbd0",
@@ -2950,9 +3576,9 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "ledger_entry_id": "IMPLEMENTATION_SECURITY:estimator.boundary.no_security_claim",
-      "ledger_entry_sha256": "a7658abf374df7c6b912f7ff6e115f973040ab5e90e65c43e85edcf149c7c67b",
+      "ledger_entry_sha256": "9343c492c279d5dea3651641ca5d8c787a767c81969e02ece30d0afc52366108",
       "obligation_id": "estimator.boundary.no_security_claim",
-      "obligation_sha256": "d01f7b710932206f84bdee69be9d391e001eb264638971ab6cd991eb5e35b841",
+      "obligation_sha256": "91b268e0855a063eda139a020a4c0163783bfe35693546ffd6cb36e7b8f91fd5",
       "obligation_type": {
         "claim_policy": {
           "public_interpretation": "applicability_check_only",
@@ -2967,7 +3593,7 @@
           "scope": "estimator"
         }
       },
-      "representative_proof_artifact_sha256": "52a9bb1a7d8fd3e0aa9afde39a5b5497b1264fc820adf89ab417799c6c7407b8",
+      "representative_proof_artifact_sha256": "5e6bae03b295c21fe3572d8716250fa0ab20245dc7c168fa01c58c101ffd633b",
       "required_reviewers": [
         "implementation_security_reviewer",
         "formal_methods_reviewer",
@@ -2975,7 +3601,20 @@
       ],
       "review_required": true,
       "statement": "Evaluator outputs are analytical or toy plumbing results, not security-break proofs.",
-      "status": "pending_review"
+      "status": "pending_review",
+      "type_rule": {
+        "backend": "lean4",
+        "kind": "estimator_claim_boundary",
+        "lean_source": {
+          "declaration": "estimator_claim_boundary_typed",
+          "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+          "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115"
+        },
+        "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+        "schema_version": "agades.pqc.formal.proof_obligation_type_rule.v1",
+        "statement": "Estimator claim boundary obligations are typed as estimator-scoped Lean obligations that require review before any security claim.",
+        "type_rule_sha256": "a5c929d0734fa5ef99002c2bda770de366d1166663cf9a2d38f780731391e6fa"
+      }
     }
   ],
   "release_gates": [
@@ -2994,7 +3633,8 @@
     ],
     "families": 9,
     "family_invariants": 12,
-    "lean_theorems": 20,
+    "lean_theorems": 25,
+    "proof_obligation_type_rules": 5,
     "proof_obligations": 22,
     "reviewer_roles": 8,
     "security_claim_allowed": false

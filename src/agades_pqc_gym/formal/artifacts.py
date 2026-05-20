@@ -30,6 +30,9 @@ EVALUATOR_RESULT_SCHEMA_MODEL = "agades_pqc_gym.core.evaluator_result.EvaluatorR
 EVALUATOR_RESULT_VALIDATION = "pydantic_v2_extra_forbid_status_payload_checks"
 ESTIMATOR_ATTACK_TYPE_COMPATIBILITY_RULE = "exact_operator_or_colon_variant_v1"
 PROOF_OBLIGATION_TYPE_SCHEMA = "agades.pqc.formal.proof_obligation_type.v1"
+PROOF_OBLIGATION_TYPE_RULE_SCHEMA = (
+    "agades.pqc.formal.proof_obligation_type_rule.v1"
+)
 PROOF_OBLIGATION_CLAIM_POLICY = {
     "public_interpretation": "applicability_check_only",
     "review_required_before_claim": True,
@@ -110,6 +113,21 @@ LEAN_THEOREM_SOURCES = {
     "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden": (
         "formal/lean/AgadesPQC/OperatorSemantics.lean"
     ),
+    "AgadesPQC.ProofObligation.target_invariant_typed": (
+        "formal/lean/AgadesPQC/ProofObligation.lean"
+    ),
+    "AgadesPQC.ProofObligation.operator_precondition_typed": (
+        "formal/lean/AgadesPQC/ProofObligation.lean"
+    ),
+    "AgadesPQC.ProofObligation.schema_only_boundary_typed": (
+        "formal/lean/AgadesPQC/ProofObligation.lean"
+    ),
+    "AgadesPQC.ProofObligation.family_applicability_boundary_typed": (
+        "formal/lean/AgadesPQC/ProofObligation.lean"
+    ),
+    "AgadesPQC.ProofObligation.estimator_claim_boundary_typed": (
+        "formal/lean/AgadesPQC/ProofObligation.lean"
+    ),
     "AgadesPQC.CodeBased.Target.parameters_well_formed": (
         "formal/lean/AgadesPQC/CodeBased/Target.lean"
     ),
@@ -152,6 +170,45 @@ LEAN_THEOREM_SOURCES = {
     "AgadesPQC.Generic.Target.family_shape_validated": (
         "formal/lean/AgadesPQC/Generic/Target.lean"
     ),
+}
+PROOF_OBLIGATION_TYPE_RULES = {
+    "target_invariant": {
+        "statement": (
+            "Target invariant obligations are typed as target-scoped Lean "
+            "obligations with reviewer-gated, non-security-claim semantics."
+        ),
+        "lean_theorem": "AgadesPQC.ProofObligation.target_invariant_typed",
+    },
+    "operator_precondition": {
+        "statement": (
+            "Operator precondition obligations are typed as operator-scoped "
+            "Lean obligations with reviewer-gated, non-security-claim semantics."
+        ),
+        "lean_theorem": "AgadesPQC.ProofObligation.operator_precondition_typed",
+    },
+    "schema_only_boundary": {
+        "statement": (
+            "Schema-only boundary obligations are typed as estimator-boundary "
+            "Lean obligations that forbid fake runtime estimates."
+        ),
+        "lean_theorem": "AgadesPQC.ProofObligation.schema_only_boundary_typed",
+    },
+    "family_applicability_boundary": {
+        "statement": (
+            "Family applicability boundary obligations are typed as "
+            "family-scoped Lean obligations with no public security claim."
+        ),
+        "lean_theorem": (
+            "AgadesPQC.ProofObligation.family_applicability_boundary_typed"
+        ),
+    },
+    "estimator_claim_boundary": {
+        "statement": (
+            "Estimator claim boundary obligations are typed as estimator-scoped "
+            "Lean obligations that require review before any security claim."
+        ),
+        "lean_theorem": "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+    },
 }
 OPERATOR_SEMANTICS = {
     "primal_usvp": (
@@ -311,6 +368,7 @@ def build_attack_plan_proof_artifact_from_json(
         ],
         "family_invariants": _family_invariants(plan),
         "estimator_model": _estimator_model(plan),
+        "proof_obligation_type_rules": proof_obligation_type_rules(),
         "estimator_result_binding": _estimator_result_binding(
             plan,
             estimator_result_path,
@@ -413,7 +471,7 @@ def verify_attack_plan_proof_artifact(
         _verify_formal_backend(artifact, project_root, failures)
         _verify_artifact_hash(artifact, failures)
         _verify_plan_binding(artifact, project_root, failures)
-        _verify_obligation_hashes(artifact, failures)
+        _verify_obligation_hashes(artifact, project_root, failures)
         _verify_estimator_result_binding(artifact, project_root, failures)
         _verify_review_binding(artifact, failures)
 
@@ -816,6 +874,29 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
     return obligations
 
 
+def proof_obligation_type_rules() -> list[dict[str, Any]]:
+    return [
+        _proof_obligation_type_rule(kind)
+        for kind in PROOF_OBLIGATION_TYPE_RULES
+    ]
+
+
+def _proof_obligation_type_rule(kind: str) -> dict[str, Any]:
+    rule = PROOF_OBLIGATION_TYPE_RULES[kind]
+    payload = {
+        "schema_version": PROOF_OBLIGATION_TYPE_RULE_SCHEMA,
+        "kind": kind,
+        "statement": rule["statement"],
+        "backend": "lean4",
+        "lean_theorem": rule["lean_theorem"],
+        **_lean_source(rule["lean_theorem"]),
+    }
+    return {
+        **payload,
+        "type_rule_sha256": stable_sha256(payload),
+    }
+
+
 def _obligation(
     obligation_id: str,
     statement: str,
@@ -824,15 +905,17 @@ def _obligation(
     family: TargetFamily,
     operator_type: str | None = None,
 ) -> dict[str, Any]:
+    obligation_type = _obligation_type(
+        obligation_id,
+        family=family,
+        operator_type=operator_type,
+    )
     payload = {
         "obligation_id": obligation_id,
         "statement": statement,
         "backend": "lean4",
-        "obligation_type": _obligation_type(
-            obligation_id,
-            family=family,
-            operator_type=operator_type,
-        ),
+        "obligation_type": obligation_type,
+        "type_rule": _proof_obligation_type_rule(obligation_type["kind"]),
         "lean_theorem": lean_theorem,
         **_lean_source(lean_theorem),
         "status": "pending_review",
@@ -966,6 +1049,7 @@ def _verify_artifact_shape(
         "operator_semantics",
         "family_invariants",
         "estimator_model",
+        "proof_obligation_type_rules",
         "estimator_result_binding",
         "proof_obligations",
         "review",
@@ -1035,6 +1119,8 @@ def _verify_plan_binding(
         failures.append("Family invariants do not match the AttackPlan.")
     if artifact.get("estimator_model") != _estimator_model(plan):
         failures.append("Estimator model does not match the AttackPlan.")
+    if artifact.get("proof_obligation_type_rules") != proof_obligation_type_rules():
+        failures.append("Proof obligation type rules do not match Lean bindings.")
     if artifact.get("proof_obligations") != _proof_obligations(plan):
         failures.append("Proof obligations do not match the AttackPlan.")
     _verify_lean_bindings(artifact, project_root, failures)
@@ -1042,6 +1128,7 @@ def _verify_plan_binding(
 
 def _verify_obligation_hashes(
     artifact: dict[str, Any],
+    project_root: Path,
     failures: list[str],
 ) -> None:
     obligations = artifact.get("proof_obligations", [])
@@ -1059,6 +1146,7 @@ def _verify_obligation_hashes(
                 "statement",
                 "backend",
                 "obligation_type",
+                "type_rule",
                 "lean_theorem",
                 "lean_source",
                 "status",
@@ -1066,7 +1154,7 @@ def _verify_obligation_hashes(
         }
         if obligation.get("backend") != "lean4":
             failures.append("Proof obligations must target lean4.")
-        _verify_obligation_type(obligation, artifact, failures)
+        _verify_obligation_type(obligation, artifact, project_root, failures)
         if not obligation.get("lean_theorem"):
             failures.append("Proof obligations must bind a Lean theorem.")
         if obligation.get("obligation_sha256") != stable_sha256(payload):
@@ -1190,9 +1278,74 @@ def _pending_review_evidence() -> dict[str, Any]:
     }
 
 
+def _verify_type_rule(
+    rule: dict[str, Any],
+    project_root: Path,
+    failures: list[str],
+    *,
+    label: str,
+) -> None:
+    if rule.get("schema_version") != PROOF_OBLIGATION_TYPE_RULE_SCHEMA:
+        failures.append(f"Proof obligation type rule schema mismatch: {label}.")
+    kind = rule.get("kind")
+    if kind not in PROOF_OBLIGATION_TYPE_RULES:
+        failures.append(f"Proof obligation type rule kind is unsupported: {label}.")
+        return
+    expected = PROOF_OBLIGATION_TYPE_RULES[kind]
+    if rule.get("statement") != expected["statement"]:
+        failures.append(f"Proof obligation type rule statement mismatch: {label}.")
+    lean_theorem = rule.get("lean_theorem")
+    if lean_theorem != expected["lean_theorem"]:
+        failures.append(f"Proof obligation type rule theorem mismatch: {label}.")
+    if rule.get("backend") != "lean4":
+        failures.append(f"Proof obligation type rule must target Lean 4: {label}.")
+    payload = {
+        key: rule.get(key)
+        for key in (
+            "schema_version",
+            "kind",
+            "statement",
+            "backend",
+            "lean_theorem",
+            "lean_source",
+        )
+    }
+    if rule.get("type_rule_sha256") != stable_sha256(payload):
+        failures.append(f"Proof obligation type rule hash mismatch: {label}.")
+    source = rule.get("lean_source")
+    if not isinstance(source, dict):
+        failures.append(f"Proof obligation type rule source is missing: {label}.")
+        return
+    expected_path = LEAN_THEOREM_SOURCES.get(lean_theorem)
+    if not isinstance(expected_path, str):
+        failures.append(f"Proof obligation type rule source path mismatch: {label}.")
+        return
+    if source.get("path") != expected_path:
+        failures.append(f"Proof obligation type rule source path mismatch: {label}.")
+        return
+    source_path = project_root / expected_path
+    try:
+        raw = source_path.read_bytes()
+    except FileNotFoundError:
+        failures.append(f"Proof obligation type rule source is missing: {label}.")
+        return
+    declaration = str(lean_theorem).rsplit(".", 1)[-1]
+    if source.get("sha256") != hashlib.sha256(raw).hexdigest():
+        failures.append(f"Proof obligation type rule source hash mismatch: {label}.")
+    if source.get("declaration") != declaration:
+        failures.append(
+            f"Proof obligation type rule declaration mismatch: {label}."
+        )
+    if f"theorem {declaration}" not in raw.decode("utf-8"):
+        failures.append(
+            f"Proof obligation type rule theorem is missing from source: {label}."
+        )
+
+
 def _verify_obligation_type(
     obligation: dict[str, Any],
     artifact: dict[str, Any],
+    project_root: Path,
     failures: list[str],
 ) -> None:
     obligation_id = obligation.get("obligation_id")
@@ -1225,6 +1378,23 @@ def _verify_obligation_type(
             failures.append(
                 f"Proof obligation claim policy is invalid: {obligation_id}."
             )
+    type_rule = obligation.get("type_rule")
+    if not isinstance(type_rule, dict):
+        failures.append(f"Proof obligation type rule is missing: {obligation_id}.")
+        return
+    if type_rule.get("kind") != kind:
+        failures.append(f"Proof obligation type rule kind mismatch: {obligation_id}.")
+    expected_rule = (
+        _proof_obligation_type_rule(kind) if isinstance(kind, str) else None
+    )
+    if type_rule != expected_rule:
+        failures.append(f"Proof obligation type rule mismatch: {obligation_id}.")
+    _verify_type_rule(
+        type_rule,
+        project_root,
+        failures,
+        label=f"proof obligation {obligation_id}",
+    )
 
 
 def _verify_formal_backend(
@@ -1305,6 +1475,7 @@ def _verify_lean_bindings(
 ) -> None:
     entries = [
         *artifact.get("family_invariants", []),
+        *artifact.get("proof_obligation_type_rules", []),
         *artifact.get("proof_obligations", []),
     ]
     for entry in entries:

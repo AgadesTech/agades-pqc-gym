@@ -12,6 +12,7 @@ from agades_pqc_gym.formal.artifacts import (
     MVP_VERTICAL_PROOF_ARTIFACT_PATHS,
     PROOF_OBLIGATION_CLAIM_POLICY,
     build_attack_plan_proof_artifact,
+    proof_obligation_type_rules,
 )
 from agades_pqc_gym.formal.estimator_model import DEFAULT_ESTIMATOR_MODEL_PATH
 from agades_pqc_gym.formal.family_coverage import (
@@ -79,6 +80,7 @@ def build_formal_obligation_ledger(root: Path | None = None) -> dict[str, Any]:
         "backend": dict(BACKEND),
         "claim_boundary": CLAIM_BOUNDARY,
         "families": family_entries,
+        "proof_obligation_type_rules": proof_obligation_type_rules(),
         "proof_obligations": proof_obligations,
         "family_invariants": family_invariants,
         "summary": _summary(
@@ -223,6 +225,7 @@ def _ledger_obligation_entry(
         "representative_proof_artifact_sha256": artifact["artifact_sha256"],
         "obligation_id": obligation["obligation_id"],
         "obligation_type": obligation["obligation_type"],
+        "type_rule": obligation["type_rule"],
         "statement": obligation["statement"],
         "backend": obligation["backend"],
         "lean_theorem": obligation["lean_theorem"],
@@ -274,7 +277,12 @@ def _summary(
     family_invariants: list[dict[str, Any]],
 ) -> dict[str, Any]:
     lean_theorems = {
-        entry["lean_theorem"] for entry in [*proof_obligations, *family_invariants]
+        entry["lean_theorem"]
+        for entry in [
+            *proof_obligations,
+            *family_invariants,
+            *proof_obligation_type_rules(),
+        ]
     }
     reviewer_roles = {
         reviewer
@@ -285,6 +293,7 @@ def _summary(
         "families": len(family_entries),
         "family_invariants": len(family_invariants),
         "proof_obligations": len(proof_obligations),
+        "proof_obligation_type_rules": len(proof_obligation_type_rules()),
         "lean_theorems": len(lean_theorems),
         "reviewer_roles": len(reviewer_roles),
         "attached_evaluator_result_families": [
@@ -360,6 +369,8 @@ def _verify_ledger_shape(
         family_invariants=family_invariants,
     ):
         failures.append("Formal obligation ledger summary is inconsistent.")
+    if ledger.get("proof_obligation_type_rules") != proof_obligation_type_rules():
+        failures.append("Formal obligation ledger type rules are not in sync.")
 
 
 def _verify_ledger_hash(
@@ -405,6 +416,9 @@ def _verify_obligation_entries(
     failures: list[str],
 ) -> None:
     obligations = _list_or_empty(ledger.get("proof_obligations"))
+    expected_type_rules = {
+        rule["kind"]: rule for rule in proof_obligation_type_rules()
+    }
     seen: set[str] = set()
     for entry in obligations:
         if not isinstance(entry, dict):
@@ -437,6 +451,30 @@ def _verify_obligation_entries(
             failures.append(
                 "Formal obligation ledger claim policy drifted: "
                 f"{entry.get('ledger_entry_id')}."
+            )
+        type_rule = entry.get("type_rule")
+        if not isinstance(type_rule, dict):
+            failures.append(
+                "Formal obligation type rule is missing: "
+                f"{entry.get('ledger_entry_id')}."
+            )
+        else:
+            kind = obligation_type.get("kind")
+            if type_rule.get("kind") != kind:
+                failures.append(
+                    "Formal obligation type rule kind mismatch: "
+                    f"{entry.get('ledger_entry_id')}."
+                )
+            if type_rule != expected_type_rules.get(kind):
+                failures.append(
+                    "Formal obligation type rule drifted: "
+                    f"{entry.get('ledger_entry_id')}."
+                )
+            _verify_nested_lean_source(
+                type_rule,
+                root,
+                failures,
+                label=f"obligation type rule {entry.get('ledger_entry_id')}",
             )
         if entry.get("status") != "pending_review":
             failures.append(
@@ -490,14 +528,29 @@ def _verify_lean_source(
     root: Path,
     failures: list[str],
 ) -> None:
+    _verify_nested_lean_source(
+        entry,
+        root,
+        failures,
+        label=str(entry.get("ledger_entry_id")),
+    )
+
+
+def _verify_nested_lean_source(
+    entry: dict[str, Any],
+    root: Path,
+    failures: list[str],
+    *,
+    label: str,
+) -> None:
     lean_source = entry.get("lean_source")
     if not isinstance(lean_source, dict):
-        failures.append(f"Lean source is missing: {entry.get('ledger_entry_id')}.")
+        failures.append(f"Lean source is missing: {label}.")
         return
     path = lean_source.get("path")
     declaration = lean_source.get("declaration")
     if not isinstance(path, str) or not isinstance(declaration, str):
-        failures.append(f"Lean source is incomplete: {entry.get('ledger_entry_id')}.")
+        failures.append(f"Lean source is incomplete: {label}.")
         return
     source_path = root / path
     try:

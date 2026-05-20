@@ -36,10 +36,20 @@ def test_formal_obligation_ledger_binds_generated_obligations_and_invariants(
         "families": 9,
         "family_invariants": 12,
         "proof_obligations": 22,
-        "lean_theorems": 20,
+        "proof_obligation_type_rules": 5,
+        "lean_theorems": 25,
         "reviewer_roles": 8,
         "attached_evaluator_result_families": ["LWE", "MLWE"],
         "security_claim_allowed": False,
+    }
+    assert {
+        rule["kind"] for rule in ledger["proof_obligation_type_rules"]
+    } == {
+        "target_invariant",
+        "operator_precondition",
+        "schema_only_boundary",
+        "family_applicability_boundary",
+        "estimator_claim_boundary",
     }
     assert [entry["family"] for entry in ledger["families"]] == [
         family.value for family in TargetFamily
@@ -71,10 +81,19 @@ def test_formal_obligation_ledger_binds_generated_obligations_and_invariants(
         assert obligation["status"] == "pending_review"
         assert obligation["backend"] == "lean4"
         assert obligation["review_required"] is True
+        assert obligation["type_rule"]["kind"] == obligation["obligation_type"][
+            "kind"
+        ]
+        assert obligation["type_rule"]["lean_theorem"].startswith(
+            "AgadesPQC.ProofObligation."
+        )
         assert obligation["obligation_type"]["claim_policy"][
             "security_claim_allowed"
         ] is False
         assert obligation["lean_source"]["path"].startswith("formal/lean/")
+        assert obligation["type_rule"]["lean_source"]["path"].startswith(
+            "formal/lean/"
+        )
         assert len(obligation["obligation_sha256"]) == 64
         assert len(obligation["ledger_entry_sha256"]) == 64
 

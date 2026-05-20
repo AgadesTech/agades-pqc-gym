@@ -263,11 +263,30 @@
       ]
     },
     {
+      "imports": [],
+      "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115",
+      "theorems": [
+        "AgadesPQC.ProofObligation.target_invariant_typed",
+        "AgadesPQC.ProofObligation.operator_precondition_typed",
+        "AgadesPQC.ProofObligation.schema_only_boundary_typed",
+        "AgadesPQC.ProofObligation.family_applicability_boundary_typed",
+        "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+        "AgadesPQC.ProofObligation.unreviewed_obligation_blocks_security_claim"
+      ]
+    },
+    {
       "imports": [
         "AgadesPQC.Lattice.Target",
         "AgadesPQC.Lattice.PrimalUSVP",
         "AgadesPQC.EstimatorModel",
         "AgadesPQC.OperatorSemantics",
+        "AgadesPQC.ProofObligation",
         "AgadesPQC.CodeBased.Target",
         "AgadesPQC.CodeBased.SchemaOnly",
         "AgadesPQC.Evaluator",
@@ -283,11 +302,11 @@
         "contains_axiom": false,
         "contains_sorry": false
       },
-      "sha256": "3d105d48eb781311d263ba4cc36ddb825a66bd85967e9580ca0baf7b803a0b22",
+      "sha256": "f08d5dda6fb67b95a199c9255afd45639b4d9f1abd0a37bca6c4aae1185257a8",
       "theorems": []
     }
   ],
-  "manifest_sha256": "25f47a496ad71f6106e713ba6f01696b1c31bbe75472be3605f7b22ac685fc98",
+  "manifest_sha256": "372183ece8ec50903fada1105ba0b52bad122104fbcc61c158070b429f262eb7",
   "placeholder_scan": {
     "contains_admit": false,
     "contains_axiom": false,
@@ -308,7 +327,7 @@
   "summary": {
     "ci_lean_build_gate": true,
     "placeholder_failures": 0,
-    "source_modules": 13,
-    "theorem_declarations": 29
+    "source_modules": 14,
+    "theorem_declarations": 35
   }
 }
