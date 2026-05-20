@@ -110,6 +110,9 @@ LEAN_THEOREM_SOURCES = {
     "AgadesPQC.OperatorSemantics.family_binding_valid": (
         "formal/lean/AgadesPQC/OperatorSemantics.lean"
     ),
+    "AgadesPQC.OperatorSemantics.family_validator_binding_valid": (
+        "formal/lean/AgadesPQC/OperatorSemantics.lean"
+    ),
     "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden": (
         "formal/lean/AgadesPQC/OperatorSemantics.lean"
     ),
