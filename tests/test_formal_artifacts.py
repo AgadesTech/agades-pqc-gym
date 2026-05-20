@@ -68,7 +68,7 @@ def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() ->
     assert backend_manifest["schema_version"] == "agades.pqc.formal.lean_backend.v1"
     assert len(backend_manifest["sha256"]) == 64
     assert len(backend_manifest["manifest_sha256"]) == 64
-    assert backend_manifest["source_modules"] == 11
+    assert backend_manifest["source_modules"] == 12
     assert backend_manifest["theorem_declarations"] >= 20
     assert backend_manifest["ci_lean_build_gate"] is True
     assert backend_manifest["placeholder_failures"] == 0

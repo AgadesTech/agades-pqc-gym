@@ -12,7 +12,11 @@ from agades_pqc_gym.core.operators import (
     supported_operators_for_family,
 )
 from agades_pqc_gym.core.target import TargetFamily
-from agades_pqc_gym.formal.artifacts import BACKEND, OPERATOR_SEMANTICS
+from agades_pqc_gym.formal.artifacts import (
+    BACKEND,
+    LEAN_THEOREM_SOURCES,
+    OPERATOR_SEMANTICS,
+)
 from agades_pqc_gym.utils.hashing import stable_sha256
 
 FORMAL_OPERATOR_SEMANTICS_SCHEMA = "agades.pqc.formal.operator_semantics.v1"
@@ -35,11 +39,43 @@ LINKED_ARTIFACT_PATHS = {
     "family_operator_catalog": "docs/family_operator_catalog.json",
     "family_plugin_manifest": "docs/family_plugin_manifest.json",
 }
+FORMAL_RULE_SPECS = (
+    {
+        "rule_id": "operator.required_params_present",
+        "statement": (
+            "The AttackPlan operator is only applicable when every required "
+            "parameter declared by the operator schema is present."
+        ),
+        "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+    },
+    {
+        "rule_id": "operator.family_binding_valid",
+        "statement": (
+            "The operator may only be routed through families listed in its "
+            "AttackPlan family binding."
+        ),
+        "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+    },
+    {
+        "rule_id": "operator.unreviewed_security_claim_forbidden",
+        "statement": (
+            "Unreviewed operator semantics may support applicability and "
+            "routing checks, but cannot authorize a cryptographic security "
+            "claim."
+        ),
+        "lean_theorem": (
+            "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden"
+        ),
+    },
+)
 
 
 def build_formal_operator_semantics(root: Path | None = None) -> dict[str, Any]:
     project_root = (root or ROOT).resolve()
-    operators = [_operator_entry(operator) for operator in OPERATOR_SEMANTICS]
+    operators = [
+        _operator_entry(operator, root=project_root)
+        for operator in OPERATOR_SEMANTICS
+    ]
     semantics = {
         "schema_version": FORMAL_OPERATOR_SEMANTICS_SCHEMA,
         "project": {
@@ -100,7 +136,7 @@ def verify_formal_operator_semantics(
     if semantics:
         _verify_semantics_shape(semantics, failures)
         _verify_semantics_hash(semantics, failures)
-        _verify_operator_entries(semantics, failures)
+        _verify_operator_entries(semantics, project_root, failures)
         _verify_linked_artifacts(semantics, expected, project_root, failures)
 
     operators = [
@@ -134,10 +170,11 @@ def operator_semantics_entry(operator_type: str) -> dict[str, str]:
     }
 
 
-def _operator_entry(operator_type: str) -> dict[str, Any]:
+def _operator_entry(operator_type: str, *, root: Path = ROOT) -> dict[str, Any]:
     entry = {
         **operator_semantics_entry(operator_type),
         "required_params": operator_required_param_schema(operator_type),
+        "formal_rules": _formal_rules(root),
         "attackplan_families": [
             family.value
             for family in TargetFamily
@@ -205,6 +242,7 @@ def _verify_semantics_hash(
 
 def _verify_operator_entries(
     semantics: dict[str, Any],
+    root: Path,
     failures: list[str],
 ) -> None:
     entries = _list_or_empty(semantics.get("operators"))
@@ -221,23 +259,29 @@ def _verify_operator_entries(
         if not isinstance(raw_entry, dict):
             failures.append("Formal operator semantics entry must be an object.")
             continue
-        _verify_operator_entry(raw_entry, failures)
+        _verify_operator_entry(raw_entry, root, failures)
 
 
-def _verify_operator_entry(entry: dict[str, Any], failures: list[str]) -> None:
+def _verify_operator_entry(
+    entry: dict[str, Any],
+    root: Path,
+    failures: list[str],
+) -> None:
     operator = entry.get("operator")
     if not isinstance(operator, str) or operator not in ALLOWED_OPERATORS:
         failures.append(
             f"Formal operator semantics operator is unsupported: {operator}."
         )
         return
-    expected = _operator_entry(operator)
+    expected = _operator_entry(operator, root=root)
     if entry.get("semantics_id") != expected["semantics_id"]:
         failures.append("Formal operator semantics IDs are not in sync.")
     if entry.get("lean_namespace") != expected["lean_namespace"]:
         failures.append("Formal operator semantics Lean namespaces are not in sync.")
     if entry.get("required_params") != expected["required_params"]:
         failures.append("Formal operator semantics parameter schemas are not in sync.")
+    if entry.get("formal_rules") != expected["formal_rules"]:
+        failures.append("Formal operator semantics formal rules are not in sync.")
     if entry.get("attackplan_families") != expected["attackplan_families"]:
         failures.append("Formal operator semantics family bindings are not in sync.")
     if entry.get("runtime_claim_boundary") != RUNTIME_CLAIM_BOUNDARY:
@@ -313,6 +357,23 @@ def _file_sha256(path: Path) -> str | None:
         return hashlib.sha256(path.read_bytes()).hexdigest()
     except FileNotFoundError:
         return None
+
+
+def _formal_rules(root: Path) -> list[dict[str, Any]]:
+    rules: list[dict[str, Any]] = []
+    for spec in FORMAL_RULE_SPECS:
+        theorem = spec["lean_theorem"]
+        source_path = LEAN_THEOREM_SOURCES[theorem]
+        rules.append(
+            {
+                **spec,
+                "lean_source": {
+                    "path": source_path,
+                    "sha256": _file_sha256(root / source_path),
+                },
+            }
+        )
+    return rules
 
 
 def _read_json_object(

@@ -233,9 +233,25 @@
       ]
     },
     {
+      "imports": [],
+      "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "8f78663f96f452e4a1f3f981f64f271f669903bf8d3050983122de91416f6004",
+      "theorems": [
+        "AgadesPQC.OperatorSemantics.required_parameter_bound",
+        "AgadesPQC.OperatorSemantics.family_binding_valid",
+        "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden"
+      ]
+    },
+    {
       "imports": [
         "AgadesPQC.Lattice.Target",
         "AgadesPQC.Lattice.PrimalUSVP",
+        "AgadesPQC.OperatorSemantics",
         "AgadesPQC.CodeBased.Target",
         "AgadesPQC.CodeBased.SchemaOnly",
         "AgadesPQC.Evaluator",
@@ -251,11 +267,11 @@
         "contains_axiom": false,
         "contains_sorry": false
       },
-      "sha256": "501f33e7ef5038a2ca314d5ca10e005f10089426cebe89e4c1efdf1a59b58eaa",
+      "sha256": "b2687abcbcdbbbf0fff417d26eef7e4486a22defa9bc0d29409bb29b12941ea8",
       "theorems": []
     }
   ],
-  "manifest_sha256": "52587cfe4a811b01591ea572efca6e64624338473ebcce1e7a4cc9d014cb7512",
+  "manifest_sha256": "b89c9ecf1576b6c68adfa0e8cf7afb3d4fdde9166014019abc4c398ffc849e86",
   "placeholder_scan": {
     "contains_admit": false,
     "contains_axiom": false,
@@ -276,7 +292,7 @@
   "summary": {
     "ci_lean_build_gate": true,
     "placeholder_failures": 0,
-    "source_modules": 11,
-    "theorem_declarations": 23
+    "source_modules": 12,
+    "theorem_declarations": 26
   }
 }
