@@ -51,9 +51,31 @@ def test_prime_environment_smoke_report_exercises_packaged_verifier(
     }
     assert report["scoring"] == {
         "accepted_score": 1.0,
+        "accepted_rubric_scores": {
+            "accepted_attack_plan": 1.0,
+            "formal_validity": 1.0,
+            "cryptographic_applicability": 1.0,
+            "no_security_overclaim": 1.0,
+            "student_readability": 1.0,
+            "reproducibility": 1.0,
+            "reviewer_quality": 1.0,
+            "task_match": 1.0,
+            "proof_obligation_coverage": 1.0,
+        },
         "invalid_json_score": 0.0,
         "prefixed_json_score": 0.0,
         "requires_single_json_object": True,
+        "rubric_terms": [
+            "accepted_attack_plan",
+            "formal_validity",
+            "cryptographic_applicability",
+            "no_security_overclaim",
+            "student_readability",
+            "reproducibility",
+            "reviewer_quality",
+            "task_match",
+            "proof_obligation_coverage",
+        ],
         "unsupported_score": 0.0,
     }
     assert report["optional_dependencies"] == {
@@ -108,6 +130,7 @@ def test_prime_environment_smoke_verify_accepts_committed_report() -> None:
             "imports_without_verifiers": True,
             "load_environment_boundary_ok": True,
             "prefixed_json_score": 0.0,
+            "rubric_terms": 9,
             "unsupported_score": 0.0,
         },
         "failures": [],
