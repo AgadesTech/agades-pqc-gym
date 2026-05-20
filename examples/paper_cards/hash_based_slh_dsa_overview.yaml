@@ -1,0 +1,16 @@
+title: "NIST FIPS 205 Stateless Hash-Based Digital Signature Standard"
+authors:
+  - "National Institute of Standards and Technology"
+year: 2024
+url: "https://csrc.nist.gov/pubs/fips/205/final"
+family: "HASH_BASED"
+relevance: "Future hash-based adapters should separate toy WOTS-chain plumbing from reviewed SLH-DSA parameter, vector, and conformance boundaries."
+key_ideas:
+  - "SLH-DSA is a stateless hash-based signature standard based on SPHINCS+."
+  - "Toy hash-bound or chain-verification fixtures must not be generalized to SLH-DSA security claims."
+  - "Applicability validators need algorithm revision, parameter-set, and vector provenance gates before any public benchmark result."
+operators_suggested:
+  - "hash_signature_verification"
+  - "security_bound_check"
+implementation_status: "note_only"
+risk: "Requires hash-based signature expert review before any adapter, vector bundle, or conformance claim is implemented."

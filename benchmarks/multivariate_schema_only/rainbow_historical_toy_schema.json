@@ -1,0 +1,9 @@
+{
+  "family": "MULTIVARIATE",
+  "name": "rainbow_historical_toy_schema",
+  "variables": 64,
+  "equations": 32,
+  "field": "GF(16)",
+  "claimed_security_bits": 80.0,
+  "support_level": "schema_only"
+}

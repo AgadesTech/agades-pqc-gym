@@ -1,0 +1,33 @@
+name: Family adapter proposal
+description: Propose a new or improved family-specific adapter.
+title: "[family-adapter] "
+labels: ["family-adapter", "proposal"]
+body:
+  - type: textarea
+    id: family
+    attributes:
+      label: Target family
+      description: Which family and target models should this support?
+    validations:
+      required: true
+  - type: textarea
+    id: evaluator
+    attributes:
+      label: Evaluator model
+      description: What estimator, benchmark, or reproduction harness would be used?
+    validations:
+      required: true
+  - type: textarea
+    id: applicability
+    attributes:
+      label: Applicability rules
+      description: What should be rejected before estimation?
+    validations:
+      required: true
+  - type: textarea
+    id: limitations
+    attributes:
+      label: Limitations
+      description: What must not be claimed from this adapter?
+    validations:
+      required: true

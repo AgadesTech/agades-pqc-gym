@@ -1,0 +1,13 @@
+{
+  "schema_version": "agades.pqc.implementation_security_toy_kat.v1",
+  "family": "IMPLEMENTATION_SECURITY",
+  "target_name": "toy_mldsa_kat_digest",
+  "suite": "toy_mldsa_kat",
+  "model": "toy_kat_digest_match",
+  "payload": "toy ML-DSA KAT vector\nseed=10111213\nmessage=616761646573\npublic_key=01020304\nsignature=deadbeefcafebabe\n",
+  "expected_sha256": "f2309d0658bce5305de0fc53ba8b77190823f6e64daa093e66f355257a4981ee",
+  "vector_count": 1,
+  "artifact_execution": false,
+  "public": true,
+  "security_claim": false
+}

@@ -1,0 +1,31 @@
+[project]
+name = "agades-pqc-verifier-env"
+description = "Prime Verifiers single-turn AttackPlan verifier environment for Agades PQC Gym"
+tags = ["pqc", "single-turn", "verifiable-reward", "attack-plan"]
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "verifiers>=0.1.8",
+    "datasets>=2,<4",
+    "agades-pqc-gym @ git+https://github.com/AgadesTech/agades-pqc-gym.git@main",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build]
+include = [
+    "agades_pqc_verifier_env.py",
+    "pyproject.toml",
+    "README.md",
+    "prime_manifest.json",
+    "data/*.json",
+]
+
+[tool.verifiers.eval]
+num_examples = 2
+rollouts_per_example = 1

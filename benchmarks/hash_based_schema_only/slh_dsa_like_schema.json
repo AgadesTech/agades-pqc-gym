@@ -1,0 +1,7 @@
+{
+  "family": "HASH_BASED",
+  "name": "slh_dsa_like_schema",
+  "hash_function": "SHAKE256",
+  "claimed_security_bits": 128.0,
+  "support_level": "schema_only"
+}

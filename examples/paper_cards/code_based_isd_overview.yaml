@@ -1,0 +1,16 @@
+title: "Attacking and Defending the McEliece Cryptosystem"
+authors:
+  - "Daniel J. Bernstein"
+  - "Tanja Lange"
+  - "Christiane Peters"
+year: 2008
+url: "https://eprint.iacr.org/2008/318"
+family: "CODE_BASED"
+relevance: "Future code-based adapters should model ISD-style cost estimates and memory/time tradeoffs without borrowing lattice assumptions."
+key_ideas:
+  - "Information set decoding is central to code-based cryptanalysis and parameter selection."
+  - "Applicability validators must distinguish code parameters and decoding assumptions from lattice targets."
+operators_suggested:
+  - "information_set_decoding"
+implementation_status: "note_only"
+risk: "Estimator and parameter mappings require code-based cryptanalysis review before any score is produced."

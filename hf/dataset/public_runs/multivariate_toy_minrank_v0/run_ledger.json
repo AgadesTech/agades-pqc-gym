@@ -1,0 +1,102 @@
+{
+  "entries": [
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_minrank_gf2_m3_r0_verify_seed",
+      "attack_type": "minrank_attack",
+      "candidate_id": "toy_minrank_gf2_m3_r0_verify_seed-0",
+      "combined_score": -12.28,
+      "estimated_memory_bits": 3.7004,
+      "estimated_time_bits": 8.7549,
+      "estimator_name": "toy-multivariate-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "multivariate_toy_minrank",
+      "target_family": "MULTIVARIATE",
+      "trace_id": "9891be29831d71c8fd87f0c359ca96540b7b388bd2619800c806b9ee21164ff1",
+      "warnings": [
+        "Toy multivariate MinRank output is for public evaluator plumbing only; it is not a security claim.",
+        "Solved a public toy binary MinRank fixture with bounded exhaustive search; this is reproducibility plumbing, not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_minrank_gf2_m3_r1_verify_seed",
+      "attack_type": "minrank_attack",
+      "candidate_id": "toy_minrank_gf2_m3_r1_verify_seed-1",
+      "combined_score": -12.28,
+      "estimated_memory_bits": 3.7004,
+      "estimated_time_bits": 8.7549,
+      "estimator_name": "toy-multivariate-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "multivariate_toy_minrank",
+      "target_family": "MULTIVARIATE",
+      "trace_id": "aaba727b78dcb11dff7db2307fdfd1ee8201ce6e45862b9144a53527351fd81a",
+      "warnings": [
+        "Toy multivariate MinRank output is for public evaluator plumbing only; it is not a security claim.",
+        "Solved a public toy binary MinRank fixture with bounded exhaustive search; this is reproducibility plumbing, not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_minrank_gf2_m4_r2_verify_seed",
+      "attack_type": "minrank_attack",
+      "candidate_id": "toy_minrank_gf2_m4_r2_verify_seed-2",
+      "combined_score": -13.6805,
+      "estimated_memory_bits": 4.3219,
+      "estimated_time_bits": 10.0,
+      "estimator_name": "toy-multivariate-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "multivariate_toy_minrank",
+      "target_family": "MULTIVARIATE",
+      "trace_id": "bb8640eac2b1afc01d2a67b3ab7cec363c1fca137b733405883137ee59c82948",
+      "warnings": [
+        "Toy multivariate MinRank output is for public evaluator plumbing only; it is not a security claim.",
+        "Solved a public toy binary MinRank fixture with bounded exhaustive search; this is reproducibility plumbing, not a security claim."
+      ]
+    }
+  ],
+  "ledger_version": "0.1.0",
+  "safety": {
+    "arbitrary_code_execution": false,
+    "live_targeting": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.public_run_ledger.v1",
+  "source_trace": {
+    "artifact": "trace_public.jsonl",
+    "public_sha256": "9ca9753aaa2465052cfdabcd062077cd15b67fb21f08730101d6fd05ad756b51",
+    "record_count": 3
+  },
+  "summary": {
+    "accepted_records": 3,
+    "by_estimator": {
+      "toy-multivariate-estimator": 3
+    },
+    "by_evaluation_status": {
+      "ok": 3
+    },
+    "by_family": {
+      "MULTIVARIATE": 3
+    },
+    "redacted_records": 0,
+    "total_records": 3
+  }
+}

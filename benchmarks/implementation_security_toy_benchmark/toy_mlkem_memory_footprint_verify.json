@@ -1,0 +1,41 @@
+{
+  "attack_plan_id": "toy_mlkem_memory_footprint_verify_seed",
+  "target": {
+    "family": "IMPLEMENTATION_SECURITY",
+    "name": "toy_mlkem_memory_footprint",
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "benchmark_harness",
+      "params": {
+        "suite": "toy_mlkem_memory",
+        "metric": "toy_memory_footprint_bytes",
+        "model": "toy_memory_footprint_check",
+        "stack_bytes": 2048,
+        "heap_bytes": 1024,
+        "code_bytes": 8192,
+        "max_stack_bytes": 4096,
+        "max_heap_bytes": 2048,
+        "max_code_bytes": 16384
+      },
+      "assumptions": ["toy_memory_footprint_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/implementation_security_toy_benchmark/fixtures/toy_mlkem_memory_footprint_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated toy implementation-security memory-footprint seed with a public JSON-only fixture. Not a memory-usage, performance, conformance, side-channel, or security claim."
+  }
+}

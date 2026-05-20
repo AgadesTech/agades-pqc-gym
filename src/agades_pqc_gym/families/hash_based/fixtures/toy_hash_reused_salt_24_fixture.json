@@ -1,0 +1,38 @@
+{
+  "schema_version": "agades.pqc.hash_based_toy_misuse.v1",
+  "family": "HASH_BASED",
+  "target_name": "toy_hash_reused_salt_24",
+  "hash_function": "SHAKE256",
+  "digest_bits": 24,
+  "misuse_model": "toy_hash_reused_salt",
+  "records": [
+    {
+      "message_id": "m0",
+      "salt_hex": "001122",
+      "message": "alpha",
+      "digest_hex": "8a53f9"
+    },
+    {
+      "message_id": "m1",
+      "salt_hex": "aabbcc",
+      "message": "beta",
+      "digest_hex": "1e9b9e"
+    },
+    {
+      "message_id": "m2",
+      "salt_hex": "001122",
+      "message": "gamma",
+      "digest_hex": "3b7f1e"
+    },
+    {
+      "message_id": "m3",
+      "salt_hex": "334455",
+      "message": "delta",
+      "digest_hex": "2dc066"
+    }
+  ],
+  "expected_reused_salts": ["001122"],
+  "expected_issue_count": 1,
+  "public": true,
+  "security_claim": false
+}

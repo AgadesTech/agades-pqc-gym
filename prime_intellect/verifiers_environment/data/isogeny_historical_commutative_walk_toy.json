@@ -1,0 +1,39 @@
+{
+  "attack_plan_id": "isogeny_historical_commutative_walk_toy_v1",
+  "target": {
+    "family": "ISOGENY_HISTORICAL",
+    "name": "toy_commutative_walk_reconstruction",
+    "n": 97,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "historical_isogeny_reconstruction",
+      "params": {
+        "case": "toy_commutative_walk_search",
+        "walk_length": 6,
+        "branching_factor": 5
+      },
+      "assumptions": [
+        "historical_not_current_standard",
+        "historical_toy_commutative_walk_model"
+      ]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/isogeny_historical_toy_path/fixtures/toy_commutative_walk_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Historical toy commutative isogeny-walk fixture for public plumbing only. Not a CSIDH result, current-standard result, or security claim."
+  }
+}

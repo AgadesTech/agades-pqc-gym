@@ -4,7 +4,7 @@ from pathlib import Path
 
 import typer
 
-from agades_lwe_gym.cli import report
+from agades_pqc_gym.cli import report
 
 
 def main(trace_path: Path, out: Path = Path("reports/report.md")) -> None:

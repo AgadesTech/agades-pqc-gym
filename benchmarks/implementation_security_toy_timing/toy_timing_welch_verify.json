@@ -1,0 +1,37 @@
+{
+  "attack_plan_id": "toy_timing_welch_fixture_verify_seed",
+  "target": {
+    "family": "IMPLEMENTATION_SECURITY",
+    "name": "toy_timing_welch_mlkem",
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "constant_time_check",
+      "params": {
+        "tool": "toy_welch_timing_check",
+        "model": "toy_timing_welch_t_check",
+        "fixed_cycles": [100, 101, 99, 100, 102, 98],
+        "random_cycles": [101, 100, 100, 102, 99, 101],
+        "max_abs_t": 1.0
+      },
+      "assumptions": ["toy_timing_leakage_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/implementation_security_toy_timing/fixtures/toy_timing_welch_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated JSON-only toy timing summary benchmark seed with a public reproduction fixture. Not a constant-time, side-channel, or security claim."
+  }
+}

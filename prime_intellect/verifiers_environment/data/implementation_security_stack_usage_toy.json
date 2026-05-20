@@ -1,0 +1,37 @@
+{
+  "attack_plan_id": "implementation_security_stack_usage_toy_v1",
+  "target": {
+    "family": "IMPLEMENTATION_SECURITY",
+    "name": "toy_pqm4_stack_usage",
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "benchmark_harness",
+      "params": {
+        "suite": "toy_pqm4_stack_usage",
+        "metric": "toy_stack_usage_bytes",
+        "model": "toy_stack_usage_check",
+        "stack_samples": [1536, 1600, 1584, 1616, 1568],
+        "max_stack_bytes": 2048
+      },
+      "assumptions": ["toy_stack_usage_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/implementation_security_toy_benchmark/fixtures/toy_pqm4_stack_usage_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Toy implementation-security stack-usage summary check for public plumbing only. Not a stack-usage, performance, conformance, side-channel, or security claim."
+  }
+}

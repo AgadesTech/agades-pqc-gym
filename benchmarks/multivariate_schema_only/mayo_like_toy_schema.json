@@ -1,0 +1,9 @@
+{
+  "family": "MULTIVARIATE",
+  "name": "mayo_like_toy_schema",
+  "variables": 96,
+  "equations": 64,
+  "field": "GF(16)",
+  "claimed_security_bits": 128.0,
+  "support_level": "schema_only"
+}

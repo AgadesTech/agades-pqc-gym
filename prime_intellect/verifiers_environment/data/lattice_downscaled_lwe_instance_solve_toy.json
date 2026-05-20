@@ -1,0 +1,36 @@
+{
+  "attack_plan_id": "lattice_downscaled_lwe_instance_solve_v1",
+  "target": {
+    "family": "LWE",
+    "name": "toy_lwe_n4_q17_instance",
+    "n": 4,
+    "q": 17,
+    "m": 8,
+    "secret_distribution": {"type": "binary", "hamming_weight": null},
+    "error_distribution": {"type": "bounded", "sigma": null},
+    "claimed_security_bits": 8.0
+  },
+  "operators": [
+    {
+      "type": "primal_usvp",
+      "params": {"beta": 8, "svp_cost_model": "toy_exhaustive_fixture"},
+      "assumptions": ["public_downscaled_lwe_fixture"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": 64.0,
+    "max_time_bits": 80.0,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/lattice_downscaled_lwe_instances/toy_lwe_n4_q17_instance.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Toy plan that solves a tiny public downscaled LWE fixture by bounded exhaustive search. Not a security claim."
+  }
+}

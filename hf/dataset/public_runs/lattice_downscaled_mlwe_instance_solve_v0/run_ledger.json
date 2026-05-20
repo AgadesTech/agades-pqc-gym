@@ -1,0 +1,54 @@
+{
+  "entries": [
+    {
+      "accepted": true,
+      "attack_plan_id": "lattice_downscaled_mlwe_instance_solve_v1",
+      "attack_type": "module_lattice_reduction_hypothesis",
+      "candidate_id": "lattice_downscaled_mlwe_instance_solve_v1-0",
+      "combined_score": -34.7007,
+      "estimated_memory_bits": 17.36,
+      "estimated_time_bits": 32.7607,
+      "estimator_name": "mock-lattice-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "lattice_downscaled_mlwe_instance_solve",
+      "target_family": "MLWE",
+      "trace_id": "78a90efb31696ddcd3851a8bbd27c13c0c658d6084be2b4cb854435f13544316",
+      "warnings": [
+        "Mock estimator output is for plumbing tests only; it is not cryptanalytic evidence.",
+        "Solved a public downscaled MLWE fixture with bounded exhaustive search over a tiny linearized module instance; this is reproducibility plumbing, not a security claim."
+      ]
+    }
+  ],
+  "ledger_version": "0.1.0",
+  "safety": {
+    "arbitrary_code_execution": false,
+    "live_targeting": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.public_run_ledger.v1",
+  "source_trace": {
+    "artifact": "trace_public.jsonl",
+    "public_sha256": "aa2db2cb6b08006f0aa2841d1a745b320e00d1deebd8704ed5512a0b5ec43a16",
+    "record_count": 1
+  },
+  "summary": {
+    "accepted_records": 1,
+    "by_estimator": {
+      "mock-lattice-estimator": 1
+    },
+    "by_evaluation_status": {
+      "ok": 1
+    },
+    "by_family": {
+      "MLWE": 1
+    },
+    "redacted_records": 0,
+    "total_records": 1
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "attack_plan_id": "implementation_security_acvp_toy_v1",
+  "target": {
+    "family": "IMPLEMENTATION_SECURITY",
+    "name": "toy_acvp_mlkem_vector_set",
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "kat_conformance",
+      "params": {
+        "suite": "toy_acvp_mlkem_encap",
+        "model": "toy_acvp_vector_set_match",
+        "algorithm": "ML-KEM",
+        "mode": "encapsulation",
+        "vector_set": {
+          "algorithm": "ML-KEM",
+          "mode": "encapsulation",
+          "revision": "FIPS203-toy",
+          "testGroups": [
+            {
+              "parameterSet": "ML-KEM-512",
+              "tests": [
+                {
+                  "ciphertext": "aabbcc",
+                  "seed": "00010203",
+                  "sharedSecret": "010203",
+                  "tcId": 1
+                },
+                {
+                  "ciphertext": "ddeeff",
+                  "seed": "04050607",
+                  "sharedSecret": "102030",
+                  "tcId": 2
+                }
+              ],
+              "tgId": 1
+            }
+          ]
+        },
+        "expected_vector_set_sha256": "d45a763b77db874c0382bc849f1e4edb8f662540a2e6b7a6bc9a10a87992f6cf",
+        "test_count": 2
+      },
+      "assumptions": ["toy_acvp_json_vector_set_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/implementation_security_toy_kat/fixtures/toy_acvp_mlkem_vector_set_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "seed",
+    "public": true,
+    "notes": "Toy implementation-security ACVP-like vector-set check for public plumbing only. Not an ACVP certificate, conformance, side-channel, or security claim."
+  }
+}

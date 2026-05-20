@@ -1,0 +1,138 @@
+{
+  "allowed_private_commands": [
+    "agades-pqc mutate-candidates",
+    "agades-pqc mutate-archive",
+    "agades-pqc deepevolve-injections",
+    "agades-pqc evolve-batch",
+    "agades-pqc private-evolution-campaign-plan",
+    "agades-pqc heldout-review-log",
+    "agades-pqc heldout-schedule",
+    "agades-pqc heldout-run-schedule",
+    "agades-pqc heldout-review-packet",
+    "agades-pqc heldout-cron-plan",
+    "agades-pqc heldout-batch",
+    "agades-pqc rescore-archive",
+    "agades-pqc archive-snapshot",
+    "agades-pqc lattice-estimator-baseline-run",
+    "agades-pqc lattice-estimator-baseline-review-packet",
+    "agades-pqc lattice-estimator-checkout-preflight"
+  ],
+  "allowed_private_roots": [
+    "private/candidates",
+    "private/datasets",
+    "private/models",
+    "private/reports",
+    "private/runs",
+    "private/traces"
+  ],
+  "export_policy": {
+    "external_publication_requires_preflight": true,
+    "public_bundle_exports_require_release_audit": true,
+    "public_trace_exports_require_redaction": true,
+    "publish_private_candidates": false,
+    "publish_private_trace_scores": false
+  },
+  "forbidden_public_roots": [
+    "docs",
+    "examples/public_runs",
+    "hf/dataset",
+    "prime_intellect/verifiers_environment/data",
+    "public"
+  ],
+  "private_dataset_policy": {
+    "publish_reviewer_annotations_publicly": false,
+    "publish_rollouts_publicly": false,
+    "publish_train_datasets_publicly": false,
+    "required_controls": [
+      "license_review",
+      "provenance_tracking",
+      "deduplication",
+      "redaction",
+      "contamination_audit"
+    ],
+    "sources": [
+      "facebookresearch/LWE-benchmarking",
+      "facebook/TAPAS",
+      "pq-code-package"
+    ]
+  },
+  "private_holdback": [
+    "serious evolution traces",
+    "private prompts and prompt-ranking policies",
+    "evaluator weighting and anti-gaming heuristics",
+    "unreleased candidate strategies",
+    "responsible-disclosure material",
+    "pedagogical RL traces and reviewer annotations",
+    "private Qwen fine-tuning corpora and adapters",
+    "license-reviewed derived datasets from LWE-benchmarking TAPAS and pq-code-package"
+  ],
+  "private_rl_policy": {
+    "method": "pedagogical_rl",
+    "preferred_private_quantization": "gguf_otq_5bit",
+    "public_metadata_only": true,
+    "publish_finetuned_model_publicly": false,
+    "publish_training_traces_publicly": false,
+    "reward_terms": [
+      "formal_validity",
+      "cryptographic_applicability",
+      "no_security_overclaim",
+      "student_readability",
+      "reproducibility",
+      "reviewer_quality"
+    ],
+    "student_model": "private_qwen3_6_27b",
+    "teacher_student_pattern": "privileged_self_teacher_student",
+    "training_path": "lora_or_qlora_then_private_gguf_otq_quantization"
+  },
+  "private_run_defaults": {
+    "arbitrary_python_candidates": false,
+    "candidate_public_release_ok_default": false,
+    "external_network_access": false,
+    "live_targeting": false,
+    "security_claims": false,
+    "trace_public_release_ok_default": false
+  },
+  "project": {
+    "cli": "agades-pqc",
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "release_gates": [
+    "uv run agades-pqc private-run-policy --out docs/private_run_policy.json",
+    "uv run agades-pqc private-run-policy-verify --policy docs/private_run_policy.json"
+  ],
+  "required_publication_controls": [
+    "redact_trace_record",
+    "public-bundle",
+    "public-ledger",
+    "publication-preflight",
+    "release-audit"
+  ],
+  "scheduler_policy": {
+    "allowed_triggers": [
+      "manual_reviewed",
+      "local_cron_after_review"
+    ],
+    "approval_gates": [
+      "private-run-policy-review",
+      "heldout-target-review",
+      "retention-owner-review",
+      "publication-export-review"
+    ],
+    "execution_safety": {
+      "arbitrary_code_execution": false,
+      "external_network_access": false,
+      "publishes_private_trace_outputs": false,
+      "writes_only_allowed_private_roots": true
+    },
+    "retention": {
+      "archive_snapshot_max_age_days": 90,
+      "delete_expired_private_runs": true,
+      "private_trace_max_age_days": 30,
+      "review_log_required": true
+    },
+    "scheduler_enabled_by_default": false
+  },
+  "schema_version": "agades.pqc.private_run_policy.v1"
+}

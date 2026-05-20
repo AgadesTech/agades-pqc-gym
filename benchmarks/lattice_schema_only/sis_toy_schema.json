@@ -1,0 +1,41 @@
+{
+  "attack_plan_id": "lattice_sis_schema_placeholder_seed",
+  "target": {
+    "family": "SIS",
+    "name": "sis_module_lattice_toy_schema",
+    "n": 256,
+    "q": 3329,
+    "m": 512,
+    "claimed_security_bits": 128.0,
+    "secret_distribution": {
+      "type": "bounded_integer",
+      "hamming_weight": 128
+    },
+    "support_level": "schema_only"
+  },
+  "operators": [
+    {
+      "type": "bkz_parameter_sweep",
+      "params": {"beta_min": 20, "beta_max": 40},
+      "assumptions": [
+        "schema_only_no_estimator",
+        "sis_reduction_mapping_unreviewed"
+      ]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": false
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Schema-only SIS lattice benchmark seed. No SIS estimator mapping is implemented."
+  }
+}

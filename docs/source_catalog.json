@@ -1,0 +1,1299 @@
+{
+  "private_holdback": [
+    "serious evolution traces",
+    "private prompts and prompt-ranking policies",
+    "evaluator weighting and anti-gaming heuristics",
+    "unreleased candidate strategies",
+    "responsible-disclosure material"
+  ],
+  "project": {
+    "cli": "agades-pqc",
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "release_gates": [
+    "uv run pytest tests/test_source_catalog.py -q",
+    "uv run agades-pqc source-catalog --out docs/source_catalog.json",
+    "uv run agades-pqc source-catalog-verify --catalog docs/source_catalog.json",
+    "uv run agades-pqc public-run-export --out public/run_export",
+    "uv run agades-pqc public-run-export-verify --export public/run_export",
+    "uv run agades-pqc family-registry-manifest --out docs/family_registry_manifest.json",
+    "uv run agades-pqc family-registry-manifest-verify --manifest docs/family_registry_manifest.json",
+    "uv run agades-pqc family-plugin-manifest --out docs/family_plugin_manifest.json",
+    "uv run agades-pqc family-plugin-manifest-verify --manifest docs/family_plugin_manifest.json",
+    "uv run agades-pqc family-support --out docs/family_support_matrix.json",
+    "uv run agades-pqc family-support-verify --matrix docs/family_support_matrix.json",
+    "uv run agades-pqc prime-publication-handoff --out docs/prime_publication_handoff.json",
+    "uv run agades-pqc prime-publication-handoff-verify --handoff docs/prime_publication_handoff.json"
+  ],
+  "safety": {
+    "arbitrary_code_execution": false,
+    "contains_private_traces": false,
+    "live_targeting": false,
+    "publishes_private_candidates": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.source_catalog.v1",
+  "scope": {
+    "current_public_runtime": "typed-attackplan-verifier",
+    "first_executable_family": "lattice",
+    "future_family_surfaces": [],
+    "non_lattice_toy_evaluators": [
+      "code_based_bjmm_isd",
+      "code_based_classic_mceliece_support_syndrome",
+      "code_based_classic_mceliece_syndrome",
+      "code_based_dumer_isd",
+      "code_based_hqc_circulant_erasure",
+      "code_based_hqc_circulant_syndrome",
+      "code_based_hqc_erasure_syndrome",
+      "code_based_hqc_parity_check",
+      "code_based_hqc_repetition",
+      "code_based_hqc_weighted_repetition",
+      "code_based_lee_brickell_isd",
+      "code_based_mdpc_bit_flip",
+      "code_based_mdpc_black_gray_bit_flip",
+      "code_based_mdpc_syndrome_weight_bit_flip",
+      "code_based_prange_isd",
+      "code_based_qc_rotation",
+      "code_based_stern_isd",
+      "hash_based_collision_bound",
+      "hash_based_fors_auth_path_verify",
+      "hash_based_merkle_auth_path_verify",
+      "hash_based_misuse_reused_salt",
+      "hash_based_preimage_bound",
+      "hash_based_slh_dsa_hypertree_verify",
+      "hash_based_wots_chain_verify",
+      "implementation_security_acvp_vector_set",
+      "implementation_security_benchmark_summary",
+      "implementation_security_binary_size",
+      "implementation_security_ctgrind_secret_taint",
+      "implementation_security_dudect_summary",
+      "implementation_security_kat_digest",
+      "implementation_security_memory_footprint",
+      "implementation_security_stack_usage",
+      "implementation_security_timing_check",
+      "isogeny_historical_commutative_walk",
+      "isogeny_historical_sidh_path",
+      "isogeny_historical_volcano_walk",
+      "multivariate_minrank_search",
+      "multivariate_mq_degree_bound",
+      "multivariate_mq_hybrid_search",
+      "multivariate_mq_search",
+      "multivariate_uov_public_map_verify"
+    ],
+    "non_lattice_toy_operator_variants": [
+      {
+        "default_estimator": "toy-code-based-isd-estimator",
+        "family": "CODE_BASED",
+        "operator_type": "information_set_decoding",
+        "plugin": "code_based",
+        "review_gate": "bounded_code_based_toy_isd_only",
+        "security_claim": false,
+        "variant": "prange_toy"
+      },
+      {
+        "default_estimator": "toy-code-based-isd-estimator",
+        "family": "CODE_BASED",
+        "operator_type": "information_set_decoding",
+        "plugin": "code_based",
+        "review_gate": "bounded_code_based_toy_isd_only",
+        "security_claim": false,
+        "variant": "lee_brickell_toy"
+      },
+      {
+        "default_estimator": "toy-code-based-isd-estimator",
+        "family": "CODE_BASED",
+        "operator_type": "information_set_decoding",
+        "plugin": "code_based",
+        "review_gate": "bounded_code_based_toy_isd_only",
+        "security_claim": false,
+        "variant": "stern_toy"
+      },
+      {
+        "default_estimator": "toy-code-based-isd-estimator",
+        "family": "CODE_BASED",
+        "operator_type": "information_set_decoding",
+        "plugin": "code_based",
+        "review_gate": "bounded_code_based_toy_isd_only",
+        "security_claim": false,
+        "variant": "dumer_toy"
+      },
+      {
+        "default_estimator": "toy-code-based-isd-estimator",
+        "family": "CODE_BASED",
+        "operator_type": "information_set_decoding",
+        "plugin": "code_based",
+        "review_gate": "bounded_code_based_toy_isd_only",
+        "security_claim": false,
+        "variant": "bjmm_toy"
+      },
+      {
+        "default_estimator": "toy-code-based-isd-estimator",
+        "family": "CODE_BASED",
+        "operator_type": "information_set_decoding",
+        "plugin": "code_based",
+        "review_gate": "bounded_code_based_toy_qc_rotation_only",
+        "security_claim": false,
+        "variant": "qc_rotation_toy"
+      },
+      {
+        "default_estimator": "toy-code-based-repetition-decoder-estimator",
+        "family": "CODE_BASED",
+        "operator_type": "decoding_fixture_check",
+        "plugin": "code_based",
+        "review_gate": "bounded_hqc_inspired_repetition_fixture_only",
+        "security_claim": false,
+        "variant": "hqc_repetition_toy"
+      },
+      {
+        "default_estimator": "toy-code-based-weighted-repetition-decoder-estimator",
+        "family": "CODE_BASED",
+        "operator_type": "decoding_fixture_check",
+        "plugin": "code_based",
+        "review_gate": "bounded_hqc_inspired_weighted_repetition_fixture_only",
+        "security_claim": false,
+        "variant": "hqc_weighted_repetition_toy"
+      },
+      {
+        "default_estimator": "toy-code-based-parity-check-decoder-estimator",
+        "family": "CODE_BASED",
+        "operator_type": "decoding_fixture_check",
+        "plugin": "code_based",
+        "review_gate": "bounded_hqc_inspired_parity_check_fixture_only",
+        "security_claim": false,
+        "variant": "hqc_parity_check_toy"
+      },
+      {
+        "default_estimator": "toy-code-based-circulant-syndrome-decoder-estimator",
+        "family": "CODE_BASED",
+        "operator_type": "decoding_fixture_check",
+        "plugin": "code_based",
+        "review_gate": "bounded_hqc_inspired_circulant_syndrome_fixture_only",
+        "security_claim": false,
+        "variant": "hqc_circulant_syndrome_toy"
+      },
+      {
+        "default_estimator": "toy-code-based-circulant-erasure-decoder-estimator",
+        "family": "CODE_BASED",
+        "operator_type": "decoding_fixture_check",
+        "plugin": "code_based",
+        "review_gate": "bounded_hqc_inspired_circulant_erasure_fixture_only",
+        "security_claim": false,
+        "variant": "hqc_circulant_erasure_toy"
+      },
+      {
+        "default_estimator": "toy-code-based-erasure-syndrome-decoder-estimator",
+        "family": "CODE_BASED",
+        "operator_type": "decoding_fixture_check",
+        "plugin": "code_based",
+        "review_gate": "bounded_hqc_inspired_erasure_syndrome_fixture_only",
+        "security_claim": false,
+        "variant": "hqc_erasure_syndrome_toy"
+      },
+      {
+        "default_estimator": "toy-code-based-bit-flip-decoder-estimator",
+        "family": "CODE_BASED",
+        "operator_type": "decoding_fixture_check",
+        "plugin": "code_based",
+        "review_gate": "bounded_mdpc_bit_flip_fixture_only",
+        "security_claim": false,
+        "variant": "mdpc_bit_flip_toy"
+      },
+      {
+        "default_estimator": "toy-code-based-bit-flip-decoder-estimator",
+        "family": "CODE_BASED",
+        "operator_type": "decoding_fixture_check",
+        "plugin": "code_based",
+        "review_gate": "bounded_mdpc_black_gray_bit_flip_fixture_only",
+        "security_claim": false,
+        "variant": "mdpc_black_gray_bit_flip_toy"
+      },
+      {
+        "default_estimator": "toy-code-based-bit-flip-decoder-estimator",
+        "family": "CODE_BASED",
+        "operator_type": "decoding_fixture_check",
+        "plugin": "code_based",
+        "review_gate": "bounded_mdpc_syndrome_weight_bit_flip_fixture_only",
+        "security_claim": false,
+        "variant": "mdpc_syndrome_weight_bit_flip_toy"
+      },
+      {
+        "default_estimator": "toy-code-based-classic-mceliece-syndrome-estimator",
+        "family": "CODE_BASED",
+        "operator_type": "decoding_fixture_check",
+        "plugin": "code_based",
+        "review_gate": "bounded_classic_mceliece_inspired_syndrome_fixture_only",
+        "security_claim": false,
+        "variant": "classic_mceliece_syndrome_toy"
+      },
+      {
+        "default_estimator": "toy-code-based-classic-mceliece-support-syndrome-estimator",
+        "family": "CODE_BASED",
+        "operator_type": "decoding_fixture_check",
+        "plugin": "code_based",
+        "review_gate": "bounded_classic_mceliece_inspired_public_support_fixture_only",
+        "security_claim": false,
+        "variant": "classic_mceliece_support_syndrome_toy"
+      },
+      {
+        "default_estimator": "toy-multivariate-estimator",
+        "family": "MULTIVARIATE",
+        "operator_type": "groebner_basis",
+        "plugin": "multivariate",
+        "review_gate": "bounded_multivariate_toy_mq_only",
+        "security_claim": false,
+        "variant": "toy_mq_search"
+      },
+      {
+        "default_estimator": "toy-multivariate-estimator",
+        "family": "MULTIVARIATE",
+        "operator_type": "groebner_basis",
+        "plugin": "multivariate",
+        "review_gate": "bounded_multivariate_toy_mq_hybrid_only",
+        "security_claim": false,
+        "variant": "toy_mq_hybrid_search"
+      },
+      {
+        "default_estimator": "toy-multivariate-estimator",
+        "family": "MULTIVARIATE",
+        "operator_type": "groebner_basis",
+        "plugin": "multivariate",
+        "review_gate": "bounded_multivariate_toy_degree_bound_only",
+        "security_claim": false,
+        "variant": "toy_mq_degree_bound"
+      },
+      {
+        "default_estimator": "toy-multivariate-estimator",
+        "family": "MULTIVARIATE",
+        "operator_type": "minrank_attack",
+        "plugin": "multivariate",
+        "review_gate": "bounded_multivariate_toy_minrank_only",
+        "security_claim": false,
+        "variant": "toy_minrank_search"
+      },
+      {
+        "default_estimator": "toy-multivariate-estimator",
+        "family": "MULTIVARIATE",
+        "operator_type": "signature_fixture_check",
+        "plugin": "multivariate",
+        "review_gate": "bounded_multivariate_toy_uov_public_map_fixture_only",
+        "security_claim": false,
+        "variant": "toy_uov_public_map_verify"
+      },
+      {
+        "default_estimator": "toy-hash-bound-estimator",
+        "family": "HASH_BASED",
+        "operator_type": "security_bound_check",
+        "plugin": "hash_based",
+        "review_gate": "bounded_hash_preimage_bound_only",
+        "security_claim": false,
+        "variant": "toy_preimage_bound"
+      },
+      {
+        "default_estimator": "toy-hash-bound-estimator",
+        "family": "HASH_BASED",
+        "operator_type": "security_bound_check",
+        "plugin": "hash_based",
+        "review_gate": "bounded_hash_collision_bound_only",
+        "security_claim": false,
+        "variant": "toy_collision_bound"
+      },
+      {
+        "default_estimator": "toy-hash-bound-estimator",
+        "family": "HASH_BASED",
+        "operator_type": "hash_signature_verification",
+        "plugin": "hash_based",
+        "review_gate": "bounded_hash_signature_chain_fixture_only",
+        "security_claim": false,
+        "variant": "toy_wots_chain_verify"
+      },
+      {
+        "default_estimator": "toy-hash-bound-estimator",
+        "family": "HASH_BASED",
+        "operator_type": "hash_signature_verification",
+        "plugin": "hash_based",
+        "review_gate": "bounded_hash_merkle_auth_path_fixture_only",
+        "security_claim": false,
+        "variant": "toy_merkle_auth_path_verify"
+      },
+      {
+        "default_estimator": "toy-hash-bound-estimator",
+        "family": "HASH_BASED",
+        "operator_type": "hash_signature_verification",
+        "plugin": "hash_based",
+        "review_gate": "bounded_hash_fors_auth_path_fixture_only",
+        "security_claim": false,
+        "variant": "toy_fors_auth_path_verify"
+      },
+      {
+        "default_estimator": "toy-hash-bound-estimator",
+        "family": "HASH_BASED",
+        "operator_type": "hash_signature_verification",
+        "plugin": "hash_based",
+        "review_gate": "bounded_hash_slh_dsa_hypertree_fixture_only",
+        "security_claim": false,
+        "variant": "toy_slh_dsa_hypertree_verify"
+      },
+      {
+        "default_estimator": "toy-hash-bound-estimator",
+        "family": "HASH_BASED",
+        "operator_type": "misuse_check",
+        "plugin": "hash_based",
+        "review_gate": "json_only_hash_reused_salt_misuse_fixture_only",
+        "security_claim": false,
+        "variant": "toy_hash_reused_salt"
+      },
+      {
+        "default_estimator": "toy-isogeny-historical-path-estimator",
+        "family": "ISOGENY_HISTORICAL",
+        "operator_type": "historical_isogeny_reconstruction",
+        "plugin": "isogeny_historical",
+        "review_gate": "historical_toy_path_only",
+        "security_claim": false,
+        "variant": "toy_sidh_path_search"
+      },
+      {
+        "default_estimator": "toy-isogeny-historical-path-estimator",
+        "family": "ISOGENY_HISTORICAL",
+        "operator_type": "historical_isogeny_reconstruction",
+        "plugin": "isogeny_historical",
+        "review_gate": "historical_commutative_walk_toy_only",
+        "security_claim": false,
+        "variant": "toy_commutative_walk_search"
+      },
+      {
+        "default_estimator": "toy-isogeny-historical-path-estimator",
+        "family": "ISOGENY_HISTORICAL",
+        "operator_type": "historical_isogeny_reconstruction",
+        "plugin": "isogeny_historical",
+        "review_gate": "historical_volcano_walk_toy_only",
+        "security_claim": false,
+        "variant": "toy_volcano_walk_search"
+      },
+      {
+        "default_estimator": "toy-implementation-security-estimator",
+        "family": "IMPLEMENTATION_SECURITY",
+        "operator_type": "kat_conformance",
+        "plugin": "implementation_security",
+        "review_gate": "json_only_toy_kat_digest_only",
+        "security_claim": false,
+        "variant": "toy_kat_digest_match"
+      },
+      {
+        "default_estimator": "toy-implementation-security-estimator",
+        "family": "IMPLEMENTATION_SECURITY",
+        "operator_type": "kat_conformance",
+        "plugin": "implementation_security",
+        "review_gate": "json_only_toy_acvp_vector_set_only",
+        "security_claim": false,
+        "variant": "toy_acvp_vector_set_match"
+      },
+      {
+        "default_estimator": "toy-implementation-security-estimator",
+        "family": "IMPLEMENTATION_SECURITY",
+        "operator_type": "constant_time_check",
+        "plugin": "implementation_security",
+        "review_gate": "json_only_toy_timing_summary_only",
+        "security_claim": false,
+        "variant": "toy_timing_welch_t_check"
+      },
+      {
+        "default_estimator": "toy-implementation-security-estimator",
+        "family": "IMPLEMENTATION_SECURITY",
+        "operator_type": "constant_time_check",
+        "plugin": "implementation_security",
+        "review_gate": "json_only_toy_dudect_summary_only",
+        "security_claim": false,
+        "variant": "toy_dudect_summary_threshold_check"
+      },
+      {
+        "default_estimator": "toy-implementation-security-estimator",
+        "family": "IMPLEMENTATION_SECURITY",
+        "operator_type": "constant_time_check",
+        "plugin": "implementation_security",
+        "review_gate": "json_only_toy_ctgrind_secret_taint_summary_only",
+        "security_claim": false,
+        "variant": "toy_ctgrind_secret_taint_summary_check"
+      },
+      {
+        "default_estimator": "toy-implementation-security-estimator",
+        "family": "IMPLEMENTATION_SECURITY",
+        "operator_type": "benchmark_harness",
+        "plugin": "implementation_security",
+        "review_gate": "json_only_toy_benchmark_summary_only",
+        "security_claim": false,
+        "variant": "toy_benchmark_summary_check"
+      },
+      {
+        "default_estimator": "toy-implementation-security-estimator",
+        "family": "IMPLEMENTATION_SECURITY",
+        "operator_type": "benchmark_harness",
+        "plugin": "implementation_security",
+        "review_gate": "json_only_toy_binary_size_only",
+        "security_claim": false,
+        "variant": "toy_binary_size_check"
+      },
+      {
+        "default_estimator": "toy-implementation-security-estimator",
+        "family": "IMPLEMENTATION_SECURITY",
+        "operator_type": "benchmark_harness",
+        "plugin": "implementation_security",
+        "review_gate": "json_only_toy_memory_footprint_only",
+        "security_claim": false,
+        "variant": "toy_memory_footprint_check"
+      },
+      {
+        "default_estimator": "toy-implementation-security-estimator",
+        "family": "IMPLEMENTATION_SECURITY",
+        "operator_type": "benchmark_harness",
+        "plugin": "implementation_security",
+        "review_gate": "json_only_toy_stack_usage_only",
+        "security_claim": false,
+        "variant": "toy_stack_usage_check"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "current_use": "optional_lattice_estimator",
+      "family": "lattice",
+      "id": "lattice-estimator",
+      "integration_status": "current_reviewed_boundary",
+      "kind": "estimator",
+      "platform": "github",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Used only for reviewed lattice-family mappings.",
+        "Not a universal PQC oracle."
+      ],
+      "title": "Lattice Estimator",
+      "url": "https://github.com/malb/lattice-estimator"
+    },
+    {
+      "current_use": "public_future_reproduction_anchor",
+      "family": "lattice",
+      "id": "facebook-tapas",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "dataset",
+      "platform": "hugging_face",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Large public LWE dataset for future reproduction ladders.",
+        "No benchmark claim should be made until mappings and storage requirements are reviewed."
+      ],
+      "title": "TAPAS: Datasets for Learning the Learning with Errors Problem",
+      "url": "https://huggingface.co/datasets/facebook/TAPAS"
+    },
+    {
+      "current_use": "public_future_reproduction_anchor",
+      "family": "lattice",
+      "id": "facebook-lwe-benchmarking",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "benchmark_harness",
+      "platform": "github",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": true,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Future adapter must isolate heavyweight GPU/Sage workflows from the current lightweight verifier.",
+        "Results must be reported as public benchmark reproduction, not as deployed-standard break claims."
+      ],
+      "title": "Benchmarking Attacks on Learning with Errors",
+      "url": "https://github.com/facebookresearch/LWE-benchmarking"
+    },
+    {
+      "current_use": "future_pqc_instruction_eval_seed",
+      "family": "all",
+      "id": "hf-post-quantum-crypto-fr",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "instruction_seed_dataset",
+      "platform": "hugging_face",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Small French Q&A/classification seed dataset for PQC migration and standards topics.",
+        "Useful for future evaluator-facing documentation checks or instruction-eval seeds, not as a complete PQC corpus.",
+        "Must be source-verified before any generated answer or training claim is published."
+      ],
+      "title": "AYI-NEDJIMI post-quantum crypto FR dataset",
+      "url": "https://huggingface.co/datasets/AYI-NEDJIMI/post-quantum-crypto-fr"
+    },
+    {
+      "current_use": "future_pqc_instruction_eval_seed",
+      "family": "all",
+      "id": "hf-post-quantum-crypto-en",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "instruction_seed_dataset",
+      "platform": "hugging_face",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Small English Q&A/classification seed dataset for PQC migration and standards topics.",
+        "Useful for future evaluator-facing documentation checks or instruction-eval seeds, not as a complete PQC corpus.",
+        "Must be source-verified before any generated answer or training claim is published."
+      ],
+      "title": "AYI-NEDJIMI post-quantum crypto EN dataset",
+      "url": "https://huggingface.co/datasets/AYI-NEDJIMI/post-quantum-crypto-en"
+    },
+    {
+      "current_use": "future_pqc_migration_scoring_anchor",
+      "family": "all",
+      "id": "hf-pqc-ssl-scans",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "migration_scoring_dataset",
+      "platform": "hugging_face",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Small tabular SSL/TLS scan dataset for PQC migration prioritization and compliance-scoring experiments.",
+        "Not a cryptanalysis dataset and not used by the current AttackPlan verifier.",
+        "Future use must keep scoring methodology, domain sampling, and claim boundaries explicit."
+      ],
+      "title": "Q-GRID PQC SSL scan dataset",
+      "url": "https://huggingface.co/datasets/Q-GRID/pqc-ssl-scans"
+    },
+    {
+      "current_use": "future_side_channel_research_anchor",
+      "family": "implementation_security",
+      "id": "hf-sc2026-side-channel",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "side_channel_dataset",
+      "platform": "hugging_face",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": true,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Public far-field EM side-channel dataset with a CRYSTALS-Kyber subset for future implementation-security research planning.",
+        "Not invoked by the current JSON-only public verifier and not a conformance, side-channel-resistance, or security claim.",
+        "Future adapters must define trace provenance, leakage model, hardware scope, and disclosure boundaries before publication."
+      ],
+      "title": "SCA-HNUST SC2026 far-field side-channel dataset",
+      "url": "https://huggingface.co/datasets/SCA-HNUST/SC2026"
+    },
+    {
+      "current_use": "future_code_based_standardization_anchor",
+      "family": "code_based",
+      "id": "nist-hqc-selection",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "standardization_selection",
+      "platform": "nist",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "HQC was selected for standardization after NIST PQC fourth-round evaluation.",
+        "Agades code-based toy evaluators are not HQC security evaluators.",
+        "Any HQC adapter requires reviewed parameter, decoder, test-vector, and claim-boundary mappings."
+      ],
+      "title": "NIST HQC fourth-round selection",
+      "url": "https://csrc.nist.gov/News/2025/hqc-announced-as-a-4th-round-selection"
+    },
+    {
+      "current_use": "future_code_based_nonselected_candidate_anchor",
+      "family": "code_based",
+      "id": "nist-bike-round4-status",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "standardization_status",
+      "platform": "nist",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "BIKE was studied in NIST PQC round four but was not selected for standardization in NIST IR 8545.",
+        "Agades BIKE-like examples are schema-only routing fixtures, not BIKE security estimators.",
+        "Any future BIKE adapter requires reviewed parameter, decoder, failure-rate, and claim-boundary mappings."
+      ],
+      "title": "NIST BIKE fourth-round status",
+      "url": "https://csrc.nist.gov/pubs/ir/8545/final"
+    },
+    {
+      "current_use": "future_code_based_nonselected_candidate_anchor",
+      "family": "code_based",
+      "id": "nist-classic-mceliece-round4-status",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "standardization_status",
+      "platform": "nist",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Classic McEliece was studied in NIST PQC round four but was not selected for standardization in NIST IR 8545.",
+        "Agades Classic-McEliece-inspired public fixtures are bounded toy verifier plumbing; schema-only Classic-McEliece-like placeholders still route unsupported, and none are Classic McEliece security estimators.",
+        "Any future Classic McEliece adapter requires reviewed parameter, decoding-workfactor, KAT provenance, and claim-boundary mappings."
+      ],
+      "title": "NIST Classic McEliece fourth-round status",
+      "url": "https://csrc.nist.gov/pubs/ir/8545/final"
+    },
+    {
+      "current_use": "future_hash_based_standard_anchor",
+      "family": "hash_based",
+      "id": "nist-fips-205",
+      "integration_status": "public_reference",
+      "kind": "standard",
+      "platform": "nist",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Used as a public standards anchor for SLH-DSA only.",
+        "The current hash-based toy WOTS-chain verifier is not an SLH-DSA implementation, proof, or security claim.",
+        "Future SLH-DSA adapters require parameter-set and vector provenance review."
+      ],
+      "title": "NIST FIPS 205 SLH-DSA",
+      "url": "https://csrc.nist.gov/pubs/fips/205/final"
+    },
+    {
+      "current_use": "future_multivariate_signature_anchor",
+      "family": "multivariate",
+      "id": "nist-additional-signatures-round3",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "standardization_process",
+      "platform": "nist",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "MAYO, QR-UOV, and UOV are relevant multivariate third-round candidates in the NIST additional-signature process.",
+        "Agades MQ, MinRank, and UOV-inspired public-map toy evaluators are not candidate security estimators.",
+        "Future adapters require reviewed public-parameter, algebraic-attack-model, and implementation-source pins."
+      ],
+      "title": "NIST additional PQC digital signatures third-round selection",
+      "url": "https://csrc.nist.gov/News/2026/nist-advances-9-candidates-to-the-3rd-round-of-pqc"
+    },
+    {
+      "current_use": "future_implementation_security_anchor",
+      "family": "implementation_security",
+      "id": "pqclean",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "implementation_corpus",
+      "platform": "github",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Useful as a public implementation corpus and testing anchor.",
+        "The current MVP only verifies toy JSON digest and timing summaries.",
+        "No real implementation-security score is produced by the MVP."
+      ],
+      "title": "PQClean",
+      "url": "https://github.com/PQClean/PQClean"
+    },
+    {
+      "current_use": "future_high_assurance_implementation_security_anchor",
+      "family": "implementation_security",
+      "id": "pq-code-package",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "high_assurance_implementation_corpus",
+      "platform": "github",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Public high-assurance implementation anchor for ML-KEM and ML-DSA native code.",
+        "Relevant repositories include mlkem-native and mldsa-native.",
+        "Future adapters must pin source revisions, ACVP vector releases, toolchains, and constant-time test scope before any public result.",
+        "Not invoked by the current JSON-only public verifier."
+      ],
+      "title": "PQ Code Package",
+      "url": "https://github.com/pq-code-package"
+    },
+    {
+      "current_use": "future_implementation_security_anchor",
+      "family": "implementation_security",
+      "id": "liboqs",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "implementation_test_harness",
+      "platform": "github",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Candidate anchor for future KAT, API, benchmark, and implementation-security gates.",
+        "Not invoked by the current public verifier."
+      ],
+      "title": "Open Quantum Safe liboqs",
+      "url": "https://github.com/open-quantum-safe/liboqs"
+    },
+    {
+      "current_use": "future_embedded_implementation_security_anchor",
+      "family": "implementation_security",
+      "id": "pqm4",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "embedded_benchmark_harness",
+      "platform": "github",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Candidate anchor for future Cortex-M4 KAT, speed, stack, and code-size benchmarks.",
+        "Requires isolated device/simulator protocol before any public result.",
+        "Not invoked by the current public verifier."
+      ],
+      "title": "pqm4 ARM Cortex-M4 PQC benchmarks",
+      "url": "https://github.com/mupq/pqm4"
+    },
+    {
+      "current_use": "future_kat_validation_anchor",
+      "family": "implementation_security",
+      "id": "nist-acvp",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "validation_protocol",
+      "platform": "nist",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Candidate anchor for future ML-KEM, ML-DSA, and SLH-DSA KAT/validation vector workflows.",
+        "Requires vector provenance and algorithm revision pinning before publication.",
+        "No ACVP server interaction is performed by the current public verifier."
+      ],
+      "title": "NIST Automated Cryptographic Validation Protocol",
+      "url": "https://github.com/usnistgov/ACVP"
+    },
+    {
+      "current_use": "future_constant_time_leakage_test_anchor",
+      "family": "implementation_security",
+      "id": "dudect",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "statistical_timing_leakage_tool",
+      "platform": "github",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Candidate anchor for future Welch t-test timing leakage experiments over pinned public implementations.",
+        "Statistical timing output is not a constant-time proof.",
+        "Not executed by the current public verifier or Prime JSON-only reward environment."
+      ],
+      "title": "dudect statistical constant-time tester",
+      "url": "https://github.com/oreparaz/dudect"
+    },
+    {
+      "current_use": "future_secret_taint_analysis_anchor",
+      "family": "implementation_security",
+      "id": "ctgrind",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "dynamic_secret_taint_tool",
+      "platform": "github",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Candidate anchor for future secret-dependent branch and memory-access dynamic checks.",
+        "Requires reviewed Valgrind/toolchain support before any public result.",
+        "Not executed by the current public verifier."
+      ],
+      "title": "ctgrind Valgrind secret-taint checker",
+      "url": "https://github.com/agl/ctgrind"
+    },
+    {
+      "current_use": "future_supercop_timecop_anchor",
+      "family": "implementation_security",
+      "id": "timecop-supercop",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "supercop_constant_time_tool",
+      "platform": "ebacs",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Candidate anchor for future TIMECOP/SUPERCOP constant-time policy checks over pinned implementations.",
+        "Requires reviewed SUPERCOP source, toolchain, CPU, and result provenance before publication.",
+        "Not executed by the current public verifier or Prime JSON-only reward environment."
+      ],
+      "title": "TIMECOP inside SUPERCOP",
+      "url": "https://bench.cr.yp.to/supercop.html"
+    },
+    {
+      "current_use": "parameter_reference_anchor",
+      "family": "lattice",
+      "id": "nist-fips-203",
+      "integration_status": "public_reference",
+      "kind": "standard",
+      "platform": "nist",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Used as a public standards anchor only.",
+        "The MVP does not claim attacks on standardized ML-KEM."
+      ],
+      "title": "NIST FIPS 203 ML-KEM",
+      "url": "https://csrc.nist.gov/pubs/fips/203/final"
+    },
+    {
+      "current_use": "current_verifier_packaging",
+      "family": "all",
+      "id": "prime-verifiers",
+      "integration_status": "current_public_surface",
+      "kind": "agent_evaluation_environment",
+      "platform": "prime_intellect",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Agades packages JSON-only AttackPlan scoring for this surface.",
+        "The environment does not execute model-submitted code."
+      ],
+      "title": "Prime Intellect Verifiers",
+      "url": "https://github.com/PrimeIntellect-ai/verifiers"
+    },
+    {
+      "current_use": "current_operator_onboarding_reference",
+      "family": "all",
+      "id": "prime-quickstart",
+      "integration_status": "source_map_only",
+      "kind": "developer_onboarding",
+      "platform": "prime_intellect",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Reference for CLI and workspace onboarding only.",
+        "Prime credentials, billing, and hosted-job launches stay outside committed public artifacts."
+      ],
+      "title": "Prime Intellect quickstart",
+      "url": "https://app.primeintellect.ai/dashboard/home/quickstart"
+    },
+    {
+      "current_use": "future_agentic_rl_training_anchor",
+      "family": "all",
+      "id": "prime-rl",
+      "integration_status": "future_reviewed_adapter",
+      "kind": "agentic_rl_framework",
+      "platform": "prime_intellect",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": true,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Future anchor for agentic RL training over reviewed AttackPlan verifier tasks.",
+        "The current release packages a JSON-only verifier environment, not a Prime RL training run.",
+        "No model-submitted code or private evolution traces are published through this surface."
+      ],
+      "title": "Prime RL",
+      "url": "https://github.com/PrimeIntellect-ai/prime-rl"
+    },
+    {
+      "current_use": "public_benchmark_story_anchor",
+      "family": "all",
+      "id": "prime-autonanogpt-speedrun",
+      "integration_status": "source_map_only",
+      "kind": "ecosystem_pattern",
+      "platform": "prime_intellect",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Inspiration for public, observable evaluator-led runs.",
+        "Agades does not publish private evolution traces."
+      ],
+      "title": "Prime Intellect auto-nanoGPT speedrun",
+      "url": "https://www.primeintellect.ai/auto-nanogpt"
+    },
+    {
+      "current_use": "public_evaluator_observability_pattern",
+      "family": "all",
+      "id": "prime-autonomous-speedrunning-experiments",
+      "integration_status": "source_map_only",
+      "kind": "ecosystem_pattern",
+      "platform": "prime_intellect",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Reference pattern for observable evaluator-led runs.",
+        "Agades public artifacts keep private evolution traces out of the release surface."
+      ],
+      "title": "Prime Intellect autonomous speedrunning experiments",
+      "url": "https://github.com/PrimeIntellect-ai/experiments-autonomous-speedrunning"
+    },
+    {
+      "current_use": "current_public_artifact",
+      "family": "all",
+      "id": "agades-hf-dataset",
+      "integration_status": "current_public_surface",
+      "kind": "local_dataset_bundle",
+      "platform": "hugging_face",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Contains only toy/schema-only AttackPlans and verifier output.",
+        "No private traces or unpublished candidate strategies."
+      ],
+      "title": "Agades PQC Gym toy dataset bundle",
+      "url": "hf/dataset"
+    },
+    {
+      "current_use": "current_public_gradio_space_contract",
+      "family": "all",
+      "id": "agades-hf-space",
+      "integration_status": "current_public_surface",
+      "kind": "local_space_manifest",
+      "platform": "hugging_face",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Documents the public Gradio Space selector and shared verifier.",
+        "Keeps Space publication behind review and no-claim guardrails."
+      ],
+      "title": "Agades PQC Gym Hugging Face Space manifest",
+      "url": "hf/space_manifest.json"
+    },
+    {
+      "current_use": "current_public_collection_contract",
+      "family": "all",
+      "id": "agades-hf-collection",
+      "integration_status": "current_public_surface",
+      "kind": "local_collection_manifest",
+      "platform": "hugging_face",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Groups the GitHub repo, toy dataset, Space, benchmark card, source map, and public benchmark manifest for review.",
+        "Does not publish private evolution traces or security claims."
+      ],
+      "title": "Agades PQC Gym Hugging Face Collection manifest",
+      "url": "hf/collection_manifest.json"
+    },
+    {
+      "current_use": "current_lattice_estimator_baseline_reproduction_contract",
+      "family": "lattice",
+      "id": "agades-lattice-estimator-baseline-contracts",
+      "integration_status": "current_public_surface",
+      "kind": "local_lattice_baseline_contract",
+      "platform": "github",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Review-ready contracts for direct LWE Lattice Estimator mappings.",
+        "This is not a numeric baseline reproduction.",
+        "Numeric outputs, publication, and security claims remain blocked until expert review."
+      ],
+      "title": "Agades PQC Gym Lattice Estimator baseline contracts",
+      "url": "docs/lattice_estimator_baseline_contracts.json"
+    },
+    {
+      "current_use": "current_public_verifier_environment_contract",
+      "family": "all",
+      "id": "agades-prime-environment",
+      "integration_status": "current_public_surface",
+      "kind": "local_prime_environment_manifest",
+      "platform": "prime_intellect",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Documents packaged Prime task rows, reward boundaries, and JSON-only scoring.",
+        "Keeps Prime Hub publication behind credentials and release review."
+      ],
+      "title": "Agades PQC Gym Prime environment manifest",
+      "url": "prime_intellect/verifiers_environment/prime_manifest.json"
+    },
+    {
+      "current_use": "current_prime_publication_review_handoff",
+      "family": "all",
+      "id": "agades-prime-publication-handoff",
+      "integration_status": "current_public_surface",
+      "kind": "local_publication_handoff_manifest",
+      "platform": "prime_intellect",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Records local Prime package readiness and review gates.",
+        "Does not claim Prime Hub publication or credential presence.",
+        "Keeps external Prime publication behind release and credential review."
+      ],
+      "title": "Agades PQC Gym Prime publication handoff manifest",
+      "url": "docs/prime_publication_handoff.json"
+    },
+    {
+      "current_use": "current_flat_public_run_review_surface",
+      "family": "all",
+      "id": "agades-public-run-export",
+      "integration_status": "current_public_surface",
+      "kind": "local_public_run_export",
+      "platform": "prime_intellect",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Flattens checked-in public run ledgers into deterministic JSONL and CSV rows for Prime-style autonomous run review.",
+        "Contains only toy and downscaled public verifier bundles.",
+        "No private evolution traces, private candidates, live targets, or security claims are published through this surface."
+      ],
+      "title": "Agades PQC Gym public run export",
+      "url": "public/run_export/manifest.json"
+    },
+    {
+      "current_use": "current_public_accelerator_contract",
+      "family": "all",
+      "id": "agades-nvidia-accelerator",
+      "integration_status": "current_public_surface",
+      "kind": "local_accelerator_manifest",
+      "platform": "nvidia",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Documents CPU-only current workloads and reserved future GPU boundaries.",
+        "Does not claim current GPU acceleration or security results."
+      ],
+      "title": "Agades PQC Gym NVIDIA accelerator manifest",
+      "url": "nvidia/accelerator_manifest.json"
+    },
+    {
+      "current_use": "current_nvidia_publication_review_handoff",
+      "family": "all",
+      "id": "agades-nvidia-publication-handoff",
+      "integration_status": "current_public_surface",
+      "kind": "local_publication_handoff_manifest",
+      "platform": "nvidia",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Records local NVIDIA review packet readiness and artifact digests.",
+        "Does not claim external NVIDIA submission, GPU execution, GPU results, credential presence, or security results.",
+        "Keeps external NVIDIA-facing use behind release review."
+      ],
+      "title": "Agades PQC Gym NVIDIA publication handoff manifest",
+      "url": "docs/nvidia_publication_handoff.json"
+    },
+    {
+      "current_use": "current_runtime_family_registry_contract",
+      "family": "all",
+      "id": "agades-family-registry-manifest",
+      "integration_status": "current_public_surface",
+      "kind": "local_runtime_registry_manifest",
+      "platform": "github",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Machine-readable runtime adapter registry for every TargetFamily.",
+        "Cross-checks adapter class, plugin, support matrix, operator catalog, and Lattice Estimator boundaries.",
+        "Only LWE may expose the external Lattice Estimator route."
+      ],
+      "title": "Agades PQC Gym family registry manifest",
+      "url": "docs/family_registry_manifest.json"
+    },
+    {
+      "current_use": "current_family_plugin_descriptor_contract",
+      "family": "all",
+      "id": "agades-family-plugin-manifest",
+      "integration_status": "current_public_surface",
+      "kind": "local_family_plugin_manifest",
+      "platform": "github",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Machine-readable plugin descriptor contract for every family plugin.",
+        "Records plugin-owned adapter and applicability validator paths.",
+        "Keeps non-lattice plugins separate from the lattice validator and Lattice Estimator boundary."
+      ],
+      "title": "Agades PQC Gym family plugin descriptor manifest",
+      "url": "docs/family_plugin_manifest.json"
+    },
+    {
+      "current_use": "current_public_artifact",
+      "family": "all",
+      "id": "agades-family-support-matrix",
+      "integration_status": "current_public_surface",
+      "kind": "local_support_manifest",
+      "platform": "github",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Machine-readable support boundary for every target family.",
+        "Marks LWE/MLWE as implemented and non-lattice executable families only as bounded toy evaluator surfaces."
+      ],
+      "title": "Agades PQC Gym family support matrix",
+      "url": "docs/family_support_matrix.json"
+    },
+    {
+      "current_use": "current_release_readiness_contract",
+      "family": "all",
+      "id": "agades-publication-manifest",
+      "integration_status": "current_public_surface",
+      "kind": "local_publication_contract",
+      "platform": "github",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Maps GitHub, Hugging Face, Prime, and NVIDIA release surfaces.",
+        "Keeps external publication credential and review boundaries explicit."
+      ],
+      "title": "Agades PQC Gym OSS publication readiness manifest",
+      "url": "docs/publication_manifest.json"
+    },
+    {
+      "current_use": "current_future_adapter_contract",
+      "family": "all",
+      "id": "agades-benchmark-source-contracts",
+      "integration_status": "current_public_surface",
+      "kind": "local_future_adapter_contract",
+      "platform": "github",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Machine-readable TAPAS, LWE-benchmarking, HQC, BIKE, Classic McEliece, SLH-DSA, multivariate additional-signature, HF PQC/SCA dataset, PQ Code Package, liboqs, pqm4, and NIST ACVP boundaries.",
+        "Keeps heavyweight and future family adapters review-gated and out of the JSON-only public verifier."
+      ],
+      "title": "Agades PQC Gym benchmark source contracts",
+      "url": "docs/benchmark_source_contracts.json"
+    },
+    {
+      "current_use": "accelerator_strategy_anchor",
+      "family": "all",
+      "id": "nvidia-inception",
+      "integration_status": "source_map_only",
+      "kind": "startup_ecosystem",
+      "platform": "nvidia",
+      "public": true,
+      "publishes_private_candidates": false,
+      "requires_gpu": false,
+      "review_required_before_claims": true,
+      "safety_notes": [
+        "Public positioning anchor for evaluator and future GPU work.",
+        "No GPU workload is claimed in the current MVP."
+      ],
+      "title": "NVIDIA Inception",
+      "url": "https://www.nvidia.com/en-us/startups/"
+    }
+  ],
+  "summary": {
+    "current_public_surface_count": 15,
+    "current_public_surfaces": [
+      "agades-benchmark-source-contracts",
+      "agades-family-plugin-manifest",
+      "agades-family-registry-manifest",
+      "agades-family-support-matrix",
+      "agades-hf-collection",
+      "agades-hf-dataset",
+      "agades-hf-space",
+      "agades-lattice-estimator-baseline-contracts",
+      "agades-nvidia-accelerator",
+      "agades-nvidia-publication-handoff",
+      "agades-prime-environment",
+      "agades-prime-publication-handoff",
+      "agades-public-run-export",
+      "agades-publication-manifest",
+      "prime-verifiers"
+    ],
+    "future_reviewed_adapter_count": 19,
+    "future_reviewed_adapters": [
+      "ctgrind",
+      "dudect",
+      "facebook-lwe-benchmarking",
+      "facebook-tapas",
+      "hf-post-quantum-crypto-en",
+      "hf-post-quantum-crypto-fr",
+      "hf-pqc-ssl-scans",
+      "hf-sc2026-side-channel",
+      "liboqs",
+      "nist-acvp",
+      "nist-additional-signatures-round3",
+      "nist-bike-round4-status",
+      "nist-classic-mceliece-round4-status",
+      "nist-hqc-selection",
+      "pq-code-package",
+      "pqclean",
+      "pqm4",
+      "prime-rl",
+      "timecop-supercop"
+    ],
+    "local_artifact_source_count": 14,
+    "non_lattice_toy_evaluator_count": 41,
+    "non_lattice_toy_operator_families": [
+      "CODE_BASED",
+      "HASH_BASED",
+      "IMPLEMENTATION_SECURITY",
+      "ISOGENY_HISTORICAL",
+      "MULTIVARIATE"
+    ],
+    "non_lattice_toy_operator_security_claims": 0,
+    "non_lattice_toy_operator_variant_count": 41,
+    "platform_counts": {
+      "ebacs": 1,
+      "github": 14,
+      "hugging_face": 8,
+      "nist": 7,
+      "nvidia": 3,
+      "prime_intellect": 8
+    },
+    "platforms": [
+      "ebacs",
+      "github",
+      "hugging_face",
+      "nist",
+      "nvidia",
+      "prime_intellect"
+    ],
+    "requires_gpu_source_count": 3,
+    "source_count": 41,
+    "source_map_only": [
+      "nvidia-inception",
+      "prime-autonanogpt-speedrun",
+      "prime-autonomous-speedrunning-experiments",
+      "prime-quickstart"
+    ],
+    "source_map_only_count": 4
+  }
+}

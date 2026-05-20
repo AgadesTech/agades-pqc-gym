@@ -1,0 +1,171 @@
+{
+  "entries": [
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_mq_degree_bound_gf16_v8_e6_seed",
+      "attack_type": "groebner_basis",
+      "candidate_id": "toy_mq_degree_bound_gf16_v8_e6_seed-0",
+      "combined_score": -35.091,
+      "estimated_memory_bits": 13.1212,
+      "estimated_time_bits": 27.2107,
+      "estimator_name": "toy-multivariate-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "multivariate_toy_mq",
+      "target_family": "MULTIVARIATE",
+      "trace_id": "c3b506ef2ed96606e4fd8695eb48ea03c1caaf5cc34bb44194e15cece7990a16",
+      "warnings": [
+        "Toy multivariate MQ degree-bound output is for public evaluator plumbing only; it is not a Groebner proof, not a UOV, MAYO, or Rainbow result, and not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_mq_degree_bound_gf2_v6_e4_seed",
+      "attack_type": "groebner_basis",
+      "candidate_id": "toy_mq_degree_bound_gf2_v6_e4_seed-1",
+      "combined_score": -26.2984,
+      "estimated_memory_bits": 11.1997,
+      "estimated_time_bits": 20.8985,
+      "estimator_name": "toy-multivariate-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "multivariate_toy_mq",
+      "target_family": "MULTIVARIATE",
+      "trace_id": "bc51d2db4f8c7838a663825a8c3c9816e222d8f05ac95dc630b4a478d6e9a939",
+      "warnings": [
+        "Toy multivariate MQ degree-bound output is for public evaluator plumbing only; it is not a Groebner proof, not a UOV, MAYO, or Rainbow result, and not a security claim.",
+        "Solved a public toy binary MQ fixture with bounded exhaustive search for degree-bound reproduction plumbing; this is not a Groebner proof, not a UOV, MAYO, or Rainbow result, and not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_mq_gf16_v8_e6_mq_seed",
+      "attack_type": "groebner_basis",
+      "candidate_id": "toy_mq_gf16_v8_e6_mq_seed-2",
+      "combined_score": -40.1369,
+      "estimated_memory_bits": 3.8074,
+      "estimated_time_bits": 34.585,
+      "estimator_name": "toy-multivariate-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "multivariate_toy_mq",
+      "target_family": "MULTIVARIATE",
+      "trace_id": "af8fc0dafba5ebea99745e1edba19ade301ef6db61d2ea8843e802c63839a11c",
+      "warnings": [
+        "Toy multivariate MQ output is for public evaluator plumbing only; it is not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_mq_gf2_v6_e4_mq_solve_seed",
+      "attack_type": "groebner_basis",
+      "candidate_id": "toy_mq_gf2_v6_e4_mq_solve_seed-3",
+      "combined_score": -11.4305,
+      "estimated_memory_bits": 3.3219,
+      "estimated_time_bits": 8.0,
+      "estimator_name": "toy-multivariate-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "multivariate_toy_mq",
+      "target_family": "MULTIVARIATE",
+      "trace_id": "5ea01ad45a34748382d274c7a5767acdf74196528e79c30ce5bac5af2b55013a",
+      "warnings": [
+        "Toy multivariate MQ output is for public evaluator plumbing only; it is not a security claim.",
+        "Solved a public toy binary MQ fixture with bounded exhaustive search; this is reproducibility plumbing, not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_mq_hybrid_gf16_v8_e6_seed",
+      "attack_type": "groebner_basis",
+      "candidate_id": "toy_mq_hybrid_gf16_v8_e6_seed-4",
+      "combined_score": -34.5629,
+      "estimated_memory_bits": 8.8041,
+      "estimated_time_bits": 27.7619,
+      "estimator_name": "toy-multivariate-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "multivariate_toy_mq",
+      "target_family": "MULTIVARIATE",
+      "trace_id": "e2cc523e1b8db58ed7ee381bb1a7d2e816f303c661649527cd8b2e01de5f189e",
+      "warnings": [
+        "Toy multivariate MQ hybrid-search output is for public evaluator plumbing only; it is not a UOV, MAYO, or Rainbow result and not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_mq_hybrid_gf2_v6_e4_seed",
+      "attack_type": "groebner_basis",
+      "candidate_id": "toy_mq_hybrid_gf2_v6_e4_seed-5",
+      "combined_score": -20.2805,
+      "estimated_memory_bits": 7.8392,
+      "estimated_time_bits": 15.7207,
+      "estimator_name": "toy-multivariate-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "multivariate_toy_mq",
+      "target_family": "MULTIVARIATE",
+      "trace_id": "3189f49a35f4d2d10b36087e963aa42032a264f2048ac1beb1578d5c84fa2252",
+      "warnings": [
+        "Toy multivariate MQ hybrid-search output is for public evaluator plumbing only; it is not a UOV, MAYO, or Rainbow result and not a security claim.",
+        "Solved a public toy binary MQ fixture with bounded guess-prefix split search for hybrid-search reproduction plumbing; this is not a UOV, MAYO, or Rainbow result and not a security claim."
+      ]
+    }
+  ],
+  "ledger_version": "0.1.0",
+  "safety": {
+    "arbitrary_code_execution": false,
+    "live_targeting": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.public_run_ledger.v1",
+  "source_trace": {
+    "artifact": "trace_public.jsonl",
+    "public_sha256": "db2960ecffee355ccbe69bbe98acf8300305f067f2528517af99269660c83781",
+    "record_count": 6
+  },
+  "summary": {
+    "accepted_records": 6,
+    "by_estimator": {
+      "toy-multivariate-estimator": 6
+    },
+    "by_evaluation_status": {
+      "ok": 6
+    },
+    "by_family": {
+      "MULTIVARIATE": 6
+    },
+    "redacted_records": 0,
+    "total_records": 6
+  }
+}

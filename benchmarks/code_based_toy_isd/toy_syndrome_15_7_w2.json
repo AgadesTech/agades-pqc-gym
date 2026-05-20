@@ -1,0 +1,35 @@
+{
+  "attack_plan_id": "toy_syndrome_15_7_w2_prange_seed",
+  "target": {
+    "family": "CODE_BASED",
+    "name": "toy_syndrome_15_7_w2",
+    "n": 15,
+    "k": 7,
+    "w": 2,
+    "claimed_security_bits": 16.0,
+    "support_level": "implemented"
+  },
+  "operators": [
+    {
+      "type": "information_set_decoding",
+      "params": {"variant": "prange_toy"},
+      "assumptions": ["prange_isd_combinatorial_cost_model"]
+    }
+  ],
+  "constraints": {
+    "max_memory_bits": null,
+    "max_time_bits": null,
+    "require_reproducibility_on_downscaled_instances": true,
+    "downscaled_reproduction_fixture": "benchmarks/code_based_toy_isd/fixtures/toy_syndrome_15_7_w2_fixture.json"
+  },
+  "claims": {
+    "estimated_time_bits": null,
+    "estimated_memory_bits": null,
+    "success_probability": null
+  },
+  "metadata": {
+    "created_by": "benchmark_seed",
+    "public": true,
+    "notes": "Generated toy Prange ISD benchmark seed with a second public syndrome-decoding reproduction fixture. Not a security claim."
+  }
+}

@@ -1,0 +1,485 @@
+{
+  "benchmark": {
+    "id": "agades-pqc-public-benchmark-v0",
+    "name": "Agades PQC Gym Public Benchmark v0",
+    "publication_status": "local_artifact_ready_review_required",
+    "scope": "toy_and_downscaled_public_verifier_bundles"
+  },
+  "bundles": [
+    {
+      "accepted_records": 2,
+      "benchmark_path": "benchmarks/code_based_toy_classic_mceliece",
+      "bundle_path": "examples/public_runs/code_based_toy_classic_mceliece_v0",
+      "estimators": [
+        "toy-code-based-classic-mceliece-support-syndrome-estimator",
+        "toy-code-based-classic-mceliece-syndrome-estimator"
+      ],
+      "evaluation_statuses": [
+        "ok"
+      ],
+      "family": "CODE_BASED",
+      "id": "code_based_toy_classic_mceliece_v0",
+      "manifest_sha256": "8365a7b9d3178d23bae1dfec573cd4b17ce4fe8bc594bea57af976c7c7b446bc",
+      "publishes_private_candidates": false,
+      "record_count": 2,
+      "redacted_records": 0,
+      "regenerate_commands": [
+        "uv run agades-pqc benchmark benchmarks/code_based_toy_classic_mceliece --out runs/code_based_toy_classic_mceliece.jsonl",
+        "uv run agades-pqc public-bundle runs/code_based_toy_classic_mceliece.jsonl --out examples/public_runs/code_based_toy_classic_mceliece_v0"
+      ],
+      "run_id": "code_based_toy_classic_mceliece",
+      "security_claim": false,
+      "trace_public_sha256": "80743ab370dcc68057489ce0da76751879b570eb873bfccb2e74a19277533459"
+    },
+    {
+      "accepted_records": 6,
+      "benchmark_path": "benchmarks/code_based_toy_hqc",
+      "bundle_path": "examples/public_runs/code_based_toy_hqc_v0",
+      "estimators": [
+        "toy-code-based-circulant-erasure-decoder-estimator",
+        "toy-code-based-circulant-syndrome-decoder-estimator",
+        "toy-code-based-erasure-syndrome-decoder-estimator",
+        "toy-code-based-parity-check-decoder-estimator",
+        "toy-code-based-repetition-decoder-estimator",
+        "toy-code-based-weighted-repetition-decoder-estimator"
+      ],
+      "evaluation_statuses": [
+        "ok"
+      ],
+      "family": "CODE_BASED",
+      "id": "code_based_toy_hqc_v0",
+      "manifest_sha256": "b9042dfc684a6c24a5293070ee2e7f64e5756717a6b62f3cb9957b749bfeabf3",
+      "publishes_private_candidates": false,
+      "record_count": 6,
+      "redacted_records": 0,
+      "regenerate_commands": [
+        "uv run agades-pqc benchmark benchmarks/code_based_toy_hqc --out runs/code_based_toy_hqc.jsonl",
+        "uv run agades-pqc public-bundle runs/code_based_toy_hqc.jsonl --out examples/public_runs/code_based_toy_hqc_v0"
+      ],
+      "run_id": "code_based_toy_hqc",
+      "security_claim": false,
+      "trace_public_sha256": "eda8755c52b8733b916bd907347c72502458b238986df5a54db09be6d7ed8020"
+    },
+    {
+      "accepted_records": 7,
+      "benchmark_path": "benchmarks/code_based_toy_isd",
+      "bundle_path": "examples/public_runs/code_based_toy_isd_v0",
+      "estimators": [
+        "toy-code-based-isd-estimator"
+      ],
+      "evaluation_statuses": [
+        "ok"
+      ],
+      "family": "CODE_BASED",
+      "id": "code_based_toy_isd_v0",
+      "manifest_sha256": "5e3b6100c8bea9774ab7938011fd50b97949ab703dbd89aff8cdbe05f7b54ee0",
+      "publishes_private_candidates": false,
+      "record_count": 7,
+      "redacted_records": 0,
+      "regenerate_commands": [
+        "uv run agades-pqc benchmark benchmarks/code_based_toy_isd --out runs/code_based_toy_isd.jsonl",
+        "uv run agades-pqc public-bundle runs/code_based_toy_isd.jsonl --out examples/public_runs/code_based_toy_isd_v0"
+      ],
+      "run_id": "code_based_toy_isd",
+      "security_claim": false,
+      "trace_public_sha256": "4d1373fa9b7caaf2b34615dfa8ee599189d2afbda06258f2b8ca473d2ed67484"
+    },
+    {
+      "accepted_records": 3,
+      "benchmark_path": "benchmarks/code_based_toy_mdpc",
+      "bundle_path": "examples/public_runs/code_based_toy_mdpc_v0",
+      "estimators": [
+        "toy-code-based-bit-flip-decoder-estimator"
+      ],
+      "evaluation_statuses": [
+        "ok"
+      ],
+      "family": "CODE_BASED",
+      "id": "code_based_toy_mdpc_v0",
+      "manifest_sha256": "3037c0d9bda76aca00e1bd7200f56c2978e5c12f3bfd7821d34f577f27c2e287",
+      "publishes_private_candidates": false,
+      "record_count": 3,
+      "redacted_records": 0,
+      "regenerate_commands": [
+        "uv run agades-pqc benchmark benchmarks/code_based_toy_mdpc --out runs/code_based_toy_mdpc.jsonl",
+        "uv run agades-pqc public-bundle runs/code_based_toy_mdpc.jsonl --out examples/public_runs/code_based_toy_mdpc_v0"
+      ],
+      "run_id": "code_based_toy_mdpc",
+      "security_claim": false,
+      "trace_public_sha256": "2cb9e6a1f5b5545fddc8cac3d4b9b78aa380a39c77bfcf7c485e812d3d769cb8"
+    },
+    {
+      "accepted_records": 3,
+      "benchmark_path": "benchmarks/hash_based_toy_bound",
+      "bundle_path": "examples/public_runs/hash_based_toy_bound_v0",
+      "estimators": [
+        "toy-hash-bound-estimator"
+      ],
+      "evaluation_statuses": [
+        "ok"
+      ],
+      "family": "HASH_BASED",
+      "id": "hash_based_toy_bound_v0",
+      "manifest_sha256": "a4dec5f0cec8462b5553142d0345c4f4e5b6c06e1db8bc919739ee025caca3ce",
+      "publishes_private_candidates": false,
+      "record_count": 3,
+      "redacted_records": 0,
+      "regenerate_commands": [
+        "uv run agades-pqc benchmark benchmarks/hash_based_toy_bound --out runs/hash_based_toy_bound.jsonl",
+        "uv run agades-pqc public-bundle runs/hash_based_toy_bound.jsonl --out examples/public_runs/hash_based_toy_bound_v0"
+      ],
+      "run_id": "hash_based_toy_bound",
+      "security_claim": false,
+      "trace_public_sha256": "ba7220414941b28a30c2a033a9f89d25665923a9505c29829fa647702fdc56ed"
+    },
+    {
+      "accepted_records": 1,
+      "benchmark_path": "benchmarks/hash_based_toy_misuse",
+      "bundle_path": "examples/public_runs/hash_based_toy_misuse_v0",
+      "estimators": [
+        "toy-hash-bound-estimator"
+      ],
+      "evaluation_statuses": [
+        "ok"
+      ],
+      "family": "HASH_BASED",
+      "id": "hash_based_toy_misuse_v0",
+      "manifest_sha256": "dd6edbecf6aef0507abda30e3bdf144c50e5816a6c82ca35aa9ec7ca45c1c1df",
+      "publishes_private_candidates": false,
+      "record_count": 1,
+      "redacted_records": 0,
+      "regenerate_commands": [
+        "uv run agades-pqc benchmark benchmarks/hash_based_toy_misuse --out runs/hash_based_toy_misuse.jsonl",
+        "uv run agades-pqc public-bundle runs/hash_based_toy_misuse.jsonl --out examples/public_runs/hash_based_toy_misuse_v0"
+      ],
+      "run_id": "hash_based_toy_misuse",
+      "security_claim": false,
+      "trace_public_sha256": "d2262f90415f77b01a2e53f2fd2352ad9a40f6025b7ede48d976453bdbe0fd51"
+    },
+    {
+      "accepted_records": 4,
+      "benchmark_path": "benchmarks/hash_based_toy_signature",
+      "bundle_path": "examples/public_runs/hash_based_toy_signature_v0",
+      "estimators": [
+        "toy-hash-bound-estimator"
+      ],
+      "evaluation_statuses": [
+        "ok"
+      ],
+      "family": "HASH_BASED",
+      "id": "hash_based_toy_signature_v0",
+      "manifest_sha256": "c669380c712d78b0ea30a4ac451a5b3d82ddd430f90622f5114e3cfb9770b5a1",
+      "publishes_private_candidates": false,
+      "record_count": 4,
+      "redacted_records": 0,
+      "regenerate_commands": [
+        "uv run agades-pqc benchmark benchmarks/hash_based_toy_signature --out runs/hash_based_toy_signature.jsonl",
+        "uv run agades-pqc public-bundle runs/hash_based_toy_signature.jsonl --out examples/public_runs/hash_based_toy_signature_v0"
+      ],
+      "run_id": "hash_based_toy_signature",
+      "security_claim": false,
+      "trace_public_sha256": "31bbfb93c1c824e3d1ddbf39509b5b232a29dbb3698e937c3a4dcb59452a580d"
+    },
+    {
+      "accepted_records": 4,
+      "benchmark_path": "benchmarks/implementation_security_toy_benchmark",
+      "bundle_path": "examples/public_runs/implementation_security_toy_benchmark_v0",
+      "estimators": [
+        "toy-implementation-security-estimator"
+      ],
+      "evaluation_statuses": [
+        "ok"
+      ],
+      "family": "IMPLEMENTATION_SECURITY",
+      "id": "implementation_security_toy_benchmark_v0",
+      "manifest_sha256": "fbe6ae17d70b79cef67607bfecfee4b9052eeb84a7ba7614765e30b2599fefef",
+      "publishes_private_candidates": false,
+      "record_count": 4,
+      "redacted_records": 0,
+      "regenerate_commands": [
+        "uv run agades-pqc benchmark benchmarks/implementation_security_toy_benchmark --out runs/implementation_security_toy_benchmark.jsonl",
+        "uv run agades-pqc public-bundle runs/implementation_security_toy_benchmark.jsonl --out examples/public_runs/implementation_security_toy_benchmark_v0"
+      ],
+      "run_id": "implementation_security_toy_benchmark",
+      "security_claim": false,
+      "trace_public_sha256": "aa06552e545786d6a2a643ab59746ceee28164984c1118b5c952abe8d6b7f1b8"
+    },
+    {
+      "accepted_records": 5,
+      "benchmark_path": "benchmarks/implementation_security_toy_kat",
+      "bundle_path": "examples/public_runs/implementation_security_toy_kat_v0",
+      "estimators": [
+        "toy-implementation-security-estimator"
+      ],
+      "evaluation_statuses": [
+        "ok"
+      ],
+      "family": "IMPLEMENTATION_SECURITY",
+      "id": "implementation_security_toy_kat_v0",
+      "manifest_sha256": "d5f62da3352e100aa40a5bec3ba64cf54269b0b58574d6abd8dfdceb7d4fbefa",
+      "publishes_private_candidates": false,
+      "record_count": 5,
+      "redacted_records": 0,
+      "regenerate_commands": [
+        "uv run agades-pqc benchmark benchmarks/implementation_security_toy_kat --out runs/implementation_security_toy_kat.jsonl",
+        "uv run agades-pqc public-bundle runs/implementation_security_toy_kat.jsonl --out examples/public_runs/implementation_security_toy_kat_v0"
+      ],
+      "run_id": "implementation_security_toy_kat",
+      "security_claim": false,
+      "trace_public_sha256": "84670b7d18ccc29126646742fe76d038ef68bb5d11d96857b3078fd2f723dd04"
+    },
+    {
+      "accepted_records": 3,
+      "benchmark_path": "benchmarks/implementation_security_toy_timing",
+      "bundle_path": "examples/public_runs/implementation_security_toy_timing_v0",
+      "estimators": [
+        "toy-implementation-security-estimator"
+      ],
+      "evaluation_statuses": [
+        "ok"
+      ],
+      "family": "IMPLEMENTATION_SECURITY",
+      "id": "implementation_security_toy_timing_v0",
+      "manifest_sha256": "987ede4f5de22631f20232955283f6d6987a82f0905d431fe6a3543298292a18",
+      "publishes_private_candidates": false,
+      "record_count": 3,
+      "redacted_records": 0,
+      "regenerate_commands": [
+        "uv run agades-pqc benchmark benchmarks/implementation_security_toy_timing --out runs/implementation_security_toy_timing.jsonl",
+        "uv run agades-pqc public-bundle runs/implementation_security_toy_timing.jsonl --out examples/public_runs/implementation_security_toy_timing_v0"
+      ],
+      "run_id": "implementation_security_toy_timing",
+      "security_claim": false,
+      "trace_public_sha256": "b467530f0f38fa244508f22ad5423a456bc8d40bb76bf5e9791454bf6324d8b1"
+    },
+    {
+      "accepted_records": 4,
+      "benchmark_path": "benchmarks/isogeny_historical_toy_path",
+      "bundle_path": "examples/public_runs/isogeny_historical_toy_path_v0",
+      "estimators": [
+        "toy-isogeny-historical-path-estimator"
+      ],
+      "evaluation_statuses": [
+        "ok"
+      ],
+      "family": "ISOGENY_HISTORICAL",
+      "id": "isogeny_historical_toy_path_v0",
+      "manifest_sha256": "3fb23fae34ff97cf433b2854a8a99ba77bd6b5a5f566eccc7c5868a314424468",
+      "publishes_private_candidates": false,
+      "record_count": 4,
+      "redacted_records": 0,
+      "regenerate_commands": [
+        "uv run agades-pqc benchmark benchmarks/isogeny_historical_toy_path --out runs/isogeny_historical_toy_path.jsonl",
+        "uv run agades-pqc public-bundle runs/isogeny_historical_toy_path.jsonl --out examples/public_runs/isogeny_historical_toy_path_v0"
+      ],
+      "run_id": "isogeny_historical_toy_path",
+      "security_claim": false,
+      "trace_public_sha256": "c3e29360cd487fb888bce78d58f007faeb5ba5c508bff4f9c98ae93eb3553496"
+    },
+    {
+      "accepted_records": 3,
+      "benchmark_path": "benchmarks/lattice_downscaled_lwe_instance_solve",
+      "bundle_path": "examples/public_runs/lattice_downscaled_lwe_instance_solve_v0",
+      "estimators": [
+        "mock-lattice-estimator"
+      ],
+      "evaluation_statuses": [
+        "ok"
+      ],
+      "family": "LWE",
+      "id": "lattice_downscaled_lwe_instance_solve_v0",
+      "manifest_sha256": "782ae92198a0704b355551315d9a3e69811545f113e7e06155d96ab8d94d874f",
+      "publishes_private_candidates": false,
+      "record_count": 3,
+      "redacted_records": 0,
+      "regenerate_commands": [
+        "uv run agades-pqc benchmark benchmarks/lattice_downscaled_lwe_instance_solve --out runs/lattice_downscaled_lwe_instance_solve.jsonl",
+        "uv run agades-pqc public-bundle runs/lattice_downscaled_lwe_instance_solve.jsonl --out examples/public_runs/lattice_downscaled_lwe_instance_solve_v0"
+      ],
+      "run_id": "lattice_downscaled_lwe_instance_solve",
+      "security_claim": false,
+      "trace_public_sha256": "5abcbb0255182b608f1ab6027ea3d4ddf87ed678fad6091557a261157345fd42"
+    },
+    {
+      "accepted_records": 1,
+      "benchmark_path": "benchmarks/lattice_downscaled_mlwe_instance_solve",
+      "bundle_path": "examples/public_runs/lattice_downscaled_mlwe_instance_solve_v0",
+      "estimators": [
+        "mock-lattice-estimator"
+      ],
+      "evaluation_statuses": [
+        "ok"
+      ],
+      "family": "MLWE",
+      "id": "lattice_downscaled_mlwe_instance_solve_v0",
+      "manifest_sha256": "4b588cc593db46196000986ea92bd240ba6567d55ed239298e4d5165b13f79a5",
+      "publishes_private_candidates": false,
+      "record_count": 1,
+      "redacted_records": 0,
+      "regenerate_commands": [
+        "uv run agades-pqc benchmark benchmarks/lattice_downscaled_mlwe_instance_solve --out runs/lattice_downscaled_mlwe_instance_solve.jsonl",
+        "uv run agades-pqc public-bundle runs/lattice_downscaled_mlwe_instance_solve.jsonl --out examples/public_runs/lattice_downscaled_mlwe_instance_solve_v0"
+      ],
+      "run_id": "lattice_downscaled_mlwe_instance_solve",
+      "security_claim": false,
+      "trace_public_sha256": "aa2db2cb6b08006f0aa2841d1a745b320e00d1deebd8704ed5512a0b5ec43a16"
+    },
+    {
+      "accepted_records": 1,
+      "benchmark_path": "benchmarks/lattice_mlkem_like",
+      "bundle_path": "examples/public_runs/lattice_mlwe_downscaled_v0",
+      "estimators": [
+        "mock-lattice-estimator"
+      ],
+      "evaluation_statuses": [
+        "ok"
+      ],
+      "family": "MLWE",
+      "id": "lattice_mlwe_downscaled_v0",
+      "manifest_sha256": "b7d980492b467cbce5fd566716e661e196cf8e570f09dc7a53193c5c7c0b51d2",
+      "publishes_private_candidates": false,
+      "record_count": 1,
+      "redacted_records": 0,
+      "regenerate_commands": [
+        "uv run agades-pqc benchmark benchmarks/lattice_mlkem_like --out runs/lattice_mlkem_like.jsonl",
+        "uv run agades-pqc public-bundle runs/lattice_mlkem_like.jsonl --out examples/public_runs/lattice_mlwe_downscaled_v0"
+      ],
+      "run_id": "lattice_mlkem_like",
+      "security_claim": false,
+      "trace_public_sha256": "2c87f6f608e1fe12ebdbbec91aa1afa6ea68688c34e5ae456caca8c58d926934"
+    },
+    {
+      "accepted_records": 2,
+      "benchmark_path": "benchmarks/lattice_toy_lwe",
+      "bundle_path": "examples/public_runs/lattice_toy_lwe_v0",
+      "estimators": [
+        "mock-lattice-estimator"
+      ],
+      "evaluation_statuses": [
+        "ok"
+      ],
+      "family": "LWE",
+      "id": "lattice_toy_lwe_v0",
+      "manifest_sha256": "59a48093584b4baf2fbfbc9904ae06744ba4588a34ba27548b37348a2d82aeb0",
+      "publishes_private_candidates": false,
+      "record_count": 2,
+      "redacted_records": 0,
+      "regenerate_commands": [
+        "uv run agades-pqc benchmark benchmarks/lattice_toy_lwe --out runs/lattice_toy_lwe.jsonl",
+        "uv run agades-pqc public-bundle runs/lattice_toy_lwe.jsonl --out examples/public_runs/lattice_toy_lwe_v0"
+      ],
+      "run_id": "lattice_toy_lwe",
+      "security_claim": false,
+      "trace_public_sha256": "443b0f474596310f916fed2f8f958e166a52ea52f6b1ea36a0d32e7f74035d2a"
+    },
+    {
+      "accepted_records": 3,
+      "benchmark_path": "benchmarks/multivariate_toy_minrank",
+      "bundle_path": "examples/public_runs/multivariate_toy_minrank_v0",
+      "estimators": [
+        "toy-multivariate-estimator"
+      ],
+      "evaluation_statuses": [
+        "ok"
+      ],
+      "family": "MULTIVARIATE",
+      "id": "multivariate_toy_minrank_v0",
+      "manifest_sha256": "ec307e4c6859f15ee6db14f98170c03fdbb60c1d17736fcdc577ec9ab40e0c1a",
+      "publishes_private_candidates": false,
+      "record_count": 3,
+      "redacted_records": 0,
+      "regenerate_commands": [
+        "uv run agades-pqc benchmark benchmarks/multivariate_toy_minrank --out runs/multivariate_toy_minrank.jsonl",
+        "uv run agades-pqc public-bundle runs/multivariate_toy_minrank.jsonl --out examples/public_runs/multivariate_toy_minrank_v0"
+      ],
+      "run_id": "multivariate_toy_minrank",
+      "security_claim": false,
+      "trace_public_sha256": "9ca9753aaa2465052cfdabcd062077cd15b67fb21f08730101d6fd05ad756b51"
+    },
+    {
+      "accepted_records": 6,
+      "benchmark_path": "benchmarks/multivariate_toy_mq",
+      "bundle_path": "examples/public_runs/multivariate_toy_mq_v0",
+      "estimators": [
+        "toy-multivariate-estimator"
+      ],
+      "evaluation_statuses": [
+        "ok"
+      ],
+      "family": "MULTIVARIATE",
+      "id": "multivariate_toy_mq_v0",
+      "manifest_sha256": "739f58fa4f923b7acb1f615b4aa272f828e05256bcec7e9792a159750ed83872",
+      "publishes_private_candidates": false,
+      "record_count": 6,
+      "redacted_records": 0,
+      "regenerate_commands": [
+        "uv run agades-pqc benchmark benchmarks/multivariate_toy_mq --out runs/multivariate_toy_mq.jsonl",
+        "uv run agades-pqc public-bundle runs/multivariate_toy_mq.jsonl --out examples/public_runs/multivariate_toy_mq_v0"
+      ],
+      "run_id": "multivariate_toy_mq",
+      "security_claim": false,
+      "trace_public_sha256": "db2960ecffee355ccbe69bbe98acf8300305f067f2528517af99269660c83781"
+    },
+    {
+      "accepted_records": 1,
+      "benchmark_path": "benchmarks/multivariate_toy_uov",
+      "bundle_path": "examples/public_runs/multivariate_toy_uov_v0",
+      "estimators": [
+        "toy-multivariate-estimator"
+      ],
+      "evaluation_statuses": [
+        "ok"
+      ],
+      "family": "MULTIVARIATE",
+      "id": "multivariate_toy_uov_v0",
+      "manifest_sha256": "95de346f1d86ee3cf6c69e7aa2ee38cf3e99ec54aa006b1e9cd1673f8b274605",
+      "publishes_private_candidates": false,
+      "record_count": 1,
+      "redacted_records": 0,
+      "regenerate_commands": [
+        "uv run agades-pqc benchmark benchmarks/multivariate_toy_uov --out runs/multivariate_toy_uov.jsonl",
+        "uv run agades-pqc public-bundle runs/multivariate_toy_uov.jsonl --out examples/public_runs/multivariate_toy_uov_v0"
+      ],
+      "run_id": "multivariate_toy_uov",
+      "security_claim": false,
+      "trace_public_sha256": "6680c7d3f42d004082353abc359a2b0ef656e5c82f642b93cf4b24266699f03b"
+    }
+  ],
+  "project": {
+    "cli": "agades-pqc",
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "release_audit_gate": "public-benchmark-manifest",
+  "release_gates": [
+    "uv run pytest tests/test_public_benchmark_manifest.py -q",
+    "uv run agades-pqc public-benchmark-manifest --out docs/public_benchmark_manifest.json",
+    "uv run agades-pqc public-benchmark-verify --manifest docs/public_benchmark_manifest.json",
+    "uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json",
+    "uv run agades-pqc release-audit --out public/release_audit.json"
+  ],
+  "safety": {
+    "arbitrary_code_execution": false,
+    "contains_private_traces": false,
+    "live_targeting": false,
+    "publishes_private_candidates": false,
+    "review_required_before_publish": true,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.public_benchmark_manifest.v1",
+  "summary": {
+    "bundle_count": 18,
+    "families": [
+      "CODE_BASED",
+      "HASH_BASED",
+      "IMPLEMENTATION_SECURITY",
+      "ISOGENY_HISTORICAL",
+      "LWE",
+      "MLWE",
+      "MULTIVARIATE"
+    ],
+    "record_count": 59,
+    "security_claim": false
+  }
+}

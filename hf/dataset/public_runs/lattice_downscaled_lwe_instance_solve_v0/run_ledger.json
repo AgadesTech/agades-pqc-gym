@@ -1,0 +1,102 @@
+{
+  "entries": [
+    {
+      "accepted": true,
+      "attack_plan_id": "lattice_downscaled_lwe_instance_solve_n5_q19_v1",
+      "attack_type": "primal_usvp",
+      "candidate_id": "lattice_downscaled_lwe_instance_solve_n5_q19_v1-0",
+      "combined_score": -15.8215,
+      "estimated_memory_bits": 6.8,
+      "estimated_time_bits": 16.5215,
+      "estimator_name": "mock-lattice-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "lattice_downscaled_lwe_instance_solve",
+      "target_family": "LWE",
+      "trace_id": "5e144a08ff59912c72d41dfce2f87d449cc5999c51e2379931c3cb8c869283a3",
+      "warnings": [
+        "Mock estimator output is for plumbing tests only; it is not cryptanalytic evidence.",
+        "Solved a public downscaled LWE fixture with bounded exhaustive search; this is reproducibility plumbing, not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "lattice_downscaled_lwe_instance_solve_n6_q23_ternary_v1",
+      "attack_type": "primal_usvp",
+      "candidate_id": "lattice_downscaled_lwe_instance_solve_n6_q23_ternary_v1-1",
+      "combined_score": -18.3901,
+      "estimated_memory_bits": 7.76,
+      "estimated_time_bits": 18.8501,
+      "estimator_name": "mock-lattice-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "lattice_downscaled_lwe_instance_solve",
+      "target_family": "LWE",
+      "trace_id": "25e7d11c451e6ef992af7baa559f8cf9dde4337de3d5a4c9a4114eb8d74a60f4",
+      "warnings": [
+        "Mock estimator output is for plumbing tests only; it is not cryptanalytic evidence.",
+        "Solved a public downscaled LWE fixture with bounded exhaustive search; this is reproducibility plumbing, not a security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "lattice_downscaled_lwe_instance_solve_v1",
+      "attack_type": "primal_usvp",
+      "candidate_id": "lattice_downscaled_lwe_instance_solve_v1-2",
+      "combined_score": -13.4487,
+      "estimated_memory_bits": 5.84,
+      "estimated_time_bits": 14.3887,
+      "estimator_name": "mock-lattice-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "lattice_downscaled_lwe_instance_solve",
+      "target_family": "LWE",
+      "trace_id": "3ef1a6ea4c321eddeef7c092a51eaccfa6c9f7a7de38bbf10b282a2faf676ad9",
+      "warnings": [
+        "Mock estimator output is for plumbing tests only; it is not cryptanalytic evidence.",
+        "Solved a public downscaled LWE fixture with bounded exhaustive search; this is reproducibility plumbing, not a security claim."
+      ]
+    }
+  ],
+  "ledger_version": "0.1.0",
+  "safety": {
+    "arbitrary_code_execution": false,
+    "live_targeting": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.public_run_ledger.v1",
+  "source_trace": {
+    "artifact": "trace_public.jsonl",
+    "public_sha256": "5abcbb0255182b608f1ab6027ea3d4ddf87ed678fad6091557a261157345fd42",
+    "record_count": 3
+  },
+  "summary": {
+    "accepted_records": 3,
+    "by_estimator": {
+      "mock-lattice-estimator": 3
+    },
+    "by_evaluation_status": {
+      "ok": 3
+    },
+    "by_family": {
+      "LWE": 3
+    },
+    "redacted_records": 0,
+    "total_records": 3
+  }
+}

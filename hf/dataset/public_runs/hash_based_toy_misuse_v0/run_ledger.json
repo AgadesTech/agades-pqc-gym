@@ -1,0 +1,54 @@
+{
+  "entries": [
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_hash_reused_salt_24_verify_seed",
+      "attack_type": "misuse_check",
+      "candidate_id": "toy_hash_reused_salt_24_verify_seed-0",
+      "combined_score": -6.0813,
+      "estimated_memory_bits": 3.585,
+      "estimated_time_bits": 2.585,
+      "estimator_name": "toy-hash-bound-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "hash_based_toy_misuse",
+      "target_family": "HASH_BASED",
+      "trace_id": "21640235da2226cafa0950bc2145e4d9fa18b336bc67b0687f95bc8e839b2860",
+      "warnings": [
+        "Toy hash misuse output is for public evaluator plumbing only; it is not a security claim.",
+        "Verified a public toy SHAKE256 reused-salt misuse fixture; this is reproducibility plumbing, not misuse exploit evidence and not a security claim."
+      ]
+    }
+  ],
+  "ledger_version": "0.1.0",
+  "safety": {
+    "arbitrary_code_execution": false,
+    "live_targeting": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.public_run_ledger.v1",
+  "source_trace": {
+    "artifact": "trace_public.jsonl",
+    "public_sha256": "d2262f90415f77b01a2e53f2fd2352ad9a40f6025b7ede48d976453bdbe0fd51",
+    "record_count": 1
+  },
+  "summary": {
+    "accepted_records": 1,
+    "by_estimator": {
+      "toy-hash-bound-estimator": 1
+    },
+    "by_evaluation_status": {
+      "ok": 1
+    },
+    "by_family": {
+      "HASH_BASED": 1
+    },
+    "redacted_records": 0,
+    "total_records": 1
+  }
+}

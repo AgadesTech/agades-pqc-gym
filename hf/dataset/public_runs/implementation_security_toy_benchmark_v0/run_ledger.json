@@ -1,0 +1,126 @@
+{
+  "entries": [
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_mlkem_benchmark_summary_verify_seed",
+      "attack_type": "benchmark_harness",
+      "candidate_id": "toy_mlkem_benchmark_summary_verify_seed-0",
+      "combined_score": -15.7312,
+      "estimated_memory_bits": 2.3219,
+      "estimated_time_bits": 12.5507,
+      "estimator_name": "toy-implementation-security-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "implementation_security_toy_benchmark",
+      "target_family": "IMPLEMENTATION_SECURITY",
+      "trace_id": "417d4aa652874fa8d62fefc2a553abf3db5b56410a80b08bd9f71e2916d119d1",
+      "warnings": [
+        "Toy implementation-security benchmark output is for public verifier plumbing only; it is not a performance claim, not a conformance result, and not a security claim.",
+        "Verified a public JSON-only toy benchmark summary fixture without executing artifacts; this is reproducibility plumbing, not a performance, conformance, side-channel, or security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_mlkem_binary_size_verify_seed",
+      "attack_type": "benchmark_harness",
+      "candidate_id": "toy_mlkem_binary_size_verify_seed-1",
+      "combined_score": -20.6236,
+      "estimated_memory_bits": 14.0,
+      "estimated_time_bits": 14.5236,
+      "estimator_name": "toy-implementation-security-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "implementation_security_toy_benchmark",
+      "target_family": "IMPLEMENTATION_SECURITY",
+      "trace_id": "d5368aa57de5b126010b239978f6990dcebc7fbb57a0d892c1f93d3f68f0bdbe",
+      "warnings": [
+        "Toy implementation-security binary-size output is for public verifier plumbing only; it is not a binary-size claim, not a performance claim, not a conformance result, and not a security claim.",
+        "Verified a public JSON-only toy binary-size fixture without executing artifacts; this is reproducibility plumbing, not a binary-size, performance, conformance, side-channel, or security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_mlkem_memory_footprint_verify_seed",
+      "attack_type": "benchmark_harness",
+      "candidate_id": "toy_mlkem_memory_footprint_verify_seed-2",
+      "combined_score": -19.3094,
+      "estimated_memory_bits": 13.0,
+      "estimated_time_bits": 13.4594,
+      "estimator_name": "toy-implementation-security-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "implementation_security_toy_benchmark",
+      "target_family": "IMPLEMENTATION_SECURITY",
+      "trace_id": "87d06af7edb9d1d0faacf8099207c694cd56a492e5ea3dab61ca6b15611094ac",
+      "warnings": [
+        "Toy implementation-security memory-footprint output is for public verifier plumbing only; it is not a memory-usage claim, not a performance claim, not a conformance result, and not a security claim.",
+        "Verified a public JSON-only toy memory-footprint fixture without executing artifacts; this is reproducibility plumbing, not a memory-usage, performance, conformance, side-channel, or security claim."
+      ]
+    },
+    {
+      "accepted": true,
+      "attack_plan_id": "toy_pqm4_stack_usage_verify_seed",
+      "attack_type": "benchmark_harness",
+      "candidate_id": "toy_pqm4_stack_usage_verify_seed-3",
+      "combined_score": -18.2129,
+      "estimated_memory_bits": 10.6582,
+      "estimated_time_bits": 12.9484,
+      "estimator_name": "toy-implementation-security-estimator",
+      "estimator_version": "0.1.0",
+      "evaluation_status": "ok",
+      "generation": 0,
+      "parent_id": null,
+      "public_release_ok": true,
+      "redacted": false,
+      "redaction_reason": null,
+      "run_id": "implementation_security_toy_benchmark",
+      "target_family": "IMPLEMENTATION_SECURITY",
+      "trace_id": "08a21dccae719bfa941fa8e00034a78ff9b3c33fff285cbfcd025d134b6eae6d",
+      "warnings": [
+        "Toy implementation-security stack-usage output is for public verifier plumbing only; it is not a stack-usage claim, not a performance claim, not a conformance result, not a side-channel result, and not a security claim.",
+        "Verified a public JSON-only toy stack-usage fixture without executing artifacts; this is reproducibility plumbing, not a stack-usage, performance, conformance, side-channel, or security claim."
+      ]
+    }
+  ],
+  "ledger_version": "0.1.0",
+  "safety": {
+    "arbitrary_code_execution": false,
+    "live_targeting": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.public_run_ledger.v1",
+  "source_trace": {
+    "artifact": "trace_public.jsonl",
+    "public_sha256": "aa06552e545786d6a2a643ab59746ceee28164984c1118b5c952abe8d6b7f1b8",
+    "record_count": 4
+  },
+  "summary": {
+    "accepted_records": 4,
+    "by_estimator": {
+      "toy-implementation-security-estimator": 4
+    },
+    "by_evaluation_status": {
+      "ok": 4
+    },
+    "by_family": {
+      "IMPLEMENTATION_SECURITY": 4
+    },
+    "redacted_records": 0,
+    "total_records": 4
+  }
+}

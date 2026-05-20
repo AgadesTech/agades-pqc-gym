@@ -4,7 +4,7 @@ from pathlib import Path
 
 import typer
 
-from agades_lwe_gym.cli import evaluate_attack_plan
+from agades_pqc_gym.cli import evaluate_attack_plan
 
 
 def main(plan_path: Path, out: Path = Path("runs/eval_trace.jsonl")) -> None:
