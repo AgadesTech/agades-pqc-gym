@@ -63,7 +63,7 @@
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",
-      "sha256": "e1721928a80376faee646d9123ff1430f6e9f25e5970724747e91b52ffda5cb3"
+      "sha256": "e51b998a004d1091882d6967016977955bcd313dfa497ee4eaaa69b1e07b8210"
     },
     "prime_eval_config_manifest": {
       "path": "docs/prime_eval_config_manifest.json",
@@ -160,6 +160,16 @@
         "task_match",
         "proof_obligation_coverage"
       ],
+      "term_definitions": {
+        "cryptographic_applicability": "candidate passes the public verifier for its target family and operator",
+        "formal_validity": "candidate parses as an AttackPlan and produces a proof artifact",
+        "no_security_overclaim": "candidate does not publish unreviewed estimates, success probability, external claims, or PQC break claims",
+        "proof_obligation_coverage": "candidate proof artifact has family invariants, proof obligations, and every proof obligation is bound to a Lean-backed type_rule",
+        "reproducibility": "candidate satisfies the task reproducibility requirement when present",
+        "reviewer_quality": "candidate proof artifact names required reviewer roles and preserves the release claim boundary",
+        "student_readability": "candidate is a single readable JSON object with notes that state the no-security-claim boundary",
+        "task_match": "candidate target family, target name, support level, and operator sequence match the task metadata"
+      },
       "type": "agades_verifier_and_reviewer_gate"
     },
     "type": "multiplicative_pedagogical_reward"

@@ -147,9 +147,8 @@ def score_attack_plan_candidate(
             and formal_summary["claim_boundary_ok"] is True
         ),
         "task_match": _bool_score(task_match),
-        "proof_obligation_coverage": _bool_score(
-            formal_summary["proof_obligations"] > 0
-            and formal_summary["family_invariants"] > 0
+        "proof_obligation_coverage": _proof_obligation_coverage_score(
+            formal_summary
         ),
     }
     blocking_reasons = _blocking_reasons(
@@ -278,6 +277,9 @@ def _formal_summary(candidate_json: str, plan: AttackPlan | None) -> dict[str, A
             "accepted": False,
             "family_invariants": 0,
             "proof_obligations": 0,
+            "typed_proof_obligations": 0,
+            "proof_obligation_type_rules": 0,
+            "type_rule_kinds": [],
             "lean_theorems": 0,
             "required_reviewers": 0,
             "claim_boundary_ok": False,
@@ -288,10 +290,27 @@ def _formal_summary(candidate_json: str, plan: AttackPlan | None) -> dict[str, A
     )
     proof_obligations = artifact["proof_obligations"]
     family_invariants = artifact["family_invariants"]
+    type_rules = artifact.get("proof_obligation_type_rules", [])
+    type_rule_keys: set[str] = set()
+    type_rule_kinds: set[str] = set()
+    for rule in type_rules:
+        type_rule_key = _type_rule_key(rule)
+        if type_rule_key is None:
+            continue
+        type_rule_keys.add(type_rule_key)
+        type_rule_kinds.add(rule["kind"])
+    typed_proof_obligations = [
+        obligation
+        for obligation in proof_obligations
+        if _obligation_has_matching_type_rule(obligation, type_rule_keys)
+    ]
     return {
         "accepted": True,
         "family_invariants": len(family_invariants),
         "proof_obligations": len(proof_obligations),
+        "typed_proof_obligations": len(typed_proof_obligations),
+        "proof_obligation_type_rules": len(type_rules),
+        "type_rule_kinds": sorted(type_rule_kinds),
         "lean_theorems": len(
             {
                 obligation["lean_theorem"]
@@ -330,6 +349,60 @@ def _no_security_overclaim(
     )
 
 
+def _proof_obligation_coverage_score(formal_summary: dict[str, Any]) -> float:
+    proof_obligations = formal_summary["proof_obligations"]
+    required_type_kinds = {
+        "target_invariant",
+        "operator_precondition",
+        "schema_only_boundary",
+        "family_applicability_boundary",
+        "estimator_claim_boundary",
+    }
+    return _bool_score(
+        proof_obligations > 0
+        and formal_summary["family_invariants"] > 0
+        and formal_summary["typed_proof_obligations"] == proof_obligations
+        and required_type_kinds.issubset(set(formal_summary["type_rule_kinds"]))
+    )
+
+
+def _obligation_has_matching_type_rule(
+    obligation: dict[str, Any],
+    type_rule_keys: set[str],
+) -> bool:
+    obligation_type = obligation.get("obligation_type")
+    type_rule = obligation.get("type_rule")
+    if not isinstance(obligation_type, dict) or not isinstance(type_rule, dict):
+        return False
+    kind = obligation_type.get("kind")
+    type_rule_key = _type_rule_key(type_rule)
+    return isinstance(kind, str) and type_rule.get("kind") == kind and (
+        type_rule_key in type_rule_keys
+    )
+
+
+def _type_rule_key(rule: object) -> str | None:
+    if not isinstance(rule, dict):
+        return None
+    lean_source = rule.get("lean_source")
+    lean_theorem = rule.get("lean_theorem")
+    if (
+        rule.get("schema_version")
+        != "agades.pqc.formal.proof_obligation_type_rule.v1"
+        or rule.get("backend") != "lean4"
+        or not isinstance(rule.get("kind"), str)
+        or not isinstance(lean_theorem, str)
+        or not lean_theorem.startswith("AgadesPQC.ProofObligation.")
+        or not isinstance(lean_source, dict)
+        or lean_source.get("path") != "formal/lean/AgadesPQC/ProofObligation.lean"
+        or not isinstance(lean_source.get("declaration"), str)
+        or not isinstance(lean_source.get("sha256"), str)
+        or not isinstance(rule.get("type_rule_sha256"), str)
+    ):
+        return None
+    return json.dumps(rule, sort_keys=True, separators=(",", ":"))
+
+
 def _student_readable(candidate_json: str, plan: AttackPlan) -> bool:
     stripped = candidate_json.strip()
     if not (stripped.startswith("{") and stripped.endswith("}")):
@@ -366,6 +439,8 @@ def _blocking_reasons(
         reasons.append("cryptographic_applicability")
     if terms["no_security_overclaim"] != 1.0:
         reasons.append("no_security_overclaim")
+    if terms["proof_obligation_coverage"] != 1.0:
+        reasons.append("proof_obligation_coverage")
     if require_task_match and task_info is None:
         reasons.append("task_info")
     if terms["task_match"] != 1.0:
