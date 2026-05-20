@@ -68,7 +68,7 @@ def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() ->
     assert backend_manifest["schema_version"] == "agades.pqc.formal.lean_backend.v1"
     assert len(backend_manifest["sha256"]) == 64
     assert len(backend_manifest["manifest_sha256"]) == 64
-    assert backend_manifest["source_modules"] == 13
+    assert backend_manifest["source_modules"] == 14
     assert backend_manifest["theorem_declarations"] >= 20
     assert backend_manifest["ci_lean_build_gate"] is True
     assert backend_manifest["placeholder_failures"] == 0
@@ -79,6 +79,30 @@ def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() ->
         "lean_namespace": "AgadesPQC.Lattice.PrimalUSVP",
     }
     assert {
+        rule["kind"] for rule in artifact["proof_obligation_type_rules"]
+    } == {
+        "target_invariant",
+        "operator_precondition",
+        "schema_only_boundary",
+        "family_applicability_boundary",
+        "estimator_claim_boundary",
+    }
+    for rule in artifact["proof_obligation_type_rules"]:
+        source = rule["lean_source"]
+        source_path = Path(source["path"])
+        assert rule["schema_version"] == (
+            "agades.pqc.formal.proof_obligation_type_rule.v1"
+        )
+        assert rule["backend"] == "lean4"
+        assert rule["lean_theorem"].startswith("AgadesPQC.ProofObligation.")
+        assert source_path.is_file()
+        assert hashlib.sha256(source_path.read_bytes()).hexdigest() == (
+            source["sha256"]
+        )
+        assert f"theorem {source['declaration']}" in source_path.read_text(
+            encoding="utf-8"
+        )
+    assert {
         obligation["obligation_id"] for obligation in artifact["proof_obligations"]
     } == {
         "target.lwe.parameters.positive",
@@ -88,6 +112,18 @@ def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() ->
     }
     obligation_types = {
         obligation["obligation_id"]: obligation["obligation_type"]
+        for obligation in artifact["proof_obligations"]
+    }
+    type_rules_by_kind = {
+        rule["kind"]: rule for rule in artifact["proof_obligation_type_rules"]
+    }
+    assert {
+        obligation["obligation_id"]: obligation["type_rule"]
+        for obligation in artifact["proof_obligations"]
+    } == {
+        obligation["obligation_id"]: type_rules_by_kind[
+            obligation["obligation_type"]["kind"]
+        ]
         for obligation in artifact["proof_obligations"]
     }
     assert obligation_types["target.lwe.parameters.positive"] == {
@@ -165,6 +201,8 @@ def test_lattice_proof_artifact_binds_existing_lean_sources() -> None:
         invariant["lean_source"] for invariant in artifact["family_invariants"]
     ] + [
         obligation["lean_source"] for obligation in artifact["proof_obligations"]
+    ] + [
+        rule["lean_source"] for rule in artifact["proof_obligation_type_rules"]
     ]
 
     for source in lean_sources:
@@ -700,6 +738,26 @@ def test_verify_attack_plan_proof_artifact_rejects_claim_enabled_obligation_type
         "Proof obligation type must forbid security claims: "
         "target.lwe.parameters.positive."
     ) in result["failures"]
+
+
+def test_verify_attack_plan_proof_artifact_rejects_stale_type_rule(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+    )
+    artifact["proof_obligations"][0]["type_rule"]["kind"] = "operator_precondition"
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Proof obligation type rule kind mismatch: target.lwe.parameters.positive."
+        in result["failures"]
+    )
 
 
 def test_formal_proof_artifact_cli_round_trip(tmp_path: Path) -> None:
