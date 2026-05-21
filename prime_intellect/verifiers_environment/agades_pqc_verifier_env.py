@@ -9,7 +9,11 @@ from agades_pqc_gym.integrations.task_metadata import (
     normalize_task_metadata,
     task_metadata_for_plan,
 )
-from agades_pqc_gym.rl.environment import REWARD_TERMS, score_attack_plan_candidate
+from agades_pqc_gym.rl.environment import (
+    REWARD_TERMS,
+    build_formal_artifact_binding,
+    score_attack_plan_candidate,
+)
 
 PACKAGE_DIR = Path(__file__).resolve().parent
 DATA_DIR = PACKAGE_DIR / "data"
@@ -60,6 +64,7 @@ def score_attack_plan_completion_report(
         task_info=normalize_task_metadata(info),
         require_task_match=require_info or info is not None,
     )
+    formal_artifact_binding = build_formal_artifact_binding(candidate)
     return _prime_reward_report(
         aggregate_reward=float(reward_report["reward"]),
         accepted=bool(reward_report["accepted"]),
@@ -73,6 +78,7 @@ def score_attack_plan_completion_report(
         },
         blocking_reasons=list(reward_report["blocking_reasons"]),
         reward_report=reward_report,
+        formal_artifact_binding=formal_artifact_binding,
     )
 
 
@@ -200,6 +206,7 @@ def _blocked_reward_report(reason: str) -> dict[str, Any]:
         rubric_scores=dict.fromkeys(PRIME_RUBRIC_TERMS, 0.0),
         blocking_reasons=[reason],
         reward_report=None,
+        formal_artifact_binding=None,
     )
 
 
@@ -211,7 +218,9 @@ def _prime_reward_report(
     rubric_scores: dict[str, float],
     blocking_reasons: list[str],
     reward_report: dict[str, Any] | None,
+    formal_artifact_binding: dict[str, Any] | None,
 ) -> dict[str, Any]:
+    binding = formal_artifact_binding or {}
     return {
         "schema_version": PRIME_REWARD_REPORT_SCHEMA,
         "aggregate_reward": aggregate_reward,
@@ -222,4 +231,6 @@ def _prime_reward_report(
         "formal_summary": (
             reward_report.get("formal_summary", {}) if reward_report else {}
         ),
+        "formal_artifact_binding": binding,
+        "review_governance_ok": binding.get("review_governance_ok") is True,
     }

@@ -62,9 +62,17 @@ def test_prime_environment_smoke_report_exercises_packaged_verifier(
             "task_match": 1.0,
             "proof_obligation_coverage": 1.0,
         },
+        "formal_artifact_binding_schema": (
+            "agades.pqc.rl.formal_artifact_binding.v1"
+        ),
         "invalid_json_score": 0.0,
         "prefixed_json_score": 0.0,
         "requires_single_json_object": True,
+        "review_governance_binding_schema": (
+            "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+        ),
+        "review_governance_ok": True,
+        "reviewer_quality": 1.0,
         "rubric_terms": [
             "accepted_attack_plan",
             "formal_validity",
@@ -127,9 +135,14 @@ def test_prime_environment_smoke_verify_accepts_committed_report() -> None:
             "accepted_score": 1.0,
             "dataset_rows": 79,
             "failure_count": 0,
+            "formal_artifact_binding_schema": (
+                "agades.pqc.rl.formal_artifact_binding.v1"
+            ),
             "imports_without_verifiers": True,
             "load_environment_boundary_ok": True,
             "prefixed_json_score": 0.0,
+            "review_governance_ok": True,
+            "reviewer_quality": 1.0,
             "rubric_terms": 9,
             "unsupported_score": 0.0,
         },

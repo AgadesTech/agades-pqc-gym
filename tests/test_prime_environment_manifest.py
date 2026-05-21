@@ -217,9 +217,21 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
         "invalid_reward": 0.0,
         "requires_single_json_object": True,
         "accepts_executable_code": False,
+        "formal_artifact_binding_schema": (
+            "agades.pqc.rl.formal_artifact_binding.v1"
+        ),
+        "review_governance_binding_schema": (
+            "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+        ),
+        "reviewer_quality_requires_governance": True,
         "acceptance_rule": (
             "schema_valid == true and accepted == true from "
             "agades_pqc_gym.verifier.verify_attack_plan_json"
+        ),
+        "formal_binding_rule": (
+            "accepted Prime rewards must attach an "
+            "agades.pqc.rl.formal_artifact_binding.v1 proof binding with "
+            "review_governance_ok == true"
         ),
         "task_match_rule": (
             "accepted candidates must match the current task info for "
@@ -345,6 +357,13 @@ def test_prime_manifest_verify_accepts_committed_manifest() -> None:
             "report_redaction_records": 2,
             "review_required_before_claims": True,
             "requires_single_json_object": True,
+            "formal_artifact_binding_schema": (
+                "agades.pqc.rl.formal_artifact_binding.v1"
+            ),
+            "review_governance_binding_schema": (
+                "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+            ),
+            "reviewer_quality_requires_governance": True,
             "task_count": 79,
             "typed_trace_redaction_covered": True,
         },

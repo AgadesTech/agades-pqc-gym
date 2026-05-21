@@ -41,6 +41,17 @@ def test_prime_verifiers_environment_exposes_term_level_reward_report() -> None:
     assert report["formal_summary"]["typed_proof_obligations"] == report[
         "formal_summary"
     ]["proof_obligations"]
+    formal_binding = report["formal_artifact_binding"]
+    assert formal_binding["schema_version"] == (
+        "agades.pqc.rl.formal_artifact_binding.v1"
+    )
+    assert formal_binding["attack_plan_id"] == "lattice_primal_usvp_toy_v1"
+    assert formal_binding["status"] == "attached"
+    assert formal_binding["review_governance_ok"] is True
+    assert formal_binding["review_governance"]["schema_version"] == (
+        "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+    )
+    assert report["review_governance_ok"] is True
 
 
 def test_prime_verifiers_environment_blocks_prefixed_json_in_term_report() -> None:
