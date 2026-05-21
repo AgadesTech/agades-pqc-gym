@@ -17,6 +17,7 @@
       "HF_TOKEN",
       "WANDB_API_KEY",
       "AGADES_QWEN_BASE_MODEL",
+      "AGADES_QWEN_ARTIFACT_PLAN",
       "AGADES_QWEN_GGUF_OTQ_5BIT_PATH",
       "AGADES_QWEN_LORA_ADAPTER_PATH"
     ],
@@ -40,7 +41,7 @@
     },
     "env_template": {
       "path": ".env.example",
-      "sha256": "12aede0486bd94737c9480ad046eef830c6265c4ccaf2cca737086ba10080842"
+      "sha256": "95b816768fa2a261a9e81274caffc290d6376daebdefa421f0306bc787cd1df1"
     },
     "gitignore": {
       "path": ".gitignore",
@@ -74,13 +75,17 @@
       "path": "docs/private_dataset_curation.json",
       "sha256": "89c07afb6c139f109621b2acedea73ed8e495e45fa842056ce6b5554fb55375d"
     },
+    "private_qwen_artifact_verifier": {
+      "path": "src/agades_pqc_gym/integrations/private_qwen_artifacts.py",
+      "sha256": "7594f1d0ecfe2aa22e86a02b19503c26362c710113480dba35e3de7c8f02919d"
+    },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
       "sha256": "6a3967176dabb28cd1a713795696ea80c53d3f3660b0859761df23a813b5a5ec"
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "adbb8226610ecf5ad59106bf26ed2fbebc4b6beb7d471c8df555bc5ff752eda0"
+      "sha256": "194e1deb44bbc76c3b77310f5c7b5438f722777b81bb6f3ce06496d0fb76f58c"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
@@ -101,6 +106,7 @@
       "sanitized status",
       "environment variable names",
       "relative public artifact paths",
+      "private relative artifact plan template paths",
       "blocked readiness gates",
       "review requirements"
     ],
@@ -235,6 +241,11 @@
       "visibility_env": "PRIME_VISIBILITY"
     },
     "qwen": {
+      "artifact_plan_env": "AGADES_QWEN_ARTIFACT_PLAN",
+      "artifact_plan_schema": "agades.pqc.private_qwen_artifact_plan.v1",
+      "artifact_plan_template": "private/reports/qwen/artifact_plan.json",
+      "artifact_verification_command": "uv run agades-pqc private-qwen-artifacts-verify --plan private/reports/qwen/artifact_plan.json",
+      "artifact_verification_schema": "agades.pqc.private_qwen_artifact_verification.v1",
       "base_model_env": "AGADES_QWEN_BASE_MODEL",
       "direct_gguf_training_allowed": false,
       "gguf_otq_5bit_env": "AGADES_QWEN_GGUF_OTQ_5BIT_PATH",

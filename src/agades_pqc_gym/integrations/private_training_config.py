@@ -18,6 +18,16 @@ from agades_pqc_gym.integrations.pedagogical_rl_method import (
     STAGE_SEQUENCE,
     TEACHER_STUDENT_PATTERN,
 )
+from agades_pqc_gym.integrations.private_qwen_artifacts import (
+    PRIVATE_QWEN_ARTIFACT_PLAN_ENV,
+    PRIVATE_QWEN_ARTIFACT_PLAN_SCHEMA,
+    PRIVATE_QWEN_ARTIFACT_PLAN_TEMPLATE,
+    PRIVATE_QWEN_ARTIFACT_VERIFICATION_COMMAND,
+    PRIVATE_QWEN_ARTIFACT_VERIFICATION_SCHEMA,
+    PRIVATE_QWEN_ARTIFACT_VERIFIER,
+    PRIVATE_QWEN_TARGET_MODEL,
+    PRIVATE_QWEN_TRAINING_PATH,
+)
 
 PRIVATE_TRAINING_CONFIG_SCHEMA = "agades.pqc.private_training_config.v1"
 PRIVATE_TRAINING_CONFIG_VERIFICATION_SCHEMA = (
@@ -85,6 +95,9 @@ LINKED_ARTIFACT_PATHS = {
     ],
     "formal_lean_backend": "docs/formal_lean_backend.json",
     "rl_pedagogy_runtime": "src/agades_pqc_gym/rl/pedagogy.py",
+    "private_qwen_artifact_verifier": (
+        "src/agades_pqc_gym/integrations/private_qwen_artifacts.py"
+    ),
 }
 FORBIDDEN_ENV_FILE_NAMES = {
     ".env",
@@ -236,17 +249,15 @@ def build_private_training_manifest(
             "launch_readiness": "blocked_until_private_model_and_dataset_review",
         },
         "qwen": {
-            "target_model": "Qwen3.6-27B-private",
+            "target_model": PRIVATE_QWEN_TARGET_MODEL,
             "base_model_env": "AGADES_QWEN_BASE_MODEL",
             "preferred_user_artifact": "private GGUF OTQ 5-bit",
             "gguf_direct_training_allowed": False,
-            "training_path": (
-                "LoRA_or_QLoRA_on_trainable_weights_then_private_GGUF_OTQ_"
-                "quantization"
-            ),
+            "training_path": PRIVATE_QWEN_TRAINING_PATH,
             "publish_weights_publicly": False,
             "publish_adapters_publicly": False,
             "publish_trace_corpora_publicly": False,
+            "artifact_verification": _private_qwen_artifact_verification_contract(),
         },
         "pedagogical_rl": {
             "method": "pedagogical_rl",
@@ -539,7 +550,7 @@ def _verify_training_manifest(
         failures.append("Private Prime training launch command is incomplete.")
 
     qwen = _dict_or_empty(manifest.get("qwen"))
-    if qwen.get("target_model") != "Qwen3.6-27B-private":
+    if qwen.get("target_model") != PRIVATE_QWEN_TARGET_MODEL:
         failures.append("Private training Qwen target is incorrect.")
     if qwen.get("base_model_env") != "AGADES_QWEN_BASE_MODEL":
         failures.append("Private training Qwen base model must use an env var.")
@@ -551,6 +562,10 @@ def _verify_training_manifest(
         failures.append("Private Qwen adapters must never be public.")
     if qwen.get("publish_trace_corpora_publicly") is not False:
         failures.append("Private Qwen trace corpora must never be public.")
+    _verify_qwen_artifact_verification(
+        _dict_or_empty(qwen.get("artifact_verification")),
+        failures,
+    )
 
     pedagogical_rl = _dict_or_empty(manifest.get("pedagogical_rl"))
     if pedagogical_rl.get("method") != "pedagogical_rl":
@@ -676,6 +691,67 @@ def _file_sha256(path: Path) -> str | None:
 
 def _toml_string_list(values: list[str]) -> str:
     return "[" + ", ".join(json.dumps(value) for value in values) + "]"
+
+
+def _private_qwen_artifact_verification_contract() -> dict[str, Any]:
+    return {
+        "plan_schema_version": PRIVATE_QWEN_ARTIFACT_PLAN_SCHEMA,
+        "verification_schema_version": PRIVATE_QWEN_ARTIFACT_VERIFICATION_SCHEMA,
+        "artifact_plan_env": PRIVATE_QWEN_ARTIFACT_PLAN_ENV,
+        "artifact_plan_template": PRIVATE_QWEN_ARTIFACT_PLAN_TEMPLATE,
+        "verification_command": PRIVATE_QWEN_ARTIFACT_VERIFICATION_COMMAND,
+        "verifier": PRIVATE_QWEN_ARTIFACT_VERIFIER,
+        "manual_private_gate": True,
+        "requires_trainable_base_before_quantization": True,
+        "requires_lora_or_qlora_adapter": True,
+        "rejects_direct_gguf_training": True,
+        "public_output_allowed": False,
+        "prints_artifact_paths": False,
+        "public_weight_or_adapter_publication_allowed": False,
+    }
+
+
+def _verify_qwen_artifact_verification(
+    artifact_verification: dict[str, Any],
+    failures: list[str],
+) -> None:
+    expected = _private_qwen_artifact_verification_contract()
+    if artifact_verification != expected:
+        failures.append("Private Qwen artifact verifier contract is incomplete.")
+    if artifact_verification.get("artifact_plan_env") != PRIVATE_QWEN_ARTIFACT_PLAN_ENV:
+        failures.append(
+            "Private Qwen artifact verifier must use AGADES_QWEN_ARTIFACT_PLAN."
+        )
+    if artifact_verification.get("artifact_plan_template") != (
+        PRIVATE_QWEN_ARTIFACT_PLAN_TEMPLATE
+    ):
+        failures.append("Private Qwen artifact verifier plan template is incorrect.")
+    if artifact_verification.get("manual_private_gate") is not True:
+        failures.append("Private Qwen artifact verifier must be a manual gate.")
+    if (
+        artifact_verification.get("requires_trainable_base_before_quantization")
+        is not True
+    ):
+        failures.append(
+            "Private Qwen artifact verifier must require trainable weights first."
+        )
+    if artifact_verification.get("requires_lora_or_qlora_adapter") is not True:
+        failures.append("Private Qwen artifact verifier must require LoRA/QLoRA.")
+    if artifact_verification.get("rejects_direct_gguf_training") is not True:
+        failures.append(
+            "Private Qwen artifact verifier must reject direct GGUF training."
+        )
+    if artifact_verification.get("public_output_allowed") is not False:
+        failures.append("Private Qwen artifact verifier output must stay private.")
+    if artifact_verification.get("prints_artifact_paths") is not False:
+        failures.append("Private Qwen artifact verifier must not print artifact paths.")
+    if (
+        artifact_verification.get("public_weight_or_adapter_publication_allowed")
+        is not False
+    ):
+        failures.append(
+            "Private Qwen artifact verifier must not allow public model publication."
+        )
 
 
 def _dict_or_empty(value: Any) -> dict[str, Any]:
