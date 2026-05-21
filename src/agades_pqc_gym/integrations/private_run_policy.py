@@ -54,6 +54,7 @@ ALLOWED_PRIVATE_COMMANDS = [
     "agades-pqc lattice-estimator-baseline-run",
     "agades-pqc lattice-estimator-baseline-review-packet",
     "agades-pqc lattice-estimator-checkout-preflight",
+    "agades-pqc private-pedagogical-traces",
 ]
 PRIVATE_HOLDBACK = [
     "serious evolution traces",

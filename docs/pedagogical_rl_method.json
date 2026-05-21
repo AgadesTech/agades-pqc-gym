@@ -71,7 +71,7 @@
     },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
-      "sha256": "a0992031eb7a4268e4813b4d5f02a9ca4dda078972c935ef829c8e981259d86a"
+      "sha256": "6a3967176dabb28cd1a713795696ea80c53d3f3660b0859761df23a813b5a5ec"
     },
     "private_trace_runtime": {
       "path": "src/agades_pqc_gym/rl/private_trace.py",

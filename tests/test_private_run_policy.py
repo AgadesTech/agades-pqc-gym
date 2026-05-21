@@ -153,6 +153,9 @@ def test_private_run_policy_defines_private_moat_boundaries() -> None:
     assert "agades-pqc lattice-estimator-checkout-preflight" in policy[
         "allowed_private_commands"
     ]
+    assert "agades-pqc private-pedagogical-traces" in policy[
+        "allowed_private_commands"
+    ]
     assert policy["release_gates"] == [
         "uv run agades-pqc private-run-policy --out docs/private_run_policy.json",
         (
@@ -191,7 +194,7 @@ def test_private_run_policy_verify_accepts_committed_policy() -> None:
         "policy_path": "docs/private_run_policy.json",
             "accepted": True,
             "summary": {
-                "allowed_private_commands": 16,
+                "allowed_private_commands": 17,
                 "allowed_private_roots": 6,
                 "failure_count": 0,
                 "forbidden_public_roots": 5,
