@@ -128,6 +128,7 @@ def test_reviewer_governance_defines_family_roles_and_review_gates(
     assert governance["linked_artifacts"]["formal_mlwe_proof_artifact"]["path"] == (
         "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json"
     )
+    assert "private_training_manifest" not in governance["linked_artifacts"]
 
 
 def test_committed_reviewer_governance_is_in_sync(tmp_path: Path) -> None:
@@ -149,7 +150,7 @@ def test_reviewer_governance_verify_accepts_committed_artifact() -> None:
             "family_reviewers": 9,
             "role_groups": 3,
             "approval_gates": 4,
-            "linked_artifacts": 12,
+            "linked_artifacts": 11,
             "failure_count": 0,
         },
         "failures": [],

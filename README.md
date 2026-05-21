@@ -93,11 +93,26 @@ uv run agades-pqc validate examples/attack_plans/code_based_isd_placeholder.json
 uv run agades-pqc evaluate examples/attack_plans/code_based_isd_placeholder.json --out runs/code_based_placeholder.jsonl
 ```
 
+Optional formal smoke check:
+
+```bash
+uv run agades-pqc formal-lean-build-smoke --out reports/formal_lean_build_smoke.json
+uv run agades-pqc formal-lean-build-smoke-verify --report reports/formal_lean_build_smoke.json
+```
+
+This runs `lake build` for the Lean 4 + Mathlib source bundle and records a
+bounded local report. Passing means the checked formal contracts compile; it is
+not a cryptographic soundness review and does not create a security claim.
+
 ## Release Checks
 
 The public release packet is deterministic and review-gated:
 
 ```bash
+uv run agades-pqc formal-lean-backend --out docs/formal_lean_backend.json
+uv run agades-pqc formal-lean-backend-verify --backend docs/formal_lean_backend.json
+uv run agades-pqc formal-lean-build-smoke --out reports/formal_lean_build_smoke.json
+uv run agades-pqc formal-lean-build-smoke-verify --report reports/formal_lean_build_smoke.json
 uv run agades-pqc openevolve-config --out examples/openevolve/config.yaml
 uv run agades-pqc openevolve-config-verify --config examples/openevolve/config.yaml
 uv run agades-pqc hf-space-smoke --out reports/hf_space_smoke.json
