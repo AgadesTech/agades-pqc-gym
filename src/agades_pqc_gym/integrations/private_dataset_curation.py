@@ -248,6 +248,24 @@ def build_private_dataset_curation(root: Path | None = None) -> dict[str, Any]:
             "requires_manual_review": True,
         },
         "evidence_contracts": copy.deepcopy(EVIDENCE_CONTRACTS),
+        "evidence_verification": {
+            "schema_version": "agades.pqc.private_dataset_evidence_verification.v1",
+            "verifier": (
+                "agades_pqc_gym.integrations.private_dataset_evidence."
+                "verify_private_dataset_evidence_bundle"
+            ),
+            "command": (
+                "uv run agades-pqc private-dataset-evidence-verify --curation "
+                "docs/private_dataset_curation.json --evidence-root ."
+            ),
+            "public_output_allowed": False,
+            "prints_private_values": False,
+            "training_eligible_requires_all_artifacts_accepted": True,
+            "required_artifacts": [
+                contract["artifact_path"]
+                for contract in EVIDENCE_CONTRACTS.values()
+            ],
+        },
         "review": {
             "launch_readiness": (
                 "blocked_until_license_provenance_redaction_and_contamination_review"
@@ -324,6 +342,7 @@ def verify_private_dataset_curation(
         _verify_controls(curation, failures)
         _verify_contamination_audit(curation, failures)
         _verify_evidence_contracts(curation, failures)
+        _verify_evidence_verification(curation, failures)
         _verify_review(curation, failures)
         _verify_publication_boundary(curation, failures)
         _verify_linked_artifacts(curation, expected, project_root, failures)
@@ -564,6 +583,35 @@ def _verify_evidence_contract(
                 f"Private dataset evidence contract {control} is missing "
                 f"required field: {field}."
             )
+
+
+def _verify_evidence_verification(
+    curation: dict[str, Any],
+    failures: list[str],
+) -> None:
+    verification = _dict_or_empty(curation.get("evidence_verification"))
+    if verification.get("schema_version") != (
+        "agades.pqc.private_dataset_evidence_verification.v1"
+    ):
+        failures.append("Private dataset evidence verifier schema is incorrect.")
+    if "private-dataset-evidence-verify" not in str(verification.get("command")):
+        failures.append("Private dataset evidence verifier command is missing.")
+    for key in (
+        "public_output_allowed",
+        "prints_private_values",
+    ):
+        if verification.get(key) is not False:
+            failures.append(f"Private dataset evidence verifier {key} must be false.")
+    if verification.get(
+        "training_eligible_requires_all_artifacts_accepted",
+    ) is not True:
+        failures.append(
+            "Private dataset evidence verifier must require all artifacts accepted."
+        )
+    if verification.get("required_artifacts") != [
+        contract["artifact_path"] for contract in EVIDENCE_CONTRACTS.values()
+    ]:
+        failures.append("Private dataset evidence verifier artifacts are incorrect.")
 
 
 def _verify_review(curation: dict[str, Any], failures: list[str]) -> None:

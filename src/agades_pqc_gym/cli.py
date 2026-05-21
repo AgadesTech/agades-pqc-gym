@@ -207,6 +207,9 @@ from agades_pqc_gym.integrations.private_dataset_curation import (
     verify_private_dataset_curation,
     write_private_dataset_curation,
 )
+from agades_pqc_gym.integrations.private_dataset_evidence import (
+    verify_private_dataset_evidence_bundle,
+)
 from agades_pqc_gym.integrations.private_pedagogical_trace_batch import (
     DEFAULT_TRACE_BATCH_PATH,
     verify_private_pedagogical_trace_batch,
@@ -1747,6 +1750,27 @@ def private_dataset_curation_verify(
 ) -> None:
     """Verify the private dataset curation and publication-boundary manifest."""
     result = verify_private_dataset_curation(curation)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("private-dataset-evidence-verify", hidden=True)
+def private_dataset_evidence_verify(
+    curation: Annotated[
+        Path,
+        typer.Option("--curation"),
+    ] = Path("docs/private_dataset_curation.json"),
+    evidence_root: Annotated[
+        Path,
+        typer.Option("--evidence-root"),
+    ] = Path("."),
+) -> None:
+    """Verify local private dataset curation evidence without printing values."""
+    result = verify_private_dataset_evidence_bundle(
+        curation,
+        evidence_root=evidence_root,
+    )
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)

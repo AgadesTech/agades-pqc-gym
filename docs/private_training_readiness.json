@@ -72,7 +72,7 @@
     },
     "private_dataset_curation": {
       "path": "docs/private_dataset_curation.json",
-      "sha256": "04daad41753196fc1e5294090f21d45abb45e8ab6acb3199182a0c50d8191042"
+      "sha256": "89c07afb6c139f109621b2acedea73ed8e495e45fa842056ce6b5554fb55375d"
     },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
@@ -80,7 +80,7 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "07257f6227ba712855718960e8fcb188ece9f25e056e81a887a1bc0b440593e9"
+      "sha256": "adbb8226610ecf5ad59106bf26ed2fbebc4b6beb7d471c8df555bc5ff752eda0"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
@@ -88,7 +88,7 @@
     },
     "rl_environment_contract": {
       "path": "docs/rl_environment_contract.json",
-      "sha256": "004db8449819a5d0057758572e4e6b5ff72816b44ea6adf6ca3f21443ccaf496"
+      "sha256": "84b0c362b918c55a98f406c2f0ae927dec60a5069cb8191abfccf5b47f8eb6d8"
     }
   },
   "project": {
