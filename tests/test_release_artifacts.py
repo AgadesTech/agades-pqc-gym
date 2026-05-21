@@ -33,6 +33,10 @@ from agades_pqc_gym.formal.operator_semantics import (
     DEFAULT_OPERATOR_SEMANTICS_PATH,
     verify_formal_operator_semantics,
 )
+from agades_pqc_gym.formal.smt_assist import (
+    DEFAULT_SMT_ASSIST_PATH,
+    verify_formal_smt_assist_contract,
+)
 from agades_pqc_gym.integrations.deepevolve_research_hooks import (
     DEFAULT_MANIFEST_PATH as DEEPEVOLVE_MANIFEST_PATH,
 )
@@ -123,11 +127,13 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
 ) -> None:
     copied_root = _copy_repo(tmp_path)
     corrupted_semantics = copied_root / DEFAULT_OPERATOR_SEMANTICS_PATH
+    corrupted_smt = copied_root / DEFAULT_SMT_ASSIST_PATH
     corrupted_training = copied_root / PRIVATE_TRAINING_MANIFEST_PATH
     corrupted_readiness = copied_root / PRIVATE_TRAINING_READINESS_PATH
     corrupted_deepevolve = copied_root / DEEPEVOLVE_MANIFEST_PATH
     corrupted_report = copied_root / "reports" / "ecosystem_smoke.json"
     corrupted_semantics.write_text("{}\n", encoding="utf-8")
+    corrupted_smt.write_text("{}\n", encoding="utf-8")
     corrupted_training.write_text("{}\n", encoding="utf-8")
     corrupted_readiness.write_text("{}\n", encoding="utf-8")
     corrupted_deepevolve.write_text("{}\n", encoding="utf-8")
@@ -147,6 +153,11 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
         for path in release_pass["changed_artifacts"]
     }
     assert DEFAULT_OPERATOR_SEMANTICS_PATH.as_posix() in {
+        path
+        for release_pass in result["pass_summaries"]
+        for path in release_pass["changed_artifacts"]
+    }
+    assert DEFAULT_SMT_ASSIST_PATH.as_posix() in {
         path
         for release_pass in result["pass_summaries"]
         for path in release_pass["changed_artifacts"]
@@ -259,6 +270,9 @@ def _assert_formal_artifacts_verified(root: Path) -> None:
         DEFAULT_OBLIGATION_LEDGER_PATH,
         root=root,
     )["accepted"] is True
+    assert verify_formal_smt_assist_contract(DEFAULT_SMT_ASSIST_PATH, root=root)[
+        "accepted"
+    ] is True
 
 
 def _assert_private_rl_prime_artifacts_verified(root: Path) -> None:

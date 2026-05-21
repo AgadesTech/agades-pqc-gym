@@ -2326,7 +2326,7 @@
       "statement": "implementation-security tasks declare a review-only scope"
     }
   ],
-  "ledger_sha256": "7c810209506431e5d737f940d5c1727badd7e8a7d65ec916af47bec48c3c129f",
+  "ledger_sha256": "cf15fd504437161f93da3c07339bf277deeaf9b4f49ea6c7f183476e531235b3",
   "linked_artifacts": {
     "formal_estimator_model": {
       "canonical_sha256": "678ff5feff203fc824db75eba8c5aea23ba6942fd9512d167cb855abafefddf2",
@@ -3623,7 +3623,8 @@
     "uv run agades-pqc formal-obligation-ledger-verify --ledger docs/formal_obligation_ledger.json",
     "uv run agades-pqc formal-family-coverage-verify --coverage docs/formal_family_coverage.json",
     "uv run agades-pqc formal-estimator-model-verify --model docs/formal_estimator_model.json",
-    "uv run agades-pqc formal-operator-semantics-verify --semantics docs/formal_operator_semantics.json"
+    "uv run agades-pqc formal-operator-semantics-verify --semantics docs/formal_operator_semantics.json",
+    "uv run agades-pqc formal-smt-assist-verify --contract docs/formal_smt_assist_contract.json"
   ],
   "schema_version": "agades.pqc.formal.obligation_ledger.v1",
   "summary": {
