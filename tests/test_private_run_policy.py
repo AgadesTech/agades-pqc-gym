@@ -102,6 +102,32 @@ def test_private_run_policy_defines_private_moat_boundaries() -> None:
         "publish_rollouts_publicly": False,
         "publish_reviewer_annotations_publicly": False,
     }
+    assert policy["private_qwen_artifact_policy"] == {
+        "artifact_plan_env": "AGADES_QWEN_ARTIFACT_PLAN",
+        "artifact_plan_template": "private/reports/qwen/artifact_plan.json",
+        "plan_schema": "agades.pqc.private_qwen_artifact_plan.v1",
+        "verification_schema": "agades.pqc.private_qwen_artifact_verification.v1",
+        "verification_command": (
+            "uv run agades-pqc private-qwen-artifacts-verify --plan "
+            "private/reports/qwen/artifact_plan.json"
+        ),
+        "private_roots": [
+            "private/models",
+            "private/reports",
+        ],
+        "required_gates": [
+            "trainable_base_before_quantization",
+            "lora_or_qlora_adapter_before_gguf",
+            "reject_direct_gguf_training",
+            "reject_public_weight_or_adapter_publication",
+            "reject_non_private_artifact_paths",
+            "reject_path_traversal",
+            "require_artifact_sha256",
+            "require_model_license_storage_quantization_release_reviews",
+        ],
+        "prints_artifact_paths": False,
+        "public_release_allowed": False,
+    }
     assert policy["scheduler_policy"] == {
         "scheduler_enabled_by_default": False,
         "allowed_triggers": [
@@ -156,6 +182,9 @@ def test_private_run_policy_defines_private_moat_boundaries() -> None:
     assert "agades-pqc private-pedagogical-traces" in policy[
         "allowed_private_commands"
     ]
+    assert "agades-pqc private-qwen-artifacts-verify" in policy[
+        "allowed_private_commands"
+    ]
     assert policy["release_gates"] == [
         "uv run agades-pqc private-run-policy --out docs/private_run_policy.json",
         (
@@ -192,21 +221,22 @@ def test_private_run_policy_verify_accepts_committed_policy() -> None:
     assert result == {
         "schema_version": PRIVATE_RUN_POLICY_VERIFICATION_SCHEMA,
         "policy_path": "docs/private_run_policy.json",
-            "accepted": True,
-            "summary": {
-                "allowed_private_commands": 17,
-                "allowed_private_roots": 6,
-                "failure_count": 0,
-                "forbidden_public_roots": 5,
-                "required_publication_controls": 5,
-                "scheduler_allowed_triggers": 2,
-                "scheduler_approval_gates": 4,
-                "scheduler_retention_rules": 4,
-                "private_rl_reward_terms": 6,
-                "private_dataset_sources": 3,
-            },
-            "failures": [],
-        }
+        "accepted": True,
+        "summary": {
+            "allowed_private_commands": 18,
+            "allowed_private_roots": 6,
+            "failure_count": 0,
+            "forbidden_public_roots": 5,
+            "required_publication_controls": 5,
+            "scheduler_allowed_triggers": 2,
+            "scheduler_approval_gates": 4,
+            "scheduler_retention_rules": 4,
+            "private_rl_reward_terms": 6,
+            "private_dataset_sources": 3,
+            "qwen_artifact_gates": 8,
+        },
+        "failures": [],
+    }
 
 
 def test_private_run_policy_verify_rejects_public_qwen_publication(
@@ -253,6 +283,40 @@ def test_private_run_policy_verify_rejects_public_private_dataset_release(
 
     assert result["accepted"] is False
     assert "Private dataset policy publish_train_datasets_publicly must be false." in (
+        result["failures"]
+    )
+
+
+def test_private_run_policy_verify_rejects_missing_qwen_artifact_command(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "private_run_policy.json"
+    policy = build_private_run_policy()
+    policy["allowed_private_commands"].remove(
+        "agades-pqc private-qwen-artifacts-verify"
+    )
+    path.write_text(json.dumps(policy, indent=2, sort_keys=True) + "\n")
+
+    result = verify_private_run_policy(path)
+
+    assert result["accepted"] is False
+    assert "Private run policy must allow Qwen artifact verification." in (
+        result["failures"]
+    )
+
+
+def test_private_run_policy_verify_rejects_public_qwen_artifact_release(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "private_run_policy.json"
+    policy = build_private_run_policy()
+    policy["private_qwen_artifact_policy"]["public_release_allowed"] = True
+    path.write_text(json.dumps(policy, indent=2, sort_keys=True) + "\n")
+
+    result = verify_private_run_policy(path)
+
+    assert result["accepted"] is False
+    assert "Private Qwen artifact policy must not allow public release." in (
         result["failures"]
     )
 
