@@ -172,6 +172,25 @@
     "public_push_requires_review": true,
     "requirements_file": "hf/requirements.txt",
     "sdk": "gradio",
+    "space_readme_file": "hf/README.md",
+    "space_readme_metadata": {
+      "app_file": "app.py",
+      "colorFrom": "gray",
+      "colorTo": "blue",
+      "license": "apache-2.0",
+      "pinned": false,
+      "python_version": "3.11",
+      "sdk": "gradio",
+      "short_description": "Public-safe AttackPlan Agent Environment for Agades PQC Gym.",
+      "tags": [
+        "agent-environment",
+        "reinforcement-learning",
+        "post-quantum-cryptography",
+        "cryptanalysis"
+      ],
+      "title": "Agades PQC Gym Agent Environment"
+    },
+    "space_readme_sha256": "cebae59c06ae86febf08868862f52757d2cf014016a1c231e91c39b7c0941f80",
     "suggested_space_id": "AgadesTech/agades-pqc-gym-agent-env"
   },
   "verifier_contract": {
