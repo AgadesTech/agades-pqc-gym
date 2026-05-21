@@ -66,6 +66,9 @@ from agades_pqc_gym.integrations.pedagogical_rl_method import (
 from agades_pqc_gym.integrations.prime_environment_manifest import (
     verify_prime_environment_manifest,
 )
+from agades_pqc_gym.integrations.prime_environment_smoke import (
+    verify_prime_environment_smoke_report,
+)
 from agades_pqc_gym.integrations.prime_eval_config import (
     DEFAULT_CONFIG_PATH as PRIME_EVAL_CONFIG_PATH,
 )
@@ -144,6 +147,9 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
     corrupted_deepevolve = copied_root / DEEPEVOLVE_MANIFEST_PATH
     corrupted_hf_dataset_manifest = copied_root / "hf" / "dataset" / "MANIFEST.sha256"
     corrupted_hf_space_smoke = copied_root / "reports" / "hf_space_smoke.json"
+    corrupted_prime_environment_smoke = (
+        copied_root / "reports" / "prime_environment_smoke.json"
+    )
     corrupted_report = copied_root / "reports" / "ecosystem_smoke.json"
     corrupted_semantics.write_text("{}\n", encoding="utf-8")
     corrupted_attackplan.write_text("{}\n", encoding="utf-8")
@@ -153,6 +159,7 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
     corrupted_deepevolve.write_text("{}\n", encoding="utf-8")
     corrupted_hf_dataset_manifest.write_text("{}\n", encoding="utf-8")
     corrupted_hf_space_smoke.write_text("{}\n", encoding="utf-8")
+    corrupted_prime_environment_smoke.write_text("{}\n", encoding="utf-8")
     corrupted_report.write_text("{}\n", encoding="utf-8")
 
     result = write_release_artifacts_until_stable(root=copied_root, max_passes=6)
@@ -208,6 +215,11 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
         for release_pass in result["pass_summaries"]
         for path in release_pass["changed_artifacts"]
     }
+    assert "reports/prime_environment_smoke.json" in {
+        path
+        for release_pass in result["pass_summaries"]
+        for path in release_pass["changed_artifacts"]
+    }
     assert result["failures"] == []
     _assert_formal_artifacts_verified(copied_root)
     _assert_private_rl_prime_artifacts_verified(copied_root)
@@ -232,6 +244,10 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
     )["accepted"] is True
     assert verify_huggingface_space_smoke_report(
         Path("reports/hf_space_smoke.json"),
+        root=copied_root,
+    )["accepted"] is True
+    assert verify_prime_environment_smoke_report(
+        Path("reports/prime_environment_smoke.json"),
         root=copied_root,
     )["accepted"] is True
     assert verify_ecosystem_smoke_report(

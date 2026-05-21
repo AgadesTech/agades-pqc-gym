@@ -5,6 +5,9 @@ import json
 from pathlib import Path
 from typing import Any
 
+from agades_pqc_gym.formal.artifacts import REVIEWER_GOVERNANCE_BINDING_SCHEMA
+from agades_pqc_gym.rl.environment import FORMAL_ARTIFACT_BINDING_SCHEMA
+
 PRIME_ENVIRONMENT_SMOKE_SCHEMA = "agades.pqc.prime_environment_smoke.v1"
 PRIME_ENVIRONMENT_SMOKE_VERIFICATION_SCHEMA = (
     "agades.pqc.prime_environment_smoke_verification.v1"
@@ -61,8 +64,12 @@ def build_prime_environment_smoke_report(
         "accepted_score": None,
         "accepted_rubric_scores": {},
         "invalid_json_score": None,
+        "formal_artifact_binding_schema": None,
         "prefixed_json_score": None,
         "requires_single_json_object": False,
+        "review_governance_binding_schema": None,
+        "review_governance_ok": False,
+        "reviewer_quality": None,
         "rubric_terms": [],
         "unsupported_score": None,
     }
@@ -98,6 +105,12 @@ def build_prime_environment_smoke_report(
         prefixed_json_score = module.score_attack_plan_completion(
             _assistant_completion(f"candidate:\n{accepted_json}")
         )
+        formal_binding = _dict_or_empty(
+            accepted_report.get("formal_artifact_binding")
+        )
+        review_governance = _dict_or_empty(
+            formal_binding.get("review_governance")
+        )
     except Exception as exc:  # noqa: BLE001 - smoke report must capture failures.
         failures.append(f"Prime environment smoke failed: {exc}")
     else:
@@ -118,9 +131,17 @@ def build_prime_environment_smoke_report(
         scoring = {
             "accepted_score": accepted_report["aggregate_reward"],
             "accepted_rubric_scores": accepted_report["rubric_scores"],
+            "formal_artifact_binding_schema": formal_binding.get("schema_version"),
             "invalid_json_score": invalid_json_score,
             "prefixed_json_score": prefixed_json_score,
             "requires_single_json_object": prefixed_json_score == 0.0,
+            "review_governance_binding_schema": review_governance.get(
+                "schema_version"
+            ),
+            "review_governance_ok": accepted_report.get("review_governance_ok"),
+            "reviewer_quality": accepted_report["rubric_scores"].get(
+                "reviewer_quality"
+            ),
             "rubric_terms": list(module.PRIME_RUBRIC_TERMS),
             "unsupported_score": unsupported_score,
         }
@@ -214,6 +235,17 @@ def _validate_smoke_contract(
         failures.append("Prime environment default AttackPlan id drifted.")
     if scoring["accepted_score"] != 1.0:
         failures.append("Prime environment rejects accepted toy plan.")
+    if scoring["formal_artifact_binding_schema"] != FORMAL_ARTIFACT_BINDING_SCHEMA:
+        failures.append("Prime environment formal artifact binding schema drifted.")
+    if (
+        scoring["review_governance_binding_schema"]
+        != REVIEWER_GOVERNANCE_BINDING_SCHEMA
+    ):
+        failures.append("Prime environment reviewer governance schema drifted.")
+    if scoring["review_governance_ok"] is not True:
+        failures.append("Prime environment lacks reviewer governance.")
+    if scoring["reviewer_quality"] != 1.0:
+        failures.append("Prime environment reviewer quality failed.")
     if scoring["rubric_terms"] != [
         "accepted_attack_plan",
         "formal_validity",
@@ -355,6 +387,25 @@ def _verify_scoring(report: dict[str, Any], failures: list[str]) -> None:
         return
     if scoring.get("accepted_score") != 1.0:
         failures.append("Prime environment smoke report accepted score is wrong.")
+    if scoring.get("formal_artifact_binding_schema") != FORMAL_ARTIFACT_BINDING_SCHEMA:
+        failures.append(
+            "Prime environment smoke report formal artifact binding schema is wrong."
+        )
+    if (
+        scoring.get("review_governance_binding_schema")
+        != REVIEWER_GOVERNANCE_BINDING_SCHEMA
+    ):
+        failures.append(
+            "Prime environment smoke report reviewer governance schema is wrong."
+        )
+    if scoring.get("review_governance_ok") is not True:
+        failures.append(
+            "Prime environment smoke report lacks reviewer governance."
+        )
+    if scoring.get("reviewer_quality") != 1.0:
+        failures.append(
+            "Prime environment smoke report reviewer quality is wrong."
+        )
     rubric_terms = scoring.get("rubric_terms")
     accepted_rubric_scores = scoring.get("accepted_rubric_scores")
     if rubric_terms != [
@@ -452,11 +503,16 @@ def _verification_summary(
         "accepted_score": scoring.get("accepted_score"),
         "dataset_rows": dataset.get("dataset_rows"),
         "failure_count": len(failures),
+        "formal_artifact_binding_schema": scoring.get(
+            "formal_artifact_binding_schema"
+        ),
         "imports_without_verifiers": environment.get("imports_without_verifiers"),
         "load_environment_boundary_ok": optional_dependencies.get(
             "load_environment_boundary_ok"
         ),
         "prefixed_json_score": scoring.get("prefixed_json_score"),
+        "review_governance_ok": scoring.get("review_governance_ok"),
+        "reviewer_quality": scoring.get("reviewer_quality"),
         "rubric_terms": len(scoring.get("rubric_terms", [])),
         "unsupported_score": scoring.get("unsupported_score"),
     }
@@ -498,3 +554,7 @@ def _display_path(path: Path, *, root: Path) -> str:
         return resolved.relative_to(root).as_posix()
     except ValueError:
         return resolved.as_posix()
+
+
+def _dict_or_empty(value: object) -> dict[str, Any]:
+    return dict(value) if isinstance(value, dict) else {}

@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from agades_pqc_gym.core.attack_plan import AttackPlan
+from agades_pqc_gym.formal.artifacts import REVIEWER_GOVERNANCE_BINDING_SCHEMA
 from agades_pqc_gym.integrations.family_support import (
     summarize_family_support_matrix,
 )
@@ -30,6 +31,7 @@ from agades_pqc_gym.integrations.task_metadata import (
     summarize_task_metadata_rows,
     task_metadata_for_plan,
 )
+from agades_pqc_gym.rl.environment import FORMAL_ARTIFACT_BINDING_SCHEMA
 
 PRIME_ENVIRONMENT_MANIFEST_SCHEMA = "agades.pqc.prime_environment_manifest.v1"
 PRIME_ENVIRONMENT_MANIFEST_VERIFICATION_SCHEMA = (
@@ -144,9 +146,17 @@ def build_prime_environment_manifest(root: Path | None = None) -> dict[str, Any]
             "invalid_reward": 0.0,
             "requires_single_json_object": True,
             "accepts_executable_code": False,
+            "formal_artifact_binding_schema": FORMAL_ARTIFACT_BINDING_SCHEMA,
+            "review_governance_binding_schema": REVIEWER_GOVERNANCE_BINDING_SCHEMA,
+            "reviewer_quality_requires_governance": True,
             "acceptance_rule": (
                 "schema_valid == true and accepted == true from "
                 "agades_pqc_gym.verifier.verify_attack_plan_json"
+            ),
+            "formal_binding_rule": (
+                "accepted Prime rewards must attach an "
+                "agades.pqc.rl.formal_artifact_binding.v1 proof binding with "
+                "review_governance_ok == true"
             ),
             "task_match_rule": (
                 "accepted candidates must match the current task info for "
@@ -346,6 +356,24 @@ def _verify_scoring_contract(
         failures.append("Prime manifest allows executable model submissions.")
     if scoring_contract.get("requires_single_json_object") is not True:
         failures.append("Prime manifest does not require a single JSON object.")
+    if (
+        scoring_contract.get("formal_artifact_binding_schema")
+        != FORMAL_ARTIFACT_BINDING_SCHEMA
+    ):
+        failures.append("Prime manifest formal artifact binding schema drifted.")
+    if (
+        scoring_contract.get("review_governance_binding_schema")
+        != REVIEWER_GOVERNANCE_BINDING_SCHEMA
+    ):
+        failures.append("Prime manifest reviewer governance schema drifted.")
+    if scoring_contract.get("reviewer_quality_requires_governance") is not True:
+        failures.append("Prime manifest reviewer quality is not governance-bound.")
+    if scoring_contract.get("formal_binding_rule") != (
+        "accepted Prime rewards must attach an "
+        "agades.pqc.rl.formal_artifact_binding.v1 proof binding with "
+        "review_governance_ok == true"
+    ):
+        failures.append("Prime manifest formal binding rule drifted.")
     task_info_fields = scoring_contract.get("task_info_fields")
     if not isinstance(task_info_fields, list) or not task_info_fields:
         failures.append("Prime manifest task_info_fields must be a non-empty list.")
@@ -686,6 +714,15 @@ def _verification_result(
             ),
             "requires_single_json_object": scoring_contract.get(
                 "requires_single_json_object"
+            ),
+            "formal_artifact_binding_schema": scoring_contract.get(
+                "formal_artifact_binding_schema"
+            ),
+            "review_governance_binding_schema": scoring_contract.get(
+                "review_governance_binding_schema"
+            ),
+            "reviewer_quality_requires_governance": scoring_contract.get(
+                "reviewer_quality_requires_governance"
             ),
             "task_count": task_manifest.get("task_count"),
         },
