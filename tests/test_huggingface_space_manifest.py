@@ -79,10 +79,17 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "observation_schema": "agades.pqc.rl.observation.v1",
         "reward_report_schema": "agades.pqc.rl.reward_report.v1",
         "rollout_trace_schema": "agades.pqc.rl.rollout_trace.v1",
+        "formal_artifact_binding_schema": (
+            "agades.pqc.rl.formal_artifact_binding.v1"
+        ),
+        "review_governance_binding_schema": (
+            "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+        ),
         "task_dataset": "hf/dataset/task_metadata.jsonl",
         "rollout_examples": "hf/dataset/rl_rollouts.jsonl",
         "scoring_function": "agades_pqc_gym.rl.environment.score_attack_plan_candidate",
         "task_interface": "single_turn_attackplan_json",
+        "reviewer_quality_requires_governance": True,
         "public_track_only": True,
         "private_trace_publication_allowed": False,
         "claims_pqc_breaks": False,

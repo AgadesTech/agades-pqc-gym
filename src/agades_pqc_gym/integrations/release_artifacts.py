@@ -77,6 +77,13 @@ from agades_pqc_gym.integrations.huggingface_space_manifest import (
     verify_huggingface_space_manifest,
     write_huggingface_space_manifest,
 )
+from agades_pqc_gym.integrations.huggingface_space_smoke import (
+    DEFAULT_REPORT as HF_SPACE_SMOKE_REPORT,
+)
+from agades_pqc_gym.integrations.huggingface_space_smoke import (
+    verify_huggingface_space_smoke_report,
+    write_huggingface_space_smoke_report,
+)
 from agades_pqc_gym.integrations.nvidia_publication_handoff import (
     verify_nvidia_publication_handoff,
     write_nvidia_publication_handoff,
@@ -212,6 +219,7 @@ RELEASE_ARTIFACT_PATHS = (
     Path("docs/prime_speedrun_handoff.json"),
     Path("hf/dataset/MANIFEST.sha256"),
     Path("hf/space_manifest.json"),
+    HF_SPACE_SMOKE_REPORT,
     Path("docs/huggingface_publication_handoff.json"),
     Path("docs/nvidia_publication_handoff.json"),
     Path("docs/publication_manifest.json"),
@@ -481,6 +489,14 @@ def _release_artifact_sequence(project_root: Path) -> tuple[ReleaseArtifactStep,
             write=lambda out: write_huggingface_space_manifest(out, root=project_root),
         ),
         ReleaseArtifactStep(
+            id="hf-space-smoke",
+            path=HF_SPACE_SMOKE_REPORT,
+            write=lambda out: write_huggingface_space_smoke_report(
+                out,
+                root=project_root,
+            ),
+        ),
+        ReleaseArtifactStep(
             id="hf-publication-handoff",
             path=Path("docs/huggingface_publication_handoff.json"),
             write=lambda out: write_huggingface_publication_handoff(
@@ -682,6 +698,10 @@ def _verify_release_artifacts(project_root: Path) -> dict[str, dict[str, Any]]:
         ),
         "hf-space-manifest": verify_huggingface_space_manifest(
             Path("hf/space_manifest.json"),
+            root=project_root,
+        ),
+        "hf-space-smoke": verify_huggingface_space_smoke_report(
+            HF_SPACE_SMOKE_REPORT,
             root=project_root,
         ),
         "hf-publication-handoff": verify_huggingface_publication_handoff(
