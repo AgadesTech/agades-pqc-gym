@@ -56,7 +56,7 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "dd8bfe03d8ae99bd3b9cd2d88131595f5ef20e56af1cea5de1be47ed3e4b8ad8"
+      "sha256": "9a39c27f5a4b2ae52c1e97103e404668a177fc2a9133f5fc11a8abc5d8b54d75"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
@@ -80,15 +80,15 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "12069ec50c5ef8c713ffc062beca747b3af27ea887c487d1296e1ac8f1a5caef"
+      "sha256": "61ad8005d27f0aadc50aba8c7b18f41eb3adec63e054f1c7592bbdb1cf88a5ed"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "fd09e8a1fc5f08e8e2a2b71e083b3ccbb4bf996d9663414944aee2fec2c17464"
+      "sha256": "2a0cae9fe83cfc4b3194caae1060de0bebddfb5408111912f779631a375a15c6"
     },
     "rl_environment_contract": {
       "path": "docs/rl_environment_contract.json",
-      "sha256": "20d87691b112060c61d556c061231a381bcd55d5fe6ff7987aedb286111e9897"
+      "sha256": "40d6d70d5d47c8d2cf5c3ff0efbbe1cbd26142b3dab8dfcf48b883be10cb1b0e"
     }
   },
   "project": {

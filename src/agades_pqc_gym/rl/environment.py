@@ -185,6 +185,7 @@ def score_attack_plan_candidate(
         "reviewer_quality": _bool_score(
             formal_summary["required_reviewers"] >= 3
             and formal_summary["claim_boundary_ok"] is True
+            and formal_summary["review_governance_ok"] is True
         ),
         "task_match": _bool_score(task_match),
         "proof_obligation_coverage": _proof_obligation_coverage_score(
@@ -339,6 +340,8 @@ def _formal_summary(
             "lean_theorems": 0,
             "required_reviewers": 0,
             "claim_boundary_ok": False,
+            "review_governance": {},
+            "review_governance_ok": False,
         }
     artifact = build_attack_plan_proof_artifact_from_json(
         candidate_json,
@@ -355,16 +358,25 @@ def _formal_summary(
             continue
         type_rule_keys.add(type_rule_key)
         type_rule_kinds.add(rule["kind"])
+    review = artifact["review"]
+    review_governance = _dict_or_empty(artifact.get("review_governance"))
+    review_governance_ok = _review_governance_binding_ok(
+        review_governance,
+        family=artifact["family"],
+        required_reviewers=review["required_reviewers"],
+    )
     typed_proof_obligations = [
         obligation
         for obligation in proof_obligations
         if _obligation_has_matching_type_rule(obligation, type_rule_keys)
     ]
     return {
-        "accepted": contracts_accepted,
+        "accepted": contracts_accepted and review_governance_ok,
         "attackplan_semantics": attackplan_semantics,
         "operator_semantics": operator_semantics,
         "formal_estimator_model": formal_estimator_model,
+        "review_governance": review_governance,
+        "review_governance_ok": review_governance_ok,
         "family_invariants": len(family_invariants),
         "proof_obligations": len(proof_obligations),
         "typed_proof_obligations": len(typed_proof_obligations),
@@ -377,9 +389,9 @@ def _formal_summary(
                 if obligation.get("lean_theorem")
             }
         ),
-        "required_reviewers": len(artifact["review"]["required_reviewers"]),
+        "required_reviewers": len(review["required_reviewers"]),
         "claim_boundary_ok": (
-            "not PQC break claims" in artifact["review"]["claim_boundary"]
+            "not PQC break claims" in review["claim_boundary"]
         ),
     }
 
@@ -437,6 +449,23 @@ def _obligation_has_matching_type_rule(
     type_rule_key = _type_rule_key(type_rule)
     return isinstance(kind, str) and type_rule.get("kind") == kind and (
         type_rule_key in type_rule_keys
+    )
+
+
+def _review_governance_binding_ok(
+    binding: dict[str, Any],
+    *,
+    family: str,
+    required_reviewers: list[str],
+) -> bool:
+    required_by_family = _dict_or_empty(binding.get("required_reviewers_by_family"))
+    return (
+        binding.get("schema_version")
+        == "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+        and binding.get("verification_accepted") is True
+        and binding.get("claim_policy_forbids_unreviewed_security_claims") is True
+        and binding.get("linked_artifact_hashes_excluded_from_contract") is True
+        and required_by_family.get(family) == required_reviewers
     )
 
 
@@ -502,6 +531,8 @@ def _blocking_reasons(
         reasons.append("no_security_overclaim")
     if terms["proof_obligation_coverage"] != 1.0:
         reasons.append("proof_obligation_coverage")
+    if terms["reviewer_quality"] != 1.0:
+        reasons.append("reviewer_quality")
     if require_task_match and task_info is None:
         reasons.append("task_info")
     if terms["task_match"] != 1.0:
@@ -579,6 +610,8 @@ def build_formal_artifact_binding(
             "attackplan_semantics": attackplan_semantics,
             "operator_semantics": operator_semantics,
             "formal_estimator_model": formal_estimator_model,
+            "review_governance": {},
+            "review_governance_ok": False,
             "review_status": None,
             "required_reviewers": [],
             "claim_allowed": False,
@@ -592,6 +625,7 @@ def build_formal_artifact_binding(
     proof_obligations = artifact["proof_obligations"]
     type_rules = artifact["proof_obligation_type_rules"]
     review = artifact["review"]
+    review_governance = _dict_or_empty(artifact.get("review_governance"))
     return {
         "schema_version": FORMAL_ARTIFACT_BINDING_SCHEMA,
         "status": "attached",
@@ -617,6 +651,12 @@ def build_formal_artifact_binding(
         "attackplan_semantics": attackplan_semantics,
         "operator_semantics": operator_semantics,
         "formal_estimator_model": formal_estimator_model,
+        "review_governance": review_governance,
+        "review_governance_ok": _review_governance_binding_ok(
+            review_governance,
+            family=artifact["family"],
+            required_reviewers=review["required_reviewers"],
+        ),
         "review_status": review["status"],
         "required_reviewers": review["required_reviewers"],
         "claim_allowed": False,
