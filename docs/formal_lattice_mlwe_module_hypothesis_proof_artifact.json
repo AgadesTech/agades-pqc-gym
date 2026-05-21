@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "02a9e5a8ab72c9daa3d7b94b7403d45c46dc84952906c026d6d5ccab695d4daa",
+  "artifact_sha256": "690af4aed96d30b8a2fb13ef03f348599694bbbd2c67fe4c774a3f96091ff645",
   "attack_plan": {
     "canonical_sha256": "cd75f20024968e2d6bd6f019c623b23663aba3d1fff350d81770755c197e284d",
     "id": "lattice_mlwe_module_hypothesis_toy_v1",
@@ -409,6 +409,66 @@
       "release_boundary_reviewer"
     ],
     "status": "pending_review"
+  },
+  "review_governance": {
+    "approval_gates": 4,
+    "claim_policy_forbids_unreviewed_security_claims": true,
+    "family_reviewers": 9,
+    "governance_contract_sha256": "9879c65cad33028836e99583527822b5de353e836cec0052c4d60cc9d8542a72",
+    "governance_schema_version": "agades.pqc.reviewer_governance.v1",
+    "linked_artifact_hashes_excluded_from_contract": true,
+    "path": "docs/reviewer_governance.json",
+    "required_reviewers_by_family": {
+      "CODE_BASED": [
+        "code_based_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "HASH_BASED": [
+        "hash_based_signature_reviewer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "IMPLEMENTATION_SECURITY": [
+        "implementation_security_reviewer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "ISOGENY_HISTORICAL": [
+        "isogeny_historical_reviewer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "LWE": [
+        "lattice_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "MLWE": [
+        "lattice_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "MULTIVARIATE": [
+        "multivariate_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "NTRU": [
+        "lattice_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "SIS": [
+        "lattice_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ]
+    },
+    "review_artifact_format_schema": "agades.pqc.review_artifact.v1",
+    "role_groups": 3,
+    "schema_version": "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1",
+    "verification_accepted": true
   },
   "schema_version": "agades.pqc.formal.proof_artifact.v2"
 }
