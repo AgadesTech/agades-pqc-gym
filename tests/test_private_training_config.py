@@ -60,6 +60,29 @@ def test_private_training_manifest_defines_prime_rl_qwen_and_dataset_controls(
         "publish_weights_publicly": False,
         "publish_adapters_publicly": False,
         "publish_trace_corpora_publicly": False,
+        "artifact_verification": {
+            "plan_schema_version": "agades.pqc.private_qwen_artifact_plan.v1",
+            "verification_schema_version": (
+                "agades.pqc.private_qwen_artifact_verification.v1"
+            ),
+            "artifact_plan_env": "AGADES_QWEN_ARTIFACT_PLAN",
+            "artifact_plan_template": "private/reports/qwen/artifact_plan.json",
+            "verification_command": (
+                "uv run agades-pqc private-qwen-artifacts-verify --plan "
+                "private/reports/qwen/artifact_plan.json"
+            ),
+            "verifier": (
+                "agades_pqc_gym.integrations.private_qwen_artifacts."
+                "verify_private_qwen_artifact_plan"
+            ),
+            "manual_private_gate": True,
+            "requires_trainable_base_before_quantization": True,
+            "requires_lora_or_qlora_adapter": True,
+            "rejects_direct_gguf_training": True,
+            "public_output_allowed": False,
+            "prints_artifact_paths": False,
+            "public_weight_or_adapter_publication_allowed": False,
+        },
     }
     assert payload["pedagogical_rl"] == {
         "method": "pedagogical_rl",
@@ -141,6 +164,9 @@ def test_private_training_manifest_defines_prime_rl_qwen_and_dataset_controls(
     )
     assert payload["linked_artifacts"]["private_dataset_curation"]["path"] == (
         "docs/private_dataset_curation.json"
+    )
+    assert payload["linked_artifacts"]["private_qwen_artifact_verifier"]["path"] == (
+        "src/agades_pqc_gym/integrations/private_qwen_artifacts.py"
     )
 
 
@@ -230,7 +256,7 @@ def test_private_training_config_verify_accepts_committed_artifacts() -> None:
             "dataset_sources": 3,
             "dataset_controls": 5,
             "reward_terms": 8,
-            "linked_artifacts": 12,
+            "linked_artifacts": 13,
             "failure_count": 0,
         },
         "failures": [],
@@ -309,6 +335,23 @@ def test_private_training_config_rejects_missing_prime_env_contract(
     assert "Private Prime training env contract is incomplete." in (
         result["failures"]
     )
+
+
+def test_private_training_config_rejects_disabled_qwen_artifact_gate(
+    tmp_path: Path,
+) -> None:
+    config = tmp_path / "private_qwen_prime_rl.template.toml"
+    manifest = tmp_path / "private_training_config_manifest.json"
+    payload = write_private_training_config(config, manifest)
+    payload["qwen"]["artifact_verification"]["rejects_direct_gguf_training"] = False
+    manifest.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+
+    result = verify_private_training_config(config, manifest)
+
+    assert result["accepted"] is False
+    assert (
+        "Private Qwen artifact verifier must reject direct GGUF training."
+    ) in result["failures"]
 
 
 def test_private_training_config_cli_round_trip(tmp_path: Path) -> None:

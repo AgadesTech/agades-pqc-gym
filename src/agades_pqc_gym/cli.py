@@ -215,6 +215,9 @@ from agades_pqc_gym.integrations.private_pedagogical_trace_batch import (
     verify_private_pedagogical_trace_batch,
     write_private_pedagogical_trace_batch,
 )
+from agades_pqc_gym.integrations.private_qwen_artifacts import (
+    verify_private_qwen_artifact_plan,
+)
 from agades_pqc_gym.integrations.private_run_policy import (
     verify_private_run_policy,
     write_private_run_policy,
@@ -1832,6 +1835,20 @@ def private_training_readiness_verify(
 ) -> None:
     """Verify the private Qwen/Prime RL launch readiness gate."""
     result = verify_private_training_readiness(readiness)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("private-qwen-artifacts-verify", hidden=True)
+def private_qwen_artifacts_verify(
+    plan: Annotated[
+        Path,
+        typer.Option("--plan"),
+    ] = Path("private/reports/qwen/artifact_plan.json"),
+) -> None:
+    """Verify a local private Qwen artifact plan without printing artifact paths."""
+    result = verify_private_qwen_artifact_plan(plan)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)

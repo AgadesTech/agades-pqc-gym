@@ -6,6 +6,16 @@ import re
 from pathlib import Path
 from typing import Any
 
+from agades_pqc_gym.integrations.private_qwen_artifacts import (
+    PRIVATE_QWEN_ARTIFACT_PLAN_ENV,
+    PRIVATE_QWEN_ARTIFACT_PLAN_SCHEMA,
+    PRIVATE_QWEN_ARTIFACT_PLAN_TEMPLATE,
+    PRIVATE_QWEN_ARTIFACT_VERIFICATION_COMMAND,
+    PRIVATE_QWEN_ARTIFACT_VERIFICATION_SCHEMA,
+    PRIVATE_QWEN_TARGET_MODEL,
+    PRIVATE_QWEN_TRAINING_PATH,
+)
+
 PRIVATE_TRAINING_READINESS_SCHEMA = "agades.pqc.private_training_readiness.v1"
 PRIVATE_TRAINING_READINESS_VERIFICATION_SCHEMA = (
     "agades.pqc.private_training_readiness_verification.v1"
@@ -39,6 +49,9 @@ LINKED_ARTIFACT_PATHS = {
     "private_dataset_curation": PRIVATE_DATASET_CURATION_PATH,
     "pedagogical_rl_method": PEDAGOGICAL_RL_METHOD_PATH,
     "private_training_manifest": PRIVATE_TRAINING_MANIFEST_PATH,
+    "private_qwen_artifact_verifier": (
+        "src/agades_pqc_gym/integrations/private_qwen_artifacts.py"
+    ),
     "prime_training_template": (
         "prime_intellect/training/private_qwen_prime_rl.template.toml"
     ),
@@ -104,16 +117,22 @@ def build_private_training_readiness(root: Path | None = None) -> dict[str, Any]
         },
         "required_inputs": {
             "qwen": {
-                "target_model": "Qwen3.6-27B-private",
+                "target_model": PRIVATE_QWEN_TARGET_MODEL,
                 "base_model_env": "AGADES_QWEN_BASE_MODEL",
                 "gguf_otq_5bit_env": "AGADES_QWEN_GGUF_OTQ_5BIT_PATH",
                 "lora_adapter_env": "AGADES_QWEN_LORA_ADAPTER_PATH",
+                "artifact_plan_env": PRIVATE_QWEN_ARTIFACT_PLAN_ENV,
+                "artifact_plan_template": PRIVATE_QWEN_ARTIFACT_PLAN_TEMPLATE,
+                "artifact_plan_schema": PRIVATE_QWEN_ARTIFACT_PLAN_SCHEMA,
+                "artifact_verification_schema": (
+                    PRIVATE_QWEN_ARTIFACT_VERIFICATION_SCHEMA
+                ),
+                "artifact_verification_command": (
+                    PRIVATE_QWEN_ARTIFACT_VERIFICATION_COMMAND
+                ),
                 "preferred_user_artifact": "private GGUF OTQ 5-bit",
                 "direct_gguf_training_allowed": False,
-                "training_path": (
-                    "LoRA_or_QLoRA_on_trainable_weights_then_private_GGUF_"
-                    "OTQ_quantization"
-                ),
+                "training_path": PRIVATE_QWEN_TRAINING_PATH,
                 "status": "required_unverified",
                 "public_release_allowed": False,
             },
@@ -172,6 +191,7 @@ def build_private_training_readiness(root: Path | None = None) -> dict[str, Any]
                 "HF_TOKEN",
                 "WANDB_API_KEY",
                 "AGADES_QWEN_BASE_MODEL",
+                "AGADES_QWEN_ARTIFACT_PLAN",
                 "AGADES_QWEN_GGUF_OTQ_5BIT_PATH",
                 "AGADES_QWEN_LORA_ADAPTER_PATH",
             ],
@@ -189,6 +209,7 @@ def build_private_training_readiness(root: Path | None = None) -> dict[str, Any]
                 "sanitized status",
                 "environment variable names",
                 "relative public artifact paths",
+                "private relative artifact plan template paths",
                 "blocked readiness gates",
                 "review requirements",
             ],
@@ -380,10 +401,34 @@ def _verify_required_inputs(
 ) -> None:
     inputs = _dict_or_empty(readiness.get("required_inputs"))
     qwen = _dict_or_empty(inputs.get("qwen"))
+    if qwen.get("target_model") != PRIVATE_QWEN_TARGET_MODEL:
+        failures.append("Private training readiness Qwen target is incorrect.")
     if qwen.get("base_model_env") != "AGADES_QWEN_BASE_MODEL":
         failures.append("Private training readiness must use AGADES_QWEN_BASE_MODEL.")
+    if qwen.get("artifact_plan_env") != PRIVATE_QWEN_ARTIFACT_PLAN_ENV:
+        failures.append(
+            "Private readiness must name AGADES_QWEN_ARTIFACT_PLAN for artifact checks."
+        )
+    if qwen.get("artifact_plan_template") != PRIVATE_QWEN_ARTIFACT_PLAN_TEMPLATE:
+        failures.append("Private readiness Qwen artifact plan template is incorrect.")
+    if qwen.get("artifact_plan_schema") != PRIVATE_QWEN_ARTIFACT_PLAN_SCHEMA:
+        failures.append("Private readiness Qwen artifact plan schema is incorrect.")
+    if qwen.get("artifact_verification_schema") != (
+        PRIVATE_QWEN_ARTIFACT_VERIFICATION_SCHEMA
+    ):
+        failures.append(
+            "Private readiness Qwen artifact verification schema is incorrect."
+        )
+    if qwen.get("artifact_verification_command") != (
+        PRIVATE_QWEN_ARTIFACT_VERIFICATION_COMMAND
+    ):
+        failures.append(
+            "Private readiness Qwen artifact verification command is incorrect."
+        )
     if qwen.get("direct_gguf_training_allowed") is not False:
         failures.append("Private readiness must not allow direct GGUF training.")
+    if qwen.get("training_path") != PRIVATE_QWEN_TRAINING_PATH:
+        failures.append("Private readiness Qwen training path is incorrect.")
     if qwen.get("public_release_allowed") is not False:
         failures.append("Private Qwen release must not be public.")
 

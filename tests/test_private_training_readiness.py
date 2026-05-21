@@ -48,6 +48,13 @@ def test_private_training_readiness_blocks_unreviewed_private_launch(
         "AGADES_QWEN_BASE_MODEL"
     )
     assert payload["required_inputs"]["qwen"]["direct_gguf_training_allowed"] is False
+    assert payload["required_inputs"]["qwen"]["artifact_plan_env"] == (
+        "AGADES_QWEN_ARTIFACT_PLAN"
+    )
+    assert payload["required_inputs"]["qwen"]["artifact_verification_command"] == (
+        "uv run agades-pqc private-qwen-artifacts-verify --plan "
+        "private/reports/qwen/artifact_plan.json"
+    )
     assert payload["required_inputs"]["prime_intellect"]["api_key_env"] == (
         "PRIME_API_KEY"
     )
@@ -56,6 +63,9 @@ def test_private_training_readiness_blocks_unreviewed_private_launch(
     assert payload["publication_boundary"]["publish_finetuned_qwen_publicly"] is False
     assert payload["linked_artifacts"]["private_training_manifest"]["path"] == (
         "docs/private_training_config_manifest.json"
+    )
+    assert payload["linked_artifacts"]["private_qwen_artifact_verifier"]["path"] == (
+        "src/agades_pqc_gym/integrations/private_qwen_artifacts.py"
     )
 
 
@@ -69,7 +79,7 @@ def test_private_training_readiness_verify_accepts_committed_artifact() -> None:
         "summary": {
             "ready": False,
             "blocked_gates": 11,
-            "linked_artifacts": 14,
+            "linked_artifacts": 15,
             "failure_count": 0,
         },
         "failures": [],
@@ -110,6 +120,22 @@ def test_private_training_readiness_rejects_embedded_secret_values(
     assert "Private training readiness artifact contains a secret-looking value." in (
         result["failures"]
     )
+
+
+def test_private_training_readiness_rejects_missing_qwen_artifact_plan_gate(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "private_training_readiness.json"
+    payload = write_private_training_readiness(out)
+    payload["required_inputs"]["qwen"]["artifact_plan_env"] = "HF_TOKEN"
+    out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+
+    result = verify_private_training_readiness(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Private readiness must name AGADES_QWEN_ARTIFACT_PLAN for artifact checks."
+    ) in result["failures"]
 
 
 def test_private_training_readiness_cli_round_trip(tmp_path: Path) -> None:

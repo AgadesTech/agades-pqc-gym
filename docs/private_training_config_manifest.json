@@ -61,6 +61,10 @@
       "path": "docs/private_dataset_curation.json",
       "sha256": "89c07afb6c139f109621b2acedea73ed8e495e45fa842056ce6b5554fb55375d"
     },
+    "private_qwen_artifact_verifier": {
+      "path": "src/agades_pqc_gym/integrations/private_qwen_artifacts.py",
+      "sha256": "7594f1d0ecfe2aa22e86a02b19503c26362c710113480dba35e3de7c8f02919d"
+    },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
       "sha256": "6a3967176dabb28cd1a713795696ea80c53d3f3660b0859761df23a813b5a5ec"
@@ -164,6 +168,21 @@
     "repository": "https://github.com/AgadesTech/agades-pqc-gym"
   },
   "qwen": {
+    "artifact_verification": {
+      "artifact_plan_env": "AGADES_QWEN_ARTIFACT_PLAN",
+      "artifact_plan_template": "private/reports/qwen/artifact_plan.json",
+      "manual_private_gate": true,
+      "plan_schema_version": "agades.pqc.private_qwen_artifact_plan.v1",
+      "prints_artifact_paths": false,
+      "public_output_allowed": false,
+      "public_weight_or_adapter_publication_allowed": false,
+      "rejects_direct_gguf_training": true,
+      "requires_lora_or_qlora_adapter": true,
+      "requires_trainable_base_before_quantization": true,
+      "verification_command": "uv run agades-pqc private-qwen-artifacts-verify --plan private/reports/qwen/artifact_plan.json",
+      "verification_schema_version": "agades.pqc.private_qwen_artifact_verification.v1",
+      "verifier": "agades_pqc_gym.integrations.private_qwen_artifacts.verify_private_qwen_artifact_plan"
+    },
     "base_model_env": "AGADES_QWEN_BASE_MODEL",
     "gguf_direct_training_allowed": false,
     "preferred_user_artifact": "private GGUF OTQ 5-bit",
