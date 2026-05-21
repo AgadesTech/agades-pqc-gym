@@ -26,6 +26,9 @@ REVIEW_EVIDENCE_SCHEMA = "agades.pqc.formal.review_evidence.v1"
 EVALUATOR_RESULT_SCHEMA_CONTRACT_SCHEMA = (
     "agades.pqc.evaluator_result.schema_contract.v1"
 )
+EVALUATOR_RESULT_VERIFICATION_SCHEMA = (
+    "agades.pqc.formal.evaluator_result_verification.v1"
+)
 EVALUATOR_RESULT_SCHEMA_MODEL = "agades_pqc_gym.core.evaluator_result.EvaluatorResult"
 EVALUATOR_RESULT_VALIDATION = "pydantic_v2_extra_forbid_status_payload_checks"
 ESTIMATOR_ATTACK_TYPE_COMPATIBILITY_RULE = "exact_operator_or_colon_variant_v1"
@@ -416,10 +419,31 @@ def write_attack_plan_proof_artifact(
 def write_attack_plan_evaluator_result(
     plan_path: Path,
     out: Path,
+    *,
+    root: Path | None = None,
+) -> dict[str, Any]:
+    payload = build_attack_plan_evaluator_result(plan_path, root=root)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return payload
+
+
+def build_attack_plan_evaluator_result(
+    plan_path: Path,
+    *,
+    root: Path | None = None,
 ) -> dict[str, Any]:
     from agades_pqc_gym.evaluators.cascade import CascadeEvaluator
 
-    raw = plan_path.read_text(encoding="utf-8")
+    project_root = root.resolve() if root is not None else None
+    resolved_plan_path = plan_path
+    if project_root is not None and not resolved_plan_path.is_absolute():
+        resolved_plan_path = project_root / resolved_plan_path
+
+    raw = resolved_plan_path.read_text(encoding="utf-8")
     plan = AttackPlan.model_validate_json(raw)
     result = CascadeEvaluator().evaluate_plan(plan)
     if result.estimator_result is None:
@@ -452,13 +476,92 @@ def write_attack_plan_evaluator_result(
     payload["warnings"] = warnings
 
     validated = EvaluatorResult.model_validate(payload)
-    payload = validated.model_dump(mode="json")
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(
-        json.dumps(payload, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
+    return validated.model_dump(mode="json")
+
+
+def verify_attack_plan_evaluator_result(
+    result_path: Path,
+    plan_path: Path,
+    *,
+    root: Path | None = None,
+) -> dict[str, Any]:
+    project_root = root.resolve() if root is not None else ROOT
+    resolved_result_path = result_path
+    if not resolved_result_path.is_absolute():
+        resolved_result_path = project_root / resolved_result_path
+
+    failures: list[str] = []
+    payload = _read_evaluator_result_json_object(resolved_result_path, failures)
+    expected: dict[str, Any] = {}
+    try:
+        expected = build_attack_plan_evaluator_result(plan_path, root=project_root)
+    except (FileNotFoundError, ValueError) as exc:
+        failures.append(f"Expected evaluator result could not be rebuilt: {exc}")
+
+    if payload:
+        try:
+            result = EvaluatorResult.model_validate(payload)
+        except ValueError as exc:
+            failures.append(f"Evaluator result does not match schema: {exc}")
+        else:
+            _verify_evaluator_result_public_boundary(result, failures)
+        if expected and payload != expected:
+            failures.append("Evaluator result is not in sync with the AttackPlan.")
+
+    return {
+        "schema_version": EVALUATOR_RESULT_VERIFICATION_SCHEMA,
+        "result_path": result_path.as_posix(),
+        "plan_path": plan_path.as_posix(),
+        "accepted": not failures,
+        "summary": {
+            "attack_plan_id": _evaluator_result_raw_output(payload).get(
+                "attack_plan_id"
+            ),
+            "attack_type": payload.get("attack_type"),
+            "failure_count": len(failures),
+        },
+        "failures": failures,
+    }
+
+
+def _read_evaluator_result_json_object(
+    path: Path,
+    failures: list[str],
+) -> dict[str, Any]:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        failures.append(f"Evaluator result is missing: {path.as_posix()}.")
+        return {}
+    except json.JSONDecodeError as exc:
+        failures.append(f"Evaluator result is invalid JSON at line {exc.lineno}.")
+        return {}
+    if not isinstance(payload, dict):
+        failures.append("Evaluator result must be a JSON object.")
+        return {}
     return payload
+
+
+def _verify_evaluator_result_public_boundary(
+    result: EvaluatorResult,
+    failures: list[str],
+) -> None:
+    raw_output = result.raw_output
+    if raw_output.get("source") != "agades_pqc_gym.evaluators.cascade.CascadeEvaluator":
+        failures.append("Evaluator result source binding is missing.")
+    if raw_output.get("claim_allowed") is not False:
+        failures.append("Evaluator result must not allow security claims.")
+    if raw_output.get("public_interpretation") != (
+        "reproducibility_and_reviewer_binding_only"
+    ):
+        failures.append("Evaluator result public interpretation boundary is missing.")
+
+
+def _evaluator_result_raw_output(payload: dict[str, Any]) -> dict[str, Any]:
+    raw_output = payload.get("raw_output")
+    if isinstance(raw_output, dict):
+        return raw_output
+    return {}
 
 
 def verify_attack_plan_proof_artifact(
