@@ -12,6 +12,9 @@ import agades_pqc_gym.rl.environment as rl_environment
 from agades_pqc_gym.cli import app
 from agades_pqc_gym.core.target import TargetFamily
 from agades_pqc_gym.formal.artifacts import build_attack_plan_proof_artifact_from_json
+from agades_pqc_gym.formal.estimator_model import (
+    formal_estimator_model_contract_sha256,
+)
 from agades_pqc_gym.rl.environment import (
     DEFAULT_ROLLOUT_PLANS,
     RL_REWARD_REPORT_SCHEMA,
@@ -71,6 +74,12 @@ def test_pedagogical_reward_scores_all_terms_for_matching_seed() -> None:
     assert len(
         report["formal_summary"]["attackplan_semantics"]["semantics_sha256"]
     ) == 64
+    assert report["formal_summary"]["operator_semantics"] == (
+        _expected_operator_semantics_binding()
+    )
+    assert report["formal_summary"]["formal_estimator_model"] == (
+        _expected_formal_estimator_model_binding()
+    )
     assert report["formal_summary"]["type_rule_kinds"] == [
         "estimator_claim_boundary",
         "family_applicability_boundary",
@@ -284,6 +293,10 @@ def test_gym_environment_reset_step_emits_public_safe_rollout_trace() -> None:
     assert semantics["formal_rules"] == 5
     assert semantics["claim_policy_forbids_unreviewed_security_claims"] is True
     assert len(semantics["semantics_sha256"]) == 64
+    assert binding["operator_semantics"] == _expected_operator_semantics_binding()
+    assert binding["formal_estimator_model"] == (
+        _expected_formal_estimator_model_binding()
+    )
 
 
 def test_default_public_rollout_examples_cover_every_target_family() -> None:
@@ -295,6 +308,14 @@ def test_default_public_rollout_examples_cover_every_target_family() -> None:
     ]
     assert all(
         row["formal_artifact_binding"]["claim_allowed"] is False
+        for row in rows
+    )
+    assert all(
+        row["formal_artifact_binding"]["operator_semantics"]["accepted"] is True
+        for row in rows
+    )
+    assert all(
+        row["formal_artifact_binding"]["formal_estimator_model"]["accepted"] is True
         for row in rows
     )
     assert all(row["private_fields_present"] is False for row in rows)
@@ -349,3 +370,48 @@ def test_rl_rollout_examples_cli_round_trip(tmp_path: Path) -> None:
 def _task_info(path: Path) -> dict[str, object]:
     env = AgadesPQCGymEnvironment.from_attack_plan_paths([path])
     return env.reset()["task"]
+
+
+def _expected_operator_semantics_binding() -> dict[str, object]:
+    payload = json.loads(
+        Path("docs/formal_operator_semantics.json").read_text(encoding="utf-8")
+    )
+    summary = payload["summary"]
+    return {
+        "schema_version": "agades.pqc.rl.operator_semantics_binding.v1",
+        "semantics_path": "docs/formal_operator_semantics.json",
+        "accepted": True,
+        "operators": summary["operators"],
+        "required_param_fields": summary["required_param_fields"],
+        "claim_policy_forbids_unreviewed_security_claims": True,
+        "semantics_sha256": payload["semantics_sha256"],
+    }
+
+
+def _expected_formal_estimator_model_binding() -> dict[str, object]:
+    payload = json.loads(
+        Path("docs/formal_estimator_model.json").read_text(encoding="utf-8")
+    )
+    summary = payload["summary"]
+    proof_binding = payload["proof_artifact_binding"]
+    return {
+        "schema_version": "agades.pqc.rl.formal_estimator_model_binding.v1",
+        "model_path": "docs/formal_estimator_model.json",
+        "accepted": True,
+        "model_schema_version": "agades.pqc.formal.estimator_model.v1",
+        "contract_sha256": formal_estimator_model_contract_sha256(payload),
+        "families": summary["families"],
+        "runtime_operator_count": summary["runtime_operator_count"],
+        "result_binding_required_before_claim": summary[
+            "result_binding_required_before_claim"
+        ],
+        "schema_only_no_estimator": summary["schema_only_no_estimator"],
+        "proof_artifact_binding_required_before_claim": (
+            proof_binding["estimator_result_binding_required_before_claim"]
+            is True
+            and proof_binding["security_claim_status_without_review"]
+            == "disallowed"
+        ),
+        "claim_policy_forbids_unreviewed_security_claims": True,
+        "linked_artifact_hashes_excluded_from_contract": True,
+    }

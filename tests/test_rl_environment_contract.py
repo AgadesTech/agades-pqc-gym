@@ -109,6 +109,8 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
         "requires_no_security_claim": True,
         "requires_reviewer_quality_signal": True,
         "requires_attackplan_semantics_contract": True,
+        "requires_operator_semantics_contract": True,
+        "requires_formal_estimator_model_contract": True,
     }
     assert contract["linked_artifacts"]["formal_attackplan_semantics"]["path"] == (
         "docs/formal_attackplan_semantics.json"
