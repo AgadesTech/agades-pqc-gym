@@ -79,6 +79,23 @@
   "lean_sources": [
     {
       "imports": [],
+      "path": "formal/lean/AgadesPQC/AttackPlan.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "e90999b0b54da67dad2b35ebaf38d9f7eeca154ac0081753740f94e8ba8aa0c2",
+      "theorems": [
+        "AgadesPQC.AttackPlan.schema_contract_well_formed",
+        "AgadesPQC.AttackPlan.canonicalization_stable",
+        "AgadesPQC.AttackPlan.operators_nonempty",
+        "AgadesPQC.AttackPlan.unsupported_operator_rejected",
+        "AgadesPQC.AttackPlan.unreviewed_security_claim_forbidden"
+      ]
+    },
+    {
+      "imports": [],
       "path": "formal/lean/AgadesPQC/CodeBased/SchemaOnly.lean",
       "placeholder_scan": {
         "contains_admit": false,
@@ -286,6 +303,7 @@
         "AgadesPQC.Lattice.Target",
         "AgadesPQC.Lattice.PrimalUSVP",
         "AgadesPQC.EstimatorModel",
+        "AgadesPQC.AttackPlan",
         "AgadesPQC.OperatorSemantics",
         "AgadesPQC.ProofObligation",
         "AgadesPQC.CodeBased.Target",
@@ -303,11 +321,11 @@
         "contains_axiom": false,
         "contains_sorry": false
       },
-      "sha256": "f08d5dda6fb67b95a199c9255afd45639b4d9f1abd0a37bca6c4aae1185257a8",
+      "sha256": "087ecc559a75efae5d1932b16ada6c0618592388ea6f4ceef78a16cfd64b4c7e",
       "theorems": []
     }
   ],
-  "manifest_sha256": "3f61f7cde6b89af4907633c746bef3e973fdd8745e3c47d87ec5d14429f7853c",
+  "manifest_sha256": "656657789b889089a6764991faa0d2fabed032eb7f7b43c561ee411247989ca4",
   "placeholder_scan": {
     "contains_admit": false,
     "contains_axiom": false,
@@ -330,7 +348,7 @@
   "summary": {
     "ci_lean_build_gate": true,
     "placeholder_failures": 0,
-    "source_modules": 14,
-    "theorem_declarations": 36
+    "source_modules": 15,
+    "theorem_declarations": 41
   }
 }

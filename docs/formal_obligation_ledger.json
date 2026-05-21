@@ -8,7 +8,7 @@
   "families": [
     {
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "69c43e61e2f50131c780580fa8a65c3c9acbbe6b0901f08fe30c71e5b9885dc1",
+      "entry_sha256": "bdf697439bd72ac2275568ec777e5e998bac26fa3853a0a8abfdff86119dd59d",
       "estimator_model": {
         "model_id": "agades.pqc.evaluator_model.boundary.v1",
         "no_fake_estimate": true,
@@ -35,8 +35,8 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.dimension_modulus_positive",
           "ledger_entry_id": "LWE:lattice.dimension_modulus_positive",
-          "ledger_entry_sha256": "41e69f378809a09a6c64bac23fba8bfe5a4e68fda38c29cb4d8955924a053889",
-          "representative_proof_artifact_sha256": "79fd2b36c9109797b3bc3fa1a18d7845646b122e7664cafbd0cb14098d1d2584",
+          "ledger_entry_sha256": "c017e32a8daedbedaa703958f287441a8842bfba7f6ed432d1ab01c11954e602",
+          "representative_proof_artifact_sha256": "0173ec93fa4d3d1106ef4d9678268565624c60c8e5c56a06d9fb083cecb17e99",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -64,8 +64,8 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
           "ledger_entry_id": "LWE:lattice.distributions_present",
-          "ledger_entry_sha256": "4105674fead9cf0303568dde52294388e253299ba10189d07f92b59c61e7b45e",
-          "representative_proof_artifact_sha256": "79fd2b36c9109797b3bc3fa1a18d7845646b122e7664cafbd0cb14098d1d2584",
+          "ledger_entry_sha256": "7642a50735f9f9f9c9dc747e9de20850ef15e1b85f04ef3ce71bd13a622558c8",
+          "representative_proof_artifact_sha256": "0173ec93fa4d3d1106ef4d9678268565624c60c8e5c56a06d9fb083cecb17e99",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -96,7 +96,7 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.parameters_positive",
           "ledger_entry_id": "LWE:target.lwe.parameters.positive",
-          "ledger_entry_sha256": "17b4d34c727fc4c0b0243f46e8440e152466bc6077eab018ebea114a646f8715",
+          "ledger_entry_sha256": "65d910b1b82e60918b2c9b849fd592d3b9c3428f31b1210a4a927f519e77051d",
           "obligation_id": "target.lwe.parameters.positive",
           "obligation_sha256": "a1b1194c6f58c34f1f9b7c9d05d4e30dc09919f29dc9efd0de778aa4e28a7a33",
           "obligation_type": {
@@ -113,7 +113,7 @@
               "target_family": "LWE"
             }
           },
-          "representative_proof_artifact_sha256": "79fd2b36c9109797b3bc3fa1a18d7845646b122e7664cafbd0cb14098d1d2584",
+          "representative_proof_artifact_sha256": "0173ec93fa4d3d1106ef4d9678268565624c60c8e5c56a06d9fb083cecb17e99",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -149,7 +149,7 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
           "ledger_entry_id": "LWE:target.lwe.distributions.present",
-          "ledger_entry_sha256": "245045af664a7924861323d14c3924a2ae1c733dbf12baaa7dd69272e3dc3a85",
+          "ledger_entry_sha256": "db422ff134e8a2118bc6710fe4c0a89463bbd84156ba82ece50f68678d5cd929",
           "obligation_id": "target.lwe.distributions.present",
           "obligation_sha256": "876054832003e1cbdea7cab9e0e7a34ca68e377fe6df3f01f59d41a72b439520",
           "obligation_type": {
@@ -166,7 +166,7 @@
               "target_family": "LWE"
             }
           },
-          "representative_proof_artifact_sha256": "79fd2b36c9109797b3bc3fa1a18d7845646b122e7664cafbd0cb14098d1d2584",
+          "representative_proof_artifact_sha256": "0173ec93fa4d3d1106ef4d9678268565624c60c8e5c56a06d9fb083cecb17e99",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -202,7 +202,7 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.PrimalUSVP.beta_valid_range",
           "ledger_entry_id": "LWE:operator.primal_usvp.beta.valid_range",
-          "ledger_entry_sha256": "ecb1fec9788361b9cf7f8c3f12225fe8de886aa93d4e01612d48a0c34acd51e4",
+          "ledger_entry_sha256": "beb2cd3cf0e28f9c6d32046da0a88c9fb1dab5b412e1e83b72af389e3c41d848",
           "obligation_id": "operator.primal_usvp.beta.valid_range",
           "obligation_sha256": "b5acc8e22683aa71db608709acfa38a02f20bb7691b608c5318884b8e63dd4db",
           "obligation_type": {
@@ -219,7 +219,7 @@
               "scope": "operator"
             }
           },
-          "representative_proof_artifact_sha256": "79fd2b36c9109797b3bc3fa1a18d7845646b122e7664cafbd0cb14098d1d2584",
+          "representative_proof_artifact_sha256": "0173ec93fa4d3d1106ef4d9678268565624c60c8e5c56a06d9fb083cecb17e99",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -255,7 +255,7 @@
           },
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "ledger_entry_id": "LWE:estimator.boundary.no_security_claim",
-          "ledger_entry_sha256": "2b73f64b87b65a60a8a2f7ee473810d4c3547b535b58ffd734ebe87a6a6749e8",
+          "ledger_entry_sha256": "eb82fbcdd319e82da9c833a291fa0046a11a07e78772a1d3ef4d64db92ca6b83",
           "obligation_id": "estimator.boundary.no_security_claim",
           "obligation_sha256": "e2b8516d37b64d8b5cea07ae886f6e5c58a03b46c83cbbc194b4c8172f8ac595",
           "obligation_type": {
@@ -272,7 +272,7 @@
               "scope": "estimator"
             }
           },
-          "representative_proof_artifact_sha256": "79fd2b36c9109797b3bc3fa1a18d7845646b122e7664cafbd0cb14098d1d2584",
+          "representative_proof_artifact_sha256": "0173ec93fa4d3d1106ef4d9678268565624c60c8e5c56a06d9fb083cecb17e99",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -310,7 +310,7 @@
         "sha256": "5cb2938a2b72024d50ab478d871c05446b92ec20c28f1971435499a12bf0a934"
       },
       "representative_proof_artifact": {
-        "artifact_sha256": "79fd2b36c9109797b3bc3fa1a18d7845646b122e7664cafbd0cb14098d1d2584",
+        "artifact_sha256": "0173ec93fa4d3d1106ef4d9678268565624c60c8e5c56a06d9fb083cecb17e99",
         "estimator_result_binding_status": "attached_unreviewed",
         "required_reviewers": [
           "lattice_cryptographer",
@@ -328,7 +328,7 @@
     },
     {
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "91dcd89dcc5d8eb8d81cf714dafc63cdf54166c074855f2a74a9642dc85b96d6",
+      "entry_sha256": "b51f66de95d4d8d338228b3d6b985344b8e60a165567d05d523f3cc08d7d8998",
       "estimator_model": {
         "model_id": "agades.pqc.evaluator_model.boundary.v1",
         "no_fake_estimate": true,
@@ -355,8 +355,8 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.dimension_modulus_positive",
           "ledger_entry_id": "MLWE:lattice.dimension_modulus_positive",
-          "ledger_entry_sha256": "9272c71179ee7fe210a7331ed0c4151ec429b6937aa28cc24df7a88698c29711",
-          "representative_proof_artifact_sha256": "50b541a0cc8f22a4deda016aa500b35566a17a4d0538d6e8bc9cd26edca36e5d",
+          "ledger_entry_sha256": "dae603c3dcb9d0a8b89e1220372902d75ea1b249e3594c5e467bcf51acf6b89b",
+          "representative_proof_artifact_sha256": "0e9e55dc770b2503f50deb6869ef4047bb970678784050a79e0052c95128a17c",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -384,8 +384,8 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
           "ledger_entry_id": "MLWE:lattice.distributions_present",
-          "ledger_entry_sha256": "23cbe121c30f75edc99b398ce5eb077ed6b2fb3114a214542ebff27caa9b0919",
-          "representative_proof_artifact_sha256": "50b541a0cc8f22a4deda016aa500b35566a17a4d0538d6e8bc9cd26edca36e5d",
+          "ledger_entry_sha256": "6dadc8c00ffc34dc85e0327ef6790f6c5cb7890b409e6eff2d4d8d4863721956",
+          "representative_proof_artifact_sha256": "0e9e55dc770b2503f50deb6869ef4047bb970678784050a79e0052c95128a17c",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -413,8 +413,8 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.module_rank_present",
           "ledger_entry_id": "MLWE:lattice.mlwe.module_rank_present",
-          "ledger_entry_sha256": "2e5bcee30bdac9dc962a22b569b27c5bcd43f089de21a31a1a65a449acbc3cec",
-          "representative_proof_artifact_sha256": "50b541a0cc8f22a4deda016aa500b35566a17a4d0538d6e8bc9cd26edca36e5d",
+          "ledger_entry_sha256": "508bba72ce91d0b8155207a0dd8f1b825f30eb669acb0e1ef0ace6e3d3b36918",
+          "representative_proof_artifact_sha256": "0e9e55dc770b2503f50deb6869ef4047bb970678784050a79e0052c95128a17c",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -450,7 +450,7 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.parameters_positive",
           "ledger_entry_id": "MLWE:target.mlwe.parameters.positive",
-          "ledger_entry_sha256": "d482993f6e9212b641222be8f2651ad300c0853aafe53b65252cd9f678122f17",
+          "ledger_entry_sha256": "1b4d634a93ec8c477501d41ee389fa15af146363d2cd6b0a3e5c3955ddccd85d",
           "obligation_id": "target.mlwe.parameters.positive",
           "obligation_sha256": "7f1b81036e2c287711e357c16aa9a0e7f8d275179d97b7aaa8e95bdb1ef27c1d",
           "obligation_type": {
@@ -467,7 +467,7 @@
               "target_family": "MLWE"
             }
           },
-          "representative_proof_artifact_sha256": "50b541a0cc8f22a4deda016aa500b35566a17a4d0538d6e8bc9cd26edca36e5d",
+          "representative_proof_artifact_sha256": "0e9e55dc770b2503f50deb6869ef4047bb970678784050a79e0052c95128a17c",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -503,7 +503,7 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
           "ledger_entry_id": "MLWE:target.mlwe.distributions.present",
-          "ledger_entry_sha256": "02c806ef81cc4cdb5604122db44dc49601fc9bb6a4c3dfac298b5171554c2665",
+          "ledger_entry_sha256": "ee3ee57b70a8becdeb28e956b1f999fd5d1a917199be4803a7df6b9196fca873",
           "obligation_id": "target.mlwe.distributions.present",
           "obligation_sha256": "9a0f200647cf0591e9d770cd4717703aae63e3c69b3a10c2f84c160b9a3574e0",
           "obligation_type": {
@@ -520,7 +520,7 @@
               "target_family": "MLWE"
             }
           },
-          "representative_proof_artifact_sha256": "50b541a0cc8f22a4deda016aa500b35566a17a4d0538d6e8bc9cd26edca36e5d",
+          "representative_proof_artifact_sha256": "0e9e55dc770b2503f50deb6869ef4047bb970678784050a79e0052c95128a17c",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -556,7 +556,7 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.module_rank_present",
           "ledger_entry_id": "MLWE:target.mlwe.module_rank.present",
-          "ledger_entry_sha256": "fa46c0dd548d6ced24329cec83575bf2beb1f3ddddd2a4c5284e3dd64a1458d2",
+          "ledger_entry_sha256": "4b4af6f7b85c6f77157ca769095f9cc88c018f04231d2bfe5287a74b26b7fc7d",
           "obligation_id": "target.mlwe.module_rank.present",
           "obligation_sha256": "53fd04b2d605efc8e60c3499f433d84336cc1a68bb7f105dc7d5b195f7553a34",
           "obligation_type": {
@@ -573,7 +573,7 @@
               "target_family": "MLWE"
             }
           },
-          "representative_proof_artifact_sha256": "50b541a0cc8f22a4deda016aa500b35566a17a4d0538d6e8bc9cd26edca36e5d",
+          "representative_proof_artifact_sha256": "0e9e55dc770b2503f50deb6869ef4047bb970678784050a79e0052c95128a17c",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -609,7 +609,7 @@
           },
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "ledger_entry_id": "MLWE:estimator.boundary.no_security_claim",
-          "ledger_entry_sha256": "3cdd8eb5e639b5baec22c3f0481e3c6a8d91e3ea763da5c59263d0276899fd36",
+          "ledger_entry_sha256": "5fbb46106231d194e428cd2d5280a2cd5093a2b4af837a89d9066204d8ab2f78",
           "obligation_id": "estimator.boundary.no_security_claim",
           "obligation_sha256": "4677331075f7eeff0e0e4fea72acec72b8a073e8239570f4908808aaff0b5cfc",
           "obligation_type": {
@@ -626,7 +626,7 @@
               "scope": "estimator"
             }
           },
-          "representative_proof_artifact_sha256": "50b541a0cc8f22a4deda016aa500b35566a17a4d0538d6e8bc9cd26edca36e5d",
+          "representative_proof_artifact_sha256": "0e9e55dc770b2503f50deb6869ef4047bb970678784050a79e0052c95128a17c",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -664,7 +664,7 @@
         "sha256": "14c62b76aef2b52e296e7de9e09e9b88e9d0f178161384c374de5d160325223a"
       },
       "representative_proof_artifact": {
-        "artifact_sha256": "50b541a0cc8f22a4deda016aa500b35566a17a4d0538d6e8bc9cd26edca36e5d",
+        "artifact_sha256": "0e9e55dc770b2503f50deb6869ef4047bb970678784050a79e0052c95128a17c",
         "estimator_result_binding_status": "attached_unreviewed",
         "required_reviewers": [
           "lattice_cryptographer",
@@ -682,7 +682,7 @@
     },
     {
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "89b493fbe510e30bcce8484f6a2267e6d6d74f333fdbc982baed60d35adc652a",
+      "entry_sha256": "2e27fd4a2a79af749e3b58c7a3436fda172553c1952ffe64b1cd964b19a28683",
       "estimator_model": {
         "model_id": "schema_only_no_estimator",
         "no_fake_estimate": true,
@@ -709,8 +709,8 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.ntru_schema_shape",
           "ledger_entry_id": "NTRU:lattice.ntru.schema_shape",
-          "ledger_entry_sha256": "87faae9dd79fd32bf621f87975b2b5b7a1db3ebe822a66a4502d82063bce4666",
-          "representative_proof_artifact_sha256": "a20eb335f5d7498f8f23651ae642bc4f6e88d30529d3ca18ada09827bf995cf6",
+          "ledger_entry_sha256": "af3a709567b77f6cf3d604168ee1b4fe9b96d9051d1dd2e9fbe984943b643fd3",
+          "representative_proof_artifact_sha256": "6df53dae7a228fb45d94a8356d45220ebfb5485b8107dd8b014df61fedd7049f",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -741,7 +741,7 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.ntru_schema_only_no_estimate",
           "ledger_entry_id": "NTRU:family.ntru.schema_only.no_estimate",
-          "ledger_entry_sha256": "11f3a8e50c6e8dd934367872d1db5c1ac3f9ef17d21796f521c216b72e0c1799",
+          "ledger_entry_sha256": "b15c1e8affa96c45a53ab2c87f825ce83ae5d8402df74475d22dcef14bda1061",
           "obligation_id": "family.ntru.schema_only.no_estimate",
           "obligation_sha256": "20916392766d3a771a8834d7732a47ca99f385ec76ccfd55785af8fa4f356c09",
           "obligation_type": {
@@ -758,7 +758,7 @@
               "support_level": "schema_only"
             }
           },
-          "representative_proof_artifact_sha256": "a20eb335f5d7498f8f23651ae642bc4f6e88d30529d3ca18ada09827bf995cf6",
+          "representative_proof_artifact_sha256": "6df53dae7a228fb45d94a8356d45220ebfb5485b8107dd8b014df61fedd7049f",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -794,7 +794,7 @@
           },
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "ledger_entry_id": "NTRU:estimator.boundary.no_security_claim",
-          "ledger_entry_sha256": "71a7b1fbd124f4a13c307868af2b60cda3a67ffa8b52d1c31da093276adcbe5b",
+          "ledger_entry_sha256": "b3c5598a8a331d844a3b455513be44c4ac634f6dd530839f35ab8351cf6e5256",
           "obligation_id": "estimator.boundary.no_security_claim",
           "obligation_sha256": "2c76aae7d7b931ec4352467d44b708a0c8c8d91f731ed5c09185cecc2ca0f6ac",
           "obligation_type": {
@@ -811,7 +811,7 @@
               "scope": "estimator"
             }
           },
-          "representative_proof_artifact_sha256": "a20eb335f5d7498f8f23651ae642bc4f6e88d30529d3ca18ada09827bf995cf6",
+          "representative_proof_artifact_sha256": "6df53dae7a228fb45d94a8356d45220ebfb5485b8107dd8b014df61fedd7049f",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -849,7 +849,7 @@
         "sha256": "6afef23bcfc7b3031a476c6bd45e6a7afdcc736c36729cf3c26766a027e5d17a"
       },
       "representative_proof_artifact": {
-        "artifact_sha256": "a20eb335f5d7498f8f23651ae642bc4f6e88d30529d3ca18ada09827bf995cf6",
+        "artifact_sha256": "6df53dae7a228fb45d94a8356d45220ebfb5485b8107dd8b014df61fedd7049f",
         "estimator_result_binding_status": "not_attached",
         "required_reviewers": [
           "lattice_cryptographer",
@@ -867,7 +867,7 @@
     },
     {
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "f54e0a3d751cad202473404d48083dbb4fc52e887195bdc3284bfeb074c1030b",
+      "entry_sha256": "803b9454631617519a807b95ec9a362dbfde2cac9167a816bafad43f2b825493",
       "estimator_model": {
         "model_id": "schema_only_no_estimator",
         "no_fake_estimate": true,
@@ -894,8 +894,8 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.sis_schema_shape",
           "ledger_entry_id": "SIS:lattice.sis.schema_shape",
-          "ledger_entry_sha256": "35f997f509f4d986d92f5e3f06965ff66db3d760212cd56bae19002eed3f5970",
-          "representative_proof_artifact_sha256": "1563530f1067215b56bcfda238f820ab9495588b93720080b445303d6add30eb",
+          "ledger_entry_sha256": "4a16de97713e17a8bc0763f367afb56cf6bcd2c58d761776d3e6104a71495c78",
+          "representative_proof_artifact_sha256": "5be751124683eb16a928281e351af745943fba71697d6dcbd723eb5ccc25db6a",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -926,7 +926,7 @@
           },
           "lean_theorem": "AgadesPQC.Lattice.Target.sis_schema_only_no_estimate",
           "ledger_entry_id": "SIS:family.sis.schema_only.no_estimate",
-          "ledger_entry_sha256": "47cd4e7f1d2b601d9b3e848740c1f6130535b57f3efebb11061a3a7c2c019a20",
+          "ledger_entry_sha256": "71cd4a3c70f4fb68f1a7804dffb89dc92227c63a366ffadcc34b65e885408bfe",
           "obligation_id": "family.sis.schema_only.no_estimate",
           "obligation_sha256": "f8a0781f173ba7b29c09ced08790c73ec777d630ee38042d8135b7a441daa900",
           "obligation_type": {
@@ -943,7 +943,7 @@
               "support_level": "schema_only"
             }
           },
-          "representative_proof_artifact_sha256": "1563530f1067215b56bcfda238f820ab9495588b93720080b445303d6add30eb",
+          "representative_proof_artifact_sha256": "5be751124683eb16a928281e351af745943fba71697d6dcbd723eb5ccc25db6a",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -979,7 +979,7 @@
           },
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "ledger_entry_id": "SIS:estimator.boundary.no_security_claim",
-          "ledger_entry_sha256": "634f1ea73a31afb9a2d526aaf08f47cc95b968af8f28549bbd10c815646f5786",
+          "ledger_entry_sha256": "d46638587817ee060dd7701f0af2750d558a1e4494c2095abf899aeb0035832a",
           "obligation_id": "estimator.boundary.no_security_claim",
           "obligation_sha256": "3c4d58e4adfd4069178f310fc29ac36fa943433646fe43a33392e55a28e79233",
           "obligation_type": {
@@ -996,7 +996,7 @@
               "scope": "estimator"
             }
           },
-          "representative_proof_artifact_sha256": "1563530f1067215b56bcfda238f820ab9495588b93720080b445303d6add30eb",
+          "representative_proof_artifact_sha256": "5be751124683eb16a928281e351af745943fba71697d6dcbd723eb5ccc25db6a",
           "required_reviewers": [
             "lattice_cryptographer",
             "formal_methods_reviewer",
@@ -1034,7 +1034,7 @@
         "sha256": "163730aecf9b5cdb1d14ae4aad5fbb62af29b2b4f35229e792d653542f032dd8"
       },
       "representative_proof_artifact": {
-        "artifact_sha256": "1563530f1067215b56bcfda238f820ab9495588b93720080b445303d6add30eb",
+        "artifact_sha256": "5be751124683eb16a928281e351af745943fba71697d6dcbd723eb5ccc25db6a",
         "estimator_result_binding_status": "not_attached",
         "required_reviewers": [
           "lattice_cryptographer",
@@ -1052,7 +1052,7 @@
     },
     {
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "7959dfc99c213ff1f4fd0d6abe46614c9e9d096866b30288929dac27e828f773",
+      "entry_sha256": "6b7e65b525bac9be77c99efaac45aa19a55f4ad1097b121738d5f4ffa2219957",
       "estimator_model": {
         "model_id": "schema_only_no_estimator",
         "no_fake_estimate": true,
@@ -1079,8 +1079,8 @@
           },
           "lean_theorem": "AgadesPQC.CodeBased.Target.parameters_well_formed",
           "ledger_entry_id": "CODE_BASED:code_based.length_dimension_weight_positive",
-          "ledger_entry_sha256": "55d1759ad19ab04c4b95d6f2c42dd42632a5494ecc1fdf10dc6738f7284e8e05",
-          "representative_proof_artifact_sha256": "0b50714327710a12c05ba806312d03a5999fbc370e9a03891048484825ab826a",
+          "ledger_entry_sha256": "20ebace89ce7b227e1b158f2d01e09b5057279a78649670638df397bbebbf695",
+          "representative_proof_artifact_sha256": "7223c4eb74ebe95fed6708658e998483e77af511153cf0e20e78a9b1b12af646",
           "required_reviewers": [
             "code_based_cryptographer",
             "formal_methods_reviewer",
@@ -1111,7 +1111,7 @@
           },
           "lean_theorem": "AgadesPQC.CodeBased.SchemaOnly.no_estimate",
           "ledger_entry_id": "CODE_BASED:family.code_based.schema_only.no_estimate",
-          "ledger_entry_sha256": "4f0aff27aa5c7549b43105fce0c9a7da9eb87ca3775035c73145dc8fa158646c",
+          "ledger_entry_sha256": "3d775dd58654d3896cfa2d4f678dc0cbdf8654f7520217dc73daf093fbb807dd",
           "obligation_id": "family.code_based.schema_only.no_estimate",
           "obligation_sha256": "d1e0bfd86f89ec09e7e8bdeddb16e91cc18c29c90a70818892f8b4264f7fd1be",
           "obligation_type": {
@@ -1128,7 +1128,7 @@
               "support_level": "schema_only"
             }
           },
-          "representative_proof_artifact_sha256": "0b50714327710a12c05ba806312d03a5999fbc370e9a03891048484825ab826a",
+          "representative_proof_artifact_sha256": "7223c4eb74ebe95fed6708658e998483e77af511153cf0e20e78a9b1b12af646",
           "required_reviewers": [
             "code_based_cryptographer",
             "formal_methods_reviewer",
@@ -1164,7 +1164,7 @@
           },
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "ledger_entry_id": "CODE_BASED:estimator.boundary.no_security_claim",
-          "ledger_entry_sha256": "2d12bfb06429ce882ea5547a37d9f2fc897cf41a6cab1a85069e485c4d4077e8",
+          "ledger_entry_sha256": "33bbba34109323b13f41e15111f423fe8f18e123d498b51965e17602aa418ae0",
           "obligation_id": "estimator.boundary.no_security_claim",
           "obligation_sha256": "5eafbad5da7f002c7bc4f03b74ac7e0cd878eaca350bee01c3aa56e2eb6caa83",
           "obligation_type": {
@@ -1181,7 +1181,7 @@
               "scope": "estimator"
             }
           },
-          "representative_proof_artifact_sha256": "0b50714327710a12c05ba806312d03a5999fbc370e9a03891048484825ab826a",
+          "representative_proof_artifact_sha256": "7223c4eb74ebe95fed6708658e998483e77af511153cf0e20e78a9b1b12af646",
           "required_reviewers": [
             "code_based_cryptographer",
             "formal_methods_reviewer",
@@ -1219,7 +1219,7 @@
         "sha256": "0d9583ca27cc8d1bf729e2275a572ac7cd61b4e3082c55f66c5e8efbbfcce35d"
       },
       "representative_proof_artifact": {
-        "artifact_sha256": "0b50714327710a12c05ba806312d03a5999fbc370e9a03891048484825ab826a",
+        "artifact_sha256": "7223c4eb74ebe95fed6708658e998483e77af511153cf0e20e78a9b1b12af646",
         "estimator_result_binding_status": "not_attached",
         "required_reviewers": [
           "code_based_cryptographer",
@@ -1237,7 +1237,7 @@
     },
     {
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "19c95b3e2fe97bb0f776054abaaf7b2b4d5d296615f674900f2ac974ce038d84",
+      "entry_sha256": "f6461ccc80735b129fcdf3b1549e2b464e9b7a28c77d8217040fdfee2758e861",
       "estimator_model": {
         "model_id": "agades.pqc.evaluator_model.boundary.v1",
         "no_fake_estimate": true,
@@ -1264,8 +1264,8 @@
           },
           "lean_theorem": "AgadesPQC.Multivariate.Target.variables_equations_field_present",
           "ledger_entry_id": "MULTIVARIATE:multivariate.variables_equations_field_present",
-          "ledger_entry_sha256": "2d7c2b15dfac7a7e76cafbe9ff3c28b86a203634a50f227bf7151deaf3f80d50",
-          "representative_proof_artifact_sha256": "6cea4ac6e6f73b4d8596becffc9d7b3e91dc8342d2778326dad9e8a81d9ec535",
+          "ledger_entry_sha256": "5cd7533e89231ea45c474e3c01908b6f876484951cdea24d0a00ceaead376af3",
+          "representative_proof_artifact_sha256": "3f59ab5a25b67a8cad2d9aea28ba79a26f36ae084524f9a01d8cba7d070f41d5",
           "required_reviewers": [
             "multivariate_cryptographer",
             "formal_methods_reviewer",
@@ -1296,7 +1296,7 @@
           },
           "lean_theorem": "AgadesPQC.Multivariate.Target.applicability_shape",
           "ledger_entry_id": "MULTIVARIATE:family.multivariate.applicability_shape",
-          "ledger_entry_sha256": "3c17f933e97b06bc99a87e33fac5fa203fe41e8450aee89a8b23f628cd00095f",
+          "ledger_entry_sha256": "60100894a12f75a61349d2a27dc5e12bb005c337769489f3c2cc1b055e5c6339",
           "obligation_id": "family.multivariate.applicability_shape",
           "obligation_sha256": "6d2d899f05601c805e32449ee6d0d4d3b23babdb43e3dec1e49cd294ac24843a",
           "obligation_type": {
@@ -1313,7 +1313,7 @@
               "target_family": "MULTIVARIATE"
             }
           },
-          "representative_proof_artifact_sha256": "6cea4ac6e6f73b4d8596becffc9d7b3e91dc8342d2778326dad9e8a81d9ec535",
+          "representative_proof_artifact_sha256": "3f59ab5a25b67a8cad2d9aea28ba79a26f36ae084524f9a01d8cba7d070f41d5",
           "required_reviewers": [
             "multivariate_cryptographer",
             "formal_methods_reviewer",
@@ -1349,7 +1349,7 @@
           },
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "ledger_entry_id": "MULTIVARIATE:estimator.boundary.no_security_claim",
-          "ledger_entry_sha256": "b2d6dad6291175219e0738c19277446f70e7c993468fd74716e7e45219b76dfe",
+          "ledger_entry_sha256": "9a2e3ab348686c5f9d991ad460ceb250b5547be68f029f9ccd48e3c4ba85bfd9",
           "obligation_id": "estimator.boundary.no_security_claim",
           "obligation_sha256": "509af6ec79eac7c4c38f8b5861dd5144176ae46df17b69108b82c07be912b116",
           "obligation_type": {
@@ -1366,7 +1366,7 @@
               "scope": "estimator"
             }
           },
-          "representative_proof_artifact_sha256": "6cea4ac6e6f73b4d8596becffc9d7b3e91dc8342d2778326dad9e8a81d9ec535",
+          "representative_proof_artifact_sha256": "3f59ab5a25b67a8cad2d9aea28ba79a26f36ae084524f9a01d8cba7d070f41d5",
           "required_reviewers": [
             "multivariate_cryptographer",
             "formal_methods_reviewer",
@@ -1404,7 +1404,7 @@
         "sha256": "ad38b7027ff36d0e7af3445b36b6acf18fbf068a94184234d8ce7a9e4fc8f3a1"
       },
       "representative_proof_artifact": {
-        "artifact_sha256": "6cea4ac6e6f73b4d8596becffc9d7b3e91dc8342d2778326dad9e8a81d9ec535",
+        "artifact_sha256": "3f59ab5a25b67a8cad2d9aea28ba79a26f36ae084524f9a01d8cba7d070f41d5",
         "estimator_result_binding_status": "not_attached",
         "required_reviewers": [
           "multivariate_cryptographer",
@@ -1422,7 +1422,7 @@
     },
     {
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "033eee120fb265fbc6529bd3450b0e29aa730cc9b9fb375f0fa36a4057039c86",
+      "entry_sha256": "f9dcf3b0ee3fd16edbef6abda7ddfafc3266689826943c174ce68c85f37b5e9f",
       "estimator_model": {
         "model_id": "agades.pqc.evaluator_model.boundary.v1",
         "no_fake_estimate": true,
@@ -1449,8 +1449,8 @@
           },
           "lean_theorem": "AgadesPQC.HashBased.Target.hash_function_and_security_parameter_present",
           "ledger_entry_id": "HASH_BASED:hash_based.hash_function_and_security_parameter_present",
-          "ledger_entry_sha256": "46e800977878a2ea92b9ee7cc8ca646e05215f34e462018599dedea65876206d",
-          "representative_proof_artifact_sha256": "44ef306330120f4f462974c27360e921cf390888a5a14801a9e16dddc7bf6956",
+          "ledger_entry_sha256": "d4d54713f4e2f6d3b0c26b044f3f9a53be212b1d2f61623927d8ea76c8e936eb",
+          "representative_proof_artifact_sha256": "b5567d29f88e5f71aa1b1ce034e95ec79005b5f9d217023c40a076f8388f1fba",
           "required_reviewers": [
             "hash_based_signature_reviewer",
             "formal_methods_reviewer",
@@ -1481,7 +1481,7 @@
           },
           "lean_theorem": "AgadesPQC.HashBased.Target.bound_check_is_not_attack_claim",
           "ledger_entry_id": "HASH_BASED:family.hash_based.bound_check_is_not_attack_claim",
-          "ledger_entry_sha256": "a032188071f3908c171a9c6cbb641618682f7c6aa6c8029924a38fff528effe7",
+          "ledger_entry_sha256": "3bebd6b34fb18fe38f343a748d858829748a2c476e902e29cfa8fbb00ff537dd",
           "obligation_id": "family.hash_based.bound_check_is_not_attack_claim",
           "obligation_sha256": "0475aeb4ea2a639e38c57e060ffb3026449e42b18b21c33f92d20d1237df878c",
           "obligation_type": {
@@ -1498,7 +1498,7 @@
               "target_family": "HASH_BASED"
             }
           },
-          "representative_proof_artifact_sha256": "44ef306330120f4f462974c27360e921cf390888a5a14801a9e16dddc7bf6956",
+          "representative_proof_artifact_sha256": "b5567d29f88e5f71aa1b1ce034e95ec79005b5f9d217023c40a076f8388f1fba",
           "required_reviewers": [
             "hash_based_signature_reviewer",
             "formal_methods_reviewer",
@@ -1534,7 +1534,7 @@
           },
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "ledger_entry_id": "HASH_BASED:estimator.boundary.no_security_claim",
-          "ledger_entry_sha256": "30445bfca794e03c692685fa078cb2fc810e5948b53fdd7f2f370ae55e0416a1",
+          "ledger_entry_sha256": "d60942a219f879f9381d62b44ec6b1ce066ab72067af196f9e520f04a28dade5",
           "obligation_id": "estimator.boundary.no_security_claim",
           "obligation_sha256": "b41adac9ccaf7497f3e41abcc98c68cd4ca60eceac6350040ff5993b5f6d5226",
           "obligation_type": {
@@ -1551,7 +1551,7 @@
               "scope": "estimator"
             }
           },
-          "representative_proof_artifact_sha256": "44ef306330120f4f462974c27360e921cf390888a5a14801a9e16dddc7bf6956",
+          "representative_proof_artifact_sha256": "b5567d29f88e5f71aa1b1ce034e95ec79005b5f9d217023c40a076f8388f1fba",
           "required_reviewers": [
             "hash_based_signature_reviewer",
             "formal_methods_reviewer",
@@ -1589,7 +1589,7 @@
         "sha256": "8b1d9b8c8774392b551e9e0a4ebf0fd3f0836d45042ba045d4865c237bf2a668"
       },
       "representative_proof_artifact": {
-        "artifact_sha256": "44ef306330120f4f462974c27360e921cf390888a5a14801a9e16dddc7bf6956",
+        "artifact_sha256": "b5567d29f88e5f71aa1b1ce034e95ec79005b5f9d217023c40a076f8388f1fba",
         "estimator_result_binding_status": "not_attached",
         "required_reviewers": [
           "hash_based_signature_reviewer",
@@ -1607,7 +1607,7 @@
     },
     {
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "fc1a812ae60c002d1b9c9daa1dea1f231c52f184993367a6305727d31f536ac4",
+      "entry_sha256": "e265c93ad52a25daa8a6eb4926b4d6d1c30351326d5a02516d36cc6901502d64",
       "estimator_model": {
         "model_id": "agades.pqc.evaluator_model.boundary.v1",
         "no_fake_estimate": true,
@@ -1634,8 +1634,8 @@
           },
           "lean_theorem": "AgadesPQC.IsogenyHistorical.Target.dimension_positive_historical_scope",
           "ledger_entry_id": "ISOGENY_HISTORICAL:isogeny_historical.dimension_positive_historical_scope",
-          "ledger_entry_sha256": "93a8c65abdd294b5c68cdf1130b318ed230a995434d8785c81b1448bf5e50231",
-          "representative_proof_artifact_sha256": "e0f0edce50c309c9c2a9294b7b6e740723af09cbb07cd9c3325e990213be6eaf",
+          "ledger_entry_sha256": "8fd58041b616509dc5db42f1fe8fd776a3c65bab609dccec99cb238131f87e67",
+          "representative_proof_artifact_sha256": "a3e335edf293df3ee933a0ff0b1d19f50ec9094e328e560b55bf5d0aa4b4e1f7",
           "required_reviewers": [
             "isogeny_historical_reviewer",
             "formal_methods_reviewer",
@@ -1666,7 +1666,7 @@
           },
           "lean_theorem": "AgadesPQC.IsogenyHistorical.Target.historical_only",
           "ledger_entry_id": "ISOGENY_HISTORICAL:family.isogeny_historical.historical_only",
-          "ledger_entry_sha256": "72e56beb1dbe6205d956a3e3c28972794493663e685a3bbdd95307306a43c9c1",
+          "ledger_entry_sha256": "5474ae94e4fc5b4552346036ff55af8e4c7e2eb9d802c2801a633287d1b7c2b4",
           "obligation_id": "family.isogeny_historical.historical_only",
           "obligation_sha256": "991cdcb6ba251760c21e228a9dd44a158814cd36224f7e3650fcd8b018ec341f",
           "obligation_type": {
@@ -1683,7 +1683,7 @@
               "target_family": "ISOGENY_HISTORICAL"
             }
           },
-          "representative_proof_artifact_sha256": "e0f0edce50c309c9c2a9294b7b6e740723af09cbb07cd9c3325e990213be6eaf",
+          "representative_proof_artifact_sha256": "a3e335edf293df3ee933a0ff0b1d19f50ec9094e328e560b55bf5d0aa4b4e1f7",
           "required_reviewers": [
             "isogeny_historical_reviewer",
             "formal_methods_reviewer",
@@ -1719,7 +1719,7 @@
           },
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "ledger_entry_id": "ISOGENY_HISTORICAL:estimator.boundary.no_security_claim",
-          "ledger_entry_sha256": "f969dbdb9007ff15049c6da8dfe4d4a6e8393b07631d5dd83083ec8fc8f67c5d",
+          "ledger_entry_sha256": "86dddcb5962119eb850b28e536128ead910a3ab83b8089337022ba8aabb1ea89",
           "obligation_id": "estimator.boundary.no_security_claim",
           "obligation_sha256": "d1833d3c3cd642fd063080acb4bb02d1ec1cde19792118b8b3ae45b2b5f1832c",
           "obligation_type": {
@@ -1736,7 +1736,7 @@
               "scope": "estimator"
             }
           },
-          "representative_proof_artifact_sha256": "e0f0edce50c309c9c2a9294b7b6e740723af09cbb07cd9c3325e990213be6eaf",
+          "representative_proof_artifact_sha256": "a3e335edf293df3ee933a0ff0b1d19f50ec9094e328e560b55bf5d0aa4b4e1f7",
           "required_reviewers": [
             "isogeny_historical_reviewer",
             "formal_methods_reviewer",
@@ -1774,7 +1774,7 @@
         "sha256": "91529eb1aee8d6dd7b9c3fa5360349cbb4ed8da9822b52b8b1f7e74bdada60b7"
       },
       "representative_proof_artifact": {
-        "artifact_sha256": "e0f0edce50c309c9c2a9294b7b6e740723af09cbb07cd9c3325e990213be6eaf",
+        "artifact_sha256": "a3e335edf293df3ee933a0ff0b1d19f50ec9094e328e560b55bf5d0aa4b4e1f7",
         "estimator_result_binding_status": "not_attached",
         "required_reviewers": [
           "isogeny_historical_reviewer",
@@ -1792,7 +1792,7 @@
     },
     {
       "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
-      "entry_sha256": "46fa85b4a7840a4c72904bd1a37d3d0eeaa44d52d48bbdcf03ffd5656cdf32c7",
+      "entry_sha256": "c5973cb20e1436998374ac040665fdb2de0f9fd9ac3f36ff4f06ffa5c7c41fa0",
       "estimator_model": {
         "model_id": "agades.pqc.evaluator_model.boundary.v1",
         "no_fake_estimate": true,
@@ -1819,8 +1819,8 @@
           },
           "lean_theorem": "AgadesPQC.ImplementationSecurity.Target.review_scope_declared",
           "ledger_entry_id": "IMPLEMENTATION_SECURITY:implementation_security.review_scope_declared",
-          "ledger_entry_sha256": "e0b85363485ebaf2180cc221980ece8265794d2a75d306cf07a5f53bd3eb2a72",
-          "representative_proof_artifact_sha256": "b7bf62c60f90e936ebdb2612687b18f15ecc86dac5408c3442a073dc7bc47e85",
+          "ledger_entry_sha256": "88670c5965bde72c309ac45f9fa222cefa8986fb7719d1a0a1732a47167ec064",
+          "representative_proof_artifact_sha256": "d38cd530e73c16045fb83ebe53d4c4aaa4841ef339fe76b191e6527fb82c4d62",
           "required_reviewers": [
             "implementation_security_reviewer",
             "formal_methods_reviewer",
@@ -1851,7 +1851,7 @@
           },
           "lean_theorem": "AgadesPQC.ImplementationSecurity.Target.no_conformance_claim",
           "ledger_entry_id": "IMPLEMENTATION_SECURITY:family.implementation_security.no_conformance_claim",
-          "ledger_entry_sha256": "0c7a75a907f560b83441dcb55d7307caf48dedf472b69d00480e4b0edca88979",
+          "ledger_entry_sha256": "d6ba3d47c7004b5d285dd88ef9c2cd46f63145e0b67c2346bdf3f068b7a46b2e",
           "obligation_id": "family.implementation_security.no_conformance_claim",
           "obligation_sha256": "48c926806a48bab5cb3ca796ccf1f72d8c7c6f435cb9d717d90b5f417117a14f",
           "obligation_type": {
@@ -1868,7 +1868,7 @@
               "target_family": "IMPLEMENTATION_SECURITY"
             }
           },
-          "representative_proof_artifact_sha256": "b7bf62c60f90e936ebdb2612687b18f15ecc86dac5408c3442a073dc7bc47e85",
+          "representative_proof_artifact_sha256": "d38cd530e73c16045fb83ebe53d4c4aaa4841ef339fe76b191e6527fb82c4d62",
           "required_reviewers": [
             "implementation_security_reviewer",
             "formal_methods_reviewer",
@@ -1904,7 +1904,7 @@
           },
           "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
           "ledger_entry_id": "IMPLEMENTATION_SECURITY:estimator.boundary.no_security_claim",
-          "ledger_entry_sha256": "18c56fb60a6e03f1f96c8c827139546de5c5787865917161d570f984f7df16ec",
+          "ledger_entry_sha256": "bb920cf802f65c81fb5f71e05447de6014ca63f459847d131e888dda53aa96b0",
           "obligation_id": "estimator.boundary.no_security_claim",
           "obligation_sha256": "91b268e0855a063eda139a020a4c0163783bfe35693546ffd6cb36e7b8f91fd5",
           "obligation_type": {
@@ -1921,7 +1921,7 @@
               "scope": "estimator"
             }
           },
-          "representative_proof_artifact_sha256": "b7bf62c60f90e936ebdb2612687b18f15ecc86dac5408c3442a073dc7bc47e85",
+          "representative_proof_artifact_sha256": "d38cd530e73c16045fb83ebe53d4c4aaa4841ef339fe76b191e6527fb82c4d62",
           "required_reviewers": [
             "implementation_security_reviewer",
             "formal_methods_reviewer",
@@ -1959,7 +1959,7 @@
         "sha256": "7bb5390d45c99a9baa4eee619771366b7db72540b315d9d581beee8e515d98c7"
       },
       "representative_proof_artifact": {
-        "artifact_sha256": "b7bf62c60f90e936ebdb2612687b18f15ecc86dac5408c3442a073dc7bc47e85",
+        "artifact_sha256": "d38cd530e73c16045fb83ebe53d4c4aaa4841ef339fe76b191e6527fb82c4d62",
         "estimator_result_binding_status": "not_attached",
         "required_reviewers": [
           "implementation_security_reviewer",
@@ -1996,8 +1996,8 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.dimension_modulus_positive",
       "ledger_entry_id": "LWE:lattice.dimension_modulus_positive",
-      "ledger_entry_sha256": "41e69f378809a09a6c64bac23fba8bfe5a4e68fda38c29cb4d8955924a053889",
-      "representative_proof_artifact_sha256": "79fd2b36c9109797b3bc3fa1a18d7845646b122e7664cafbd0cb14098d1d2584",
+      "ledger_entry_sha256": "c017e32a8daedbedaa703958f287441a8842bfba7f6ed432d1ab01c11954e602",
+      "representative_proof_artifact_sha256": "0173ec93fa4d3d1106ef4d9678268565624c60c8e5c56a06d9fb083cecb17e99",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2025,8 +2025,8 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
       "ledger_entry_id": "LWE:lattice.distributions_present",
-      "ledger_entry_sha256": "4105674fead9cf0303568dde52294388e253299ba10189d07f92b59c61e7b45e",
-      "representative_proof_artifact_sha256": "79fd2b36c9109797b3bc3fa1a18d7845646b122e7664cafbd0cb14098d1d2584",
+      "ledger_entry_sha256": "7642a50735f9f9f9c9dc747e9de20850ef15e1b85f04ef3ce71bd13a622558c8",
+      "representative_proof_artifact_sha256": "0173ec93fa4d3d1106ef4d9678268565624c60c8e5c56a06d9fb083cecb17e99",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2054,8 +2054,8 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.dimension_modulus_positive",
       "ledger_entry_id": "MLWE:lattice.dimension_modulus_positive",
-      "ledger_entry_sha256": "9272c71179ee7fe210a7331ed0c4151ec429b6937aa28cc24df7a88698c29711",
-      "representative_proof_artifact_sha256": "50b541a0cc8f22a4deda016aa500b35566a17a4d0538d6e8bc9cd26edca36e5d",
+      "ledger_entry_sha256": "dae603c3dcb9d0a8b89e1220372902d75ea1b249e3594c5e467bcf51acf6b89b",
+      "representative_proof_artifact_sha256": "0e9e55dc770b2503f50deb6869ef4047bb970678784050a79e0052c95128a17c",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2083,8 +2083,8 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
       "ledger_entry_id": "MLWE:lattice.distributions_present",
-      "ledger_entry_sha256": "23cbe121c30f75edc99b398ce5eb077ed6b2fb3114a214542ebff27caa9b0919",
-      "representative_proof_artifact_sha256": "50b541a0cc8f22a4deda016aa500b35566a17a4d0538d6e8bc9cd26edca36e5d",
+      "ledger_entry_sha256": "6dadc8c00ffc34dc85e0327ef6790f6c5cb7890b409e6eff2d4d8d4863721956",
+      "representative_proof_artifact_sha256": "0e9e55dc770b2503f50deb6869ef4047bb970678784050a79e0052c95128a17c",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2112,8 +2112,8 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.module_rank_present",
       "ledger_entry_id": "MLWE:lattice.mlwe.module_rank_present",
-      "ledger_entry_sha256": "2e5bcee30bdac9dc962a22b569b27c5bcd43f089de21a31a1a65a449acbc3cec",
-      "representative_proof_artifact_sha256": "50b541a0cc8f22a4deda016aa500b35566a17a4d0538d6e8bc9cd26edca36e5d",
+      "ledger_entry_sha256": "508bba72ce91d0b8155207a0dd8f1b825f30eb669acb0e1ef0ace6e3d3b36918",
+      "representative_proof_artifact_sha256": "0e9e55dc770b2503f50deb6869ef4047bb970678784050a79e0052c95128a17c",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2141,8 +2141,8 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.ntru_schema_shape",
       "ledger_entry_id": "NTRU:lattice.ntru.schema_shape",
-      "ledger_entry_sha256": "87faae9dd79fd32bf621f87975b2b5b7a1db3ebe822a66a4502d82063bce4666",
-      "representative_proof_artifact_sha256": "a20eb335f5d7498f8f23651ae642bc4f6e88d30529d3ca18ada09827bf995cf6",
+      "ledger_entry_sha256": "af3a709567b77f6cf3d604168ee1b4fe9b96d9051d1dd2e9fbe984943b643fd3",
+      "representative_proof_artifact_sha256": "6df53dae7a228fb45d94a8356d45220ebfb5485b8107dd8b014df61fedd7049f",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2170,8 +2170,8 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.sis_schema_shape",
       "ledger_entry_id": "SIS:lattice.sis.schema_shape",
-      "ledger_entry_sha256": "35f997f509f4d986d92f5e3f06965ff66db3d760212cd56bae19002eed3f5970",
-      "representative_proof_artifact_sha256": "1563530f1067215b56bcfda238f820ab9495588b93720080b445303d6add30eb",
+      "ledger_entry_sha256": "4a16de97713e17a8bc0763f367afb56cf6bcd2c58d761776d3e6104a71495c78",
+      "representative_proof_artifact_sha256": "5be751124683eb16a928281e351af745943fba71697d6dcbd723eb5ccc25db6a",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2199,8 +2199,8 @@
       },
       "lean_theorem": "AgadesPQC.CodeBased.Target.parameters_well_formed",
       "ledger_entry_id": "CODE_BASED:code_based.length_dimension_weight_positive",
-      "ledger_entry_sha256": "55d1759ad19ab04c4b95d6f2c42dd42632a5494ecc1fdf10dc6738f7284e8e05",
-      "representative_proof_artifact_sha256": "0b50714327710a12c05ba806312d03a5999fbc370e9a03891048484825ab826a",
+      "ledger_entry_sha256": "20ebace89ce7b227e1b158f2d01e09b5057279a78649670638df397bbebbf695",
+      "representative_proof_artifact_sha256": "7223c4eb74ebe95fed6708658e998483e77af511153cf0e20e78a9b1b12af646",
       "required_reviewers": [
         "code_based_cryptographer",
         "formal_methods_reviewer",
@@ -2228,8 +2228,8 @@
       },
       "lean_theorem": "AgadesPQC.Multivariate.Target.variables_equations_field_present",
       "ledger_entry_id": "MULTIVARIATE:multivariate.variables_equations_field_present",
-      "ledger_entry_sha256": "2d7c2b15dfac7a7e76cafbe9ff3c28b86a203634a50f227bf7151deaf3f80d50",
-      "representative_proof_artifact_sha256": "6cea4ac6e6f73b4d8596becffc9d7b3e91dc8342d2778326dad9e8a81d9ec535",
+      "ledger_entry_sha256": "5cd7533e89231ea45c474e3c01908b6f876484951cdea24d0a00ceaead376af3",
+      "representative_proof_artifact_sha256": "3f59ab5a25b67a8cad2d9aea28ba79a26f36ae084524f9a01d8cba7d070f41d5",
       "required_reviewers": [
         "multivariate_cryptographer",
         "formal_methods_reviewer",
@@ -2257,8 +2257,8 @@
       },
       "lean_theorem": "AgadesPQC.HashBased.Target.hash_function_and_security_parameter_present",
       "ledger_entry_id": "HASH_BASED:hash_based.hash_function_and_security_parameter_present",
-      "ledger_entry_sha256": "46e800977878a2ea92b9ee7cc8ca646e05215f34e462018599dedea65876206d",
-      "representative_proof_artifact_sha256": "44ef306330120f4f462974c27360e921cf390888a5a14801a9e16dddc7bf6956",
+      "ledger_entry_sha256": "d4d54713f4e2f6d3b0c26b044f3f9a53be212b1d2f61623927d8ea76c8e936eb",
+      "representative_proof_artifact_sha256": "b5567d29f88e5f71aa1b1ce034e95ec79005b5f9d217023c40a076f8388f1fba",
       "required_reviewers": [
         "hash_based_signature_reviewer",
         "formal_methods_reviewer",
@@ -2286,8 +2286,8 @@
       },
       "lean_theorem": "AgadesPQC.IsogenyHistorical.Target.dimension_positive_historical_scope",
       "ledger_entry_id": "ISOGENY_HISTORICAL:isogeny_historical.dimension_positive_historical_scope",
-      "ledger_entry_sha256": "93a8c65abdd294b5c68cdf1130b318ed230a995434d8785c81b1448bf5e50231",
-      "representative_proof_artifact_sha256": "e0f0edce50c309c9c2a9294b7b6e740723af09cbb07cd9c3325e990213be6eaf",
+      "ledger_entry_sha256": "8fd58041b616509dc5db42f1fe8fd776a3c65bab609dccec99cb238131f87e67",
+      "representative_proof_artifact_sha256": "a3e335edf293df3ee933a0ff0b1d19f50ec9094e328e560b55bf5d0aa4b4e1f7",
       "required_reviewers": [
         "isogeny_historical_reviewer",
         "formal_methods_reviewer",
@@ -2315,8 +2315,8 @@
       },
       "lean_theorem": "AgadesPQC.ImplementationSecurity.Target.review_scope_declared",
       "ledger_entry_id": "IMPLEMENTATION_SECURITY:implementation_security.review_scope_declared",
-      "ledger_entry_sha256": "e0b85363485ebaf2180cc221980ece8265794d2a75d306cf07a5f53bd3eb2a72",
-      "representative_proof_artifact_sha256": "b7bf62c60f90e936ebdb2612687b18f15ecc86dac5408c3442a073dc7bc47e85",
+      "ledger_entry_sha256": "88670c5965bde72c309ac45f9fa222cefa8986fb7719d1a0a1732a47167ec064",
+      "representative_proof_artifact_sha256": "d38cd530e73c16045fb83ebe53d4c4aaa4841ef339fe76b191e6527fb82c4d62",
       "required_reviewers": [
         "implementation_security_reviewer",
         "formal_methods_reviewer",
@@ -2326,25 +2326,31 @@
       "statement": "implementation-security tasks declare a review-only scope"
     }
   ],
-  "ledger_sha256": "cf15fd504437161f93da3c07339bf277deeaf9b4f49ea6c7f183476e531235b3",
+  "ledger_sha256": "15ea28db4d3f31bcd298aabb52391896ab5b94e0cb5458b581d885a1dd0a8d34",
   "linked_artifacts": {
+    "formal_attackplan_semantics": {
+      "canonical_sha256": "0c8bbd1b0f554f97731126881f15e7e49d4d669b1f92023901c9334146aacf42",
+      "path": "docs/formal_attackplan_semantics.json",
+      "schema_version": "agades.pqc.formal.attackplan_semantics.v1",
+      "sha256": "7ad2cc549f65109a06d662d550d13ff985f9e9aec8ca0284eadc5397f279580e"
+    },
     "formal_estimator_model": {
-      "canonical_sha256": "678ff5feff203fc824db75eba8c5aea23ba6942fd9512d167cb855abafefddf2",
+      "canonical_sha256": "025a24baf266b630df3fab45257c3b4523abad3641346de836481842d420e898",
       "path": "docs/formal_estimator_model.json",
       "schema_version": "agades.pqc.formal.estimator_model.v1",
-      "sha256": "f7344606554e5692d5f64113bff92b742619a1a38d188d4d50277e193e2c08f5"
+      "sha256": "1d230ccd1acd43b86a4819dffe030631dc0e1505658ae888dfb105c3d88ea7bc"
     },
     "formal_family_coverage": {
-      "canonical_sha256": "06c90c347da0d8b16810373263e55c38b2a504050110d6977f74f531788ed9db",
+      "canonical_sha256": "5bc75bb0b7a9c357a9a9b0d71c66089ec3d23b356eb8a5fa0b8618f9df42f4d8",
       "path": "docs/formal_family_coverage.json",
       "schema_version": "agades.pqc.formal.family_coverage.v1",
-      "sha256": "b733bbfe47a59070cfca0136930709d1a4cb33d4c096b8869e4e18f908174e5c"
+      "sha256": "d1476ba7a8fa30adffa66b86e6ae08ecb53f83ce6531f6d60d9da6d113bfb8d3"
     },
     "formal_lean_backend": {
-      "canonical_sha256": "13045560eaebdd5b4ae9bc6d6eeaf00c5d1c719c17f78364ecb76eefbf80ab5f",
+      "canonical_sha256": "c03634087eb1cdd22a7ef0045aeae244b1abc3742d71c17333958201c54052ba",
       "path": "docs/formal_lean_backend.json",
       "schema_version": "agades.pqc.formal.lean_backend.v1",
-      "sha256": "362bb8a19a74c7dcf318c6078eb7dfed43253e6d3d4a1f36ff31d511f6f788b0"
+      "sha256": "36793f0ba088ef4e4d692616b119bbff6f3e3653923aea3ebe39ceec6595d526"
     },
     "formal_lwe_evaluator_result": {
       "canonical_sha256": "19eeeda00bc0711436564712a14164fb5aed78dc1874cd2d7059453758b2be29",
@@ -2353,10 +2359,10 @@
       "sha256": "f84ad52b967ece51b4f9e165f469c55e5ba469b30d339ae81584352f102f3c3d"
     },
     "formal_lwe_proof_artifact": {
-      "canonical_sha256": "c9827555294fc72ed5316c0207b501ef7bd93459db491f6357e383ed4ffcce6c",
+      "canonical_sha256": "60c2d1f13f81de319fdc698b46d539dc823879815c754c482e9aba9bb219af09",
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
       "schema_version": "agades.pqc.formal.proof_artifact.v1",
-      "sha256": "753f16478946a27654dd6fbd3b54547b0a8b1a7a579172fc23709b1f1887449b"
+      "sha256": "6e46b60f236426526ac57ec64a648373f8fcf46034080a825315fba96109f8e8"
     },
     "formal_mlwe_evaluator_result": {
       "canonical_sha256": "3c5c37b0cfb4461b1ef99d559bb88c81e23557a0399f4004d70fee5bd58c991a",
@@ -2365,10 +2371,10 @@
       "sha256": "c9c4a7491a6049ef0cf49194841972f1ffbe7b8303403d6f23e8ae67f4e60f14"
     },
     "formal_mlwe_proof_artifact": {
-      "canonical_sha256": "4f00b733bff0f8db67a14ba20c3a6e7ad858f63ef4ed524f9be9c5a07394d16a",
+      "canonical_sha256": "fd66dda88ba8a31cbb073bd946ee6501b27b60fb17fc742d173969285c204de7",
       "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
       "schema_version": "agades.pqc.formal.proof_artifact.v1",
-      "sha256": "9487f2bade2e23a786d1a8e69abe21506bf659e0a692a2fd90f985d8f154bb81"
+      "sha256": "9f9d8b1fb9356c336c09612eb61993422a1c9eef6a58763b7cf9e5129af60065"
     },
     "formal_operator_semantics": {
       "canonical_sha256": "725350ae49a4314d7fe9bcd946f2c472f98bc6bef0d468eb052bbca403a76d5b",
@@ -2463,7 +2469,7 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.parameters_positive",
       "ledger_entry_id": "LWE:target.lwe.parameters.positive",
-      "ledger_entry_sha256": "17b4d34c727fc4c0b0243f46e8440e152466bc6077eab018ebea114a646f8715",
+      "ledger_entry_sha256": "65d910b1b82e60918b2c9b849fd592d3b9c3428f31b1210a4a927f519e77051d",
       "obligation_id": "target.lwe.parameters.positive",
       "obligation_sha256": "a1b1194c6f58c34f1f9b7c9d05d4e30dc09919f29dc9efd0de778aa4e28a7a33",
       "obligation_type": {
@@ -2480,7 +2486,7 @@
           "target_family": "LWE"
         }
       },
-      "representative_proof_artifact_sha256": "79fd2b36c9109797b3bc3fa1a18d7845646b122e7664cafbd0cb14098d1d2584",
+      "representative_proof_artifact_sha256": "0173ec93fa4d3d1106ef4d9678268565624c60c8e5c56a06d9fb083cecb17e99",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2516,7 +2522,7 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
       "ledger_entry_id": "LWE:target.lwe.distributions.present",
-      "ledger_entry_sha256": "245045af664a7924861323d14c3924a2ae1c733dbf12baaa7dd69272e3dc3a85",
+      "ledger_entry_sha256": "db422ff134e8a2118bc6710fe4c0a89463bbd84156ba82ece50f68678d5cd929",
       "obligation_id": "target.lwe.distributions.present",
       "obligation_sha256": "876054832003e1cbdea7cab9e0e7a34ca68e377fe6df3f01f59d41a72b439520",
       "obligation_type": {
@@ -2533,7 +2539,7 @@
           "target_family": "LWE"
         }
       },
-      "representative_proof_artifact_sha256": "79fd2b36c9109797b3bc3fa1a18d7845646b122e7664cafbd0cb14098d1d2584",
+      "representative_proof_artifact_sha256": "0173ec93fa4d3d1106ef4d9678268565624c60c8e5c56a06d9fb083cecb17e99",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2569,7 +2575,7 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.PrimalUSVP.beta_valid_range",
       "ledger_entry_id": "LWE:operator.primal_usvp.beta.valid_range",
-      "ledger_entry_sha256": "ecb1fec9788361b9cf7f8c3f12225fe8de886aa93d4e01612d48a0c34acd51e4",
+      "ledger_entry_sha256": "beb2cd3cf0e28f9c6d32046da0a88c9fb1dab5b412e1e83b72af389e3c41d848",
       "obligation_id": "operator.primal_usvp.beta.valid_range",
       "obligation_sha256": "b5acc8e22683aa71db608709acfa38a02f20bb7691b608c5318884b8e63dd4db",
       "obligation_type": {
@@ -2586,7 +2592,7 @@
           "scope": "operator"
         }
       },
-      "representative_proof_artifact_sha256": "79fd2b36c9109797b3bc3fa1a18d7845646b122e7664cafbd0cb14098d1d2584",
+      "representative_proof_artifact_sha256": "0173ec93fa4d3d1106ef4d9678268565624c60c8e5c56a06d9fb083cecb17e99",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2622,7 +2628,7 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "ledger_entry_id": "LWE:estimator.boundary.no_security_claim",
-      "ledger_entry_sha256": "2b73f64b87b65a60a8a2f7ee473810d4c3547b535b58ffd734ebe87a6a6749e8",
+      "ledger_entry_sha256": "eb82fbcdd319e82da9c833a291fa0046a11a07e78772a1d3ef4d64db92ca6b83",
       "obligation_id": "estimator.boundary.no_security_claim",
       "obligation_sha256": "e2b8516d37b64d8b5cea07ae886f6e5c58a03b46c83cbbc194b4c8172f8ac595",
       "obligation_type": {
@@ -2639,7 +2645,7 @@
           "scope": "estimator"
         }
       },
-      "representative_proof_artifact_sha256": "79fd2b36c9109797b3bc3fa1a18d7845646b122e7664cafbd0cb14098d1d2584",
+      "representative_proof_artifact_sha256": "0173ec93fa4d3d1106ef4d9678268565624c60c8e5c56a06d9fb083cecb17e99",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2675,7 +2681,7 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.parameters_positive",
       "ledger_entry_id": "MLWE:target.mlwe.parameters.positive",
-      "ledger_entry_sha256": "d482993f6e9212b641222be8f2651ad300c0853aafe53b65252cd9f678122f17",
+      "ledger_entry_sha256": "1b4d634a93ec8c477501d41ee389fa15af146363d2cd6b0a3e5c3955ddccd85d",
       "obligation_id": "target.mlwe.parameters.positive",
       "obligation_sha256": "7f1b81036e2c287711e357c16aa9a0e7f8d275179d97b7aaa8e95bdb1ef27c1d",
       "obligation_type": {
@@ -2692,7 +2698,7 @@
           "target_family": "MLWE"
         }
       },
-      "representative_proof_artifact_sha256": "50b541a0cc8f22a4deda016aa500b35566a17a4d0538d6e8bc9cd26edca36e5d",
+      "representative_proof_artifact_sha256": "0e9e55dc770b2503f50deb6869ef4047bb970678784050a79e0052c95128a17c",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2728,7 +2734,7 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
       "ledger_entry_id": "MLWE:target.mlwe.distributions.present",
-      "ledger_entry_sha256": "02c806ef81cc4cdb5604122db44dc49601fc9bb6a4c3dfac298b5171554c2665",
+      "ledger_entry_sha256": "ee3ee57b70a8becdeb28e956b1f999fd5d1a917199be4803a7df6b9196fca873",
       "obligation_id": "target.mlwe.distributions.present",
       "obligation_sha256": "9a0f200647cf0591e9d770cd4717703aae63e3c69b3a10c2f84c160b9a3574e0",
       "obligation_type": {
@@ -2745,7 +2751,7 @@
           "target_family": "MLWE"
         }
       },
-      "representative_proof_artifact_sha256": "50b541a0cc8f22a4deda016aa500b35566a17a4d0538d6e8bc9cd26edca36e5d",
+      "representative_proof_artifact_sha256": "0e9e55dc770b2503f50deb6869ef4047bb970678784050a79e0052c95128a17c",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2781,7 +2787,7 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.module_rank_present",
       "ledger_entry_id": "MLWE:target.mlwe.module_rank.present",
-      "ledger_entry_sha256": "fa46c0dd548d6ced24329cec83575bf2beb1f3ddddd2a4c5284e3dd64a1458d2",
+      "ledger_entry_sha256": "4b4af6f7b85c6f77157ca769095f9cc88c018f04231d2bfe5287a74b26b7fc7d",
       "obligation_id": "target.mlwe.module_rank.present",
       "obligation_sha256": "53fd04b2d605efc8e60c3499f433d84336cc1a68bb7f105dc7d5b195f7553a34",
       "obligation_type": {
@@ -2798,7 +2804,7 @@
           "target_family": "MLWE"
         }
       },
-      "representative_proof_artifact_sha256": "50b541a0cc8f22a4deda016aa500b35566a17a4d0538d6e8bc9cd26edca36e5d",
+      "representative_proof_artifact_sha256": "0e9e55dc770b2503f50deb6869ef4047bb970678784050a79e0052c95128a17c",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2834,7 +2840,7 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "ledger_entry_id": "MLWE:estimator.boundary.no_security_claim",
-      "ledger_entry_sha256": "3cdd8eb5e639b5baec22c3f0481e3c6a8d91e3ea763da5c59263d0276899fd36",
+      "ledger_entry_sha256": "5fbb46106231d194e428cd2d5280a2cd5093a2b4af837a89d9066204d8ab2f78",
       "obligation_id": "estimator.boundary.no_security_claim",
       "obligation_sha256": "4677331075f7eeff0e0e4fea72acec72b8a073e8239570f4908808aaff0b5cfc",
       "obligation_type": {
@@ -2851,7 +2857,7 @@
           "scope": "estimator"
         }
       },
-      "representative_proof_artifact_sha256": "50b541a0cc8f22a4deda016aa500b35566a17a4d0538d6e8bc9cd26edca36e5d",
+      "representative_proof_artifact_sha256": "0e9e55dc770b2503f50deb6869ef4047bb970678784050a79e0052c95128a17c",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2887,7 +2893,7 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.ntru_schema_only_no_estimate",
       "ledger_entry_id": "NTRU:family.ntru.schema_only.no_estimate",
-      "ledger_entry_sha256": "11f3a8e50c6e8dd934367872d1db5c1ac3f9ef17d21796f521c216b72e0c1799",
+      "ledger_entry_sha256": "b15c1e8affa96c45a53ab2c87f825ce83ae5d8402df74475d22dcef14bda1061",
       "obligation_id": "family.ntru.schema_only.no_estimate",
       "obligation_sha256": "20916392766d3a771a8834d7732a47ca99f385ec76ccfd55785af8fa4f356c09",
       "obligation_type": {
@@ -2904,7 +2910,7 @@
           "support_level": "schema_only"
         }
       },
-      "representative_proof_artifact_sha256": "a20eb335f5d7498f8f23651ae642bc4f6e88d30529d3ca18ada09827bf995cf6",
+      "representative_proof_artifact_sha256": "6df53dae7a228fb45d94a8356d45220ebfb5485b8107dd8b014df61fedd7049f",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2940,7 +2946,7 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "ledger_entry_id": "NTRU:estimator.boundary.no_security_claim",
-      "ledger_entry_sha256": "71a7b1fbd124f4a13c307868af2b60cda3a67ffa8b52d1c31da093276adcbe5b",
+      "ledger_entry_sha256": "b3c5598a8a331d844a3b455513be44c4ac634f6dd530839f35ab8351cf6e5256",
       "obligation_id": "estimator.boundary.no_security_claim",
       "obligation_sha256": "2c76aae7d7b931ec4352467d44b708a0c8c8d91f731ed5c09185cecc2ca0f6ac",
       "obligation_type": {
@@ -2957,7 +2963,7 @@
           "scope": "estimator"
         }
       },
-      "representative_proof_artifact_sha256": "a20eb335f5d7498f8f23651ae642bc4f6e88d30529d3ca18ada09827bf995cf6",
+      "representative_proof_artifact_sha256": "6df53dae7a228fb45d94a8356d45220ebfb5485b8107dd8b014df61fedd7049f",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -2993,7 +2999,7 @@
       },
       "lean_theorem": "AgadesPQC.Lattice.Target.sis_schema_only_no_estimate",
       "ledger_entry_id": "SIS:family.sis.schema_only.no_estimate",
-      "ledger_entry_sha256": "47cd4e7f1d2b601d9b3e848740c1f6130535b57f3efebb11061a3a7c2c019a20",
+      "ledger_entry_sha256": "71cd4a3c70f4fb68f1a7804dffb89dc92227c63a366ffadcc34b65e885408bfe",
       "obligation_id": "family.sis.schema_only.no_estimate",
       "obligation_sha256": "f8a0781f173ba7b29c09ced08790c73ec777d630ee38042d8135b7a441daa900",
       "obligation_type": {
@@ -3010,7 +3016,7 @@
           "support_level": "schema_only"
         }
       },
-      "representative_proof_artifact_sha256": "1563530f1067215b56bcfda238f820ab9495588b93720080b445303d6add30eb",
+      "representative_proof_artifact_sha256": "5be751124683eb16a928281e351af745943fba71697d6dcbd723eb5ccc25db6a",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -3046,7 +3052,7 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "ledger_entry_id": "SIS:estimator.boundary.no_security_claim",
-      "ledger_entry_sha256": "634f1ea73a31afb9a2d526aaf08f47cc95b968af8f28549bbd10c815646f5786",
+      "ledger_entry_sha256": "d46638587817ee060dd7701f0af2750d558a1e4494c2095abf899aeb0035832a",
       "obligation_id": "estimator.boundary.no_security_claim",
       "obligation_sha256": "3c4d58e4adfd4069178f310fc29ac36fa943433646fe43a33392e55a28e79233",
       "obligation_type": {
@@ -3063,7 +3069,7 @@
           "scope": "estimator"
         }
       },
-      "representative_proof_artifact_sha256": "1563530f1067215b56bcfda238f820ab9495588b93720080b445303d6add30eb",
+      "representative_proof_artifact_sha256": "5be751124683eb16a928281e351af745943fba71697d6dcbd723eb5ccc25db6a",
       "required_reviewers": [
         "lattice_cryptographer",
         "formal_methods_reviewer",
@@ -3099,7 +3105,7 @@
       },
       "lean_theorem": "AgadesPQC.CodeBased.SchemaOnly.no_estimate",
       "ledger_entry_id": "CODE_BASED:family.code_based.schema_only.no_estimate",
-      "ledger_entry_sha256": "4f0aff27aa5c7549b43105fce0c9a7da9eb87ca3775035c73145dc8fa158646c",
+      "ledger_entry_sha256": "3d775dd58654d3896cfa2d4f678dc0cbdf8654f7520217dc73daf093fbb807dd",
       "obligation_id": "family.code_based.schema_only.no_estimate",
       "obligation_sha256": "d1e0bfd86f89ec09e7e8bdeddb16e91cc18c29c90a70818892f8b4264f7fd1be",
       "obligation_type": {
@@ -3116,7 +3122,7 @@
           "support_level": "schema_only"
         }
       },
-      "representative_proof_artifact_sha256": "0b50714327710a12c05ba806312d03a5999fbc370e9a03891048484825ab826a",
+      "representative_proof_artifact_sha256": "7223c4eb74ebe95fed6708658e998483e77af511153cf0e20e78a9b1b12af646",
       "required_reviewers": [
         "code_based_cryptographer",
         "formal_methods_reviewer",
@@ -3152,7 +3158,7 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "ledger_entry_id": "CODE_BASED:estimator.boundary.no_security_claim",
-      "ledger_entry_sha256": "2d12bfb06429ce882ea5547a37d9f2fc897cf41a6cab1a85069e485c4d4077e8",
+      "ledger_entry_sha256": "33bbba34109323b13f41e15111f423fe8f18e123d498b51965e17602aa418ae0",
       "obligation_id": "estimator.boundary.no_security_claim",
       "obligation_sha256": "5eafbad5da7f002c7bc4f03b74ac7e0cd878eaca350bee01c3aa56e2eb6caa83",
       "obligation_type": {
@@ -3169,7 +3175,7 @@
           "scope": "estimator"
         }
       },
-      "representative_proof_artifact_sha256": "0b50714327710a12c05ba806312d03a5999fbc370e9a03891048484825ab826a",
+      "representative_proof_artifact_sha256": "7223c4eb74ebe95fed6708658e998483e77af511153cf0e20e78a9b1b12af646",
       "required_reviewers": [
         "code_based_cryptographer",
         "formal_methods_reviewer",
@@ -3205,7 +3211,7 @@
       },
       "lean_theorem": "AgadesPQC.Multivariate.Target.applicability_shape",
       "ledger_entry_id": "MULTIVARIATE:family.multivariate.applicability_shape",
-      "ledger_entry_sha256": "3c17f933e97b06bc99a87e33fac5fa203fe41e8450aee89a8b23f628cd00095f",
+      "ledger_entry_sha256": "60100894a12f75a61349d2a27dc5e12bb005c337769489f3c2cc1b055e5c6339",
       "obligation_id": "family.multivariate.applicability_shape",
       "obligation_sha256": "6d2d899f05601c805e32449ee6d0d4d3b23babdb43e3dec1e49cd294ac24843a",
       "obligation_type": {
@@ -3222,7 +3228,7 @@
           "target_family": "MULTIVARIATE"
         }
       },
-      "representative_proof_artifact_sha256": "6cea4ac6e6f73b4d8596becffc9d7b3e91dc8342d2778326dad9e8a81d9ec535",
+      "representative_proof_artifact_sha256": "3f59ab5a25b67a8cad2d9aea28ba79a26f36ae084524f9a01d8cba7d070f41d5",
       "required_reviewers": [
         "multivariate_cryptographer",
         "formal_methods_reviewer",
@@ -3258,7 +3264,7 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "ledger_entry_id": "MULTIVARIATE:estimator.boundary.no_security_claim",
-      "ledger_entry_sha256": "b2d6dad6291175219e0738c19277446f70e7c993468fd74716e7e45219b76dfe",
+      "ledger_entry_sha256": "9a2e3ab348686c5f9d991ad460ceb250b5547be68f029f9ccd48e3c4ba85bfd9",
       "obligation_id": "estimator.boundary.no_security_claim",
       "obligation_sha256": "509af6ec79eac7c4c38f8b5861dd5144176ae46df17b69108b82c07be912b116",
       "obligation_type": {
@@ -3275,7 +3281,7 @@
           "scope": "estimator"
         }
       },
-      "representative_proof_artifact_sha256": "6cea4ac6e6f73b4d8596becffc9d7b3e91dc8342d2778326dad9e8a81d9ec535",
+      "representative_proof_artifact_sha256": "3f59ab5a25b67a8cad2d9aea28ba79a26f36ae084524f9a01d8cba7d070f41d5",
       "required_reviewers": [
         "multivariate_cryptographer",
         "formal_methods_reviewer",
@@ -3311,7 +3317,7 @@
       },
       "lean_theorem": "AgadesPQC.HashBased.Target.bound_check_is_not_attack_claim",
       "ledger_entry_id": "HASH_BASED:family.hash_based.bound_check_is_not_attack_claim",
-      "ledger_entry_sha256": "a032188071f3908c171a9c6cbb641618682f7c6aa6c8029924a38fff528effe7",
+      "ledger_entry_sha256": "3bebd6b34fb18fe38f343a748d858829748a2c476e902e29cfa8fbb00ff537dd",
       "obligation_id": "family.hash_based.bound_check_is_not_attack_claim",
       "obligation_sha256": "0475aeb4ea2a639e38c57e060ffb3026449e42b18b21c33f92d20d1237df878c",
       "obligation_type": {
@@ -3328,7 +3334,7 @@
           "target_family": "HASH_BASED"
         }
       },
-      "representative_proof_artifact_sha256": "44ef306330120f4f462974c27360e921cf390888a5a14801a9e16dddc7bf6956",
+      "representative_proof_artifact_sha256": "b5567d29f88e5f71aa1b1ce034e95ec79005b5f9d217023c40a076f8388f1fba",
       "required_reviewers": [
         "hash_based_signature_reviewer",
         "formal_methods_reviewer",
@@ -3364,7 +3370,7 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "ledger_entry_id": "HASH_BASED:estimator.boundary.no_security_claim",
-      "ledger_entry_sha256": "30445bfca794e03c692685fa078cb2fc810e5948b53fdd7f2f370ae55e0416a1",
+      "ledger_entry_sha256": "d60942a219f879f9381d62b44ec6b1ce066ab72067af196f9e520f04a28dade5",
       "obligation_id": "estimator.boundary.no_security_claim",
       "obligation_sha256": "b41adac9ccaf7497f3e41abcc98c68cd4ca60eceac6350040ff5993b5f6d5226",
       "obligation_type": {
@@ -3381,7 +3387,7 @@
           "scope": "estimator"
         }
       },
-      "representative_proof_artifact_sha256": "44ef306330120f4f462974c27360e921cf390888a5a14801a9e16dddc7bf6956",
+      "representative_proof_artifact_sha256": "b5567d29f88e5f71aa1b1ce034e95ec79005b5f9d217023c40a076f8388f1fba",
       "required_reviewers": [
         "hash_based_signature_reviewer",
         "formal_methods_reviewer",
@@ -3417,7 +3423,7 @@
       },
       "lean_theorem": "AgadesPQC.IsogenyHistorical.Target.historical_only",
       "ledger_entry_id": "ISOGENY_HISTORICAL:family.isogeny_historical.historical_only",
-      "ledger_entry_sha256": "72e56beb1dbe6205d956a3e3c28972794493663e685a3bbdd95307306a43c9c1",
+      "ledger_entry_sha256": "5474ae94e4fc5b4552346036ff55af8e4c7e2eb9d802c2801a633287d1b7c2b4",
       "obligation_id": "family.isogeny_historical.historical_only",
       "obligation_sha256": "991cdcb6ba251760c21e228a9dd44a158814cd36224f7e3650fcd8b018ec341f",
       "obligation_type": {
@@ -3434,7 +3440,7 @@
           "target_family": "ISOGENY_HISTORICAL"
         }
       },
-      "representative_proof_artifact_sha256": "e0f0edce50c309c9c2a9294b7b6e740723af09cbb07cd9c3325e990213be6eaf",
+      "representative_proof_artifact_sha256": "a3e335edf293df3ee933a0ff0b1d19f50ec9094e328e560b55bf5d0aa4b4e1f7",
       "required_reviewers": [
         "isogeny_historical_reviewer",
         "formal_methods_reviewer",
@@ -3470,7 +3476,7 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "ledger_entry_id": "ISOGENY_HISTORICAL:estimator.boundary.no_security_claim",
-      "ledger_entry_sha256": "f969dbdb9007ff15049c6da8dfe4d4a6e8393b07631d5dd83083ec8fc8f67c5d",
+      "ledger_entry_sha256": "86dddcb5962119eb850b28e536128ead910a3ab83b8089337022ba8aabb1ea89",
       "obligation_id": "estimator.boundary.no_security_claim",
       "obligation_sha256": "d1833d3c3cd642fd063080acb4bb02d1ec1cde19792118b8b3ae45b2b5f1832c",
       "obligation_type": {
@@ -3487,7 +3493,7 @@
           "scope": "estimator"
         }
       },
-      "representative_proof_artifact_sha256": "e0f0edce50c309c9c2a9294b7b6e740723af09cbb07cd9c3325e990213be6eaf",
+      "representative_proof_artifact_sha256": "a3e335edf293df3ee933a0ff0b1d19f50ec9094e328e560b55bf5d0aa4b4e1f7",
       "required_reviewers": [
         "isogeny_historical_reviewer",
         "formal_methods_reviewer",
@@ -3523,7 +3529,7 @@
       },
       "lean_theorem": "AgadesPQC.ImplementationSecurity.Target.no_conformance_claim",
       "ledger_entry_id": "IMPLEMENTATION_SECURITY:family.implementation_security.no_conformance_claim",
-      "ledger_entry_sha256": "0c7a75a907f560b83441dcb55d7307caf48dedf472b69d00480e4b0edca88979",
+      "ledger_entry_sha256": "d6ba3d47c7004b5d285dd88ef9c2cd46f63145e0b67c2346bdf3f068b7a46b2e",
       "obligation_id": "family.implementation_security.no_conformance_claim",
       "obligation_sha256": "48c926806a48bab5cb3ca796ccf1f72d8c7c6f435cb9d717d90b5f417117a14f",
       "obligation_type": {
@@ -3540,7 +3546,7 @@
           "target_family": "IMPLEMENTATION_SECURITY"
         }
       },
-      "representative_proof_artifact_sha256": "b7bf62c60f90e936ebdb2612687b18f15ecc86dac5408c3442a073dc7bc47e85",
+      "representative_proof_artifact_sha256": "d38cd530e73c16045fb83ebe53d4c4aaa4841ef339fe76b191e6527fb82c4d62",
       "required_reviewers": [
         "implementation_security_reviewer",
         "formal_methods_reviewer",
@@ -3576,7 +3582,7 @@
       },
       "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
       "ledger_entry_id": "IMPLEMENTATION_SECURITY:estimator.boundary.no_security_claim",
-      "ledger_entry_sha256": "18c56fb60a6e03f1f96c8c827139546de5c5787865917161d570f984f7df16ec",
+      "ledger_entry_sha256": "bb920cf802f65c81fb5f71e05447de6014ca63f459847d131e888dda53aa96b0",
       "obligation_id": "estimator.boundary.no_security_claim",
       "obligation_sha256": "91b268e0855a063eda139a020a4c0163783bfe35693546ffd6cb36e7b8f91fd5",
       "obligation_type": {
@@ -3593,7 +3599,7 @@
           "scope": "estimator"
         }
       },
-      "representative_proof_artifact_sha256": "b7bf62c60f90e936ebdb2612687b18f15ecc86dac5408c3442a073dc7bc47e85",
+      "representative_proof_artifact_sha256": "d38cd530e73c16045fb83ebe53d4c4aaa4841ef339fe76b191e6527fb82c4d62",
       "required_reviewers": [
         "implementation_security_reviewer",
         "formal_methods_reviewer",
@@ -3624,6 +3630,7 @@
     "uv run agades-pqc formal-family-coverage-verify --coverage docs/formal_family_coverage.json",
     "uv run agades-pqc formal-estimator-model-verify --model docs/formal_estimator_model.json",
     "uv run agades-pqc formal-operator-semantics-verify --semantics docs/formal_operator_semantics.json",
+    "uv run agades-pqc formal-attackplan-semantics-verify --semantics docs/formal_attackplan_semantics.json",
     "uv run agades-pqc formal-smt-assist-verify --contract docs/formal_smt_assist_contract.json"
   ],
   "schema_version": "agades.pqc.formal.obligation_ledger.v1",

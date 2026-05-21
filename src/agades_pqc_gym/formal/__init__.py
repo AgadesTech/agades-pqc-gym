@@ -8,6 +8,11 @@ from agades_pqc_gym.formal.artifacts import (
     write_attack_plan_evaluator_result,
     write_attack_plan_proof_artifact,
 )
+from agades_pqc_gym.formal.attack_plan_semantics import (
+    build_formal_attackplan_semantics,
+    verify_formal_attackplan_semantics,
+    write_formal_attackplan_semantics,
+)
 from agades_pqc_gym.formal.obligation_ledger import (
     build_formal_obligation_ledger,
     verify_formal_obligation_ledger,
@@ -24,14 +29,17 @@ __all__ = [
     "build_attack_plan_evaluator_result",
     "build_attack_plan_proof_artifact",
     "build_attack_plan_proof_artifact_from_json",
+    "build_formal_attackplan_semantics",
     "build_formal_obligation_ledger",
     "build_formal_smt_assist_contract",
     "verify_attack_plan_evaluator_result",
     "verify_attack_plan_proof_artifact",
+    "verify_formal_attackplan_semantics",
     "verify_formal_obligation_ledger",
     "verify_formal_smt_assist_contract",
     "write_attack_plan_evaluator_result",
     "write_attack_plan_proof_artifact",
+    "write_formal_attackplan_semantics",
     "write_formal_obligation_ledger",
     "write_formal_smt_assist_contract",
 ]

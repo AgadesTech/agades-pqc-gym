@@ -87,7 +87,7 @@ def test_formal_lean_build_smoke_report_binds_successful_lake_build(
     assert report["formal_backend_manifest"]["placeholder_failures"] == 0
     assert report["summary"] == {
         "accepted": True,
-        "source_modules": 14,
+        "source_modules": 15,
         "theorem_declarations": report["summary"]["theorem_declarations"],
         "placeholder_failures": 0,
         "ci_lean_build_gate": True,
@@ -176,7 +176,7 @@ def test_formal_lean_build_smoke_verify_accepts_written_report(
         "accepted": True,
         "summary": {
             "accepted": True,
-            "source_modules": 14,
+            "source_modules": 15,
             "theorem_declarations": verification["summary"][
                 "theorem_declarations"
             ],

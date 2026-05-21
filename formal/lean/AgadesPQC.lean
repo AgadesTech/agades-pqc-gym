@@ -1,6 +1,7 @@
 import AgadesPQC.Lattice.Target
 import AgadesPQC.Lattice.PrimalUSVP
 import AgadesPQC.EstimatorModel
+import AgadesPQC.AttackPlan
 import AgadesPQC.OperatorSemantics
 import AgadesPQC.ProofObligation
 import AgadesPQC.CodeBased.Target
