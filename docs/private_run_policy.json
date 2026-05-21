@@ -15,7 +15,8 @@
     "agades-pqc archive-snapshot",
     "agades-pqc lattice-estimator-baseline-run",
     "agades-pqc lattice-estimator-baseline-review-packet",
-    "agades-pqc lattice-estimator-checkout-preflight"
+    "agades-pqc lattice-estimator-checkout-preflight",
+    "agades-pqc private-pedagogical-traces"
   ],
   "allowed_private_roots": [
     "private/candidates",

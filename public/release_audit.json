@@ -1740,7 +1740,7 @@
       "blocking": true,
       "detail": "Private evolution traces and candidate strategies are confined to private roots and require redaction/preflight before public export.",
       "evidence": {
-        "allowed_private_commands": 16,
+        "allowed_private_commands": 17,
         "allowed_private_roots": 6,
         "forbidden_public_roots": 5,
         "private_dataset_sources": 3,

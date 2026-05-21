@@ -195,6 +195,11 @@ from agades_pqc_gym.integrations.private_dataset_curation import (
     verify_private_dataset_curation,
     write_private_dataset_curation,
 )
+from agades_pqc_gym.integrations.private_pedagogical_trace_batch import (
+    DEFAULT_TRACE_BATCH_PATH,
+    verify_private_pedagogical_trace_batch,
+    write_private_pedagogical_trace_batch,
+)
 from agades_pqc_gym.integrations.private_run_policy import (
     verify_private_run_policy,
     write_private_run_policy,
@@ -2020,6 +2025,70 @@ def pedagogical_rl_method_verify(
 ) -> None:
     """Verify the private Pedagogical RL method contract."""
     result = verify_pedagogical_rl_method(method)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("private-pedagogical-traces", hidden=True)
+def private_pedagogical_traces(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = DEFAULT_TRACE_BATCH_PATH,
+    plan: Annotated[
+        list[Path] | None,
+        typer.Option("--plan"),
+    ] = None,
+    dataset_curation: Annotated[
+        Path,
+        typer.Option("--dataset-curation"),
+    ] = Path("docs/private_dataset_curation.json"),
+    policy: Annotated[
+        Path,
+        typer.Option("--policy"),
+    ] = Path("docs/private_run_policy.json"),
+) -> None:
+    """Write digest-only private Pedagogical RL trace records."""
+    paths = plan if plan else DEFAULT_ROLLOUT_PLANS
+    try:
+        manifest = write_private_pedagogical_trace_batch(
+            paths,
+            out,
+            dataset_curation_manifest_path=dataset_curation,
+            policy_path=policy,
+        )
+    except (OSError, ValueError) as exc:
+        console.print(f"[red]private pedagogical traces failed[/red]: {exc}")
+        raise typer.Exit(1) from exc
+    typer.echo(
+        f"private_pedagogical_traces={out} "
+        f"manifest={manifest['manifest_path']} "
+        f"count={manifest['summary']['trace_count']}"
+    )
+
+
+@app.command("private-pedagogical-traces-verify", hidden=True)
+def private_pedagogical_traces_verify(
+    trace_path: Annotated[
+        Path,
+        typer.Option("--trace-path"),
+    ] = DEFAULT_TRACE_BATCH_PATH,
+    manifest_path: Annotated[
+        Path | None,
+        typer.Option("--manifest-path"),
+    ] = None,
+    policy: Annotated[
+        Path,
+        typer.Option("--policy"),
+    ] = Path("docs/private_run_policy.json"),
+) -> None:
+    """Verify digest-only private Pedagogical RL trace records."""
+    result = verify_private_pedagogical_trace_batch(
+        trace_path,
+        manifest_path=manifest_path,
+        policy_path=policy,
+    )
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)
