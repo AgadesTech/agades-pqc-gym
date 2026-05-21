@@ -17,7 +17,8 @@ DEEPEVOLVE_RESEARCH_HOOKS_VERIFICATION_SCHEMA = (
     "agades.pqc.deepevolve_research_hooks_verification.v1"
 )
 ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_PAPER_CARD_DIR = ROOT / "examples" / "paper_cards"
+DEFAULT_MANIFEST_PATH = Path("docs/deepevolve_research_hooks_manifest.json")
+DEFAULT_PAPER_CARD_DIR = Path("examples/paper_cards")
 _REQUIRED_FAMILIES = {
     "CODE_BASED",
     "HASH_BASED",
@@ -61,8 +62,11 @@ PRIVATE_QWEN_RESEARCH_BINDING = {
 
 def build_deepevolve_research_hooks_manifest(
     paper_card_dir: Path | None = None,
+    *,
+    root: Path | None = None,
 ) -> dict[str, Any]:
-    source_dir = (paper_card_dir or DEFAULT_PAPER_CARD_DIR).resolve()
+    project_root = (root or ROOT).resolve()
+    source_dir = _resolve_path(paper_card_dir or DEFAULT_PAPER_CARD_DIR, project_root)
     cards = load_paper_cards(source_dir)
     proposals = [
         proposal
@@ -111,15 +115,19 @@ def build_deepevolve_research_hooks_manifest(
 
 
 def write_deepevolve_research_hooks_manifest(
-    out: Path,
+    out: Path = DEFAULT_MANIFEST_PATH,
     *,
     paper_card_dir: Path | None = None,
+    root: Path | None = None,
 ) -> dict[str, Any]:
+    project_root = (root or ROOT).resolve()
     manifest = build_deepevolve_research_hooks_manifest(
         paper_card_dir=paper_card_dir,
+        root=project_root,
     )
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(
+    resolved_out = _resolve_path(out, project_root)
+    resolved_out.parent.mkdir(parents=True, exist_ok=True)
+    resolved_out.write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
@@ -127,13 +135,16 @@ def write_deepevolve_research_hooks_manifest(
 
 
 def verify_deepevolve_research_hooks_manifest(
-    manifest_path: Path,
+    manifest_path: Path = DEFAULT_MANIFEST_PATH,
     *,
     paper_card_dir: Path | None = None,
+    root: Path | None = None,
 ) -> dict[str, Any]:
+    project_root = (root or ROOT).resolve()
+    resolved_manifest_path = _resolve_path(manifest_path, project_root)
     failures: list[str] = []
     try:
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest = json.loads(resolved_manifest_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         return _verification_result(
             manifest_path=manifest_path,
@@ -143,6 +154,7 @@ def verify_deepevolve_research_hooks_manifest(
 
     expected = build_deepevolve_research_hooks_manifest(
         paper_card_dir=paper_card_dir,
+        root=project_root,
     )
     if manifest != expected:
         failures.append("DeepEvolve research hook manifest is not in sync.")
@@ -201,6 +213,12 @@ def verify_deepevolve_research_hooks_manifest(
         manifest=manifest,
         failures=failures,
     )
+
+
+def _resolve_path(path: Path, root: Path) -> Path:
+    if path.is_absolute():
+        return path
+    return root / path
 
 
 def _validate_private_qwen_binding(

@@ -33,9 +33,55 @@ from agades_pqc_gym.formal.operator_semantics import (
     DEFAULT_OPERATOR_SEMANTICS_PATH,
     verify_formal_operator_semantics,
 )
+from agades_pqc_gym.integrations.deepevolve_research_hooks import (
+    DEFAULT_MANIFEST_PATH as DEEPEVOLVE_MANIFEST_PATH,
+)
+from agades_pqc_gym.integrations.deepevolve_research_hooks import (
+    verify_deepevolve_research_hooks_manifest,
+)
 from agades_pqc_gym.integrations.ecosystem_smoke import verify_ecosystem_smoke_report
 from agades_pqc_gym.integrations.external_publication_review_packet import (
     verify_external_publication_review_packet,
+)
+from agades_pqc_gym.integrations.pedagogical_rl_method import (
+    DEFAULT_METHOD_PATH as PEDAGOGICAL_RL_METHOD_PATH,
+)
+from agades_pqc_gym.integrations.pedagogical_rl_method import (
+    verify_pedagogical_rl_method,
+)
+from agades_pqc_gym.integrations.prime_environment_manifest import (
+    verify_prime_environment_manifest,
+)
+from agades_pqc_gym.integrations.prime_eval_config import (
+    DEFAULT_CONFIG_PATH as PRIME_EVAL_CONFIG_PATH,
+)
+from agades_pqc_gym.integrations.prime_eval_config import (
+    DEFAULT_MANIFEST_PATH as PRIME_EVAL_MANIFEST_PATH,
+)
+from agades_pqc_gym.integrations.prime_eval_config import (
+    verify_prime_eval_config,
+)
+from agades_pqc_gym.integrations.prime_publication_handoff import (
+    verify_prime_publication_handoff,
+)
+from agades_pqc_gym.integrations.prime_speedrun_handoff import (
+    verify_prime_speedrun_handoff,
+)
+from agades_pqc_gym.integrations.private_dataset_curation import (
+    DEFAULT_CURATION_PATH as PRIVATE_DATASET_CURATION_PATH,
+)
+from agades_pqc_gym.integrations.private_dataset_curation import (
+    verify_private_dataset_curation,
+)
+from agades_pqc_gym.integrations.private_run_policy import verify_private_run_policy
+from agades_pqc_gym.integrations.private_training_config import (
+    DEFAULT_CONFIG_PATH as PRIVATE_TRAINING_CONFIG_PATH,
+)
+from agades_pqc_gym.integrations.private_training_config import (
+    DEFAULT_MANIFEST_PATH as PRIVATE_TRAINING_MANIFEST_PATH,
+)
+from agades_pqc_gym.integrations.private_training_config import (
+    verify_private_training_config,
 )
 from agades_pqc_gym.integrations.publication_preflight import (
     verify_publication_preflight,
@@ -49,6 +95,18 @@ from agades_pqc_gym.integrations.reviewer_governance import verify_reviewer_gove
 from agades_pqc_gym.integrations.rl_environment_contract import (
     verify_rl_environment_contract,
 )
+from agades_pqc_gym.openevolve_adapter.config_templates import (
+    DEFAULT_CONFIG_PATH as OPENEVOLVE_CONFIG_PATH,
+)
+from agades_pqc_gym.openevolve_adapter.config_templates import (
+    verify_default_config_template,
+)
+from agades_pqc_gym.openevolve_adapter.smoke import (
+    DEFAULT_REPORT as OPENEVOLVE_SMOKE_REPORT,
+)
+from agades_pqc_gym.openevolve_adapter.smoke import (
+    verify_openevolve_smoke_report,
+)
 
 LWE_PLAN = Path("examples/attack_plans/lattice_primal_usvp_toy.json")
 MLWE_PLAN = Path("examples/attack_plans/lattice_mlwe_module_hypothesis_toy.json")
@@ -59,8 +117,12 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
 ) -> None:
     copied_root = _copy_repo(tmp_path)
     corrupted_semantics = copied_root / DEFAULT_OPERATOR_SEMANTICS_PATH
+    corrupted_training = copied_root / PRIVATE_TRAINING_MANIFEST_PATH
+    corrupted_deepevolve = copied_root / DEEPEVOLVE_MANIFEST_PATH
     corrupted_report = copied_root / "reports" / "ecosystem_smoke.json"
     corrupted_semantics.write_text("{}\n", encoding="utf-8")
+    corrupted_training.write_text("{}\n", encoding="utf-8")
+    corrupted_deepevolve.write_text("{}\n", encoding="utf-8")
     corrupted_report.write_text("{}\n", encoding="utf-8")
 
     result = write_release_artifacts_until_stable(root=copied_root, max_passes=6)
@@ -81,8 +143,19 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
         for release_pass in result["pass_summaries"]
         for path in release_pass["changed_artifacts"]
     }
+    assert PRIVATE_TRAINING_MANIFEST_PATH.as_posix() in {
+        path
+        for release_pass in result["pass_summaries"]
+        for path in release_pass["changed_artifacts"]
+    }
+    assert DEEPEVOLVE_MANIFEST_PATH.as_posix() in {
+        path
+        for release_pass in result["pass_summaries"]
+        for path in release_pass["changed_artifacts"]
+    }
     assert result["failures"] == []
     _assert_formal_artifacts_verified(copied_root)
+    _assert_private_rl_prime_artifacts_verified(copied_root)
     assert json.loads((copied_root / "public" / "release_audit.json").read_text())[
         "accepted"
     ] is True
@@ -171,6 +244,53 @@ def _assert_formal_artifacts_verified(root: Path) -> None:
     ] is True
     assert verify_formal_obligation_ledger(
         DEFAULT_OBLIGATION_LEDGER_PATH,
+        root=root,
+    )["accepted"] is True
+
+
+def _assert_private_rl_prime_artifacts_verified(root: Path) -> None:
+    assert verify_private_run_policy(
+        Path("docs/private_run_policy.json"),
+        root=root,
+    )["accepted"] is True
+    assert verify_prime_eval_config(
+        PRIME_EVAL_CONFIG_PATH,
+        PRIME_EVAL_MANIFEST_PATH,
+        root=root,
+    )["accepted"] is True
+    assert verify_prime_environment_manifest(
+        Path("prime_intellect/verifiers_environment/prime_manifest.json"),
+        root=root,
+    )["accepted"] is True
+    assert verify_private_dataset_curation(
+        PRIVATE_DATASET_CURATION_PATH,
+        root=root,
+    )["accepted"] is True
+    assert verify_pedagogical_rl_method(
+        PEDAGOGICAL_RL_METHOD_PATH,
+        root=root,
+    )["accepted"] is True
+    assert verify_private_training_config(
+        PRIVATE_TRAINING_CONFIG_PATH,
+        PRIVATE_TRAINING_MANIFEST_PATH,
+        root=root,
+    )["accepted"] is True
+    assert verify_default_config_template(OPENEVOLVE_CONFIG_PATH, root=root)[
+        "accepted"
+    ] is True
+    assert verify_openevolve_smoke_report(OPENEVOLVE_SMOKE_REPORT, root=root)[
+        "accepted"
+    ] is True
+    assert verify_deepevolve_research_hooks_manifest(
+        DEEPEVOLVE_MANIFEST_PATH,
+        root=root,
+    )["accepted"] is True
+    assert verify_prime_publication_handoff(
+        Path("docs/prime_publication_handoff.json"),
+        root=root,
+    )["accepted"] is True
+    assert verify_prime_speedrun_handoff(
+        Path("docs/prime_speedrun_handoff.json"),
         root=root,
     )["accepted"] is True
 
