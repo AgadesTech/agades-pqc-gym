@@ -54,6 +54,9 @@ from agades_pqc_gym.integrations.external_publication_review_packet import (
 from agades_pqc_gym.integrations.huggingface_dataset import (
     verify_huggingface_dataset_bundle,
 )
+from agades_pqc_gym.integrations.huggingface_space_smoke import (
+    verify_huggingface_space_smoke_report,
+)
 from agades_pqc_gym.integrations.pedagogical_rl_method import (
     DEFAULT_METHOD_PATH as PEDAGOGICAL_RL_METHOD_PATH,
 )
@@ -140,6 +143,7 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
     corrupted_readiness = copied_root / PRIVATE_TRAINING_READINESS_PATH
     corrupted_deepevolve = copied_root / DEEPEVOLVE_MANIFEST_PATH
     corrupted_hf_dataset_manifest = copied_root / "hf" / "dataset" / "MANIFEST.sha256"
+    corrupted_hf_space_smoke = copied_root / "reports" / "hf_space_smoke.json"
     corrupted_report = copied_root / "reports" / "ecosystem_smoke.json"
     corrupted_semantics.write_text("{}\n", encoding="utf-8")
     corrupted_attackplan.write_text("{}\n", encoding="utf-8")
@@ -148,6 +152,7 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
     corrupted_readiness.write_text("{}\n", encoding="utf-8")
     corrupted_deepevolve.write_text("{}\n", encoding="utf-8")
     corrupted_hf_dataset_manifest.write_text("{}\n", encoding="utf-8")
+    corrupted_hf_space_smoke.write_text("{}\n", encoding="utf-8")
     corrupted_report.write_text("{}\n", encoding="utf-8")
 
     result = write_release_artifacts_until_stable(root=copied_root, max_passes=6)
@@ -198,6 +203,11 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
         for release_pass in result["pass_summaries"]
         for path in release_pass["changed_artifacts"]
     }
+    assert "reports/hf_space_smoke.json" in {
+        path
+        for release_pass in result["pass_summaries"]
+        for path in release_pass["changed_artifacts"]
+    }
     assert result["failures"] == []
     _assert_formal_artifacts_verified(copied_root)
     _assert_private_rl_prime_artifacts_verified(copied_root)
@@ -218,6 +228,10 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
     )["accepted"] is True
     assert verify_huggingface_dataset_bundle(
         Path("hf/dataset"),
+        root=copied_root,
+    )["accepted"] is True
+    assert verify_huggingface_space_smoke_report(
+        Path("reports/hf_space_smoke.json"),
         root=copied_root,
     )["accepted"] is True
     assert verify_ecosystem_smoke_report(

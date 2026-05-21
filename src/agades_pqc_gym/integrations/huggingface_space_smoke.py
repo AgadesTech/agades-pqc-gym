@@ -58,6 +58,10 @@ def build_huggingface_space_smoke_report(
         "rollout_trace_schema": None,
         "has_prompt": False,
         "reward": None,
+        "reviewer_quality": None,
+        "review_governance_ok": False,
+        "review_governance_binding_schema": None,
+        "summary_contains_review_governance": False,
         "task_match": None,
         "trace_public_release_ok": False,
         "private_fields_present": None,
@@ -106,6 +110,20 @@ def build_huggingface_space_smoke_report(
             "rollout_trace_schema": trace.get("schema_version"),
             "has_prompt": bool(observation.get("prompt")),
             "reward": reward_report.get("reward"),
+            "reviewer_quality": reward_report.get("terms", {}).get(
+                "reviewer_quality"
+            ),
+            "review_governance_ok": _dict_or_empty(
+                trace.get("formal_artifact_binding")
+            ).get("review_governance_ok"),
+            "review_governance_binding_schema": _dict_or_empty(
+                _dict_or_empty(trace.get("formal_artifact_binding")).get(
+                    "review_governance"
+                )
+            ).get("schema_version"),
+            "summary_contains_review_governance": (
+                "review_governance=accepted" in reward_summary
+            ),
             "task_match": reward_report.get("terms", {}).get("task_match"),
             "trace_public_release_ok": trace.get("public_release_ok"),
             "private_fields_present": trace.get("private_fields_present"),
@@ -214,6 +232,24 @@ def _validate_smoke_contract(
         failures.append("Hugging Face Space Agent Environment lacks a task prompt.")
     if agent_environment["reward"] != 1.0:
         failures.append("Hugging Face Space Agent Environment default reward failed.")
+    if agent_environment["reviewer_quality"] != 1.0:
+        failures.append(
+            "Hugging Face Space Agent Environment reviewer quality failed."
+        )
+    if agent_environment["review_governance_ok"] is not True:
+        failures.append(
+            "Hugging Face Space Agent Environment lacks reviewer governance."
+        )
+    if agent_environment["review_governance_binding_schema"] != (
+        "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+    ):
+        failures.append(
+            "Hugging Face Space Agent Environment reviewer governance schema drifted."
+        )
+    if agent_environment["summary_contains_review_governance"] is not True:
+        failures.append(
+            "Hugging Face Space Agent Environment summary hides reviewer governance."
+        )
     if agent_environment["task_match"] != 1.0:
         failures.append("Hugging Face Space Agent Environment task match failed.")
     if agent_environment["trace_public_release_ok"] is not True:
@@ -287,6 +323,12 @@ def _verify_agent_environment(report: dict[str, Any], failures: list[str]) -> No
         "rollout_trace_schema": "agades.pqc.rl.rollout_trace.v1",
         "has_prompt": True,
         "reward": 1.0,
+        "reviewer_quality": 1.0,
+        "review_governance_ok": True,
+        "review_governance_binding_schema": (
+            "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+        ),
+        "summary_contains_review_governance": True,
         "task_match": 1.0,
         "trace_public_release_ok": True,
         "private_fields_present": False,
@@ -396,3 +438,7 @@ def _display_path(path: Path, *, root: Path) -> str:
         return resolved.relative_to(root).as_posix()
     except ValueError:
         return resolved.as_posix()
+
+
+def _dict_or_empty(value: object) -> dict[str, Any]:
+    return dict(value) if isinstance(value, dict) else {}
