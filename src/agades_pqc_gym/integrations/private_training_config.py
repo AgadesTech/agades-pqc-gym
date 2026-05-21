@@ -58,6 +58,15 @@ PRIVATE_ROOTS = [
     "private/runs",
     "private/traces",
 ]
+PRIVATE_TRAINING_REQUIRED_ENV_VARS = [
+    "PRIME_API_KEY",
+    "PRIME_ORG",
+    "PRIME_ENVIRONMENT_SLUG",
+    "PRIME_VISIBILITY",
+    "HF_TOKEN",
+    "WANDB_API_KEY",
+    "AGADES_QWEN_BASE_MODEL",
+]
 LINKED_ARTIFACT_PATHS = {
     "private_run_policy": "docs/private_run_policy.json",
     "private_dataset_curation": PRIVATE_DATASET_CURATION_MANIFEST_PATH,
@@ -114,6 +123,7 @@ def build_prime_rl_training_template() -> str:
         "requires_provenance_review = true\n"
         "publish_to_hf_public = false\n"
         "publish_to_prime_public = false\n"
+        f"required_env_vars = {_toml_string_list(PRIVATE_TRAINING_REQUIRED_ENV_VARS)}\n"
         f'dataset_curation_manifest = "{PRIVATE_DATASET_CURATION_MANIFEST_PATH}"\n'
         'student_model = "Qwen3.6-27B-private"\n'
         'preferred_user_artifact = "private GGUF OTQ 5-bit"\n'
@@ -215,8 +225,12 @@ def build_private_training_manifest(
             "dataset_curation_manifest_path": PRIVATE_DATASET_CURATION_MANIFEST_PATH,
             "launch_command_template": (
                 f"prime train {config_path.as_posix()} "
-                "--env-var HF_TOKEN --env-var WANDB_API_KEY"
+                + " ".join(
+                    f"--env-var {env_name}"
+                    for env_name in PRIVATE_TRAINING_REQUIRED_ENV_VARS
+                )
             ),
+            "required_env_vars": list(PRIVATE_TRAINING_REQUIRED_ENV_VARS),
             "eval_command": "prime eval run agades-pqc-verifier-env",
             "training_stack": "prime-rl",
             "launch_readiness": "blocked_until_private_model_and_dataset_review",
@@ -280,7 +294,7 @@ def build_private_training_manifest(
             "public_trace_corpora_allowed": False,
             "public_train_dataset_allowed": False,
             "env_file_upload_allowed": False,
-            "allowed_env_vars": ["HF_TOKEN", "WANDB_API_KEY"],
+            "allowed_env_vars": list(PRIVATE_TRAINING_REQUIRED_ENV_VARS),
             "private_roots": list(PRIVATE_ROOTS),
         },
         "linked_artifacts": _linked_artifacts(project_root),
@@ -407,6 +421,8 @@ def _verify_training_toml(
         failures.append("Prime RL config must not publish to public HF.")
     if run_config.get("publish_to_prime_public") is not False:
         failures.append("Prime RL config must not publish to public Prime.")
+    if run_config.get("required_env_vars") != PRIVATE_TRAINING_REQUIRED_ENV_VARS:
+        failures.append("Prime RL config required env vars are incorrect.")
     if run_config.get("dataset_curation_manifest") != (
         PRIVATE_DATASET_CURATION_MANIFEST_PATH
     ):
@@ -505,6 +521,22 @@ def _verify_training_manifest(
         "blocked_until_private_model_and_dataset_review"
     ):
         failures.append("Private training must stay blocked until review.")
+    if prime_training.get("required_env_vars") != PRIVATE_TRAINING_REQUIRED_ENV_VARS:
+        failures.append("Private Prime training env contract is incomplete.")
+    expected_launch_command = (
+        " ".join(
+            ["prime", "train", str(prime_training.get("config_path"))]
+            + [
+                token
+                for env_name in PRIVATE_TRAINING_REQUIRED_ENV_VARS
+                for token in ("--env-var", env_name)
+            ]
+        )
+        if prime_training.get("config_path")
+        else None
+    )
+    if prime_training.get("launch_command_template") != expected_launch_command:
+        failures.append("Private Prime training launch command is incomplete.")
 
     qwen = _dict_or_empty(manifest.get("qwen"))
     if qwen.get("target_model") != "Qwen3.6-27B-private":
@@ -582,6 +614,8 @@ def _verify_training_manifest(
     ):
         if privacy.get(key) is not False:
             failures.append(f"Privacy control {key} must be false.")
+    if privacy.get("allowed_env_vars") != PRIVATE_TRAINING_REQUIRED_ENV_VARS:
+        failures.append("Private Prime training env contract is incomplete.")
     linked = manifest.get("linked_artifacts")
     if not isinstance(linked, dict):
         failures.append("Private training linked_artifacts must be an object.")
