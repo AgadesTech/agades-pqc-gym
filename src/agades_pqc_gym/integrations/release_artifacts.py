@@ -15,6 +15,11 @@ from agades_pqc_gym.formal.artifacts import (
     write_attack_plan_evaluator_result,
     write_attack_plan_proof_artifact,
 )
+from agades_pqc_gym.formal.attack_plan_semantics import (
+    DEFAULT_ATTACKPLAN_SEMANTICS_PATH,
+    verify_formal_attackplan_semantics,
+    write_formal_attackplan_semantics,
+)
 from agades_pqc_gym.formal.estimator_model import (
     DEFAULT_ESTIMATOR_MODEL_PATH,
     verify_formal_estimator_model,
@@ -59,6 +64,10 @@ from agades_pqc_gym.integrations.ecosystem_smoke import (
 from agades_pqc_gym.integrations.external_publication_review_packet import (
     verify_external_publication_review_packet,
     write_external_publication_review_packet,
+)
+from agades_pqc_gym.integrations.huggingface_dataset import (
+    verify_huggingface_dataset_bundle,
+    write_huggingface_dataset_bundle,
 )
 from agades_pqc_gym.integrations.huggingface_publication_handoff import (
     verify_huggingface_publication_handoff,
@@ -178,6 +187,7 @@ FORMAL_MVP_ATTACK_PLAN_PATHS = {
 RELEASE_ARTIFACT_PATHS = (
     DEFAULT_BACKEND_PATH,
     DEFAULT_OPERATOR_SEMANTICS_PATH,
+    DEFAULT_ATTACKPLAN_SEMANTICS_PATH,
     Path(MVP_VERTICAL_ESTIMATOR_RESULT_PATHS[LWE_FAMILY]),
     Path(MVP_VERTICAL_ESTIMATOR_RESULT_PATHS[MLWE_FAMILY]),
     Path(MVP_VERTICAL_PROOF_ARTIFACT_PATHS[LWE_FAMILY]),
@@ -200,6 +210,7 @@ RELEASE_ARTIFACT_PATHS = (
     DEEPEVOLVE_MANIFEST_PATH,
     Path("docs/prime_publication_handoff.json"),
     Path("docs/prime_speedrun_handoff.json"),
+    Path("hf/dataset/MANIFEST.sha256"),
     Path("hf/space_manifest.json"),
     Path("docs/huggingface_publication_handoff.json"),
     Path("docs/nvidia_publication_handoff.json"),
@@ -296,6 +307,14 @@ def _release_artifact_sequence(project_root: Path) -> tuple[ReleaseArtifactStep,
             id="formal-operator-semantics",
             path=DEFAULT_OPERATOR_SEMANTICS_PATH,
             write=lambda out: write_formal_operator_semantics(out, root=project_root),
+        ),
+        ReleaseArtifactStep(
+            id="formal-attackplan-semantics",
+            path=DEFAULT_ATTACKPLAN_SEMANTICS_PATH,
+            write=lambda out: write_formal_attackplan_semantics(
+                out,
+                root=project_root,
+            ),
         ),
         ReleaseArtifactStep(
             id="formal-lwe-evaluator-result",
@@ -449,6 +468,14 @@ def _release_artifact_sequence(project_root: Path) -> tuple[ReleaseArtifactStep,
             ),
         ),
         ReleaseArtifactStep(
+            id="hf-dataset",
+            path=Path("hf/dataset/MANIFEST.sha256"),
+            write=lambda out: write_huggingface_dataset_bundle(
+                out.parent,
+                root=project_root,
+            ),
+        ),
+        ReleaseArtifactStep(
             id="hf-space-manifest",
             path=Path("hf/space_manifest.json"),
             write=lambda out: write_huggingface_space_manifest(out, root=project_root),
@@ -561,6 +588,10 @@ def _verify_release_artifacts(project_root: Path) -> dict[str, dict[str, Any]]:
             DEFAULT_OPERATOR_SEMANTICS_PATH,
             root=project_root,
         ),
+        "formal-attackplan-semantics": verify_formal_attackplan_semantics(
+            DEFAULT_ATTACKPLAN_SEMANTICS_PATH,
+            root=project_root,
+        ),
         "formal-lwe-evaluator-result": verify_attack_plan_evaluator_result(
             Path(MVP_VERTICAL_ESTIMATOR_RESULT_PATHS[LWE_FAMILY]),
             FORMAL_MVP_ATTACK_PLAN_PATHS[LWE_FAMILY],
@@ -643,6 +674,10 @@ def _verify_release_artifacts(project_root: Path) -> dict[str, dict[str, Any]]:
         ),
         "prime-speedrun-handoff": verify_prime_speedrun_handoff(
             Path("docs/prime_speedrun_handoff.json"),
+            root=project_root,
+        ),
+        "hf-dataset": verify_huggingface_dataset_bundle(
+            Path("hf/dataset"),
             root=project_root,
         ),
         "hf-space-manifest": verify_huggingface_space_manifest(

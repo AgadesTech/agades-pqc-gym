@@ -51,6 +51,10 @@ from agades_pqc_gym.formal.artifacts import (
     write_attack_plan_evaluator_result,
     write_attack_plan_proof_artifact,
 )
+from agades_pqc_gym.formal.attack_plan_semantics import (
+    verify_formal_attackplan_semantics,
+    write_formal_attackplan_semantics,
+)
 from agades_pqc_gym.formal.estimator_model import (
     verify_formal_estimator_model,
     write_formal_estimator_model,
@@ -1959,6 +1963,32 @@ def formal_operator_semantics_verify(
 ) -> None:
     """Verify operator semantics, params, family bindings, and claim policy."""
     result = verify_formal_operator_semantics(semantics)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("formal-attackplan-semantics", hidden=True)
+def formal_attackplan_semantics(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("docs/formal_attackplan_semantics.json"),
+) -> None:
+    """Write the stable formal AttackPlan schema and claim-gate semantics."""
+    write_formal_attackplan_semantics(out)
+    typer.echo(f"formal_attackplan_semantics={out}")
+
+
+@app.command("formal-attackplan-semantics-verify", hidden=True)
+def formal_attackplan_semantics_verify(
+    semantics: Annotated[
+        Path,
+        typer.Option("--semantics"),
+    ] = Path("docs/formal_attackplan_semantics.json"),
+) -> None:
+    """Verify AttackPlan schema, canonicalization, and claim-gate semantics."""
+    result = verify_formal_attackplan_semantics(semantics)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)
