@@ -68,7 +68,7 @@
     },
     "prime_training_template": {
       "path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
-      "sha256": "b3dadf71ff5a729b7eb27fcf80107e7db1687f9fa196d0521193332bbba1d4c2"
+      "sha256": "6044580bb49bc2e0762f74b2f70984f13ec1320fab48a6a0b1f8337eb828f1f3"
     },
     "private_dataset_curation": {
       "path": "docs/private_dataset_curation.json",
@@ -80,7 +80,7 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "073f9ad7181a67909fad860f9fe66b93e5cd7929ef80987157f4db81b33439b5"
+      "sha256": "4d9fb44b97f57b6b20a03408233bdc403a57649e5518fbf5a216df07bccced9a"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
@@ -88,7 +88,7 @@
     },
     "rl_environment_contract": {
       "path": "docs/rl_environment_contract.json",
-      "sha256": "7b718b958e7ca9bdcb8ec420ee78c4c09493b753d5fefdd81075ea441b742afd"
+      "sha256": "14dd5a1800736967934e3a5962de88f0b49af98a6f454a7d91f6095d0a4da4ad"
     }
   },
   "project": {

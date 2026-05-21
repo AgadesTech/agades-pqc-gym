@@ -81,7 +81,7 @@
     },
     "prime_rl_training_template": {
       "path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
-      "sha256": "b3dadf71ff5a729b7eb27fcf80107e7db1687f9fa196d0521193332bbba1d4c2"
+      "sha256": "6044580bb49bc2e0762f74b2f70984f13ec1320fab48a6a0b1f8337eb828f1f3"
     },
     "prime_schema_manifest": {
       "path": "prime_intellect/schemas/schema_manifest.json",

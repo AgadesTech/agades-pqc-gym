@@ -117,19 +117,33 @@
   },
   "prime_training": {
     "config_path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
-    "config_sha256": "b3dadf71ff5a729b7eb27fcf80107e7db1687f9fa196d0521193332bbba1d4c2",
+    "config_sha256": "6044580bb49bc2e0762f74b2f70984f13ec1320fab48a6a0b1f8337eb828f1f3",
     "dataset_curation_manifest_path": "docs/private_dataset_curation.json",
     "eval_command": "prime eval run agades-pqc-verifier-env",
     "eval_config_manifest_path": "docs/prime_eval_config_manifest.json",
-    "launch_command_template": "prime train prime_intellect/training/private_qwen_prime_rl.template.toml --env-var HF_TOKEN --env-var WANDB_API_KEY",
+    "launch_command_template": "prime train prime_intellect/training/private_qwen_prime_rl.template.toml --env-var PRIME_API_KEY --env-var PRIME_ORG --env-var PRIME_ENVIRONMENT_SLUG --env-var PRIME_VISIBILITY --env-var HF_TOKEN --env-var WANDB_API_KEY --env-var AGADES_QWEN_BASE_MODEL",
     "launch_readiness": "blocked_until_private_model_and_dataset_review",
+    "required_env_vars": [
+      "PRIME_API_KEY",
+      "PRIME_ORG",
+      "PRIME_ENVIRONMENT_SLUG",
+      "PRIME_VISIBILITY",
+      "HF_TOKEN",
+      "WANDB_API_KEY",
+      "AGADES_QWEN_BASE_MODEL"
+    ],
     "rl_environment_contract_path": "docs/rl_environment_contract.json",
     "training_stack": "prime-rl"
   },
   "privacy_controls": {
     "allowed_env_vars": [
+      "PRIME_API_KEY",
+      "PRIME_ORG",
+      "PRIME_ENVIRONMENT_SLUG",
+      "PRIME_VISIBILITY",
       "HF_TOKEN",
-      "WANDB_API_KEY"
+      "WANDB_API_KEY",
+      "AGADES_QWEN_BASE_MODEL"
     ],
     "env_file_upload_allowed": false,
     "private_roots": [

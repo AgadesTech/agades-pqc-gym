@@ -16,6 +16,7 @@ requires_license_review = true
 requires_provenance_review = true
 publish_to_hf_public = false
 publish_to_prime_public = false
+required_env_vars = ["PRIME_API_KEY", "PRIME_ORG", "PRIME_ENVIRONMENT_SLUG", "PRIME_VISIBILITY", "HF_TOKEN", "WANDB_API_KEY", "AGADES_QWEN_BASE_MODEL"]
 dataset_curation_manifest = "docs/private_dataset_curation.json"
 student_model = "Qwen3.6-27B-private"
 preferred_user_artifact = "private GGUF OTQ 5-bit"
