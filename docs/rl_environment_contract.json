@@ -61,7 +61,7 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "f16213c07adc6202c99a6635215c8059df4fb2ee099bf18773ea3c6897b113c2"
+      "sha256": "a8295d3318d256206a6c89061221442b20bc9fcceb96a8735f6945e2e6ae94c9"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
@@ -93,11 +93,11 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "8c3a3deb92e7ef956f1336ffa7fd735453b796bd7bbf20a58ba0dc0c0b102d3f"
+      "sha256": "87036d1c2a16820e340f375f7042ac2406704f7f6c829c97c9664ecd32f49e92"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "916c7f614d648c5d378cbe04839c0dd64ec75ad65bf418bfc2b2aafcc119df85"
+      "sha256": "cdefcaaba0e59ff57ae05eeca5986d56df7600bc4035bf3483537d67356d2b91"
     }
   },
   "private_track": {

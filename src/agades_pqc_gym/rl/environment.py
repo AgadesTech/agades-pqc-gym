@@ -460,7 +460,7 @@ def _rollout_trace(
         "schema_version": ROLLOUT_TRACE_SCHEMA,
         "task": task,
         "candidate": candidate,
-        "formal_artifact_binding": _formal_artifact_binding(candidate_json),
+        "formal_artifact_binding": build_formal_artifact_binding(candidate_json),
         "reward_report": reward_report,
         "public_release_ok": True,
         "private_fields_present": False,
@@ -488,7 +488,7 @@ def _candidate_summary(candidate_json: str) -> dict[str, Any]:
     }
 
 
-def _formal_artifact_binding(candidate_json: str) -> dict[str, Any]:
+def build_formal_artifact_binding(candidate_json: str) -> dict[str, Any]:
     try:
         artifact = build_attack_plan_proof_artifact_from_json(
             candidate_json,

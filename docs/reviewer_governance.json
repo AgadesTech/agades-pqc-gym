@@ -268,7 +268,7 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "8c3a3deb92e7ef956f1336ffa7fd735453b796bd7bbf20a58ba0dc0c0b102d3f"
+      "sha256": "87036d1c2a16820e340f375f7042ac2406704f7f6c829c97c9664ecd32f49e92"
     },
     "publication_manifest": {
       "path": "docs/publication_manifest.json",
@@ -276,7 +276,7 @@
     },
     "release_audit": {
       "path": "public/release_audit.json",
-      "sha256": "42e9978ece1bf268eb1e4799cafe92c2c547fc3b4d63b438c71dd0e932d8078a"
+      "sha256": "945649886ef4375ce530251b2c595fbc520730600c31c5eaf0ddb64962708de7"
     }
   },
   "private_training_review": {
