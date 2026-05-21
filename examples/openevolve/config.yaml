@@ -6,6 +6,12 @@ private_qwen_research_engine:
   model_artifact_env: AGADES_QWEN_BASE_MODEL
   lora_adapter_env: AGADES_QWEN_LORA_ADAPTER_PATH
   gguf_otq_5bit_env: AGADES_QWEN_GGUF_OTQ_5BIT_PATH
+  artifact_plan_env: AGADES_QWEN_ARTIFACT_PLAN
+  artifact_plan_template: private/reports/qwen/artifact_plan.json
+  artifact_plan_schema: agades.pqc.private_qwen_artifact_plan.v1
+  artifact_verification_schema: agades.pqc.private_qwen_artifact_verification.v1
+  artifact_verification_command: uv run agades-pqc private-qwen-artifacts-verify --plan
+    private/reports/qwen/artifact_plan.json
   required_env_vars:
   - PRIME_API_KEY
   - PRIME_ORG
@@ -40,6 +46,7 @@ private_qwen_research_engine:
       publication_allowed: false
       requires_formal_validation: true
       requires_estimator_compatibility: true
+      requires_private_qwen_artifact_verification: true
       requires_private_training_readiness: true
       requires_human_review_before_claim: true
 candidate_roots:

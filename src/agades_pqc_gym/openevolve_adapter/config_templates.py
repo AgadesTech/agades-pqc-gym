@@ -14,6 +14,13 @@ from agades_pqc_gym.evolution.campaign import (
 from agades_pqc_gym.evolution.cron import HELDOUT_CRON_PLAN_SCHEMA
 from agades_pqc_gym.evolution.scheduler import HELDOUT_REVIEW_LOG_SCHEMA
 from agades_pqc_gym.evolution.snapshot import PRIVATE_ARCHIVE_SNAPSHOT_SCHEMA
+from agades_pqc_gym.integrations.private_qwen_artifacts import (
+    PRIVATE_QWEN_ARTIFACT_PLAN_ENV,
+    PRIVATE_QWEN_ARTIFACT_PLAN_SCHEMA,
+    PRIVATE_QWEN_ARTIFACT_PLAN_TEMPLATE,
+    PRIVATE_QWEN_ARTIFACT_VERIFICATION_COMMAND,
+    PRIVATE_QWEN_ARTIFACT_VERIFICATION_SCHEMA,
+)
 from agades_pqc_gym.integrations.private_training_config import (
     PRIVATE_TRAINING_REQUIRED_ENV_VARS,
 )
@@ -79,6 +86,11 @@ PRIVATE_QWEN_RESEARCH_ENGINE = {
     "model_artifact_env": "AGADES_QWEN_BASE_MODEL",
     "lora_adapter_env": "AGADES_QWEN_LORA_ADAPTER_PATH",
     "gguf_otq_5bit_env": "AGADES_QWEN_GGUF_OTQ_5BIT_PATH",
+    "artifact_plan_env": PRIVATE_QWEN_ARTIFACT_PLAN_ENV,
+    "artifact_plan_template": PRIVATE_QWEN_ARTIFACT_PLAN_TEMPLATE,
+    "artifact_plan_schema": PRIVATE_QWEN_ARTIFACT_PLAN_SCHEMA,
+    "artifact_verification_schema": PRIVATE_QWEN_ARTIFACT_VERIFICATION_SCHEMA,
+    "artifact_verification_command": PRIVATE_QWEN_ARTIFACT_VERIFICATION_COMMAND,
     "required_env_vars": list(PRIVATE_TRAINING_REQUIRED_ENV_VARS),
     "training_manifest": "docs/private_training_config_manifest.json",
     "training_readiness": "docs/private_training_readiness.json",
@@ -98,6 +110,7 @@ PRIVATE_QWEN_RESEARCH_ENGINE = {
             "publication_allowed": False,
             "requires_formal_validation": True,
             "requires_estimator_compatibility": True,
+            "requires_private_qwen_artifact_verification": True,
             "requires_private_training_readiness": True,
             "requires_human_review_before_claim": True,
         },
@@ -435,6 +448,11 @@ def _verify_private_qwen_research_engine(
         "model_artifact_env",
         "lora_adapter_env",
         "gguf_otq_5bit_env",
+        "artifact_plan_env",
+        "artifact_plan_template",
+        "artifact_plan_schema",
+        "artifact_verification_schema",
+        "artifact_verification_command",
         "required_env_vars",
         "training_manifest",
         "training_readiness",
@@ -485,6 +503,10 @@ def _verify_private_qwen_research_engine(
     if private_track.get("requires_estimator_compatibility") is not True:
         failures.append(
             "OpenEvolve private Qwen track must require estimator compatibility."
+        )
+    if private_track.get("requires_private_qwen_artifact_verification") is not True:
+        failures.append(
+            "OpenEvolve private Qwen track must require artifact verification."
         )
     if private_track.get("requires_private_training_readiness") is not True:
         failures.append(

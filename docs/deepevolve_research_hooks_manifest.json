@@ -317,6 +317,11 @@
     }
   ],
   "private_qwen_research_binding": {
+    "artifact_plan_env": "AGADES_QWEN_ARTIFACT_PLAN",
+    "artifact_plan_schema": "agades.pqc.private_qwen_artifact_plan.v1",
+    "artifact_plan_template": "private/reports/qwen/artifact_plan.json",
+    "artifact_verification_command": "uv run agades-pqc private-qwen-artifacts-verify --plan private/reports/qwen/artifact_plan.json",
+    "artifact_verification_schema": "agades.pqc.private_qwen_artifact_verification.v1",
     "base_model_env": "AGADES_QWEN_BASE_MODEL",
     "dataset_curation_manifest": "docs/private_dataset_curation.json",
     "gguf_otq_5bit_env": "AGADES_QWEN_GGUF_OTQ_5BIT_PATH",
@@ -327,6 +332,7 @@
       "attackplan_validation_required": true,
       "estimator_compatibility_required": true,
       "human_review_required_before_claim": true,
+      "private_qwen_artifact_verification_required": true,
       "proof_obligation_generation_required": true
     },
     "proposal_roles": [
