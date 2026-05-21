@@ -867,12 +867,14 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "verify-family-support",
         "generate-ecosystem-source-graph",
         "verify-ecosystem-source-graph",
-        "generate-family-operator-catalog",
-        "verify-family-operator-catalog",
-        "generate-formal-lean-backend",
-        "verify-formal-lean-backend",
-        "generate-hf-dataset",
-        "verify-hf-dataset",
+            "generate-family-operator-catalog",
+            "verify-family-operator-catalog",
+            "generate-formal-lean-backend",
+            "verify-formal-lean-backend",
+            "smoke-build-formal-lean",
+            "verify-formal-lean-build-smoke",
+            "generate-hf-dataset",
+            "verify-hf-dataset",
         "generate-hf-space-manifest",
         "verify-hf-space-manifest",
         "generate-hf-space-smoke",
@@ -949,6 +951,14 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert (
         "uv run agades-pqc formal-lean-backend-verify --backend "
         "docs/formal_lean_backend.json" in workflow
+    )
+    assert (
+        "uv run agades-pqc formal-lean-build-smoke --out "
+        "reports/formal_lean_build_smoke.json" in workflow
+    )
+    assert (
+        "uv run agades-pqc formal-lean-build-smoke-verify --report "
+        "reports/formal_lean_build_smoke.json" in workflow
     )
     artifact_diff_line = next(
         line for line in workflow.splitlines() if "git diff --exit-code --" in line

@@ -98,7 +98,6 @@ LINKED_ARTIFACT_PATHS = {
         TargetFamily.MLWE.value
     ],
     "private_run_policy": "docs/private_run_policy.json",
-    "private_training_manifest": "docs/private_training_config_manifest.json",
     "external_publication_review_packet": (
         "docs/external_publication_review_packet.json"
     ),

@@ -63,6 +63,10 @@ from agades_pqc_gym.formal.lean_backend import (
     verify_formal_lean_backend,
     write_formal_lean_backend,
 )
+from agades_pqc_gym.formal.lean_build import (
+    verify_formal_lean_build_smoke,
+    write_formal_lean_build_smoke,
+)
 from agades_pqc_gym.formal.obligation_ledger import (
     verify_formal_obligation_ledger,
     write_formal_obligation_ledger,
@@ -1947,6 +1951,39 @@ def formal_lean_backend_verify(
 ) -> None:
     """Verify Lean sources, theorem declarations, placeholders, and CI gate."""
     result = verify_formal_lean_backend(backend)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("formal-lean-build-smoke", hidden=True)
+def formal_lean_build_smoke(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("reports/formal_lean_build_smoke.json"),
+    timeout_seconds: Annotated[
+        int,
+        typer.Option(
+            "--timeout-seconds",
+            help="Maximum seconds to wait for `lake build`.",
+        ),
+    ] = 600,
+) -> None:
+    """Run `lake build` for the Lean backend and write a bounded smoke report."""
+    write_formal_lean_build_smoke(out, timeout_seconds=timeout_seconds)
+    typer.echo(f"formal_lean_build_smoke={out}")
+
+
+@app.command("formal-lean-build-smoke-verify", hidden=True)
+def formal_lean_build_smoke_verify(
+    report: Annotated[
+        Path,
+        typer.Option("--report"),
+    ] = Path("reports/formal_lean_build_smoke.json"),
+) -> None:
+    """Verify a Lean build smoke report without re-running `lake build`."""
+    result = verify_formal_lean_build_smoke(report)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)
