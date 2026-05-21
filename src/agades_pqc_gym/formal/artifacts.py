@@ -1832,6 +1832,8 @@ def _formal_estimator_model_contract_binding(
         DEFAULT_ESTIMATOR_MODEL_PATH,
         FORMAL_ESTIMATOR_MODEL_SCHEMA,
         build_formal_estimator_model,
+        formal_estimator_model_contract_payload,
+        formal_estimator_model_contract_sha256,
     )
 
     path = root / DEFAULT_ESTIMATOR_MODEL_PATH
@@ -1867,8 +1869,8 @@ def _formal_estimator_model_contract_binding(
     ]
     contract_matches = (
         bool(payload)
-        and _formal_estimator_model_contract_payload(payload)
-        == _formal_estimator_model_contract_payload(expected)
+        and formal_estimator_model_contract_payload(payload)
+        == formal_estimator_model_contract_payload(expected)
     )
     proof_artifact_binding_required = (
         proof_binding.get("estimator_result_binding_required_before_claim") is True
@@ -1893,7 +1895,7 @@ def _formal_estimator_model_contract_binding(
             payload.get("schema_version") or FORMAL_ESTIMATOR_MODEL_SCHEMA
         ),
         "contract_sha256": (
-            _formal_estimator_model_contract_sha256(payload) if payload else None
+            formal_estimator_model_contract_sha256(payload) if payload else None
         ),
         "families": summary.get("families"),
         "runtime_operator_count": summary.get("runtime_operator_count"),
@@ -1954,20 +1956,6 @@ def _verify_formal_estimator_model_contract_binding(
         failures.append(
             "Proof artifact formal estimator model binding must verify cleanly."
         )
-
-
-def _formal_estimator_model_contract_sha256(payload: dict[str, Any]) -> str:
-    return stable_sha256(_formal_estimator_model_contract_payload(payload))
-
-
-def _formal_estimator_model_contract_payload(
-    payload: dict[str, Any],
-) -> dict[str, Any]:
-    return {
-        key: value
-        for key, value in payload.items()
-        if key not in {"linked_artifacts", "model_sha256"}
-    }
 
 
 def _list_or_empty(value: object) -> list[Any]:
