@@ -239,7 +239,7 @@
   "linked_artifacts": {
     "external_publication_review_packet": {
       "path": "docs/external_publication_review_packet.json",
-      "sha256": "3692859c7065ad3cd7a06da0958ff3e483a89413b8fbf7412ebdafa52bc172ed"
+      "sha256": "d44f17a06082c733177afb10bd60390e8d5c70fea6e18334985b4d4456049895"
     },
     "formal_attackplan_semantics": {
       "path": "docs/formal_attackplan_semantics.json",
@@ -247,11 +247,11 @@
     },
     "formal_estimator_model": {
       "path": "docs/formal_estimator_model.json",
-      "sha256": "1d230ccd1acd43b86a4819dffe030631dc0e1505658ae888dfb105c3d88ea7bc"
+      "sha256": "b3cbfa9dfbdc7877465d9af55089278d0e8f3698c90eea9f9b8c7756f8f78be2"
     },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "d1476ba7a8fa30adffa66b86e6ae08ecb53f83ce6531f6d60d9da6d113bfb8d3"
+      "sha256": "e31b2c10dc703515f0a8632abeb3b7e25e32707fa4db377aa038b1668eb39375"
     },
     "formal_lean_backend": {
       "path": "docs/formal_lean_backend.json",
@@ -259,15 +259,15 @@
     },
     "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "6e46b60f236426526ac57ec64a648373f8fcf46034080a825315fba96109f8e8"
+      "sha256": "03070a244147ddd72d9fc9ec30727764fa959c4c390364bfd565371ea28f8da2"
     },
     "formal_mlwe_proof_artifact": {
       "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
-      "sha256": "9f9d8b1fb9356c336c09612eb61993422a1c9eef6a58763b7cf9e5129af60065"
+      "sha256": "85a66a0f28d50db55b74119ce83fa7d365e4d202e18303e9654e90f9bb6880d5"
     },
     "formal_obligation_ledger": {
       "path": "docs/formal_obligation_ledger.json",
-      "sha256": "e4f39244b386a3aa9bcc2414453f78d1a8db83597c70573513a575ef9132fd99"
+      "sha256": "e3edaad609b7b24b3fe1287d694496f0d8cc82e574dc8672827be30bcf8ed9ce"
     },
     "formal_operator_semantics": {
       "path": "docs/formal_operator_semantics.json",
@@ -275,7 +275,7 @@
     },
     "formal_smt_assist_contract": {
       "path": "docs/formal_smt_assist_contract.json",
-      "sha256": "f6ef55e1307d60b86529efc28af6a8806dcd713805248b0d2b6ca456a964cdd5"
+      "sha256": "80fc708f49827661a625c12abd58cc638978a67dfde52a09d18a9f70762cc3c1"
     },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
@@ -283,7 +283,7 @@
     },
     "publication_manifest": {
       "path": "docs/publication_manifest.json",
-      "sha256": "5573b743e3b4e2d45f997fe20a5178ea1a7268770590a78f67ccd0f9fc4903ff"
+      "sha256": "62710ec2fae6bd0c7e5138c09cf3b9ae4ff0999c9e701a6ba4e1f50ecd96690f"
     },
     "release_audit": {
       "path": "public/release_audit.json",

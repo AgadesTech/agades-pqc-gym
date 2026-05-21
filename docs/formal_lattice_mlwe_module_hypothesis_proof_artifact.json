@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "0e9e55dc770b2503f50deb6869ef4047bb970678784050a79e0052c95128a17c",
+  "artifact_sha256": "cca9a8dbbb347841b615533823307fcc9e2c5521865db255c0f3f0f4278e6adb",
   "attack_plan": {
     "canonical_sha256": "cd75f20024968e2d6bd6f019c623b23663aba3d1fff350d81770755c197e284d",
     "id": "lattice_mlwe_module_hypothesis_toy_v1",
@@ -12,6 +12,17 @@
       "validation": "pydantic_v2_extra_forbid_family_cross_checks"
     },
     "sha256": "14c62b76aef2b52e296e7de9e09e9b88e9d0f178161384c374de5d160325223a"
+  },
+  "attack_plan_semantics": {
+    "claim_policy_forbids_unreviewed_security_claims": true,
+    "formal_rules": 5,
+    "path": "docs/formal_attackplan_semantics.json",
+    "schema_version": "agades.pqc.formal.proof_artifact.attackplan_semantics_binding.v1",
+    "semantics_schema_version": "agades.pqc.formal.attackplan_semantics.v1",
+    "semantics_sha256": "f37f659d2cc70515c6ba6dc6a3c17c37b8e03e6b5657635a326db742a9c56a18",
+    "sha256": "7ad2cc549f65109a06d662d550d13ff985f9e9aec8ca0284eadc5397f279580e",
+    "validation_rules": 7,
+    "verification_accepted": true
   },
   "backend": {
     "library": "mathlib",
@@ -374,5 +385,5 @@
     ],
     "status": "pending_review"
   },
-  "schema_version": "agades.pqc.formal.proof_artifact.v1"
+  "schema_version": "agades.pqc.formal.proof_artifact.v2"
 }

@@ -36,7 +36,7 @@ def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() ->
         Path("examples/attack_plans/lattice_primal_usvp_toy.json")
     )
 
-    assert artifact["schema_version"] == "agades.pqc.formal.proof_artifact.v1"
+    assert artifact["schema_version"] == "agades.pqc.formal.proof_artifact.v2"
     assert artifact["backend"] == {
         "primary": "lean4",
         "library": "mathlib",
@@ -72,6 +72,21 @@ def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() ->
     assert backend_manifest["theorem_declarations"] >= 20
     assert backend_manifest["ci_lean_build_gate"] is True
     assert backend_manifest["placeholder_failures"] == 0
+    semantics_path = Path("docs/formal_attackplan_semantics.json")
+    semantics_payload = json.loads(semantics_path.read_text(encoding="utf-8"))
+    assert artifact["attack_plan_semantics"] == {
+        "schema_version": (
+            "agades.pqc.formal.proof_artifact.attackplan_semantics_binding.v1"
+        ),
+        "path": semantics_path.as_posix(),
+        "semantics_schema_version": "agades.pqc.formal.attackplan_semantics.v1",
+        "sha256": hashlib.sha256(semantics_path.read_bytes()).hexdigest(),
+        "semantics_sha256": semantics_payload["semantics_sha256"],
+        "validation_rules": 7,
+        "formal_rules": 5,
+        "claim_policy_forbids_unreviewed_security_claims": True,
+        "verification_accepted": True,
+    }
     assert artifact["family"] == "LWE"
     assert artifact["operator_semantics"][0] == {
         "operator": "primal_usvp",
@@ -380,6 +395,7 @@ def test_write_and_verify_attack_plan_proof_artifact(tmp_path: Path) -> None:
             "proof_obligations": 4,
             "lean_theorems": 4,
             "estimator_result_attached": False,
+            "attackplan_semantics_attached": True,
             "required_reviewers": 3,
             "failure_count": 0,
         },
@@ -520,6 +536,7 @@ def test_committed_mlwe_proof_artifact_is_in_sync_and_verifiable(
             "proof_obligations": 4,
             "lean_theorems": 4,
             "estimator_result_attached": True,
+            "attackplan_semantics_attached": True,
             "required_reviewers": 3,
             "failure_count": 0,
         },
@@ -572,6 +589,27 @@ def test_verify_attack_plan_proof_artifact_rejects_stale_formal_backend_binding(
 
     assert result["accepted"] is False
     assert "Proof artifact formal_backend is not in sync." in result["failures"]
+
+
+def test_verify_attack_plan_proof_artifact_rejects_stale_attackplan_semantics(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+    )
+    artifact["attack_plan_semantics"]["semantics_sha256"] = "0" * 64
+    artifact["artifact_sha256"] = _artifact_payload_sha256(artifact)
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Proof artifact AttackPlan semantics binding is not in sync."
+        in result["failures"]
+    )
 
 
 def test_verify_attack_plan_proof_artifact_rejects_stale_attack_plan_schema_contract(
@@ -955,6 +993,9 @@ def _review_artifact_binding(artifact: dict[str, object]) -> dict[str, object]:
         "estimator_result_binding_status": estimator_binding["status"],
         "review_status": review["status"],
         "required_reviewers": review["required_reviewers"],
+        "attack_plan_semantics_sha256": artifact["attack_plan_semantics"][
+            "semantics_sha256"
+        ],
         "proof_obligation_sha256": [
             obligation["obligation_sha256"]
             for obligation in proof_obligations
