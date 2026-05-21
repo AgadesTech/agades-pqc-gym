@@ -40,6 +40,13 @@ from agades_pqc_gym.formal.operator_semantics import (
     verify_formal_operator_semantics,
     write_formal_operator_semantics,
 )
+from agades_pqc_gym.integrations.deepevolve_research_hooks import (
+    DEFAULT_MANIFEST_PATH as DEEPEVOLVE_MANIFEST_PATH,
+)
+from agades_pqc_gym.integrations.deepevolve_research_hooks import (
+    verify_deepevolve_research_hooks_manifest,
+    write_deepevolve_research_hooks_manifest,
+)
 from agades_pqc_gym.integrations.ecosystem_smoke import (
     verify_ecosystem_smoke_report,
     write_ecosystem_smoke_report,
@@ -59,6 +66,56 @@ from agades_pqc_gym.integrations.huggingface_space_manifest import (
 from agades_pqc_gym.integrations.nvidia_publication_handoff import (
     verify_nvidia_publication_handoff,
     write_nvidia_publication_handoff,
+)
+from agades_pqc_gym.integrations.pedagogical_rl_method import (
+    DEFAULT_METHOD_PATH as PEDAGOGICAL_RL_METHOD_PATH,
+)
+from agades_pqc_gym.integrations.pedagogical_rl_method import (
+    verify_pedagogical_rl_method,
+    write_pedagogical_rl_method,
+)
+from agades_pqc_gym.integrations.prime_environment_manifest import (
+    verify_prime_environment_manifest,
+    write_prime_environment_manifest,
+)
+from agades_pqc_gym.integrations.prime_eval_config import (
+    DEFAULT_CONFIG_PATH as PRIME_EVAL_CONFIG_PATH,
+)
+from agades_pqc_gym.integrations.prime_eval_config import (
+    DEFAULT_MANIFEST_PATH as PRIME_EVAL_MANIFEST_PATH,
+)
+from agades_pqc_gym.integrations.prime_eval_config import (
+    verify_prime_eval_config,
+    write_prime_eval_config,
+)
+from agades_pqc_gym.integrations.prime_publication_handoff import (
+    verify_prime_publication_handoff,
+    write_prime_publication_handoff,
+)
+from agades_pqc_gym.integrations.prime_speedrun_handoff import (
+    verify_prime_speedrun_handoff,
+    write_prime_speedrun_handoff,
+)
+from agades_pqc_gym.integrations.private_dataset_curation import (
+    DEFAULT_CURATION_PATH as PRIVATE_DATASET_CURATION_PATH,
+)
+from agades_pqc_gym.integrations.private_dataset_curation import (
+    verify_private_dataset_curation,
+    write_private_dataset_curation,
+)
+from agades_pqc_gym.integrations.private_run_policy import (
+    verify_private_run_policy,
+    write_private_run_policy,
+)
+from agades_pqc_gym.integrations.private_training_config import (
+    DEFAULT_CONFIG_PATH as PRIVATE_TRAINING_CONFIG_PATH,
+)
+from agades_pqc_gym.integrations.private_training_config import (
+    DEFAULT_MANIFEST_PATH as PRIVATE_TRAINING_MANIFEST_PATH,
+)
+from agades_pqc_gym.integrations.private_training_config import (
+    verify_private_training_config,
+    write_private_training_config,
 )
 from agades_pqc_gym.integrations.publication_manifest import (
     verify_publication_manifest,
@@ -82,6 +139,20 @@ from agades_pqc_gym.integrations.rl_environment_contract import (
     write_rl_environment_contract,
 )
 from agades_pqc_gym.integrations.runbook_audit import write_runbook_audit
+from agades_pqc_gym.openevolve_adapter.config_templates import (
+    DEFAULT_CONFIG_PATH as OPENEVOLVE_CONFIG_PATH,
+)
+from agades_pqc_gym.openevolve_adapter.config_templates import (
+    verify_default_config_template,
+    write_default_config_template,
+)
+from agades_pqc_gym.openevolve_adapter.smoke import (
+    DEFAULT_REPORT as OPENEVOLVE_SMOKE_REPORT,
+)
+from agades_pqc_gym.openevolve_adapter.smoke import (
+    verify_openevolve_smoke_report,
+    write_openevolve_smoke_report,
+)
 
 RELEASE_ARTIFACTS_SCHEMA = "agades.pqc.release_artifacts.v1"
 ROOT = Path(__file__).resolve().parents[3]
@@ -102,6 +173,19 @@ RELEASE_ARTIFACT_PATHS = (
     DEFAULT_COVERAGE_PATH,
     DEFAULT_ESTIMATOR_MODEL_PATH,
     DEFAULT_OBLIGATION_LEDGER_PATH,
+    Path("docs/private_run_policy.json"),
+    PRIME_EVAL_CONFIG_PATH,
+    PRIME_EVAL_MANIFEST_PATH,
+    Path("prime_intellect/verifiers_environment/prime_manifest.json"),
+    PRIVATE_DATASET_CURATION_PATH,
+    PEDAGOGICAL_RL_METHOD_PATH,
+    PRIVATE_TRAINING_CONFIG_PATH,
+    PRIVATE_TRAINING_MANIFEST_PATH,
+    OPENEVOLVE_CONFIG_PATH,
+    OPENEVOLVE_SMOKE_REPORT,
+    DEEPEVOLVE_MANIFEST_PATH,
+    Path("docs/prime_publication_handoff.json"),
+    Path("docs/prime_speedrun_handoff.json"),
     Path("hf/space_manifest.json"),
     Path("docs/huggingface_publication_handoff.json"),
     Path("docs/nvidia_publication_handoff.json"),
@@ -257,6 +341,84 @@ def _release_artifact_sequence(project_root: Path) -> tuple[ReleaseArtifactStep,
             write=lambda out: write_formal_obligation_ledger(out, root=project_root),
         ),
         ReleaseArtifactStep(
+            id="private-run-policy",
+            path=Path("docs/private_run_policy.json"),
+            write=lambda out: write_private_run_policy(out),
+        ),
+        ReleaseArtifactStep(
+            id="prime-eval-config",
+            path=PRIME_EVAL_MANIFEST_PATH,
+            write=lambda out: write_prime_eval_config(
+                PRIME_EVAL_CONFIG_PATH,
+                out,
+                root=project_root,
+            ),
+        ),
+        ReleaseArtifactStep(
+            id="prime-environment-manifest",
+            path=Path("prime_intellect/verifiers_environment/prime_manifest.json"),
+            write=lambda out: write_prime_environment_manifest(
+                out,
+                root=project_root,
+            ),
+        ),
+        ReleaseArtifactStep(
+            id="private-dataset-curation",
+            path=PRIVATE_DATASET_CURATION_PATH,
+            write=lambda out: write_private_dataset_curation(out, root=project_root),
+        ),
+        ReleaseArtifactStep(
+            id="pedagogical-rl-method",
+            path=PEDAGOGICAL_RL_METHOD_PATH,
+            write=lambda out: write_pedagogical_rl_method(out, root=project_root),
+        ),
+        ReleaseArtifactStep(
+            id="private-training-config",
+            path=PRIVATE_TRAINING_MANIFEST_PATH,
+            write=lambda out: write_private_training_config(
+                PRIVATE_TRAINING_CONFIG_PATH,
+                out,
+                root=project_root,
+            ),
+        ),
+        ReleaseArtifactStep(
+            id="openevolve-config",
+            path=OPENEVOLVE_CONFIG_PATH,
+            write=lambda out: write_default_config_template(out),
+        ),
+        ReleaseArtifactStep(
+            id="openevolve-smoke",
+            path=OPENEVOLVE_SMOKE_REPORT,
+            write=lambda out: write_openevolve_smoke_report(
+                out,
+                root=project_root,
+            ),
+        ),
+        ReleaseArtifactStep(
+            id="deepevolve-manifest",
+            path=DEEPEVOLVE_MANIFEST_PATH,
+            write=lambda out: write_deepevolve_research_hooks_manifest(
+                out,
+                root=project_root,
+            ),
+        ),
+        ReleaseArtifactStep(
+            id="prime-publication-handoff",
+            path=Path("docs/prime_publication_handoff.json"),
+            write=lambda out: write_prime_publication_handoff(
+                out,
+                root=project_root,
+            ),
+        ),
+        ReleaseArtifactStep(
+            id="prime-speedrun-handoff",
+            path=Path("docs/prime_speedrun_handoff.json"),
+            write=lambda out: write_prime_speedrun_handoff(
+                out,
+                root=project_root,
+            ),
+        ),
+        ReleaseArtifactStep(
             id="hf-space-manifest",
             path=Path("hf/space_manifest.json"),
             write=lambda out: write_huggingface_space_manifest(out, root=project_root),
@@ -397,6 +559,52 @@ def _verify_release_artifacts(project_root: Path) -> dict[str, dict[str, Any]]:
         ),
         "formal-obligation-ledger": verify_formal_obligation_ledger(
             DEFAULT_OBLIGATION_LEDGER_PATH,
+            root=project_root,
+        ),
+        "private-run-policy": verify_private_run_policy(
+            Path("docs/private_run_policy.json"),
+            root=project_root,
+        ),
+        "prime-eval-config": verify_prime_eval_config(
+            PRIME_EVAL_CONFIG_PATH,
+            PRIME_EVAL_MANIFEST_PATH,
+            root=project_root,
+        ),
+        "prime-environment-manifest": verify_prime_environment_manifest(
+            Path("prime_intellect/verifiers_environment/prime_manifest.json"),
+            root=project_root,
+        ),
+        "private-dataset-curation": verify_private_dataset_curation(
+            PRIVATE_DATASET_CURATION_PATH,
+            root=project_root,
+        ),
+        "pedagogical-rl-method": verify_pedagogical_rl_method(
+            PEDAGOGICAL_RL_METHOD_PATH,
+            root=project_root,
+        ),
+        "private-training-config": verify_private_training_config(
+            PRIVATE_TRAINING_CONFIG_PATH,
+            PRIVATE_TRAINING_MANIFEST_PATH,
+            root=project_root,
+        ),
+        "openevolve-config": verify_default_config_template(
+            OPENEVOLVE_CONFIG_PATH,
+            root=project_root,
+        ),
+        "openevolve-smoke": verify_openevolve_smoke_report(
+            OPENEVOLVE_SMOKE_REPORT,
+            root=project_root,
+        ),
+        "deepevolve-manifest": verify_deepevolve_research_hooks_manifest(
+            DEEPEVOLVE_MANIFEST_PATH,
+            root=project_root,
+        ),
+        "prime-publication-handoff": verify_prime_publication_handoff(
+            Path("docs/prime_publication_handoff.json"),
+            root=project_root,
+        ),
+        "prime-speedrun-handoff": verify_prime_speedrun_handoff(
+            Path("docs/prime_speedrun_handoff.json"),
             root=project_root,
         ),
         "hf-space-manifest": verify_huggingface_space_manifest(
