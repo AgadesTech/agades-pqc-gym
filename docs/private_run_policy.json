@@ -16,7 +16,8 @@
     "agades-pqc lattice-estimator-baseline-run",
     "agades-pqc lattice-estimator-baseline-review-packet",
     "agades-pqc lattice-estimator-checkout-preflight",
-    "agades-pqc private-pedagogical-traces"
+    "agades-pqc private-pedagogical-traces",
+    "agades-pqc private-qwen-artifacts-verify"
   ],
   "allowed_private_roots": [
     "private/candidates",
@@ -67,6 +68,29 @@
     "private Qwen fine-tuning corpora and adapters",
     "license-reviewed derived datasets from LWE-benchmarking TAPAS and pq-code-package"
   ],
+  "private_qwen_artifact_policy": {
+    "artifact_plan_env": "AGADES_QWEN_ARTIFACT_PLAN",
+    "artifact_plan_template": "private/reports/qwen/artifact_plan.json",
+    "plan_schema": "agades.pqc.private_qwen_artifact_plan.v1",
+    "prints_artifact_paths": false,
+    "private_roots": [
+      "private/models",
+      "private/reports"
+    ],
+    "public_release_allowed": false,
+    "required_gates": [
+      "trainable_base_before_quantization",
+      "lora_or_qlora_adapter_before_gguf",
+      "reject_direct_gguf_training",
+      "reject_public_weight_or_adapter_publication",
+      "reject_non_private_artifact_paths",
+      "reject_path_traversal",
+      "require_artifact_sha256",
+      "require_model_license_storage_quantization_release_reviews"
+    ],
+    "verification_command": "uv run agades-pqc private-qwen-artifacts-verify --plan private/reports/qwen/artifact_plan.json",
+    "verification_schema": "agades.pqc.private_qwen_artifact_verification.v1"
+  },
   "private_rl_policy": {
     "method": "pedagogical_rl",
     "preferred_private_quantization": "gguf_otq_5bit",
