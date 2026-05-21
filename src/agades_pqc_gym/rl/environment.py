@@ -25,6 +25,7 @@ from agades_pqc_gym.verifier import verify_attack_plan_json
 RL_REWARD_REPORT_SCHEMA = "agades.pqc.rl.reward_report.v1"
 ROLLOUT_TRACE_SCHEMA = "agades.pqc.rl.rollout_trace.v1"
 OBSERVATION_SCHEMA = "agades.pqc.rl.observation.v1"
+FORMAL_ARTIFACT_BINDING_SCHEMA = "agades.pqc.rl.formal_artifact_binding.v1"
 REWARD_TERMS = (
     "formal_validity",
     "cryptographic_applicability",
@@ -488,7 +489,6 @@ def _candidate_summary(candidate_json: str) -> dict[str, Any]:
 
 
 def _formal_artifact_binding(candidate_json: str) -> dict[str, Any]:
-    schema = "agades.pqc.rl.formal_artifact_binding.v1"
     try:
         artifact = build_attack_plan_proof_artifact_from_json(
             candidate_json,
@@ -496,7 +496,7 @@ def _formal_artifact_binding(candidate_json: str) -> dict[str, Any]:
         )
     except (json.JSONDecodeError, ValidationError, ValueError):
         return {
-            "schema_version": schema,
+            "schema_version": FORMAL_ARTIFACT_BINDING_SCHEMA,
             "status": "unavailable",
             "attack_plan_id": None,
             "family": None,
@@ -519,7 +519,7 @@ def _formal_artifact_binding(candidate_json: str) -> dict[str, Any]:
     type_rules = artifact["proof_obligation_type_rules"]
     review = artifact["review"]
     return {
-        "schema_version": schema,
+        "schema_version": FORMAL_ARTIFACT_BINDING_SCHEMA,
         "status": "attached",
         "attack_plan_id": artifact["attack_plan"]["id"],
         "attack_plan_canonical_sha256": artifact["attack_plan"][
