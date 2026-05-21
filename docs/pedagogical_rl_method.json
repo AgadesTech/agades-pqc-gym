@@ -55,7 +55,7 @@
     },
     "formal_obligation_ledger": {
       "path": "docs/formal_obligation_ledger.json",
-      "sha256": "4e9c1d88f713970af53e3330695737b23f1030eea1eeb2ce1fa493b6b3ba2690"
+      "sha256": "2566b8a94cf1fe5a44c7168a128c092b88be670a23ff9fef5fe7e5b056a93b65"
     },
     "formal_operator_semantics": {
       "path": "docs/formal_operator_semantics.json",

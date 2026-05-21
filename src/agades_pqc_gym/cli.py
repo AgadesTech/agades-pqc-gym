@@ -75,6 +75,10 @@ from agades_pqc_gym.formal.operator_semantics import (
     verify_formal_operator_semantics,
     write_formal_operator_semantics,
 )
+from agades_pqc_gym.formal.smt_assist import (
+    verify_formal_smt_assist_contract,
+    write_formal_smt_assist_contract,
+)
 from agades_pqc_gym.integrations.benchmark_source_contracts import (
     verify_benchmark_source_contracts,
     write_benchmark_source_contracts,
@@ -1981,6 +1985,32 @@ def formal_lean_backend_verify(
 ) -> None:
     """Verify Lean sources, theorem declarations, placeholders, and CI gate."""
     result = verify_formal_lean_backend(backend)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("formal-smt-assist", hidden=True)
+def formal_smt_assist(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("docs/formal_smt_assist_contract.json"),
+) -> None:
+    """Write the optional Z3 assist contract for finite decidable obligations."""
+    write_formal_smt_assist_contract(out)
+    typer.echo(f"formal_smt_assist_contract={out}")
+
+
+@app.command("formal-smt-assist-verify", hidden=True)
+def formal_smt_assist_verify(
+    contract: Annotated[
+        Path,
+        typer.Option("--contract"),
+    ] = Path("docs/formal_smt_assist_contract.json"),
+) -> None:
+    """Verify that optional Z3 assistance stays secondary to Lean and review."""
+    result = verify_formal_smt_assist_contract(contract)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)

@@ -40,6 +40,11 @@ from agades_pqc_gym.formal.operator_semantics import (
     verify_formal_operator_semantics,
     write_formal_operator_semantics,
 )
+from agades_pqc_gym.formal.smt_assist import (
+    DEFAULT_SMT_ASSIST_PATH,
+    verify_formal_smt_assist_contract,
+    write_formal_smt_assist_contract,
+)
 from agades_pqc_gym.integrations.deepevolve_research_hooks import (
     DEFAULT_MANIFEST_PATH as DEEPEVOLVE_MANIFEST_PATH,
 )
@@ -180,6 +185,7 @@ RELEASE_ARTIFACT_PATHS = (
     DEFAULT_COVERAGE_PATH,
     DEFAULT_ESTIMATOR_MODEL_PATH,
     DEFAULT_OBLIGATION_LEDGER_PATH,
+    DEFAULT_SMT_ASSIST_PATH,
     Path("docs/private_run_policy.json"),
     PRIME_EVAL_CONFIG_PATH,
     PRIME_EVAL_MANIFEST_PATH,
@@ -347,6 +353,14 @@ def _release_artifact_sequence(project_root: Path) -> tuple[ReleaseArtifactStep,
             id="formal-obligation-ledger",
             path=DEFAULT_OBLIGATION_LEDGER_PATH,
             write=lambda out: write_formal_obligation_ledger(out, root=project_root),
+        ),
+        ReleaseArtifactStep(
+            id="formal-smt-assist",
+            path=DEFAULT_SMT_ASSIST_PATH,
+            write=lambda out: write_formal_smt_assist_contract(
+                out,
+                root=project_root,
+            ),
         ),
         ReleaseArtifactStep(
             id="private-run-policy",
@@ -575,6 +589,10 @@ def _verify_release_artifacts(project_root: Path) -> dict[str, dict[str, Any]]:
         ),
         "formal-obligation-ledger": verify_formal_obligation_ledger(
             DEFAULT_OBLIGATION_LEDGER_PATH,
+            root=project_root,
+        ),
+        "formal-smt-assist": verify_formal_smt_assist_contract(
+            DEFAULT_SMT_ASSIST_PATH,
             root=project_root,
         ),
         "private-run-policy": verify_private_run_policy(

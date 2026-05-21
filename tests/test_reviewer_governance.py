@@ -39,6 +39,7 @@ def test_reviewer_governance_defines_family_roles_and_review_gates(
         "smt_assist": {
             "backend": "z3",
             "scope": "optional_finite_decidable_obligations_only",
+            "contract_path": "docs/formal_smt_assist_contract.json",
             "may_replace_primary_backend": False,
         },
     }
@@ -125,6 +126,9 @@ def test_reviewer_governance_defines_family_roles_and_review_gates(
     assert governance["linked_artifacts"]["formal_lean_backend"]["path"] == (
         "docs/formal_lean_backend.json"
     )
+    assert governance["linked_artifacts"]["formal_smt_assist_contract"]["path"] == (
+        "docs/formal_smt_assist_contract.json"
+    )
     assert governance["linked_artifacts"]["formal_mlwe_proof_artifact"]["path"] == (
         "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json"
     )
@@ -150,7 +154,7 @@ def test_reviewer_governance_verify_accepts_committed_artifact() -> None:
             "family_reviewers": 9,
             "role_groups": 3,
             "approval_gates": 4,
-            "linked_artifacts": 11,
+            "linked_artifacts": 12,
             "failure_count": 0,
         },
         "failures": [],

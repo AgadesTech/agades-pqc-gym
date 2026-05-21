@@ -35,7 +35,7 @@
     },
     "formal_obligation_ledger": {
       "path": "docs/formal_obligation_ledger.json",
-      "sha256": "4e9c1d88f713970af53e3330695737b23f1030eea1eeb2ce1fa493b6b3ba2690"
+      "sha256": "2566b8a94cf1fe5a44c7168a128c092b88be670a23ff9fef5fe7e5b056a93b65"
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",
@@ -43,7 +43,7 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "04b6177ad539adc6a971ad8e1c19ab3efc4f591556fde1c302a27a994108ff1c"
+      "sha256": "ddbf52466aca170e3dbeb6336943518f7a47a6d9ea546f60da4c17b4aec35669"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
