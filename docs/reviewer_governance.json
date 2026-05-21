@@ -225,6 +225,7 @@
     },
     "smt_assist": {
       "backend": "z3",
+      "contract_path": "docs/formal_smt_assist_contract.json",
       "may_replace_primary_backend": false,
       "scope": "optional_finite_decidable_obligations_only"
     }
@@ -256,11 +257,15 @@
     },
     "formal_obligation_ledger": {
       "path": "docs/formal_obligation_ledger.json",
-      "sha256": "4e9c1d88f713970af53e3330695737b23f1030eea1eeb2ce1fa493b6b3ba2690"
+      "sha256": "2566b8a94cf1fe5a44c7168a128c092b88be670a23ff9fef5fe7e5b056a93b65"
     },
     "formal_operator_semantics": {
       "path": "docs/formal_operator_semantics.json",
       "sha256": "9fa0bc4ee4cd2f5229d9352a2e9e490df323819bbfea5c6cf446a34fab2d231c"
+    },
+    "formal_smt_assist_contract": {
+      "path": "docs/formal_smt_assist_contract.json",
+      "sha256": "96d18a536b30e9ddd407d1a2f42707f263f714dd7dad0c42e97b17890f526e1e"
     },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
@@ -272,7 +277,7 @@
     },
     "release_audit": {
       "path": "public/release_audit.json",
-      "sha256": "90bb000f23abf450ed6b031483d239b45158026f26bd060564b27a9feea80be4"
+      "sha256": "3c0f944ee11d3cd71ce172d6e12e379e93e4cd12565ebef36649882385248f8e"
     }
   },
   "private_training_review": {

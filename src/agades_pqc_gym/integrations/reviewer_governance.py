@@ -16,6 +16,7 @@ from agades_pqc_gym.formal.review import (
     REVIEWER_ROLE_GROUPS,
     required_reviewers_for_family,
 )
+from agades_pqc_gym.formal.smt_assist import DEFAULT_SMT_ASSIST_PATH
 
 REVIEWER_GOVERNANCE_SCHEMA = "agades.pqc.reviewer_governance.v1"
 REVIEWER_GOVERNANCE_VERIFICATION_SCHEMA = (
@@ -91,6 +92,7 @@ LINKED_ARTIFACT_PATHS = {
     "formal_obligation_ledger": "docs/formal_obligation_ledger.json",
     "formal_operator_semantics": "docs/formal_operator_semantics.json",
     "formal_lean_backend": "docs/formal_lean_backend.json",
+    "formal_smt_assist_contract": DEFAULT_SMT_ASSIST_PATH.as_posix(),
     "formal_lwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
         TargetFamily.LWE.value
     ],
@@ -150,6 +152,7 @@ def build_reviewer_governance(root: Path | None = None) -> dict[str, Any]:
             "smt_assist": {
                 "backend": "z3",
                 "scope": "optional_finite_decidable_obligations_only",
+                "contract_path": DEFAULT_SMT_ASSIST_PATH.as_posix(),
                 "may_replace_primary_backend": False,
             },
         },
@@ -420,6 +423,8 @@ def _verify_formal_backend_policy(
         failures.append(
             "SMT assistance must be scoped to finite decidable obligations."
         )
+    if smt.get("contract_path") != DEFAULT_SMT_ASSIST_PATH.as_posix():
+        failures.append("SMT assistance must bind the formal SMT contract.")
     if smt.get("may_replace_primary_backend") is not False:
         failures.append("SMT assistance must not replace the primary Lean backend.")
 
