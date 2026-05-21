@@ -117,6 +117,13 @@ from agades_pqc_gym.integrations.private_training_config import (
     verify_private_training_config,
     write_private_training_config,
 )
+from agades_pqc_gym.integrations.private_training_readiness import (
+    DEFAULT_READINESS_PATH as PRIVATE_TRAINING_READINESS_PATH,
+)
+from agades_pqc_gym.integrations.private_training_readiness import (
+    verify_private_training_readiness,
+    write_private_training_readiness,
+)
 from agades_pqc_gym.integrations.publication_manifest import (
     verify_publication_manifest,
     write_publication_manifest,
@@ -181,6 +188,7 @@ RELEASE_ARTIFACT_PATHS = (
     PEDAGOGICAL_RL_METHOD_PATH,
     PRIVATE_TRAINING_CONFIG_PATH,
     PRIVATE_TRAINING_MANIFEST_PATH,
+    PRIVATE_TRAINING_READINESS_PATH,
     OPENEVOLVE_CONFIG_PATH,
     OPENEVOLVE_SMOKE_REPORT,
     DEEPEVOLVE_MANIFEST_PATH,
@@ -377,6 +385,14 @@ def _release_artifact_sequence(project_root: Path) -> tuple[ReleaseArtifactStep,
             path=PRIVATE_TRAINING_MANIFEST_PATH,
             write=lambda out: write_private_training_config(
                 PRIVATE_TRAINING_CONFIG_PATH,
+                out,
+                root=project_root,
+            ),
+        ),
+        ReleaseArtifactStep(
+            id="private-training-readiness",
+            path=PRIVATE_TRAINING_READINESS_PATH,
+            write=lambda out: write_private_training_readiness(
                 out,
                 root=project_root,
             ),
@@ -585,6 +601,10 @@ def _verify_release_artifacts(project_root: Path) -> dict[str, dict[str, Any]]:
         "private-training-config": verify_private_training_config(
             PRIVATE_TRAINING_CONFIG_PATH,
             PRIVATE_TRAINING_MANIFEST_PATH,
+            root=project_root,
+        ),
+        "private-training-readiness": verify_private_training_readiness(
+            PRIVATE_TRAINING_READINESS_PATH,
             root=project_root,
         ),
         "openevolve-config": verify_default_config_template(
