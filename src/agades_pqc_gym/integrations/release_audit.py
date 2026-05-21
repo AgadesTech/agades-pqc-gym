@@ -4504,11 +4504,14 @@ def _deepevolve_research_hooks(root: Path) -> dict[str, Any]:
             failures.append(f"DeepEvolve research hook manifest is invalid JSON: {exc}")
 
         if isinstance(committed, dict):
-            expected = build_deepevolve_research_hooks_manifest()
+            expected = build_deepevolve_research_hooks_manifest(root=root)
             if committed != expected:
                 failures.append("DeepEvolve research hook manifest is not in sync.")
 
-            verification = verify_deepevolve_research_hooks_manifest(manifest_path)
+            verification = verify_deepevolve_research_hooks_manifest(
+                manifest_path,
+                root=root,
+            )
             failures.extend(verification["failures"])
             evidence["private_qwen_bound"] = verification["summary"][
                 "private_qwen_bound"
