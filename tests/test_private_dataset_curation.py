@@ -204,6 +204,27 @@ def test_private_dataset_curation_defines_private_source_controls(
             ),
         },
     }
+    assert payload["evidence_verification"] == {
+        "schema_version": "agades.pqc.private_dataset_evidence_verification.v1",
+        "verifier": (
+            "agades_pqc_gym.integrations.private_dataset_evidence."
+            "verify_private_dataset_evidence_bundle"
+        ),
+        "command": (
+            "uv run agades-pqc private-dataset-evidence-verify --curation "
+            "docs/private_dataset_curation.json --evidence-root ."
+        ),
+        "public_output_allowed": False,
+        "prints_private_values": False,
+        "training_eligible_requires_all_artifacts_accepted": True,
+        "required_artifacts": [
+            "private/reports/dataset_curation/license_review.json",
+            "private/reports/dataset_curation/provenance_manifest.json",
+            "private/reports/dataset_curation/deduplication_report.json",
+            "private/reports/dataset_curation/redaction_report.json",
+            "private/reports/dataset_curation/contamination_audit.json",
+        ],
+    }
     assert payload["publication_boundary"]["forbidden_public_artifacts"] == [
         "private_dataset_rows",
         "raw_source_rows",
@@ -294,6 +315,28 @@ def test_private_dataset_curation_rejects_public_or_incomplete_evidence_contract
         "Private dataset evidence contract redaction is missing required field: "
         "accepted."
     ) in result["failures"]
+
+
+def test_private_dataset_curation_rejects_public_evidence_verifier(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "private_dataset_curation.json"
+    payload = write_private_dataset_curation(out)
+    payload["evidence_verification"]["public_output_allowed"] = True
+    payload["evidence_verification"]["prints_private_values"] = True
+    out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+
+    result = verify_private_dataset_curation(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Private dataset evidence verifier public_output_allowed must be false."
+        in result["failures"]
+    )
+    assert (
+        "Private dataset evidence verifier prints_private_values must be false."
+        in result["failures"]
+    )
 
 
 def test_private_dataset_curation_cli_round_trip(tmp_path: Path) -> None:

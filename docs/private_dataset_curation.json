@@ -101,6 +101,21 @@
       "schema_version": "agades.pqc.private_dataset.redaction_report_evidence.v1"
     }
   },
+  "evidence_verification": {
+    "command": "uv run agades-pqc private-dataset-evidence-verify --curation docs/private_dataset_curation.json --evidence-root .",
+    "prints_private_values": false,
+    "public_output_allowed": false,
+    "required_artifacts": [
+      "private/reports/dataset_curation/license_review.json",
+      "private/reports/dataset_curation/provenance_manifest.json",
+      "private/reports/dataset_curation/deduplication_report.json",
+      "private/reports/dataset_curation/redaction_report.json",
+      "private/reports/dataset_curation/contamination_audit.json"
+    ],
+    "schema_version": "agades.pqc.private_dataset_evidence_verification.v1",
+    "training_eligible_requires_all_artifacts_accepted": true,
+    "verifier": "agades_pqc_gym.integrations.private_dataset_evidence.verify_private_dataset_evidence_bundle"
+  },
   "linked_artifacts": {
     "benchmark_source_contracts": {
       "path": "docs/benchmark_source_contracts.json",
