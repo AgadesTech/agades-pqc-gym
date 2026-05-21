@@ -52,7 +52,6 @@ LINKED_ARTIFACT_PATHS = {
     "prime_eval_template": "prime_intellect/evals/agades_pqc_eval.template.toml",
     "private_run_policy": "docs/private_run_policy.json",
     "private_dataset_curation": PRIVATE_DATASET_CURATION_MANIFEST_PATH,
-    "private_training_manifest": "docs/private_training_config_manifest.json",
     "prime_rl_training_template": "prime_intellect/training/"
     "private_qwen_prime_rl.template.toml",
     "pedagogical_rl_method": "docs/pedagogical_rl_method.json",

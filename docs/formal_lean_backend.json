@@ -307,7 +307,7 @@
       "theorems": []
     }
   ],
-  "manifest_sha256": "91c79b2b5847f03e9ac04172ce028d1b29ae9b737ca5ab9ff7d1602ce188f66e",
+  "manifest_sha256": "3f61f7cde6b89af4907633c746bef3e973fdd8745e3c47d87ec5d14429f7853c",
   "placeholder_scan": {
     "contains_admit": false,
     "contains_axiom": false,
@@ -322,6 +322,8 @@
     "uv run pytest tests/test_formal_lean_backend.py -q",
     "uv run agades-pqc formal-lean-backend --out docs/formal_lean_backend.json",
     "uv run agades-pqc formal-lean-backend-verify --backend docs/formal_lean_backend.json",
+    "uv run agades-pqc formal-lean-build-smoke --out reports/formal_lean_build_smoke.json",
+    "uv run agades-pqc formal-lean-build-smoke-verify --report reports/formal_lean_build_smoke.json",
     "GitHub CI: Build Lean formal backend via leanprover/lean-action@v1"
   ],
   "schema_version": "agades.pqc.formal.lean_backend.v1",

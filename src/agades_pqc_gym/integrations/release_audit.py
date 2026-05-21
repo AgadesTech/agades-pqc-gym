@@ -520,6 +520,16 @@ GITHUB_ACTIONS_REQUIRED_COMMANDS = (
         "docs/formal_lean_backend.json",
     ),
     (
+        "smoke-build-formal-lean",
+        "uv run agades-pqc formal-lean-build-smoke --out "
+        "reports/formal_lean_build_smoke.json",
+    ),
+    (
+        "verify-formal-lean-build-smoke",
+        "uv run agades-pqc formal-lean-build-smoke-verify --report "
+        "reports/formal_lean_build_smoke.json",
+    ),
+    (
         "generate-hf-dataset",
         "uv run agades-pqc hf-dataset --out hf/dataset",
     ),

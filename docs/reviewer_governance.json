@@ -232,31 +232,31 @@
   "linked_artifacts": {
     "external_publication_review_packet": {
       "path": "docs/external_publication_review_packet.json",
-      "sha256": "c572c7a6222ac6405bf0c60e36ff99c1d6547b8085e386fec86793b8d49585f1"
+      "sha256": "13530b4f418cc8cb79cc15ab1a7c3c55e719f5b578f50ae2a6824cc338afdc0e"
     },
     "formal_estimator_model": {
       "path": "docs/formal_estimator_model.json",
-      "sha256": "71fd50f7bc4651d2b4ff80cf5f7a8f46c8ce513e8ad9e875ae6b391d207408c2"
+      "sha256": "f7344606554e5692d5f64113bff92b742619a1a38d188d4d50277e193e2c08f5"
     },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "244aece8209436e7113279d8d63b9266b8f2e7502852e0adfb2ecced15e11333"
+      "sha256": "b733bbfe47a59070cfca0136930709d1a4cb33d4c096b8869e4e18f908174e5c"
     },
     "formal_lean_backend": {
       "path": "docs/formal_lean_backend.json",
-      "sha256": "e06c1d1107a57abb6203f8343e7135f2e9931a2ff7affbd2738b1bc6025ea8aa"
+      "sha256": "362bb8a19a74c7dcf318c6078eb7dfed43253e6d3d4a1f36ff31d511f6f788b0"
     },
     "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "fc87c4ccd8afcc308bd847020dfdc44a2ddd42398febeb21f30451e61d9ae004"
+      "sha256": "753f16478946a27654dd6fbd3b54547b0a8b1a7a579172fc23709b1f1887449b"
     },
     "formal_mlwe_proof_artifact": {
       "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
-      "sha256": "8ae91212c526a1e77b86f6d28dd1a90631d6186a30e589135a269cb7c642a0dd"
+      "sha256": "9487f2bade2e23a786d1a8e69abe21506bf659e0a692a2fd90f985d8f154bb81"
     },
     "formal_obligation_ledger": {
       "path": "docs/formal_obligation_ledger.json",
-      "sha256": "4599de5b004e29f8122237b7f726e3a725e1fd1685039b23717e6ed0da4e4185"
+      "sha256": "4e9c1d88f713970af53e3330695737b23f1030eea1eeb2ce1fa493b6b3ba2690"
     },
     "formal_operator_semantics": {
       "path": "docs/formal_operator_semantics.json",
@@ -266,17 +266,13 @@
       "path": "docs/private_run_policy.json",
       "sha256": "6a3967176dabb28cd1a713795696ea80c53d3f3660b0859761df23a813b5a5ec"
     },
-    "private_training_manifest": {
-      "path": "docs/private_training_config_manifest.json",
-      "sha256": "24ab8784db618dcf204479321522f9ccf1eb6466539f5f5b720d8936b51489c4"
-    },
     "publication_manifest": {
       "path": "docs/publication_manifest.json",
-      "sha256": "236090fbffebb754b654c54244cee7ad5adcfbef26de8f1cbe04bc1c1eb16670"
+      "sha256": "2c0ea64d7c678275904ddaedd8600966ddcd2c78a75e6b6c24035a820221b2ec"
     },
     "release_audit": {
       "path": "public/release_audit.json",
-      "sha256": "8ef6f628a80b7712ac253a4c328312bf45d8778a37872231f15e0ebe35ed3613"
+      "sha256": "7938ae0c6d5cdca593fc472a30e05c590a0a2fe9115ac407d1810b3468ff91b0"
     }
   },
   "private_training_review": {
