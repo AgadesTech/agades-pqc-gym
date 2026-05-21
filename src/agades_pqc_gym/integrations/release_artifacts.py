@@ -7,6 +7,39 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from agades_pqc_gym.formal.artifacts import (
+    MVP_VERTICAL_ESTIMATOR_RESULT_PATHS,
+    MVP_VERTICAL_PROOF_ARTIFACT_PATHS,
+    verify_attack_plan_evaluator_result,
+    verify_attack_plan_proof_artifact,
+    write_attack_plan_evaluator_result,
+    write_attack_plan_proof_artifact,
+)
+from agades_pqc_gym.formal.estimator_model import (
+    DEFAULT_ESTIMATOR_MODEL_PATH,
+    verify_formal_estimator_model,
+    write_formal_estimator_model,
+)
+from agades_pqc_gym.formal.family_coverage import (
+    DEFAULT_COVERAGE_PATH,
+    verify_formal_family_coverage,
+    write_formal_family_coverage,
+)
+from agades_pqc_gym.formal.lean_backend import (
+    DEFAULT_BACKEND_PATH,
+    verify_formal_lean_backend,
+    write_formal_lean_backend,
+)
+from agades_pqc_gym.formal.obligation_ledger import (
+    DEFAULT_OBLIGATION_LEDGER_PATH,
+    verify_formal_obligation_ledger,
+    write_formal_obligation_ledger,
+)
+from agades_pqc_gym.formal.operator_semantics import (
+    DEFAULT_OPERATOR_SEMANTICS_PATH,
+    verify_formal_operator_semantics,
+    write_formal_operator_semantics,
+)
 from agades_pqc_gym.integrations.ecosystem_smoke import (
     verify_ecosystem_smoke_report,
     write_ecosystem_smoke_report,
@@ -52,8 +85,23 @@ from agades_pqc_gym.integrations.runbook_audit import write_runbook_audit
 
 RELEASE_ARTIFACTS_SCHEMA = "agades.pqc.release_artifacts.v1"
 ROOT = Path(__file__).resolve().parents[3]
+LWE_FAMILY = "LWE"
+MLWE_FAMILY = "MLWE"
+FORMAL_MVP_ATTACK_PLAN_PATHS = {
+    LWE_FAMILY: Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+    MLWE_FAMILY: Path("examples/attack_plans/lattice_mlwe_module_hypothesis_toy.json"),
+}
 
 RELEASE_ARTIFACT_PATHS = (
+    DEFAULT_BACKEND_PATH,
+    DEFAULT_OPERATOR_SEMANTICS_PATH,
+    Path(MVP_VERTICAL_ESTIMATOR_RESULT_PATHS[LWE_FAMILY]),
+    Path(MVP_VERTICAL_ESTIMATOR_RESULT_PATHS[MLWE_FAMILY]),
+    Path(MVP_VERTICAL_PROOF_ARTIFACT_PATHS[LWE_FAMILY]),
+    Path(MVP_VERTICAL_PROOF_ARTIFACT_PATHS[MLWE_FAMILY]),
+    DEFAULT_COVERAGE_PATH,
+    DEFAULT_ESTIMATOR_MODEL_PATH,
+    DEFAULT_OBLIGATION_LEDGER_PATH,
     Path("hf/space_manifest.json"),
     Path("docs/huggingface_publication_handoff.json"),
     Path("docs/nvidia_publication_handoff.json"),
@@ -141,6 +189,73 @@ def _write_release_artifact_sequence(project_root: Path) -> None:
 
 def _release_artifact_sequence(project_root: Path) -> tuple[ReleaseArtifactStep, ...]:
     return (
+        ReleaseArtifactStep(
+            id="formal-lean-backend",
+            path=DEFAULT_BACKEND_PATH,
+            write=lambda out: write_formal_lean_backend(out, root=project_root),
+        ),
+        ReleaseArtifactStep(
+            id="formal-operator-semantics",
+            path=DEFAULT_OPERATOR_SEMANTICS_PATH,
+            write=lambda out: write_formal_operator_semantics(out, root=project_root),
+        ),
+        ReleaseArtifactStep(
+            id="formal-lwe-evaluator-result",
+            path=Path(MVP_VERTICAL_ESTIMATOR_RESULT_PATHS[LWE_FAMILY]),
+            write=lambda out: write_attack_plan_evaluator_result(
+                FORMAL_MVP_ATTACK_PLAN_PATHS[LWE_FAMILY],
+                out,
+                root=project_root,
+            ),
+        ),
+        ReleaseArtifactStep(
+            id="formal-mlwe-evaluator-result",
+            path=Path(MVP_VERTICAL_ESTIMATOR_RESULT_PATHS[MLWE_FAMILY]),
+            write=lambda out: write_attack_plan_evaluator_result(
+                FORMAL_MVP_ATTACK_PLAN_PATHS[MLWE_FAMILY],
+                out,
+                root=project_root,
+            ),
+        ),
+        ReleaseArtifactStep(
+            id="formal-lwe-proof-artifact",
+            path=Path(MVP_VERTICAL_PROOF_ARTIFACT_PATHS[LWE_FAMILY]),
+            write=lambda out: write_attack_plan_proof_artifact(
+                FORMAL_MVP_ATTACK_PLAN_PATHS[LWE_FAMILY],
+                out,
+                estimator_result_path=Path(
+                    MVP_VERTICAL_ESTIMATOR_RESULT_PATHS[LWE_FAMILY]
+                ),
+                root=project_root,
+            ),
+        ),
+        ReleaseArtifactStep(
+            id="formal-mlwe-proof-artifact",
+            path=Path(MVP_VERTICAL_PROOF_ARTIFACT_PATHS[MLWE_FAMILY]),
+            write=lambda out: write_attack_plan_proof_artifact(
+                FORMAL_MVP_ATTACK_PLAN_PATHS[MLWE_FAMILY],
+                out,
+                estimator_result_path=Path(
+                    MVP_VERTICAL_ESTIMATOR_RESULT_PATHS[MLWE_FAMILY]
+                ),
+                root=project_root,
+            ),
+        ),
+        ReleaseArtifactStep(
+            id="formal-family-coverage",
+            path=DEFAULT_COVERAGE_PATH,
+            write=lambda out: write_formal_family_coverage(out, root=project_root),
+        ),
+        ReleaseArtifactStep(
+            id="formal-estimator-model",
+            path=DEFAULT_ESTIMATOR_MODEL_PATH,
+            write=lambda out: write_formal_estimator_model(out, root=project_root),
+        ),
+        ReleaseArtifactStep(
+            id="formal-obligation-ledger",
+            path=DEFAULT_OBLIGATION_LEDGER_PATH,
+            write=lambda out: write_formal_obligation_ledger(out, root=project_root),
+        ),
         ReleaseArtifactStep(
             id="hf-space-manifest",
             path=Path("hf/space_manifest.json"),
@@ -246,6 +361,44 @@ def _verify_release_artifacts(project_root: Path) -> dict[str, dict[str, Any]]:
         label="release audit",
     )
     return {
+        "formal-lean-backend": verify_formal_lean_backend(
+            DEFAULT_BACKEND_PATH,
+            root=project_root,
+        ),
+        "formal-operator-semantics": verify_formal_operator_semantics(
+            DEFAULT_OPERATOR_SEMANTICS_PATH,
+            root=project_root,
+        ),
+        "formal-lwe-evaluator-result": verify_attack_plan_evaluator_result(
+            Path(MVP_VERTICAL_ESTIMATOR_RESULT_PATHS[LWE_FAMILY]),
+            FORMAL_MVP_ATTACK_PLAN_PATHS[LWE_FAMILY],
+            root=project_root,
+        ),
+        "formal-mlwe-evaluator-result": verify_attack_plan_evaluator_result(
+            Path(MVP_VERTICAL_ESTIMATOR_RESULT_PATHS[MLWE_FAMILY]),
+            FORMAL_MVP_ATTACK_PLAN_PATHS[MLWE_FAMILY],
+            root=project_root,
+        ),
+        "formal-lwe-proof-artifact": verify_attack_plan_proof_artifact(
+            project_root / MVP_VERTICAL_PROOF_ARTIFACT_PATHS[LWE_FAMILY],
+            root=project_root,
+        ),
+        "formal-mlwe-proof-artifact": verify_attack_plan_proof_artifact(
+            project_root / MVP_VERTICAL_PROOF_ARTIFACT_PATHS[MLWE_FAMILY],
+            root=project_root,
+        ),
+        "formal-family-coverage": verify_formal_family_coverage(
+            DEFAULT_COVERAGE_PATH,
+            root=project_root,
+        ),
+        "formal-estimator-model": verify_formal_estimator_model(
+            DEFAULT_ESTIMATOR_MODEL_PATH,
+            root=project_root,
+        ),
+        "formal-obligation-ledger": verify_formal_obligation_ledger(
+            DEFAULT_OBLIGATION_LEDGER_PATH,
+            root=project_root,
+        ),
         "hf-space-manifest": verify_huggingface_space_manifest(
             Path("hf/space_manifest.json"),
             root=project_root,
