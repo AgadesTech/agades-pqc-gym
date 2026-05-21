@@ -4,6 +4,14 @@ import json
 from pathlib import Path
 from typing import Any
 
+from agades_pqc_gym.integrations.private_qwen_artifacts import (
+    PRIVATE_QWEN_ARTIFACT_PLAN_ENV,
+    PRIVATE_QWEN_ARTIFACT_PLAN_SCHEMA,
+    PRIVATE_QWEN_ARTIFACT_PLAN_TEMPLATE,
+    PRIVATE_QWEN_ARTIFACT_VERIFICATION_COMMAND,
+    PRIVATE_QWEN_ARTIFACT_VERIFICATION_SCHEMA,
+)
+
 PRIVATE_RUN_POLICY_SCHEMA = "agades.pqc.private_run_policy.v1"
 PRIVATE_RUN_POLICY_VERIFICATION_SCHEMA = (
     "agades.pqc.private_run_policy_verification.v1"
@@ -55,6 +63,7 @@ ALLOWED_PRIVATE_COMMANDS = [
     "agades-pqc lattice-estimator-baseline-review-packet",
     "agades-pqc lattice-estimator-checkout-preflight",
     "agades-pqc private-pedagogical-traces",
+    "agades-pqc private-qwen-artifacts-verify",
 ]
 PRIVATE_HOLDBACK = [
     "serious evolution traces",
@@ -101,6 +110,29 @@ PRIVATE_DATASET_POLICY = {
     "publish_rollouts_publicly": False,
     "publish_reviewer_annotations_publicly": False,
 }
+PRIVATE_QWEN_ARTIFACT_POLICY = {
+    "artifact_plan_env": PRIVATE_QWEN_ARTIFACT_PLAN_ENV,
+    "artifact_plan_template": PRIVATE_QWEN_ARTIFACT_PLAN_TEMPLATE,
+    "plan_schema": PRIVATE_QWEN_ARTIFACT_PLAN_SCHEMA,
+    "verification_schema": PRIVATE_QWEN_ARTIFACT_VERIFICATION_SCHEMA,
+    "verification_command": PRIVATE_QWEN_ARTIFACT_VERIFICATION_COMMAND,
+    "private_roots": [
+        "private/models",
+        "private/reports",
+    ],
+    "required_gates": [
+        "trainable_base_before_quantization",
+        "lora_or_qlora_adapter_before_gguf",
+        "reject_direct_gguf_training",
+        "reject_public_weight_or_adapter_publication",
+        "reject_non_private_artifact_paths",
+        "reject_path_traversal",
+        "require_artifact_sha256",
+        "require_model_license_storage_quantization_release_reviews",
+    ],
+    "prints_artifact_paths": False,
+    "public_release_allowed": False,
+}
 SCHEDULER_ALLOWED_TRIGGERS = [
     "manual_reviewed",
     "local_cron_after_review",
@@ -144,6 +176,7 @@ def build_private_run_policy() -> dict[str, Any]:
         "private_holdback": list(PRIVATE_HOLDBACK),
         "private_rl_policy": dict(PRIVATE_RL_POLICY),
         "private_dataset_policy": dict(PRIVATE_DATASET_POLICY),
+        "private_qwen_artifact_policy": dict(PRIVATE_QWEN_ARTIFACT_POLICY),
         "scheduler_policy": {
             "scheduler_enabled_by_default": False,
             "allowed_triggers": list(SCHEDULER_ALLOWED_TRIGGERS),
@@ -220,6 +253,9 @@ def verify_private_run_policy(
         "private_dataset_sources": len(
             policy.get("private_dataset_policy", {}).get("sources", [])
         ),
+        "qwen_artifact_gates": len(
+            policy.get("private_qwen_artifact_policy", {}).get("required_gates", [])
+        ),
     }
     return {
         "schema_version": PRIVATE_RUN_POLICY_VERIFICATION_SCHEMA,
@@ -275,11 +311,20 @@ def _verify_policy(policy: dict[str, Any], failures: list[str]) -> None:
 
     if policy.get("allowed_private_commands") != ALLOWED_PRIVATE_COMMANDS:
         failures.append("Private run policy commands are incorrect.")
+    if "agades-pqc private-qwen-artifacts-verify" not in policy.get(
+        "allowed_private_commands",
+        [],
+    ):
+        failures.append("Private run policy must allow Qwen artifact verification.")
     if policy.get("private_holdback") != PRIVATE_HOLDBACK:
         failures.append("Private run holdback list is incorrect.")
     _verify_private_rl_policy(policy.get("private_rl_policy", {}), failures)
     _verify_private_dataset_policy(
         policy.get("private_dataset_policy", {}),
+        failures,
+    )
+    _verify_private_qwen_artifact_policy(
+        policy.get("private_qwen_artifact_policy", {}),
         failures,
     )
     _verify_scheduler_policy(policy.get("scheduler_policy", {}), failures)
@@ -329,6 +374,46 @@ def _verify_private_dataset_policy(
     ):
         if private_dataset_policy.get(key) is not False:
             failures.append(f"Private dataset policy {key} must be false.")
+
+
+def _verify_private_qwen_artifact_policy(
+    private_qwen_artifact_policy: Any,
+    failures: list[str],
+) -> None:
+    if not isinstance(private_qwen_artifact_policy, dict):
+        failures.append("Private Qwen artifact policy must be a JSON object.")
+        return
+    if private_qwen_artifact_policy != PRIVATE_QWEN_ARTIFACT_POLICY:
+        failures.append("Private Qwen artifact policy is incorrect.")
+    if private_qwen_artifact_policy.get("artifact_plan_env") != (
+        PRIVATE_QWEN_ARTIFACT_PLAN_ENV
+    ):
+        failures.append(
+            "Private Qwen artifact policy must use AGADES_QWEN_ARTIFACT_PLAN."
+        )
+    if private_qwen_artifact_policy.get("verification_command") != (
+        PRIVATE_QWEN_ARTIFACT_VERIFICATION_COMMAND
+    ):
+        failures.append(
+            "Private Qwen artifact policy verification command is incorrect."
+        )
+    required_gates = private_qwen_artifact_policy.get("required_gates", [])
+    for gate in (
+        "trainable_base_before_quantization",
+        "lora_or_qlora_adapter_before_gguf",
+        "reject_direct_gguf_training",
+        "reject_public_weight_or_adapter_publication",
+        "reject_non_private_artifact_paths",
+        "reject_path_traversal",
+        "require_artifact_sha256",
+        "require_model_license_storage_quantization_release_reviews",
+    ):
+        if gate not in required_gates:
+            failures.append(f"Private Qwen artifact policy is missing gate {gate}.")
+    if private_qwen_artifact_policy.get("prints_artifact_paths") is not False:
+        failures.append("Private Qwen artifact policy must not print artifact paths.")
+    if private_qwen_artifact_policy.get("public_release_allowed") is not False:
+        failures.append("Private Qwen artifact policy must not allow public release.")
 
 
 def _verify_scheduler_policy(
