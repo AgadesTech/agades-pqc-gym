@@ -103,6 +103,107 @@ def test_private_dataset_curation_defines_private_source_controls(
         "requires_hash_and_similarity_report": True,
         "requires_manual_review": True,
     }
+    assert payload["evidence_contracts"] == {
+        "license_review": {
+            "artifact_path": "private/reports/dataset_curation/license_review.json",
+            "blocks_training_until_accepted": True,
+            "must_remain_private": True,
+            "required_fields": [
+                "source_id",
+                "source",
+                "upstream_url",
+                "license_identifier",
+                "license_text_sha256",
+                "allowed_private_training",
+                "decision",
+                "restrictions",
+                "reviewer_id",
+                "reviewed_at_utc",
+            ],
+            "schema_version": (
+                "agades.pqc.private_dataset.license_review_evidence.v1"
+            ),
+        },
+        "provenance_tracking": {
+            "artifact_path": (
+                "private/reports/dataset_curation/provenance_manifest.json"
+            ),
+            "blocks_training_until_accepted": True,
+            "must_remain_private": True,
+            "required_fields": [
+                "row_id",
+                "source_id",
+                "source_revision_or_commit",
+                "retrieved_at_utc",
+                "raw_content_sha256",
+                "normalized_content_sha256",
+                "transform_config_sha256",
+                "private_storage_path",
+                "license_review_id",
+            ],
+            "schema_version": (
+                "agades.pqc.private_dataset.provenance_manifest_evidence.v1"
+            ),
+        },
+        "deduplication": {
+            "artifact_path": (
+                "private/reports/dataset_curation/deduplication_report.json"
+            ),
+            "blocks_training_until_accepted": True,
+            "must_remain_private": True,
+            "required_fields": [
+                "exact_hash_groups",
+                "normalized_hash_groups",
+                "near_duplicate_clusters",
+                "cross_source_duplicate_count",
+                "removed_row_ids_sha256",
+                "deduplicated_row_count",
+                "reviewer_id",
+                "accepted",
+            ],
+            "schema_version": (
+                "agades.pqc.private_dataset.deduplication_report_evidence.v1"
+            ),
+        },
+        "redaction": {
+            "artifact_path": "private/reports/dataset_curation/redaction_report.json",
+            "blocks_training_until_accepted": True,
+            "must_remain_private": True,
+            "required_fields": [
+                "credential_scan_digest",
+                "personal_data_scan_digest",
+                "unlicensed_span_removal_digest",
+                "private_path_scrub_digest",
+                "remaining_findings",
+                "reviewer_id",
+                "accepted",
+            ],
+            "schema_version": (
+                "agades.pqc.private_dataset.redaction_report_evidence.v1"
+            ),
+        },
+        "contamination_audit": {
+            "artifact_path": (
+                "private/reports/dataset_curation/contamination_audit.json"
+            ),
+            "blocks_training_until_accepted": True,
+            "must_remain_private": True,
+            "required_fields": [
+                "public_reference_digest",
+                "exact_public_overlap_count",
+                "prompt_leakage_count",
+                "reviewer_annotation_leakage_count",
+                "similarity_threshold",
+                "similarity_report_sha256",
+                "manual_review_status",
+                "reviewer_id",
+                "accepted",
+            ],
+            "schema_version": (
+                "agades.pqc.private_dataset.contamination_audit_evidence.v1"
+            ),
+        },
+    }
     assert payload["publication_boundary"]["forbidden_public_artifacts"] == [
         "private_dataset_rows",
         "raw_source_rows",
@@ -143,6 +244,7 @@ def test_private_dataset_curation_verify_accepts_committed_artifact() -> None:
             "sources": 3,
             "pipeline_stages": 7,
             "required_controls": 5,
+            "evidence_contracts": 5,
             "linked_artifacts": 3,
             "failure_count": 0,
         },
@@ -166,6 +268,32 @@ def test_private_dataset_curation_rejects_public_outputs_or_skipped_license(
     assert result["accepted"] is False
     assert "Private dataset rows must never be public." in result["failures"]
     assert "Dataset ingestion must wait for license review." in result["failures"]
+
+
+def test_private_dataset_curation_rejects_public_or_incomplete_evidence_contracts(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "private_dataset_curation.json"
+    payload = write_private_dataset_curation(out)
+    payload["evidence_contracts"]["license_review"]["artifact_path"] = (
+        "docs/license_review.json"
+    )
+    payload["evidence_contracts"]["redaction"]["required_fields"].remove("accepted")
+    del payload["evidence_contracts"]["deduplication"]
+    out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+
+    result = verify_private_dataset_curation(out)
+
+    assert result["accepted"] is False
+    assert "Private dataset evidence contracts are incomplete." in result["failures"]
+    assert (
+        "Private dataset evidence contract license_review path must stay private."
+        in result["failures"]
+    )
+    assert (
+        "Private dataset evidence contract redaction is missing required field: "
+        "accepted."
+    ) in result["failures"]
 
 
 def test_private_dataset_curation_cli_round_trip(tmp_path: Path) -> None:
