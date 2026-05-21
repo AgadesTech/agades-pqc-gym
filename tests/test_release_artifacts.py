@@ -7,6 +7,32 @@ from pathlib import Path
 from typer.testing import CliRunner
 
 from agades_pqc_gym.cli import app
+from agades_pqc_gym.formal.artifacts import (
+    MVP_VERTICAL_ESTIMATOR_RESULT_PATHS,
+    MVP_VERTICAL_PROOF_ARTIFACT_PATHS,
+    verify_attack_plan_evaluator_result,
+    verify_attack_plan_proof_artifact,
+)
+from agades_pqc_gym.formal.estimator_model import (
+    DEFAULT_ESTIMATOR_MODEL_PATH,
+    verify_formal_estimator_model,
+)
+from agades_pqc_gym.formal.family_coverage import (
+    DEFAULT_COVERAGE_PATH,
+    verify_formal_family_coverage,
+)
+from agades_pqc_gym.formal.lean_backend import (
+    DEFAULT_BACKEND_PATH,
+    verify_formal_lean_backend,
+)
+from agades_pqc_gym.formal.obligation_ledger import (
+    DEFAULT_OBLIGATION_LEDGER_PATH,
+    verify_formal_obligation_ledger,
+)
+from agades_pqc_gym.formal.operator_semantics import (
+    DEFAULT_OPERATOR_SEMANTICS_PATH,
+    verify_formal_operator_semantics,
+)
 from agades_pqc_gym.integrations.ecosystem_smoke import verify_ecosystem_smoke_report
 from agades_pqc_gym.integrations.external_publication_review_packet import (
     verify_external_publication_review_packet,
@@ -24,12 +50,17 @@ from agades_pqc_gym.integrations.rl_environment_contract import (
     verify_rl_environment_contract,
 )
 
+LWE_PLAN = Path("examples/attack_plans/lattice_primal_usvp_toy.json")
+MLWE_PLAN = Path("examples/attack_plans/lattice_mlwe_module_hypothesis_toy.json")
+
 
 def test_release_artifact_convergence_repairs_dependent_artifacts(
     tmp_path: Path,
 ) -> None:
     copied_root = _copy_repo(tmp_path)
+    corrupted_semantics = copied_root / DEFAULT_OPERATOR_SEMANTICS_PATH
     corrupted_report = copied_root / "reports" / "ecosystem_smoke.json"
+    corrupted_semantics.write_text("{}\n", encoding="utf-8")
     corrupted_report.write_text("{}\n", encoding="utf-8")
 
     result = write_release_artifacts_until_stable(root=copied_root, max_passes=6)
@@ -45,7 +76,13 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
         for release_pass in result["pass_summaries"]
         for path in release_pass["changed_artifacts"]
     }
+    assert DEFAULT_OPERATOR_SEMANTICS_PATH.as_posix() in {
+        path
+        for release_pass in result["pass_summaries"]
+        for path in release_pass["changed_artifacts"]
+    }
     assert result["failures"] == []
+    _assert_formal_artifacts_verified(copied_root)
     assert json.loads((copied_root / "public" / "release_audit.json").read_text())[
         "accepted"
     ] is True
@@ -98,6 +135,44 @@ def test_release_artifacts_cli_converges_explicit_root(tmp_path: Path) -> None:
     assert payload["accepted"] is True
     assert payload["stable"] is True
     assert payload["passes"] >= 2
+
+
+def _assert_formal_artifacts_verified(root: Path) -> None:
+    assert verify_formal_lean_backend(DEFAULT_BACKEND_PATH, root=root)[
+        "accepted"
+    ] is True
+    assert verify_formal_operator_semantics(
+        DEFAULT_OPERATOR_SEMANTICS_PATH,
+        root=root,
+    )["accepted"] is True
+    assert verify_attack_plan_evaluator_result(
+        Path(MVP_VERTICAL_ESTIMATOR_RESULT_PATHS["LWE"]),
+        LWE_PLAN,
+        root=root,
+    )["accepted"] is True
+    assert verify_attack_plan_evaluator_result(
+        Path(MVP_VERTICAL_ESTIMATOR_RESULT_PATHS["MLWE"]),
+        MLWE_PLAN,
+        root=root,
+    )["accepted"] is True
+    assert verify_attack_plan_proof_artifact(
+        root / MVP_VERTICAL_PROOF_ARTIFACT_PATHS["LWE"],
+        root=root,
+    )["accepted"] is True
+    assert verify_attack_plan_proof_artifact(
+        root / MVP_VERTICAL_PROOF_ARTIFACT_PATHS["MLWE"],
+        root=root,
+    )["accepted"] is True
+    assert verify_formal_family_coverage(DEFAULT_COVERAGE_PATH, root=root)[
+        "accepted"
+    ] is True
+    assert verify_formal_estimator_model(DEFAULT_ESTIMATOR_MODEL_PATH, root=root)[
+        "accepted"
+    ] is True
+    assert verify_formal_obligation_ledger(
+        DEFAULT_OBLIGATION_LEDGER_PATH,
+        root=root,
+    )["accepted"] is True
 
 
 def _copy_repo(tmp_path: Path) -> Path:
