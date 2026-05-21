@@ -161,6 +161,8 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
             "requires_no_security_claim": True,
             "requires_reviewer_quality_signal": True,
             "requires_attackplan_semantics_contract": True,
+            "requires_operator_semantics_contract": True,
+            "requires_formal_estimator_model_contract": True,
         },
         "claim_boundary": {
             "agent_task": (
@@ -411,6 +413,10 @@ def _verify_reward_model(contract: dict[str, Any], failures: list[str]) -> None:
         failures.append("RL reward must include reviewer-quality signal.")
     if reward_model.get("requires_attackplan_semantics_contract") is not True:
         failures.append("RL reward must bind the AttackPlan semantics contract.")
+    if reward_model.get("requires_operator_semantics_contract") is not True:
+        failures.append("RL reward must bind the operator semantics contract.")
+    if reward_model.get("requires_formal_estimator_model_contract") is not True:
+        failures.append("RL reward must bind the formal estimator model contract.")
 
 
 def _verify_claim_boundary(contract: dict[str, Any], failures: list[str]) -> None:
