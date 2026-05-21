@@ -12,6 +12,10 @@ from agades_pqc_gym.core.target import TargetFamily
 from agades_pqc_gym.formal.artifacts import (
     build_attack_plan_proof_artifact_from_json,
 )
+from agades_pqc_gym.formal.attack_plan_semantics import (
+    DEFAULT_ATTACKPLAN_SEMANTICS_PATH,
+    verify_formal_attackplan_semantics,
+)
 from agades_pqc_gym.formal.family_coverage import REPRESENTATIVE_ATTACK_PLANS
 from agades_pqc_gym.integrations.task_metadata import (
     attack_plan_matches_task_metadata,
@@ -26,6 +30,10 @@ RL_REWARD_REPORT_SCHEMA = "agades.pqc.rl.reward_report.v1"
 ROLLOUT_TRACE_SCHEMA = "agades.pqc.rl.rollout_trace.v1"
 OBSERVATION_SCHEMA = "agades.pqc.rl.observation.v1"
 FORMAL_ARTIFACT_BINDING_SCHEMA = "agades.pqc.rl.formal_artifact_binding.v1"
+ATTACKPLAN_SEMANTICS_BINDING_SCHEMA = (
+    "agades.pqc.rl.attackplan_semantics_binding.v1"
+)
+ROOT = Path(__file__).resolve().parents[3]
 REWARD_TERMS = (
     "formal_validity",
     "cryptographic_applicability",
@@ -44,10 +52,16 @@ DEFAULT_ROLLOUT_PLANS = [
 class AgadesPQCGymEnvironment:
     """Small public-safe single-step RL environment over AttackPlan tasks."""
 
-    def __init__(self, tasks: list[dict[str, Any]]) -> None:
+    def __init__(
+        self,
+        tasks: list[dict[str, Any]],
+        *,
+        root: Path | None = None,
+    ) -> None:
         if not tasks:
             raise ValueError("AgadesPQCGymEnvironment requires at least one task.")
         self._tasks = tasks
+        self._root = root
         self._current_task: dict[str, Any] | None = None
 
     @classmethod
@@ -65,7 +79,8 @@ class AgadesPQCGymEnvironment:
                     source_path=_source_path_label(path, project_root),
                 )
                 for path in paths
-            ]
+            ],
+            root=project_root,
         )
 
     def reset(self, index: int = 0) -> dict[str, Any]:
@@ -93,8 +108,14 @@ class AgadesPQCGymEnvironment:
             candidate_json,
             task_info=self._current_task,
             require_task_match=True,
+            root=self._root,
         )
-        trace = _rollout_trace(self._current_task, candidate_json, reward_report)
+        trace = _rollout_trace(
+            self._current_task,
+            candidate_json,
+            reward_report,
+            root=self._root,
+        )
         return {
             "observation": None,
             "reward": reward_report["reward"],
@@ -112,6 +133,7 @@ def score_attack_plan_candidate(
     task_info: dict[str, Any] | str | None = None,
     require_task_match: bool = False,
     pedagogical_signals: dict[str, Any] | None = None,
+    root: Path | None = None,
 ) -> dict[str, Any]:
     parsed_task = normalize_task_metadata(task_info)
     plan: AttackPlan | None = None
@@ -124,7 +146,7 @@ def score_attack_plan_candidate(
         validation_errors.append(str(exc))
 
     verifier_result = verify_attack_plan_json(candidate_json)
-    formal_summary = _formal_summary(candidate_json, plan)
+    formal_summary = _formal_summary(candidate_json, plan, root=root)
     task_match = (
         _task_match(plan, parsed_task)
         if parsed_task is not None
@@ -273,10 +295,17 @@ def _prompt_for_task(task: dict[str, Any]) -> list[dict[str, str]]:
     ]
 
 
-def _formal_summary(candidate_json: str, plan: AttackPlan | None) -> dict[str, Any]:
+def _formal_summary(
+    candidate_json: str,
+    plan: AttackPlan | None,
+    *,
+    root: Path | None = None,
+) -> dict[str, Any]:
+    attackplan_semantics = build_attackplan_semantics_binding(root=root)
     if plan is None:
         return {
             "accepted": False,
+            "attackplan_semantics": attackplan_semantics,
             "family_invariants": 0,
             "proof_obligations": 0,
             "typed_proof_obligations": 0,
@@ -307,7 +336,8 @@ def _formal_summary(candidate_json: str, plan: AttackPlan | None) -> dict[str, A
         if _obligation_has_matching_type_rule(obligation, type_rule_keys)
     ]
     return {
-        "accepted": True,
+        "accepted": attackplan_semantics["accepted"] is True,
+        "attackplan_semantics": attackplan_semantics,
         "family_invariants": len(family_invariants),
         "proof_obligations": len(proof_obligations),
         "typed_proof_obligations": len(typed_proof_obligations),
@@ -437,6 +467,8 @@ def _blocking_reasons(
     reasons: list[str] = []
     if verifier_result["schema_valid"] is not True:
         reasons.append("schema_valid")
+    if terms["formal_validity"] != 1.0:
+        reasons.append("formal_validity")
     if verifier_result["accepted"] is not True:
         reasons.append("cryptographic_applicability")
     if terms["no_security_overclaim"] != 1.0:
@@ -454,13 +486,18 @@ def _rollout_trace(
     task: dict[str, Any],
     candidate_json: str,
     reward_report: dict[str, Any],
+    *,
+    root: Path | None = None,
 ) -> dict[str, Any]:
     candidate = _candidate_summary(candidate_json)
     return {
         "schema_version": ROLLOUT_TRACE_SCHEMA,
         "task": task,
         "candidate": candidate,
-        "formal_artifact_binding": build_formal_artifact_binding(candidate_json),
+        "formal_artifact_binding": build_formal_artifact_binding(
+            candidate_json,
+            root=root,
+        ),
         "reward_report": reward_report,
         "public_release_ok": True,
         "private_fields_present": False,
@@ -488,7 +525,12 @@ def _candidate_summary(candidate_json: str) -> dict[str, Any]:
     }
 
 
-def build_formal_artifact_binding(candidate_json: str) -> dict[str, Any]:
+def build_formal_artifact_binding(
+    candidate_json: str,
+    *,
+    root: Path | None = None,
+) -> dict[str, Any]:
+    attackplan_semantics = build_attackplan_semantics_binding(root=root)
     try:
         artifact = build_attack_plan_proof_artifact_from_json(
             candidate_json,
@@ -505,6 +547,7 @@ def build_formal_artifact_binding(candidate_json: str) -> dict[str, Any]:
             "proof_obligation_ids": [],
             "proof_obligation_sha256": [],
             "proof_obligation_type_rule_sha256": [],
+            "attackplan_semantics": attackplan_semantics,
             "review_status": None,
             "required_reviewers": [],
             "claim_allowed": False,
@@ -540,11 +583,47 @@ def build_formal_artifact_binding(candidate_json: str) -> dict[str, Any]:
         "proof_obligation_type_rule_sha256": [
             rule["type_rule_sha256"] for rule in type_rules
         ],
+        "attackplan_semantics": attackplan_semantics,
         "review_status": review["status"],
         "required_reviewers": review["required_reviewers"],
         "claim_allowed": False,
         "claim_boundary": review["claim_boundary"],
     }
+
+
+def build_attackplan_semantics_binding(
+    *,
+    root: Path | None = None,
+) -> dict[str, Any]:
+    project_root = (root or ROOT).resolve()
+    verification = verify_formal_attackplan_semantics(
+        DEFAULT_ATTACKPLAN_SEMANTICS_PATH,
+        root=project_root,
+    )
+    contract = _read_attackplan_semantics_contract(project_root)
+    claim_policy = contract.get("claim_policy", {})
+    return {
+        "schema_version": ATTACKPLAN_SEMANTICS_BINDING_SCHEMA,
+        "semantics_path": DEFAULT_ATTACKPLAN_SEMANTICS_PATH.as_posix(),
+        "accepted": verification["accepted"],
+        "validation_rules": len(contract.get("validation_rules", [])),
+        "formal_rules": len(contract.get("formal_rules", [])),
+        "claim_policy_forbids_unreviewed_security_claims": (
+            isinstance(claim_policy, dict)
+            and claim_policy.get("security_claim_allowed_without_review") is False
+        ),
+        "semantics_sha256": contract.get("semantics_sha256"),
+    }
+
+
+def _read_attackplan_semantics_contract(root: Path) -> dict[str, Any]:
+    try:
+        payload = json.loads(
+            (root / DEFAULT_ATTACKPLAN_SEMANTICS_PATH).read_text(encoding="utf-8")
+        )
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+    return payload if isinstance(payload, dict) else {}
 
 
 def _bool_score(value: bool) -> float:

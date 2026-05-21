@@ -108,7 +108,11 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
         ],
         "requires_no_security_claim": True,
         "requires_reviewer_quality_signal": True,
+        "requires_attackplan_semantics_contract": True,
     }
+    assert contract["linked_artifacts"]["formal_attackplan_semantics"]["path"] == (
+        "docs/formal_attackplan_semantics.json"
+    )
     assert contract["linked_artifacts"]["formal_lwe_proof_artifact"]["path"] == (
         "docs/formal_lattice_primal_usvp_proof_artifact.json"
     )
@@ -179,7 +183,7 @@ def test_rl_environment_contract_verify_accepts_committed_contract() -> None:
             "surfaces": 2,
             "reward_terms": 8,
             "private_dataset_sources": 3,
-            "linked_artifacts": 18,
+            "linked_artifacts": 19,
             "failure_count": 0,
         },
         "failures": [],
