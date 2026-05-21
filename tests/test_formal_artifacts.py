@@ -87,6 +87,23 @@ def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() ->
         "claim_policy_forbids_unreviewed_security_claims": True,
         "verification_accepted": True,
     }
+    operator_semantics_path = Path("docs/formal_operator_semantics.json")
+    operator_semantics_payload = json.loads(
+        operator_semantics_path.read_text(encoding="utf-8")
+    )
+    assert artifact["operator_semantics_contract"] == {
+        "schema_version": (
+            "agades.pqc.formal.proof_artifact.operator_semantics_binding.v1"
+        ),
+        "path": operator_semantics_path.as_posix(),
+        "semantics_schema_version": "agades.pqc.formal.operator_semantics.v1",
+        "sha256": hashlib.sha256(operator_semantics_path.read_bytes()).hexdigest(),
+        "semantics_sha256": operator_semantics_payload["semantics_sha256"],
+        "operators": 24,
+        "required_param_fields": 25,
+        "claim_policy_forbids_unreviewed_security_claims": True,
+        "verification_accepted": True,
+    }
     assert artifact["family"] == "LWE"
     assert artifact["operator_semantics"][0] == {
         "operator": "primal_usvp",
@@ -396,6 +413,7 @@ def test_write_and_verify_attack_plan_proof_artifact(tmp_path: Path) -> None:
             "lean_theorems": 4,
             "estimator_result_attached": False,
             "attackplan_semantics_attached": True,
+            "operator_semantics_contract_attached": True,
             "required_reviewers": 3,
             "failure_count": 0,
         },
@@ -537,6 +555,7 @@ def test_committed_mlwe_proof_artifact_is_in_sync_and_verifiable(
             "lean_theorems": 4,
             "estimator_result_attached": True,
             "attackplan_semantics_attached": True,
+            "operator_semantics_contract_attached": True,
             "required_reviewers": 3,
             "failure_count": 0,
         },
@@ -608,6 +627,27 @@ def test_verify_attack_plan_proof_artifact_rejects_stale_attackplan_semantics(
     assert result["accepted"] is False
     assert (
         "Proof artifact AttackPlan semantics binding is not in sync."
+        in result["failures"]
+    )
+
+
+def test_verify_attack_plan_proof_artifact_rejects_stale_operator_semantics(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+    )
+    artifact["operator_semantics_contract"]["semantics_sha256"] = "0" * 64
+    artifact["artifact_sha256"] = _artifact_payload_sha256(artifact)
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Proof artifact operator semantics contract binding is not in sync."
         in result["failures"]
     )
 
@@ -994,6 +1034,9 @@ def _review_artifact_binding(artifact: dict[str, object]) -> dict[str, object]:
         "review_status": review["status"],
         "required_reviewers": review["required_reviewers"],
         "attack_plan_semantics_sha256": artifact["attack_plan_semantics"][
+            "semantics_sha256"
+        ],
+        "operator_semantics_sha256": artifact["operator_semantics_contract"][
             "semantics_sha256"
         ],
         "proof_obligation_sha256": [
