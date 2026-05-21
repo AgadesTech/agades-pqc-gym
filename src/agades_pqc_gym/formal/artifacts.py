@@ -27,6 +27,9 @@ OPERATOR_SEMANTICS_BINDING_SCHEMA = (
 FORMAL_ESTIMATOR_MODEL_BINDING_SCHEMA = (
     "agades.pqc.formal.proof_artifact.formal_estimator_model_binding.v1"
 )
+REVIEWER_GOVERNANCE_BINDING_SCHEMA = (
+    "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+)
 ATTACK_PLAN_SCHEMA_CONTRACT_SCHEMA = "agades.pqc.attack_plan.schema_contract.v1"
 ATTACK_PLAN_SCHEMA_MODEL = "agades_pqc_gym.core.attack_plan.AttackPlan"
 ATTACK_PLAN_CANONICALIZATION = "json_sort_keys_minified_v1"
@@ -377,6 +380,7 @@ def build_attack_plan_proof_artifact_from_json(
         "formal_estimator_model_contract": (
             _formal_estimator_model_contract_binding(project_root)
         ),
+        "review_governance": _reviewer_governance_binding(project_root),
         "attack_plan": {
             "id": plan.attack_plan_id,
             "path": source_label,
@@ -598,6 +602,11 @@ def verify_attack_plan_proof_artifact(
             failures,
         )
         _verify_formal_estimator_model_contract_binding(
+            artifact,
+            project_root,
+            failures,
+        )
+        _verify_reviewer_governance_binding(
             artifact,
             project_root,
             failures,
@@ -1208,6 +1217,7 @@ def _verify_artifact_shape(
         "attack_plan_semantics",
         "operator_semantics_contract",
         "formal_estimator_model_contract",
+        "review_governance",
         "artifact_sha256",
     ):
         if key not in artifact:
@@ -1955,6 +1965,137 @@ def _verify_formal_estimator_model_contract_binding(
     if binding.get("verification_accepted") is not True:
         failures.append(
             "Proof artifact formal estimator model binding must verify cleanly."
+        )
+
+
+def _reviewer_governance_binding(
+    root: Path,
+    *,
+    failures: list[str] | None = None,
+) -> dict[str, Any]:
+    from agades_pqc_gym.integrations.reviewer_governance import (
+        DEFAULT_GOVERNANCE_PATH,
+        REVIEWER_GOVERNANCE_SCHEMA,
+    )
+
+    path = root / DEFAULT_GOVERNANCE_PATH
+    try:
+        raw = path.read_bytes()
+        payload = json.loads(raw.decode("utf-8"))
+    except FileNotFoundError:
+        if failures is not None:
+            failures.append(
+                "Reviewer governance artifact is missing: "
+                f"{DEFAULT_GOVERNANCE_PATH.as_posix()}."
+            )
+        payload = {}
+    except json.JSONDecodeError as exc:
+        if failures is not None:
+            failures.append(
+                "Reviewer governance artifact is invalid JSON at line "
+                f"{exc.lineno}."
+            )
+        payload = {}
+    if not isinstance(payload, dict):
+        if failures is not None:
+            failures.append("Reviewer governance artifact must be an object.")
+        payload = {}
+
+    role_groups = _dict_or_empty(payload.get("role_groups"))
+    family_reviewers = _list_or_empty(payload.get("family_reviewers"))
+    approval_gates = _dict_or_empty(payload.get("approval_gates"))
+    review_format = _dict_or_empty(payload.get("review_artifact_format"))
+    formal_binding = _dict_or_empty(payload.get("formal_artifact_binding"))
+    required_reviewers_by_family = _dict_or_empty(
+        formal_binding.get("required_reviewers_by_family")
+    )
+    gate_policies_forbid_claims = bool(approval_gates) and all(
+        _dict_or_empty(gate).get("security_claim_allowed_without_review") is False
+        for gate in approval_gates.values()
+    )
+    review_format_ok = (
+        review_format.get("schema_version") == "agades.pqc.review_artifact.v1"
+    )
+    return {
+        "schema_version": REVIEWER_GOVERNANCE_BINDING_SCHEMA,
+        "path": DEFAULT_GOVERNANCE_PATH.as_posix(),
+        "governance_schema_version": (
+            payload.get("schema_version") or REVIEWER_GOVERNANCE_SCHEMA
+        ),
+        "governance_contract_sha256": (
+            _reviewer_governance_contract_sha256(payload) if payload else None
+        ),
+        "role_groups": len(role_groups),
+        "family_reviewers": len(family_reviewers),
+        "approval_gates": len(approval_gates),
+        "review_artifact_format_schema": review_format.get("schema_version"),
+        "required_reviewers_by_family": required_reviewers_by_family,
+        "claim_policy_forbids_unreviewed_security_claims": (
+            gate_policies_forbid_claims
+        ),
+        "linked_artifact_hashes_excluded_from_contract": True,
+        "verification_accepted": (
+            payload.get("schema_version") == REVIEWER_GOVERNANCE_SCHEMA
+            and gate_policies_forbid_claims
+            and review_format_ok
+            and bool(required_reviewers_by_family)
+        ),
+    }
+
+
+def _reviewer_governance_contract_sha256(payload: dict[str, Any]) -> str:
+    return stable_sha256(_reviewer_governance_contract_payload(payload))
+
+
+def _reviewer_governance_contract_payload(
+    payload: dict[str, Any],
+) -> dict[str, Any]:
+    return {
+        key: value
+        for key, value in payload.items()
+        if key != "linked_artifacts"
+    }
+
+
+def _verify_reviewer_governance_binding(
+    artifact: dict[str, Any],
+    project_root: Path,
+    failures: list[str],
+) -> None:
+    binding = artifact.get("review_governance")
+    if not isinstance(binding, dict):
+        failures.append(
+            "Proof artifact reviewer governance binding must be a JSON object."
+        )
+        return
+    governance_failures: list[str] = []
+    expected = _reviewer_governance_binding(
+        project_root,
+        failures=governance_failures,
+    )
+    failures.extend(governance_failures)
+    if binding != expected:
+        failures.append("Proof artifact reviewer governance binding is not in sync.")
+    if binding.get("claim_policy_forbids_unreviewed_security_claims") is not True:
+        failures.append(
+            "Proof artifact reviewer governance binding must forbid unreviewed "
+            "security claims."
+        )
+    if binding.get("linked_artifact_hashes_excluded_from_contract") is not True:
+        failures.append(
+            "Proof artifact reviewer governance binding must avoid recursive "
+            "linked artifact hashes."
+        )
+    if binding.get("verification_accepted") is not True:
+        failures.append(
+            "Proof artifact reviewer governance binding must verify cleanly."
+        )
+    required_by_family = _dict_or_empty(binding.get("required_reviewers_by_family"))
+    family_reviewers = required_by_family.get(artifact.get("family"))
+    review = _dict_or_empty(artifact.get("review"))
+    if review.get("required_reviewers") != family_reviewers:
+        failures.append(
+            "Proof artifact reviewers do not match reviewer governance."
         )
 
 

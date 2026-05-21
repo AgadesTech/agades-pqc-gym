@@ -29,11 +29,11 @@
     },
     "formal_estimator_model": {
       "path": "docs/formal_estimator_model.json",
-      "sha256": "f050c638200ca8df0ac563f1e7486d4f0fc2e41293a550f897e94f6553d2b5e5"
+      "sha256": "9f617361ad810ee3a2351e46631f4965a62bfc28a28413b870e07933ac55519b"
     },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "c393fd4eeef63d5d27c48c6e8d3c09df54d327bc4afeefc05431689888a4adfd"
+      "sha256": "1b251f77b15dd11cdc5256ed81c1cd6fcb1575d848ee503f9cb682f8abe9363a"
     },
     "formal_lean_backend": {
       "path": "docs/formal_lean_backend.json",
@@ -41,15 +41,15 @@
     },
     "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "c1ab68a8cb78bab720316f44c6afec27e87bd800ccd236f40ebeb7ad242f22e8"
+      "sha256": "a16cf84f3f2e1de0f25ad85c9180b33aafcdd481797350173ddb6727a7714e29"
     },
     "formal_mlwe_proof_artifact": {
       "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
-      "sha256": "6a0d14e2667b5799edda3ad10a234a8f0ff6cb96d48547ad5f0f13942536a681"
+      "sha256": "062c0adeff2a340e1b5e9f5d7bff6e6ec546ec7915b463a3eee10426476bbbe9"
     },
     "formal_obligation_ledger": {
       "path": "docs/formal_obligation_ledger.json",
-      "sha256": "9db6b5b5fc933f5ad2f11f6d11900cfb35103ba03f1f5a572faa70b7df20fcfb"
+      "sha256": "049658dfe84d435de2486edf9045ec3c5e2477832c5c952363f579cdca2045e7"
     },
     "formal_operator_semantics": {
       "path": "docs/formal_operator_semantics.json",
@@ -57,7 +57,7 @@
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",
-      "sha256": "fe02900f69f22e52a558f194d5b9c9fd381fdfb4152f8bdfaec447eeef6d0ab0"
+      "sha256": "a8944901eda5c26e330ffeebf83da00fa819e1b4738dc64c76e86141228ecd4d"
     },
     "hf_space_manifest": {
       "path": "hf/space_manifest.json",
@@ -65,7 +65,7 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "a88eb8b5d4e42806e2320e322ed7c3cd2f8bb3a8b80858cd27aa2c0a7f83b7ac"
+      "sha256": "dd8bfe03d8ae99bd3b9cd2d88131595f5ef20e56af1cea5de1be47ed3e4b8ad8"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
@@ -97,7 +97,7 @@
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "537dd30d684a1973c65a873c72a6779f59515e1472598fe069acf282f513ddf7"
+      "sha256": "fd09e8a1fc5f08e8e2a2b71e083b3ccbb4bf996d9663414944aee2fec2c17464"
     }
   },
   "private_track": {
