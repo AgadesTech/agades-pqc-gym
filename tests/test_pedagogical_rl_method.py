@@ -129,6 +129,7 @@ def test_pedagogical_rl_method_defines_agades_teacher_student_pipeline(
             "pedagogical_reward",
             "formal_artifact_binding",
             "dataset_curation_digest",
+            "dataset_curation_gate",
             "review_gate",
             "privacy_boundary",
         ],

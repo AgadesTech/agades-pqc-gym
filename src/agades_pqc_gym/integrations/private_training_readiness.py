@@ -57,6 +57,7 @@ READINESS_GATE_IDS = [
     "private_qwen_trainable_weights_available",
     "dataset_license_review_complete",
     "dataset_provenance_manifest_complete",
+    "dataset_deduplication_report_complete",
     "dataset_redaction_report_complete",
     "dataset_contamination_audit_complete",
     "pedagogical_trace_quality_review_complete",
@@ -285,6 +286,10 @@ def _readiness_gates() -> list[dict[str, Any]]:
         "dataset_provenance_manifest_complete": (
             "Private per-row provenance and hash manifests must exist before "
             "training."
+        ),
+        "dataset_deduplication_report_complete": (
+            "Private exact, normalized, and near-duplicate reports must prove "
+            "cross-source deduplication before training."
         ),
         "dataset_redaction_report_complete": (
             "Private redaction report must prove credentials, personal data, and "
