@@ -268,7 +268,7 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "4f6f8bcb4e6645999852b24c08a42d20df0bb34adc4af20471abb02ec6858c95"
+      "sha256": "8c3a3deb92e7ef956f1336ffa7fd735453b796bd7bbf20a58ba0dc0c0b102d3f"
     },
     "publication_manifest": {
       "path": "docs/publication_manifest.json",
