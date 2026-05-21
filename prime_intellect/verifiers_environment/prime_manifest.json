@@ -137,8 +137,12 @@
     "acceptance_rule": "schema_valid == true and accepted == true from agades_pqc_gym.verifier.verify_attack_plan_json",
     "accepted_reward": 1.0,
     "accepts_executable_code": false,
+    "formal_artifact_binding_schema": "agades.pqc.rl.formal_artifact_binding.v1",
+    "formal_binding_rule": "accepted Prime rewards must attach an agades.pqc.rl.formal_artifact_binding.v1 proof binding with review_governance_ok == true",
     "invalid_reward": 0.0,
     "requires_single_json_object": true,
+    "review_governance_binding_schema": "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1",
+    "reviewer_quality_requires_governance": true,
     "reward_range": [
       0.0,
       1.0

@@ -99,6 +99,13 @@ from agades_pqc_gym.integrations.prime_environment_manifest import (
     verify_prime_environment_manifest,
     write_prime_environment_manifest,
 )
+from agades_pqc_gym.integrations.prime_environment_smoke import (
+    DEFAULT_REPORT as PRIME_ENVIRONMENT_SMOKE_REPORT,
+)
+from agades_pqc_gym.integrations.prime_environment_smoke import (
+    verify_prime_environment_smoke_report,
+    write_prime_environment_smoke_report,
+)
 from agades_pqc_gym.integrations.prime_eval_config import (
     DEFAULT_CONFIG_PATH as PRIME_EVAL_CONFIG_PATH,
 )
@@ -207,6 +214,7 @@ RELEASE_ARTIFACT_PATHS = (
     PRIME_EVAL_CONFIG_PATH,
     PRIME_EVAL_MANIFEST_PATH,
     Path("prime_intellect/verifiers_environment/prime_manifest.json"),
+    PRIME_ENVIRONMENT_SMOKE_REPORT,
     PRIVATE_DATASET_CURATION_PATH,
     PEDAGOGICAL_RL_METHOD_PATH,
     PRIVATE_TRAINING_CONFIG_PATH,
@@ -407,6 +415,14 @@ def _release_artifact_sequence(project_root: Path) -> tuple[ReleaseArtifactStep,
             id="prime-environment-manifest",
             path=Path("prime_intellect/verifiers_environment/prime_manifest.json"),
             write=lambda out: write_prime_environment_manifest(
+                out,
+                root=project_root,
+            ),
+        ),
+        ReleaseArtifactStep(
+            id="prime-environment-smoke",
+            path=PRIME_ENVIRONMENT_SMOKE_REPORT,
+            write=lambda out: write_prime_environment_smoke_report(
                 out,
                 root=project_root,
             ),
@@ -653,6 +669,10 @@ def _verify_release_artifacts(project_root: Path) -> dict[str, dict[str, Any]]:
         ),
         "prime-environment-manifest": verify_prime_environment_manifest(
             Path("prime_intellect/verifiers_environment/prime_manifest.json"),
+            root=project_root,
+        ),
+        "prime-environment-smoke": verify_prime_environment_smoke_report(
+            PRIME_ENVIRONMENT_SMOKE_REPORT,
             root=project_root,
         ),
         "private-dataset-curation": verify_private_dataset_curation(
