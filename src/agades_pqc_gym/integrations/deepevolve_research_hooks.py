@@ -12,6 +12,13 @@ from agades_pqc_gym.deepevolve_hooks.operator_proposals import (
     proposals_from_paper_card,
 )
 from agades_pqc_gym.deepevolve_hooks.paper_card import PaperCard, load_paper_cards
+from agades_pqc_gym.integrations.private_qwen_artifacts import (
+    PRIVATE_QWEN_ARTIFACT_PLAN_ENV,
+    PRIVATE_QWEN_ARTIFACT_PLAN_SCHEMA,
+    PRIVATE_QWEN_ARTIFACT_PLAN_TEMPLATE,
+    PRIVATE_QWEN_ARTIFACT_VERIFICATION_COMMAND,
+    PRIVATE_QWEN_ARTIFACT_VERIFICATION_SCHEMA,
+)
 from agades_pqc_gym.integrations.private_training_config import (
     PRIVATE_TRAINING_REQUIRED_ENV_VARS,
 )
@@ -53,6 +60,11 @@ PRIVATE_QWEN_RESEARCH_BINDING = {
     "base_model_env": "AGADES_QWEN_BASE_MODEL",
     "lora_adapter_env": "AGADES_QWEN_LORA_ADAPTER_PATH",
     "gguf_otq_5bit_env": "AGADES_QWEN_GGUF_OTQ_5BIT_PATH",
+    "artifact_plan_env": PRIVATE_QWEN_ARTIFACT_PLAN_ENV,
+    "artifact_plan_template": PRIVATE_QWEN_ARTIFACT_PLAN_TEMPLATE,
+    "artifact_plan_schema": PRIVATE_QWEN_ARTIFACT_PLAN_SCHEMA,
+    "artifact_verification_schema": PRIVATE_QWEN_ARTIFACT_VERIFICATION_SCHEMA,
+    "artifact_verification_command": PRIVATE_QWEN_ARTIFACT_VERIFICATION_COMMAND,
     "required_env_vars": list(PRIVATE_TRAINING_REQUIRED_ENV_VARS),
     "training_manifest": "docs/private_training_config_manifest.json",
     "training_readiness": "docs/private_training_readiness.json",
@@ -63,6 +75,7 @@ PRIVATE_QWEN_RESEARCH_BINDING = {
     "proposal_gate": {
         "attackplan_validation_required": True,
         "proof_obligation_generation_required": True,
+        "private_qwen_artifact_verification_required": True,
         "estimator_compatibility_required": True,
         "human_review_required_before_claim": True,
     },
@@ -248,6 +261,11 @@ def _validate_private_qwen_binding(
                 "base_model_env",
                 "lora_adapter_env",
                 "gguf_otq_5bit_env",
+                "artifact_plan_env",
+                "artifact_plan_template",
+                "artifact_plan_schema",
+                "artifact_verification_schema",
+                "artifact_verification_command",
                 "required_env_vars",
                 "training_readiness",
                 "public_model_id_allowed",
@@ -266,6 +284,7 @@ def _validate_private_qwen_binding(
         for key in (
             "attackplan_validation_required",
             "proof_obligation_generation_required",
+            "private_qwen_artifact_verification_required",
             "estimator_compatibility_required",
             "human_review_required_before_claim",
         ):
