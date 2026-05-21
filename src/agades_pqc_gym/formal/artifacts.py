@@ -24,6 +24,9 @@ ATTACK_PLAN_SEMANTICS_BINDING_SCHEMA = (
 OPERATOR_SEMANTICS_BINDING_SCHEMA = (
     "agades.pqc.formal.proof_artifact.operator_semantics_binding.v1"
 )
+FORMAL_ESTIMATOR_MODEL_BINDING_SCHEMA = (
+    "agades.pqc.formal.proof_artifact.formal_estimator_model_binding.v1"
+)
 ATTACK_PLAN_SCHEMA_CONTRACT_SCHEMA = "agades.pqc.attack_plan.schema_contract.v1"
 ATTACK_PLAN_SCHEMA_MODEL = "agades_pqc_gym.core.attack_plan.AttackPlan"
 ATTACK_PLAN_CANONICALIZATION = "json_sort_keys_minified_v1"
@@ -371,6 +374,9 @@ def build_attack_plan_proof_artifact_from_json(
         "operator_semantics_contract": _operator_semantics_contract_binding(
             project_root
         ),
+        "formal_estimator_model_contract": (
+            _formal_estimator_model_contract_binding(project_root)
+        ),
         "attack_plan": {
             "id": plan.attack_plan_id,
             "path": source_label,
@@ -591,6 +597,11 @@ def verify_attack_plan_proof_artifact(
             project_root,
             failures,
         )
+        _verify_formal_estimator_model_contract_binding(
+            artifact,
+            project_root,
+            failures,
+        )
         _verify_artifact_hash(artifact, failures)
         _verify_plan_binding(artifact, project_root, failures)
         _verify_obligation_hashes(artifact, project_root, failures)
@@ -620,6 +631,12 @@ def verify_attack_plan_proof_artifact(
         ),
         "operator_semantics_contract_attached": (
             artifact.get("operator_semantics_contract", {}).get(
+                "verification_accepted"
+            )
+            is True
+        ),
+        "formal_estimator_model_attached": (
+            artifact.get("formal_estimator_model_contract", {}).get(
                 "verification_accepted"
             )
             is True
@@ -1190,6 +1207,7 @@ def _verify_artifact_shape(
         "formal_backend",
         "attack_plan_semantics",
         "operator_semantics_contract",
+        "formal_estimator_model_contract",
         "artifact_sha256",
     ):
         if key not in artifact:
@@ -1805,6 +1823,153 @@ def _verify_operator_semantics_contract_binding(
         )
 
 
+def _formal_estimator_model_contract_binding(
+    root: Path,
+    *,
+    failures: list[str] | None = None,
+) -> dict[str, Any]:
+    from agades_pqc_gym.formal.estimator_model import (
+        DEFAULT_ESTIMATOR_MODEL_PATH,
+        FORMAL_ESTIMATOR_MODEL_SCHEMA,
+        build_formal_estimator_model,
+    )
+
+    path = root / DEFAULT_ESTIMATOR_MODEL_PATH
+    try:
+        raw = path.read_bytes()
+        payload = json.loads(raw.decode("utf-8"))
+    except FileNotFoundError:
+        if failures is not None:
+            failures.append(
+                "Formal estimator model artifact is missing: "
+                f"{DEFAULT_ESTIMATOR_MODEL_PATH.as_posix()}."
+            )
+        payload = {}
+    except json.JSONDecodeError as exc:
+        if failures is not None:
+            failures.append(
+                "Formal estimator model artifact is invalid JSON at line "
+                f"{exc.lineno}."
+            )
+        payload = {}
+    if not isinstance(payload, dict):
+        if failures is not None:
+            failures.append("Formal estimator model artifact must be an object.")
+        payload = {}
+
+    expected = build_formal_estimator_model(root=root)
+    summary = _dict_or_empty(payload.get("summary"))
+    proof_binding = _dict_or_empty(payload.get("proof_artifact_binding"))
+    family_entries = [
+        entry
+        for entry in _list_or_empty(payload.get("families"))
+        if isinstance(entry, dict)
+    ]
+    contract_matches = (
+        bool(payload)
+        and _formal_estimator_model_contract_payload(payload)
+        == _formal_estimator_model_contract_payload(expected)
+    )
+    proof_artifact_binding_required = (
+        proof_binding.get("estimator_result_binding_required_before_claim") is True
+        and proof_binding.get("security_claim_status_without_review")
+        == "disallowed"
+    )
+    claim_policy_forbids_claims = bool(family_entries) and all(
+        _dict_or_empty(entry.get("claim_policy")).get(
+            "security_claim_allowed_without_review"
+        )
+        is False
+        and _dict_or_empty(entry.get("estimator_model")).get(
+            "security_claim_allowed_without_review"
+        )
+        is False
+        for entry in family_entries
+    )
+    return {
+        "schema_version": FORMAL_ESTIMATOR_MODEL_BINDING_SCHEMA,
+        "path": DEFAULT_ESTIMATOR_MODEL_PATH.as_posix(),
+        "model_schema_version": (
+            payload.get("schema_version") or FORMAL_ESTIMATOR_MODEL_SCHEMA
+        ),
+        "contract_sha256": (
+            _formal_estimator_model_contract_sha256(payload) if payload else None
+        ),
+        "families": summary.get("families"),
+        "runtime_operator_count": summary.get("runtime_operator_count"),
+        "result_binding_required_before_claim": summary.get(
+            "result_binding_required_before_claim"
+        ),
+        "schema_only_no_estimator": summary.get("schema_only_no_estimator"),
+        "proof_artifact_binding_required_before_claim": (
+            proof_artifact_binding_required
+        ),
+        "claim_policy_forbids_unreviewed_security_claims": (
+            claim_policy_forbids_claims
+        ),
+        "linked_artifact_hashes_excluded_from_contract": True,
+        "verification_accepted": (
+            contract_matches
+            and proof_artifact_binding_required
+            and claim_policy_forbids_claims
+        ),
+    }
+
+
+def _verify_formal_estimator_model_contract_binding(
+    artifact: dict[str, Any],
+    project_root: Path,
+    failures: list[str],
+) -> None:
+    binding = artifact.get("formal_estimator_model_contract")
+    if not isinstance(binding, dict):
+        failures.append(
+            "Proof artifact formal estimator model binding must be a JSON object."
+        )
+        return
+    estimator_model_failures: list[str] = []
+    expected = _formal_estimator_model_contract_binding(
+        project_root,
+        failures=estimator_model_failures,
+    )
+    failures.extend(estimator_model_failures)
+    if binding != expected:
+        failures.append("Proof artifact formal estimator model binding is not in sync.")
+    if binding.get("proof_artifact_binding_required_before_claim") is not True:
+        failures.append(
+            "Proof artifact formal estimator model binding must require estimator "
+            "results before claims."
+        )
+    if binding.get("claim_policy_forbids_unreviewed_security_claims") is not True:
+        failures.append(
+            "Proof artifact formal estimator model binding must forbid unreviewed "
+            "security claims."
+        )
+    if binding.get("linked_artifact_hashes_excluded_from_contract") is not True:
+        failures.append(
+            "Proof artifact formal estimator model binding must avoid recursive "
+            "linked artifact hashes."
+        )
+    if binding.get("verification_accepted") is not True:
+        failures.append(
+            "Proof artifact formal estimator model binding must verify cleanly."
+        )
+
+
+def _formal_estimator_model_contract_sha256(payload: dict[str, Any]) -> str:
+    return stable_sha256(_formal_estimator_model_contract_payload(payload))
+
+
+def _formal_estimator_model_contract_payload(
+    payload: dict[str, Any],
+) -> dict[str, Any]:
+    return {
+        key: value
+        for key, value in payload.items()
+        if key not in {"linked_artifacts", "model_sha256"}
+    }
+
+
 def _list_or_empty(value: object) -> list[Any]:
     return value if isinstance(value, list) else []
 
@@ -2019,6 +2184,12 @@ def _review_artifact_binding(artifact: dict[str, Any]) -> dict[str, Any]:
     operator_semantics_contract = artifact.get("operator_semantics_contract", {})
     if not isinstance(operator_semantics_contract, dict):
         operator_semantics_contract = {}
+    formal_estimator_model_contract = artifact.get(
+        "formal_estimator_model_contract",
+        {},
+    )
+    if not isinstance(formal_estimator_model_contract, dict):
+        formal_estimator_model_contract = {}
     proof_obligations = artifact.get("proof_obligations", [])
     if not isinstance(proof_obligations, list):
         proof_obligations = []
@@ -2037,6 +2208,9 @@ def _review_artifact_binding(artifact: dict[str, Any]) -> dict[str, Any]:
         ),
         "operator_semantics_sha256": operator_semantics_contract.get(
             "semantics_sha256"
+        ),
+        "formal_estimator_model_contract_sha256": (
+            formal_estimator_model_contract.get("contract_sha256")
         ),
         "proof_obligation_sha256": [
             obligation.get("obligation_sha256")
