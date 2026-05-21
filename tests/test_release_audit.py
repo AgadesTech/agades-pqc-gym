@@ -1449,7 +1449,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert checks["private-run-policy"]["status"] == "passed"
     assert checks["private-run-policy"]["blocking"] is True
     assert checks["private-run-policy"]["evidence"] == {
-        "allowed_private_commands": 16,
+        "allowed_private_commands": 17,
         "allowed_private_roots": 6,
         "forbidden_public_roots": 5,
         "private_dataset_sources": 3,

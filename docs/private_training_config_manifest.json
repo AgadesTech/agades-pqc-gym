@@ -43,7 +43,7 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "a8295d3318d256206a6c89061221442b20bc9fcceb96a8735f6945e2e6ae94c9"
+      "sha256": "6a5330b952536c517e93b1092351a9ca54eaab6c29517a3da5454f70a4379273"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
@@ -59,11 +59,11 @@
     },
     "private_dataset_curation": {
       "path": "docs/private_dataset_curation.json",
-      "sha256": "68b6deaa764fa827b36d4b73b5d40eaf51aca89ccb8d7fbe01a4e7f15f44509f"
+      "sha256": "beb67562ada79646dbc3545afecd61ca8f9220045d32f18ef6fb29e238fefbac"
     },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
-      "sha256": "a0992031eb7a4268e4813b4d5f02a9ca4dda078972c935ef829c8e981259d86a"
+      "sha256": "6a3967176dabb28cd1a713795696ea80c53d3f3660b0859761df23a813b5a5ec"
     },
     "rl_pedagogy_runtime": {
       "path": "src/agades_pqc_gym/rl/pedagogy.py",
