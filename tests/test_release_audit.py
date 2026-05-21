@@ -685,7 +685,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert checks["pedagogical-rl-method"]["evidence"] == {
         "stages": 4,
         "reward_terms": 8,
-        "linked_artifacts": 10,
+            "linked_artifacts": 11,
         "teacher_student_pattern": "privileged_self_teacher_student",
         "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
         "privacy_preserving": True,

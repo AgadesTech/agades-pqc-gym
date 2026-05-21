@@ -43,7 +43,7 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "f16213c07adc6202c99a6635215c8059df4fb2ee099bf18773ea3c6897b113c2"
+      "sha256": "a8295d3318d256206a6c89061221442b20bc9fcceb96a8735f6945e2e6ae94c9"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",

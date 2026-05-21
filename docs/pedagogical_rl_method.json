@@ -73,6 +73,10 @@
       "path": "docs/private_run_policy.json",
       "sha256": "a0992031eb7a4268e4813b4d5f02a9ca4dda078972c935ef829c8e981259d86a"
     },
+    "private_trace_runtime": {
+      "path": "src/agades_pqc_gym/rl/private_trace.py",
+      "sha256": "ecd233fc7855f5a15d95f54ae107239fd3a96261d3129a199cee3666db99560f"
+    },
     "rl_pedagogy_runtime": {
       "path": "src/agades_pqc_gym/rl/pedagogy.py",
       "sha256": "4d3a2f5ef7f12eaa06977cba10901e169ec8eb9584b7e982e7709af36dfaaa6c"
