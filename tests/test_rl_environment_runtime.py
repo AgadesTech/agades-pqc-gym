@@ -80,6 +80,10 @@ def test_pedagogical_reward_scores_all_terms_for_matching_seed() -> None:
     assert report["formal_summary"]["formal_estimator_model"] == (
         _expected_formal_estimator_model_binding()
     )
+    assert report["formal_summary"]["review_governance"] == (
+        _expected_reviewer_governance_binding()
+    )
+    assert report["formal_summary"]["review_governance_ok"] is True
     assert report["formal_summary"]["type_rule_kinds"] == [
         "estimator_claim_boundary",
         "family_applicability_boundary",
@@ -131,6 +135,50 @@ def test_pedagogical_reward_blocks_untyped_formal_obligations(
     assert report["terms"]["proof_obligation_coverage"] == 0.0
     assert "proof_obligation_coverage" in report["blocking_reasons"]
     assert report["formal_summary"]["typed_proof_obligations"] == 3
+
+
+def test_pedagogical_reward_blocks_missing_reviewer_governance(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task_info = _task_info(LATTICE_PLAN)
+
+    def build_artifact_without_reviewer_governance(
+        raw_json: str,
+        *,
+        source_label: str,
+        estimator_result_path: Path | None = None,
+        review_status: str = "pending_review",
+        root: Path | None = None,
+    ) -> dict[str, Any]:
+        artifact = build_attack_plan_proof_artifact_from_json(
+            raw_json,
+            source_label=source_label,
+            estimator_result_path=estimator_result_path,
+            review_status=review_status,
+            root=root,
+        )
+        artifact.pop("review_governance", None)
+        return artifact
+
+    monkeypatch.setattr(
+        rl_environment,
+        "build_attack_plan_proof_artifact_from_json",
+        build_artifact_without_reviewer_governance,
+    )
+
+    report = score_attack_plan_candidate(
+        LATTICE_PLAN.read_text(encoding="utf-8"),
+        task_info=task_info,
+        require_task_match=True,
+    )
+
+    assert report["reward"] == 0.0
+    assert report["accepted"] is False
+    assert report["blocked"] is True
+    assert report["terms"]["reviewer_quality"] == 0.0
+    assert "reviewer_quality" in report["blocking_reasons"]
+    assert report["formal_summary"]["review_governance"] == {}
+    assert report["formal_summary"]["review_governance_ok"] is False
 
 
 def test_pedagogical_reward_blocks_forged_formal_type_rules(
@@ -283,6 +331,10 @@ def test_gym_environment_reset_step_emits_public_safe_rollout_trace() -> None:
     assert all(len(value) == 64 for value in binding["proof_obligation_sha256"])
     assert binding["review_status"] == "pending_review"
     assert binding["claim_allowed"] is False
+    assert binding["review_governance"] == _expected_reviewer_governance_binding()
+    assert binding["review_governance"]["required_reviewers_by_family"][
+        binding["family"]
+    ] == binding["required_reviewers"]
     semantics = binding["attackplan_semantics"]
     assert semantics["schema_version"] == (
         "agades.pqc.rl.attackplan_semantics_binding.v1"
@@ -316,6 +368,20 @@ def test_default_public_rollout_examples_cover_every_target_family() -> None:
     )
     assert all(
         row["formal_artifact_binding"]["formal_estimator_model"]["accepted"] is True
+        for row in rows
+    )
+    assert all(
+        row["formal_artifact_binding"]["review_governance"][
+            "verification_accepted"
+        ]
+        is True
+        for row in rows
+    )
+    assert all(
+        row["formal_artifact_binding"]["review_governance"][
+            "required_reviewers_by_family"
+        ][row["candidate"]["target_family"]]
+        == row["formal_artifact_binding"]["required_reviewers"]
         for row in rows
     )
     assert all(row["private_fields_present"] is False for row in rows)
@@ -415,3 +481,11 @@ def _expected_formal_estimator_model_binding() -> dict[str, object]:
         "claim_policy_forbids_unreviewed_security_claims": True,
         "linked_artifact_hashes_excluded_from_contract": True,
     }
+
+
+def _expected_reviewer_governance_binding() -> dict[str, object]:
+    artifact = build_attack_plan_proof_artifact_from_json(
+        LATTICE_PLAN.read_text(encoding="utf-8"),
+        source_label="<rl-candidate>",
+    )
+    return artifact["review_governance"]
