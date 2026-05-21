@@ -57,6 +57,20 @@ def test_pedagogical_reward_scores_all_terms_for_matching_seed() -> None:
     assert report["formal_summary"]["proof_obligations"] == 4
     assert report["formal_summary"]["typed_proof_obligations"] == 4
     assert report["formal_summary"]["proof_obligation_type_rules"] == 5
+    assert report["formal_summary"]["attackplan_semantics"] == {
+        "schema_version": "agades.pqc.rl.attackplan_semantics_binding.v1",
+        "semantics_path": "docs/formal_attackplan_semantics.json",
+        "accepted": True,
+        "validation_rules": 7,
+        "formal_rules": 5,
+        "claim_policy_forbids_unreviewed_security_claims": True,
+        "semantics_sha256": report["formal_summary"]["attackplan_semantics"][
+            "semantics_sha256"
+        ],
+    }
+    assert len(
+        report["formal_summary"]["attackplan_semantics"]["semantics_sha256"]
+    ) == 64
     assert report["formal_summary"]["type_rule_kinds"] == [
         "estimator_claim_boundary",
         "family_applicability_boundary",
@@ -260,6 +274,16 @@ def test_gym_environment_reset_step_emits_public_safe_rollout_trace() -> None:
     assert all(len(value) == 64 for value in binding["proof_obligation_sha256"])
     assert binding["review_status"] == "pending_review"
     assert binding["claim_allowed"] is False
+    semantics = binding["attackplan_semantics"]
+    assert semantics["schema_version"] == (
+        "agades.pqc.rl.attackplan_semantics_binding.v1"
+    )
+    assert semantics["semantics_path"] == "docs/formal_attackplan_semantics.json"
+    assert semantics["accepted"] is True
+    assert semantics["validation_rules"] == 7
+    assert semantics["formal_rules"] == 5
+    assert semantics["claim_policy_forbids_unreviewed_security_claims"] is True
+    assert len(semantics["semantics_sha256"]) == 64
 
 
 def test_default_public_rollout_examples_cover_every_target_family() -> None:

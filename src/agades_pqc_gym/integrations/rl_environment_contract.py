@@ -55,6 +55,7 @@ LINKED_ARTIFACT_PATHS = {
     "prime_rl_training_template": "prime_intellect/training/"
     "private_qwen_prime_rl.template.toml",
     "pedagogical_rl_method": "docs/pedagogical_rl_method.json",
+    "formal_attackplan_semantics": "docs/formal_attackplan_semantics.json",
     "formal_obligation_ledger": "docs/formal_obligation_ledger.json",
     "formal_estimator_model": "docs/formal_estimator_model.json",
     "formal_family_coverage": "docs/formal_family_coverage.json",
@@ -159,6 +160,7 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
             "terms": list(REWARD_TERMS),
             "requires_no_security_claim": True,
             "requires_reviewer_quality_signal": True,
+            "requires_attackplan_semantics_contract": True,
         },
         "claim_boundary": {
             "agent_task": (
@@ -407,6 +409,8 @@ def _verify_reward_model(contract: dict[str, Any], failures: list[str]) -> None:
         failures.append("RL reward must enforce no-overclaim behavior.")
     if reward_model.get("requires_reviewer_quality_signal") is not True:
         failures.append("RL reward must include reviewer-quality signal.")
+    if reward_model.get("requires_attackplan_semantics_contract") is not True:
+        failures.append("RL reward must bind the AttackPlan semantics contract.")
 
 
 def _verify_claim_boundary(contract: dict[str, Any], failures: list[str]) -> None:
