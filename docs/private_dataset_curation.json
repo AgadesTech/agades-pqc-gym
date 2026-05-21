@@ -16,6 +16,91 @@
     "near_duplicate_review_required": true,
     "normalized_text_deduplication": true
   },
+  "evidence_contracts": {
+    "contamination_audit": {
+      "artifact_path": "private/reports/dataset_curation/contamination_audit.json",
+      "blocks_training_until_accepted": true,
+      "must_remain_private": true,
+      "required_fields": [
+        "public_reference_digest",
+        "exact_public_overlap_count",
+        "prompt_leakage_count",
+        "reviewer_annotation_leakage_count",
+        "similarity_threshold",
+        "similarity_report_sha256",
+        "manual_review_status",
+        "reviewer_id",
+        "accepted"
+      ],
+      "schema_version": "agades.pqc.private_dataset.contamination_audit_evidence.v1"
+    },
+    "deduplication": {
+      "artifact_path": "private/reports/dataset_curation/deduplication_report.json",
+      "blocks_training_until_accepted": true,
+      "must_remain_private": true,
+      "required_fields": [
+        "exact_hash_groups",
+        "normalized_hash_groups",
+        "near_duplicate_clusters",
+        "cross_source_duplicate_count",
+        "removed_row_ids_sha256",
+        "deduplicated_row_count",
+        "reviewer_id",
+        "accepted"
+      ],
+      "schema_version": "agades.pqc.private_dataset.deduplication_report_evidence.v1"
+    },
+    "license_review": {
+      "artifact_path": "private/reports/dataset_curation/license_review.json",
+      "blocks_training_until_accepted": true,
+      "must_remain_private": true,
+      "required_fields": [
+        "source_id",
+        "source",
+        "upstream_url",
+        "license_identifier",
+        "license_text_sha256",
+        "allowed_private_training",
+        "decision",
+        "restrictions",
+        "reviewer_id",
+        "reviewed_at_utc"
+      ],
+      "schema_version": "agades.pqc.private_dataset.license_review_evidence.v1"
+    },
+    "provenance_tracking": {
+      "artifact_path": "private/reports/dataset_curation/provenance_manifest.json",
+      "blocks_training_until_accepted": true,
+      "must_remain_private": true,
+      "required_fields": [
+        "row_id",
+        "source_id",
+        "source_revision_or_commit",
+        "retrieved_at_utc",
+        "raw_content_sha256",
+        "normalized_content_sha256",
+        "transform_config_sha256",
+        "private_storage_path",
+        "license_review_id"
+      ],
+      "schema_version": "agades.pqc.private_dataset.provenance_manifest_evidence.v1"
+    },
+    "redaction": {
+      "artifact_path": "private/reports/dataset_curation/redaction_report.json",
+      "blocks_training_until_accepted": true,
+      "must_remain_private": true,
+      "required_fields": [
+        "credential_scan_digest",
+        "personal_data_scan_digest",
+        "unlicensed_span_removal_digest",
+        "private_path_scrub_digest",
+        "remaining_findings",
+        "reviewer_id",
+        "accepted"
+      ],
+      "schema_version": "agades.pqc.private_dataset.redaction_report_evidence.v1"
+    }
+  },
   "linked_artifacts": {
     "benchmark_source_contracts": {
       "path": "docs/benchmark_source_contracts.json",
