@@ -2,9 +2,12 @@
   "agent_environment_contract": {
     "claims_pqc_breaks": false,
     "environment_class": "agades_pqc_gym.rl.environment.AgadesPQCGymEnvironment",
+    "formal_artifact_binding_schema": "agades.pqc.rl.formal_artifact_binding.v1",
     "observation_schema": "agades.pqc.rl.observation.v1",
     "private_trace_publication_allowed": false,
     "public_track_only": true,
+    "review_governance_binding_schema": "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1",
+    "reviewer_quality_requires_governance": true,
     "reward_report_schema": "agades.pqc.rl.reward_report.v1",
     "rollout_examples": "hf/dataset/rl_rollouts.jsonl",
     "rollout_trace_schema": "agades.pqc.rl.rollout_trace.v1",

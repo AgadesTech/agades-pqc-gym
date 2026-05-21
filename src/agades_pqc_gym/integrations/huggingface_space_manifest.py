@@ -11,6 +11,7 @@ from pydantic import ValidationError
 
 from agades_pqc_gym.core.attack_plan import AttackPlan
 from agades_pqc_gym.rl.environment import (
+    FORMAL_ARTIFACT_BINDING_SCHEMA,
     OBSERVATION_SCHEMA,
     RL_REWARD_REPORT_SCHEMA,
     ROLLOUT_TRACE_SCHEMA,
@@ -111,12 +112,17 @@ def build_huggingface_space_manifest(root: Path | None = None) -> dict[str, Any]
             "observation_schema": OBSERVATION_SCHEMA,
             "reward_report_schema": RL_REWARD_REPORT_SCHEMA,
             "rollout_trace_schema": ROLLOUT_TRACE_SCHEMA,
+            "formal_artifact_binding_schema": FORMAL_ARTIFACT_BINDING_SCHEMA,
+            "review_governance_binding_schema": (
+                "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+            ),
             "task_dataset": "hf/dataset/task_metadata.jsonl",
             "rollout_examples": "hf/dataset/rl_rollouts.jsonl",
             "scoring_function": (
                 "agades_pqc_gym.rl.environment.score_attack_plan_candidate"
             ),
             "task_interface": "single_turn_attackplan_json",
+            "reviewer_quality_requires_governance": True,
             "public_track_only": True,
             "private_trace_publication_allowed": False,
             "claims_pqc_breaks": False,
@@ -416,10 +422,15 @@ def _verify_agent_environment_contract(
         "observation_schema": OBSERVATION_SCHEMA,
         "reward_report_schema": RL_REWARD_REPORT_SCHEMA,
         "rollout_trace_schema": ROLLOUT_TRACE_SCHEMA,
+        "formal_artifact_binding_schema": FORMAL_ARTIFACT_BINDING_SCHEMA,
+        "review_governance_binding_schema": (
+            "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+        ),
         "task_dataset": "hf/dataset/task_metadata.jsonl",
         "rollout_examples": "hf/dataset/rl_rollouts.jsonl",
         "scoring_function": "agades_pqc_gym.rl.environment.score_attack_plan_candidate",
         "task_interface": "single_turn_attackplan_json",
+        "reviewer_quality_requires_governance": True,
         "public_track_only": True,
         "private_trace_publication_allowed": False,
         "claims_pqc_breaks": False,
@@ -470,6 +481,26 @@ def _verify_agent_environment_contract(
         failures.append("Hugging Face Space Agent Environment reward schema drifted.")
     if rollout.get("schema_version") != ROLLOUT_TRACE_SCHEMA:
         failures.append("Hugging Face Space Agent Environment trace schema drifted.")
+    formal_binding = _dict_or_empty(rollout.get("formal_artifact_binding"))
+    review_governance = _dict_or_empty(formal_binding.get("review_governance"))
+    if formal_binding.get("schema_version") != FORMAL_ARTIFACT_BINDING_SCHEMA:
+        failures.append(
+            "Hugging Face Space Agent Environment formal binding schema drifted."
+        )
+    if formal_binding.get("review_governance_ok") is not True:
+        failures.append(
+            "Hugging Face Space Agent Environment lacks reviewer governance."
+        )
+    if review_governance.get("schema_version") != (
+        "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+    ):
+        failures.append(
+            "Hugging Face Space Agent Environment reviewer governance schema drifted."
+        )
+    if reward.get("terms", {}).get("reviewer_quality") != 1.0:
+        failures.append(
+            "Hugging Face Space Agent Environment reviewer quality is not backed."
+        )
     if rollout.get("private_fields_present") is not False:
         failures.append("Hugging Face Space Agent Environment exposes private fields.")
 
@@ -766,3 +797,7 @@ def _requirements(path: Path) -> list[str]:
         for line in path.read_text(encoding="utf-8").splitlines()
         if line.strip() and not line.lstrip().startswith("#")
     ]
+
+
+def _dict_or_empty(value: object) -> dict[str, Any]:
+    return dict(value) if isinstance(value, dict) else {}

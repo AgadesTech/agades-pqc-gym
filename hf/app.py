@@ -107,9 +107,11 @@ def score_attack_plan_for_task(label: str, raw_plan: str) -> tuple[str, str, str
     step = env.step(raw_plan)
     reward_report = step["info"]["reward_report"]
     trace = step["info"]["trace"]
+    formal_binding = trace.get("formal_artifact_binding", {})
     summary = (
         f"reward={reward_report['reward']}; "
-        f"accepted={str(reward_report['accepted']).lower()}. "
+        f"accepted={str(reward_report['accepted']).lower()}; "
+        f"review_governance={_review_governance_status(formal_binding)}. "
         "Toy/demo Agent Environment output only; not a security claim."
     )
     return (
@@ -204,6 +206,14 @@ def _json_safe(value: Any) -> Any:
     if isinstance(value, list):
         return [_json_safe(item) for item in value]
     return value
+
+
+def _review_governance_status(formal_binding: object) -> str:
+    if not isinstance(formal_binding, dict):
+        return "missing"
+    if formal_binding.get("review_governance_ok") is True:
+        return "accepted"
+    return "rejected"
 
 
 if __name__ == "__main__":

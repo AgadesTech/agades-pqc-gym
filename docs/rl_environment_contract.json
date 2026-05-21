@@ -61,7 +61,7 @@
     },
     "hf_space_manifest": {
       "path": "hf/space_manifest.json",
-      "sha256": "ccdce075e138be04293b3bdff095f7a8b134af337fb9cb7c73b82afef6d08bf7"
+      "sha256": "2047b59eff8b8cade5b3f848f1e7680954808b61e3d819fd890679f1d394568f"
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
@@ -97,7 +97,7 @@
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "2a0cae9fe83cfc4b3194caae1060de0bebddfb5408111912f779631a375a15c6"
+      "sha256": "820d8de773af0952cf766553bd7d7bcaab6d63495ba5d6fc0e1056df6c8a2255"
     }
   },
   "private_track": {
