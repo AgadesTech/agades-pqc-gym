@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "50b541a0cc8f22a4deda016aa500b35566a17a4d0538d6e8bc9cd26edca36e5d",
+  "artifact_sha256": "0e9e55dc770b2503f50deb6869ef4047bb970678784050a79e0052c95128a17c",
   "attack_plan": {
     "canonical_sha256": "cd75f20024968e2d6bd6f019c623b23663aba3d1fff350d81770755c197e284d",
     "id": "lattice_mlwe_module_hypothesis_toy_v1",
@@ -94,13 +94,13 @@
   "formal_backend": {
     "backend_manifest": {
       "ci_lean_build_gate": true,
-      "manifest_sha256": "3f61f7cde6b89af4907633c746bef3e973fdd8745e3c47d87ec5d14429f7853c",
+      "manifest_sha256": "656657789b889089a6764991faa0d2fabed032eb7f7b43c561ee411247989ca4",
       "path": "docs/formal_lean_backend.json",
       "placeholder_failures": 0,
       "schema_version": "agades.pqc.formal.lean_backend.v1",
-      "sha256": "362bb8a19a74c7dcf318c6078eb7dfed43253e6d3d4a1f36ff31d511f6f788b0",
-      "source_modules": 14,
-      "theorem_declarations": 36
+      "sha256": "36793f0ba088ef4e4d692616b119bbff6f3e3653923aea3ebe39ceec6595d526",
+      "source_modules": 15,
+      "theorem_declarations": 41
     },
     "build_command": "lake build",
     "entry_module": "formal/lean/AgadesPQC.lean",

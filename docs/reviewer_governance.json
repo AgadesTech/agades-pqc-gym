@@ -161,6 +161,7 @@
   ],
   "formal_artifact_binding": {
     "claim_boundary_contains": "not PQC break claims",
+    "formal_attackplan_semantics_path": "docs/formal_attackplan_semantics.json",
     "formal_estimator_model_path": "docs/formal_estimator_model.json",
     "formal_family_coverage_path": "docs/formal_family_coverage.json",
     "formal_obligation_ledger_path": "docs/formal_obligation_ledger.json",
@@ -218,6 +219,11 @@
     }
   },
   "formal_backend_policy": {
+    "attack_plan_semantics": {
+      "canonicalization": "json_sort_keys_minified_v1",
+      "contract_path": "docs/formal_attackplan_semantics.json",
+      "security_claim_allowed_without_review": false
+    },
     "primary": {
       "backend": "lean4",
       "library": "mathlib",
@@ -233,31 +239,35 @@
   "linked_artifacts": {
     "external_publication_review_packet": {
       "path": "docs/external_publication_review_packet.json",
-      "sha256": "e90a1f230d94aa4c91fc751e1aa23d83b8ebf87d550686076797c20a754ac52e"
+      "sha256": "58a75062f4b5ed20a5cbe02891338e6dda47b9cbae87a6f6f4a81d32706d70ac"
+    },
+    "formal_attackplan_semantics": {
+      "path": "docs/formal_attackplan_semantics.json",
+      "sha256": "7ad2cc549f65109a06d662d550d13ff985f9e9aec8ca0284eadc5397f279580e"
     },
     "formal_estimator_model": {
       "path": "docs/formal_estimator_model.json",
-      "sha256": "f7344606554e5692d5f64113bff92b742619a1a38d188d4d50277e193e2c08f5"
+      "sha256": "1d230ccd1acd43b86a4819dffe030631dc0e1505658ae888dfb105c3d88ea7bc"
     },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "b733bbfe47a59070cfca0136930709d1a4cb33d4c096b8869e4e18f908174e5c"
+      "sha256": "d1476ba7a8fa30adffa66b86e6ae08ecb53f83ce6531f6d60d9da6d113bfb8d3"
     },
     "formal_lean_backend": {
       "path": "docs/formal_lean_backend.json",
-      "sha256": "362bb8a19a74c7dcf318c6078eb7dfed43253e6d3d4a1f36ff31d511f6f788b0"
+      "sha256": "36793f0ba088ef4e4d692616b119bbff6f3e3653923aea3ebe39ceec6595d526"
     },
     "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "753f16478946a27654dd6fbd3b54547b0a8b1a7a579172fc23709b1f1887449b"
+      "sha256": "6e46b60f236426526ac57ec64a648373f8fcf46034080a825315fba96109f8e8"
     },
     "formal_mlwe_proof_artifact": {
       "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
-      "sha256": "9487f2bade2e23a786d1a8e69abe21506bf659e0a692a2fd90f985d8f154bb81"
+      "sha256": "9f9d8b1fb9356c336c09612eb61993422a1c9eef6a58763b7cf9e5129af60065"
     },
     "formal_obligation_ledger": {
       "path": "docs/formal_obligation_ledger.json",
-      "sha256": "2566b8a94cf1fe5a44c7168a128c092b88be670a23ff9fef5fe7e5b056a93b65"
+      "sha256": "e4f39244b386a3aa9bcc2414453f78d1a8db83597c70573513a575ef9132fd99"
     },
     "formal_operator_semantics": {
       "path": "docs/formal_operator_semantics.json",
@@ -265,7 +275,7 @@
     },
     "formal_smt_assist_contract": {
       "path": "docs/formal_smt_assist_contract.json",
-      "sha256": "96d18a536b30e9ddd407d1a2f42707f263f714dd7dad0c42e97b17890f526e1e"
+      "sha256": "f6ef55e1307d60b86529efc28af6a8806dcd713805248b0d2b6ca456a964cdd5"
     },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
@@ -273,11 +283,11 @@
     },
     "publication_manifest": {
       "path": "docs/publication_manifest.json",
-      "sha256": "3d6692e48c2ecd9cb62a87e4a02e46ce30d9b4d3129ec5aa1a5166139b37b0b8"
+      "sha256": "f58df7dd98a93e42cc3f98c71b04f73f86ebccbed9be69eb7a0683aab1a9f71d"
     },
     "release_audit": {
       "path": "public/release_audit.json",
-      "sha256": "3c0f944ee11d3cd71ce172d6e12e379e93e4cd12565ebef36649882385248f8e"
+      "sha256": "6ccf68deff429af228b2a6c036df577538e490dbd4e70b08b0e6be99eca65a48"
     }
   },
   "private_training_review": {

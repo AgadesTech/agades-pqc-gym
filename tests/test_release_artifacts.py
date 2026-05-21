@@ -13,6 +13,10 @@ from agades_pqc_gym.formal.artifacts import (
     verify_attack_plan_evaluator_result,
     verify_attack_plan_proof_artifact,
 )
+from agades_pqc_gym.formal.attack_plan_semantics import (
+    DEFAULT_ATTACKPLAN_SEMANTICS_PATH,
+    verify_formal_attackplan_semantics,
+)
 from agades_pqc_gym.formal.estimator_model import (
     DEFAULT_ESTIMATOR_MODEL_PATH,
     verify_formal_estimator_model,
@@ -46,6 +50,9 @@ from agades_pqc_gym.integrations.deepevolve_research_hooks import (
 from agades_pqc_gym.integrations.ecosystem_smoke import verify_ecosystem_smoke_report
 from agades_pqc_gym.integrations.external_publication_review_packet import (
     verify_external_publication_review_packet,
+)
+from agades_pqc_gym.integrations.huggingface_dataset import (
+    verify_huggingface_dataset_bundle,
 )
 from agades_pqc_gym.integrations.pedagogical_rl_method import (
     DEFAULT_METHOD_PATH as PEDAGOGICAL_RL_METHOD_PATH,
@@ -127,16 +134,20 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
 ) -> None:
     copied_root = _copy_repo(tmp_path)
     corrupted_semantics = copied_root / DEFAULT_OPERATOR_SEMANTICS_PATH
+    corrupted_attackplan = copied_root / DEFAULT_ATTACKPLAN_SEMANTICS_PATH
     corrupted_smt = copied_root / DEFAULT_SMT_ASSIST_PATH
     corrupted_training = copied_root / PRIVATE_TRAINING_MANIFEST_PATH
     corrupted_readiness = copied_root / PRIVATE_TRAINING_READINESS_PATH
     corrupted_deepevolve = copied_root / DEEPEVOLVE_MANIFEST_PATH
+    corrupted_hf_dataset_manifest = copied_root / "hf" / "dataset" / "MANIFEST.sha256"
     corrupted_report = copied_root / "reports" / "ecosystem_smoke.json"
     corrupted_semantics.write_text("{}\n", encoding="utf-8")
+    corrupted_attackplan.write_text("{}\n", encoding="utf-8")
     corrupted_smt.write_text("{}\n", encoding="utf-8")
     corrupted_training.write_text("{}\n", encoding="utf-8")
     corrupted_readiness.write_text("{}\n", encoding="utf-8")
     corrupted_deepevolve.write_text("{}\n", encoding="utf-8")
+    corrupted_hf_dataset_manifest.write_text("{}\n", encoding="utf-8")
     corrupted_report.write_text("{}\n", encoding="utf-8")
 
     result = write_release_artifacts_until_stable(root=copied_root, max_passes=6)
@@ -153,6 +164,11 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
         for path in release_pass["changed_artifacts"]
     }
     assert DEFAULT_OPERATOR_SEMANTICS_PATH.as_posix() in {
+        path
+        for release_pass in result["pass_summaries"]
+        for path in release_pass["changed_artifacts"]
+    }
+    assert DEFAULT_ATTACKPLAN_SEMANTICS_PATH.as_posix() in {
         path
         for release_pass in result["pass_summaries"]
         for path in release_pass["changed_artifacts"]
@@ -177,6 +193,11 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
         for release_pass in result["pass_summaries"]
         for path in release_pass["changed_artifacts"]
     }
+    assert "hf/dataset/MANIFEST.sha256" in {
+        path
+        for release_pass in result["pass_summaries"]
+        for path in release_pass["changed_artifacts"]
+    }
     assert result["failures"] == []
     _assert_formal_artifacts_verified(copied_root)
     _assert_private_rl_prime_artifacts_verified(copied_root)
@@ -193,6 +214,10 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
     )["accepted"] is True
     assert verify_external_publication_review_packet(
         Path("docs/external_publication_review_packet.json"),
+        root=copied_root,
+    )["accepted"] is True
+    assert verify_huggingface_dataset_bundle(
+        Path("hf/dataset"),
         root=copied_root,
     )["accepted"] is True
     assert verify_ecosystem_smoke_report(
@@ -240,6 +265,10 @@ def _assert_formal_artifacts_verified(root: Path) -> None:
     ] is True
     assert verify_formal_operator_semantics(
         DEFAULT_OPERATOR_SEMANTICS_PATH,
+        root=root,
+    )["accepted"] is True
+    assert verify_formal_attackplan_semantics(
+        DEFAULT_ATTACKPLAN_SEMANTICS_PATH,
         root=root,
     )["accepted"] is True
     assert verify_attack_plan_evaluator_result(
