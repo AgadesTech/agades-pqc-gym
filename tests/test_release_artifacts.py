@@ -19,6 +19,10 @@ from agades_pqc_gym.integrations.release_artifacts import (
     write_release_artifacts_until_stable,
 )
 from agades_pqc_gym.integrations.release_status import verify_release_status
+from agades_pqc_gym.integrations.reviewer_governance import verify_reviewer_governance
+from agades_pqc_gym.integrations.rl_environment_contract import (
+    verify_rl_environment_contract,
+)
 
 
 def test_release_artifact_convergence_repairs_dependent_artifacts(
@@ -59,6 +63,14 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
     )["accepted"] is True
     assert verify_ecosystem_smoke_report(
         Path("reports/ecosystem_smoke.json"),
+        root=copied_root,
+    )["accepted"] is True
+    assert verify_reviewer_governance(
+        Path("docs/reviewer_governance.json"),
+        root=copied_root,
+    )["accepted"] is True
+    assert verify_rl_environment_contract(
+        Path("docs/rl_environment_contract.json"),
         root=copied_root,
     )["accepted"] is True
 

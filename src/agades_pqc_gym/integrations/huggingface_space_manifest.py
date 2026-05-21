@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
 from typing import Any
 
+import yaml
 from pydantic import ValidationError
 
 from agades_pqc_gym.core.attack_plan import AttackPlan
@@ -21,6 +23,21 @@ HF_SPACE_MANIFEST_VERIFICATION_SCHEMA = (
 )
 ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_LABEL = "LWE / lattice_primal_usvp_toy_v1"
+SPACE_README_PATH = Path("hf/README.md")
+SPACE_README_METADATA = {
+    "title": "Agades PQC Gym Agent Environment",
+    "sdk": "gradio",
+    "app_file": "app.py",
+    "python_version": "3.11",
+    "license": "apache-2.0",
+    "pinned": False,
+    "tags": [
+        "agent-environment",
+        "reinforcement-learning",
+        "post-quantum-cryptography",
+        "cryptanalysis",
+    ],
+}
 _EXPECTED_FALSE_SAFETY_FLAGS = (
     "contains_private_traces",
     "arbitrary_code_execution",
@@ -48,6 +65,7 @@ def build_huggingface_space_manifest(root: Path | None = None) -> dict[str, Any]
     labels = example_index["labels"]
 
     default_label = DEFAULT_LABEL if DEFAULT_LABEL in labels else labels[0]
+    space_readme = _space_readme_binding(project_root)
     return {
         "schema_version": HF_SPACE_MANIFEST_SCHEMA,
         "project": {
@@ -61,6 +79,9 @@ def build_huggingface_space_manifest(root: Path | None = None) -> dict[str, Any]
             "sdk": "gradio",
             "category": "agent-environment",
             "app_file": "hf/app.py",
+            "space_readme_file": SPACE_README_PATH.as_posix(),
+            "space_readme_sha256": space_readme["sha256"],
+            "space_readme_metadata": space_readme["metadata"],
             "requirements_file": "hf/requirements.txt",
             "dataset_bundle": "hf/dataset",
             "hub_create_command_template": (
@@ -171,7 +192,7 @@ def verify_huggingface_space_manifest(
         failures.append("Hugging Face Space manifest is not in sync.")
 
     _verify_project_metadata(manifest, failures)
-    _verify_space_contract(manifest, expected, failures)
+    _verify_space_contract(project_root, manifest, expected, failures)
     _verify_runtime(project_root, manifest, failures)
     _verify_agent_environment_contract(project_root, manifest, failures)
     _verify_example_manifest(project_root, manifest, failures)
@@ -231,6 +252,7 @@ def _verify_project_metadata(
 
 
 def _verify_space_contract(
+    root: Path,
     manifest: dict[str, Any],
     expected: dict[str, Any],
     failures: list[str],
@@ -244,6 +266,9 @@ def _verify_space_contract(
         "suggested_space_id",
         "sdk",
         "app_file",
+        "space_readme_file",
+        "space_readme_sha256",
+        "space_readme_metadata",
         "requirements_file",
         "dataset_bundle",
         "hub_create_command_template",
@@ -255,6 +280,88 @@ def _verify_space_contract(
         failures.append("Hugging Face Space manifest is not an Agent Environment.")
     if space.get("public_push_requires_review") is not True:
         failures.append("Hugging Face Space manifest lacks public push review gate.")
+    _verify_space_readme(root, space, failures)
+
+
+def _space_readme_binding(root: Path) -> dict[str, Any]:
+    path = root / SPACE_README_PATH
+    raw = path.read_bytes()
+    return {
+        "sha256": hashlib.sha256(raw).hexdigest(),
+        "metadata": _parse_space_readme_metadata(raw.decode("utf-8")),
+    }
+
+
+def _verify_space_readme(
+    root: Path,
+    space: dict[str, Any],
+    failures: list[str],
+) -> None:
+    if space.get("space_readme_file") != SPACE_README_PATH.as_posix():
+        failures.append("Hugging Face Space manifest README path is incorrect.")
+        return
+    try:
+        expected = _space_readme_binding(root)
+    except FileNotFoundError:
+        failures.append("Hugging Face Space root README is missing.")
+        return
+    except ValueError as exc:
+        failures.append(f"Hugging Face Space root README metadata is invalid: {exc}")
+        return
+
+    if space.get("space_readme_sha256") != expected["sha256"]:
+        failures.append("Hugging Face Space root README hash drifted.")
+    metadata = space.get("space_readme_metadata")
+    if metadata != expected["metadata"]:
+        failures.append("Hugging Face Space root README metadata drifted.")
+        metadata = metadata if isinstance(metadata, dict) else {}
+
+    for field, required_value in SPACE_README_METADATA.items():
+        actual_value = metadata.get(field) if isinstance(metadata, dict) else None
+        if field == "tags":
+            actual_tags = actual_value if isinstance(actual_value, list) else []
+            missing_tags = [
+                tag for tag in required_value if tag not in actual_tags
+            ]
+            if missing_tags:
+                failures.append(
+                    "Hugging Face Space root README is missing required tags: "
+                    + ", ".join(missing_tags)
+                    + "."
+                )
+        elif actual_value != required_value:
+            failures.append(
+                "Hugging Face Space root README metadata field is incorrect: "
+                f"{field}."
+            )
+
+    readme_text = (root / SPACE_README_PATH).read_text(encoding="utf-8")
+    for required_phrase in (
+        "Agent Environment",
+        "not security claims",
+        "does not publish private RL traces",
+        "Public publication requires release review",
+    ):
+        if required_phrase not in readme_text:
+            failures.append(
+                "Hugging Face Space root README is missing required boundary "
+                f"phrase: {required_phrase}."
+            )
+
+
+def _parse_space_readme_metadata(text: str) -> dict[str, Any]:
+    lines = text.splitlines()
+    if not lines or lines[0].strip() != "---":
+        raise ValueError("missing opening YAML front matter marker")
+    try:
+        closing_index = lines[1:].index("---") + 1
+    except ValueError as exc:
+        raise ValueError("missing closing YAML front matter marker") from exc
+
+    metadata = yaml.safe_load("\n".join(lines[1:closing_index]))
+    if not isinstance(metadata, dict):
+        raise ValueError("YAML front matter must be an object")
+    return metadata
 
 
 def _verify_runtime(
@@ -578,6 +685,14 @@ def _verification_result(
             "default_label": examples.get("default_label"),
             "example_count": examples.get("example_count"),
             "failure_count": len(failures),
+            "has_space_readme_metadata": (
+                isinstance(space.get("space_readme_metadata"), dict)
+                and space.get("space_readme_metadata", {}).get("sdk") == "gradio"
+                and space.get("space_readme_metadata", {}).get("app_file")
+                == "app.py"
+                and "agent-environment"
+                in space.get("space_readme_metadata", {}).get("tags", [])
+            ),
             "is_agent_environment": (
                 space.get("category") == "agent-environment"
                 and agent_environment.get("observation_schema") == OBSERVATION_SCHEMA
