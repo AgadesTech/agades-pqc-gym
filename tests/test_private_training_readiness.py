@@ -68,7 +68,7 @@ def test_private_training_readiness_verify_accepts_committed_artifact() -> None:
         "accepted": True,
         "summary": {
             "ready": False,
-            "blocked_gates": 10,
+            "blocked_gates": 11,
             "linked_artifacts": 14,
             "failure_count": 0,
         },

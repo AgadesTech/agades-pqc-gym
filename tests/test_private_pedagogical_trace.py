@@ -54,6 +54,32 @@ def test_private_pedagogical_trace_record_is_digest_only_and_contract_bound() ->
         "lattice_primal_usvp_toy_v1"
     )
     assert record["formal_artifact_binding"]["claim_allowed"] is False
+    assert record["dataset_curation_gate"] == {
+        "schema_version": "agades.pqc.rl.private_trace_dataset_curation_gate.v1",
+        "curation_manifest_path": "docs/private_dataset_curation.json",
+        "source_count": 3,
+        "required_controls": [
+            "license_review",
+            "provenance_tracking",
+            "deduplication",
+            "redaction",
+            "contamination_audit",
+        ],
+        "source_license_review_statuses": {
+            "facebook_tapas": "required_unverified",
+            "facebookresearch_lwe_benchmarking": "required_unverified",
+            "pq_code_package": "required_unverified",
+        },
+        "all_sources_license_reviewed": False,
+        "training_eligible": False,
+        "promotion_blockers": [
+            "dataset_license_review_complete",
+            "dataset_provenance_manifest_complete",
+            "dataset_deduplication_report_complete",
+            "dataset_redaction_report_complete",
+            "dataset_contamination_audit_complete",
+        ],
+    }
     assert record["review_gate"] == {
         "human_crypto_review_required": True,
         "formal_methods_review_required": True,
@@ -80,6 +106,7 @@ def test_private_pedagogical_trace_record_is_digest_only_and_contract_bound() ->
         "summary": {
             "has_formal_artifact_binding": True,
             "has_pedagogical_reward": True,
+            "training_eligible": False,
             "public_release_ok": False,
             "raw_private_signals_included": False,
             "failure_count": 0,
@@ -116,4 +143,32 @@ def test_private_pedagogical_trace_verifier_rejects_public_or_raw_fields() -> No
     assert (
         "Private pedagogical trace contains forbidden field: "
         "student_token_logprobs."
+    ) in result["failures"]
+
+
+def test_private_pedagogical_trace_verifier_rejects_premature_training_gate() -> None:
+    candidate_json = LATTICE_PLAN.read_text(encoding="utf-8")
+    task = AgadesPQCGymEnvironment.from_attack_plan_paths([LATTICE_PLAN]).reset()[
+        "task"
+    ]
+    reward_report = score_attack_plan_candidate(
+        candidate_json,
+        task_info=task,
+        require_task_match=True,
+    )
+    record = build_private_pedagogical_trace_record(
+        task=task,
+        candidate_json=candidate_json,
+        reward_report=reward_report,
+        dataset_curation_manifest_path=DATASET_CURATION,
+    )
+    record["dataset_curation_gate"]["training_eligible"] = True
+    record["dataset_curation_gate"]["promotion_blockers"] = []
+
+    result = verify_private_pedagogical_trace_record(record)
+
+    assert result["accepted"] is False
+    assert (
+        "Private pedagogical trace dataset gate cannot mark unreviewed "
+        "sources training eligible."
     ) in result["failures"]

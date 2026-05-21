@@ -229,6 +229,7 @@ def _batch_manifest(
                 if verify_private_pedagogical_trace_record(record)["accepted"]
                 is True
             ),
+            "training_eligible_records": _training_eligible_record_count(records),
             "public_release_ok": False,
             "raw_private_signals_included": False,
         },
@@ -243,6 +244,11 @@ def _batch_manifest(
                 for record in records
                 for field in PRIVATE_TRACE_FORBIDDEN_PUBLIC_FIELDS
             ),
+            "training_eligible": (
+                bool(records)
+                and _training_eligible_record_count(records) == len(records)
+            ),
+            "requires_private_review_before_training": True,
             "writes_only_allowed_private_roots": True,
         },
     }
@@ -274,6 +280,21 @@ def _verify_manifest_safety(
             failures.append(f"Private pedagogical trace batch safety.{key} is unsafe.")
     if safety.get("private") is not True:
         failures.append("Private pedagogical trace batch must be private.")
+    summary = _dict_or_empty(manifest.get("summary"))
+    expected_training_eligible = (
+        isinstance(summary.get("trace_count"), int)
+        and summary.get("trace_count") > 0
+        and summary.get("training_eligible_records") == summary.get("trace_count")
+    )
+    if safety.get("training_eligible") is not expected_training_eligible:
+        failures.append(
+            "Private pedagogical trace batch training eligibility is not in sync."
+        )
+    if safety.get("requires_private_review_before_training") is not True:
+        failures.append(
+            "Private pedagogical trace batch must require private review before "
+            "training."
+        )
     if safety.get("writes_only_allowed_private_roots") is not True:
         failures.append(
             "Private pedagogical trace batch must write only allowed private roots."
@@ -302,6 +323,7 @@ def _verification_result(
         "summary": {
             "trace_count": len(records),
             "accepted_records": accepted_records,
+            "training_eligible_records": _training_eligible_record_count(records),
             "failure_count": len(failures),
             "manifest_in_sync": manifest_in_sync,
             "public_release_ok": False,
@@ -343,6 +365,17 @@ def _read_records(
 def _jsonl_bytes(records: list[dict[str, Any]]) -> bytes:
     payload = "".join(json.dumps(record, sort_keys=True) + "\n" for record in records)
     return payload.encode("utf-8")
+
+
+def _training_eligible_record_count(records: list[dict[str, Any]]) -> int:
+    return sum(
+        1
+        for record in records
+        if _dict_or_empty(record.get("dataset_curation_gate")).get(
+            "training_eligible"
+        )
+        is True
+    )
 
 
 def _validate_private_outputs(
@@ -387,3 +420,7 @@ def _contains_exact_key(value: object, key: str) -> bool:
     if isinstance(value, list):
         return any(_contains_exact_key(child, key) for child in value)
     return False
+
+
+def _dict_or_empty(value: object) -> dict[str, Any]:
+    return value if isinstance(value, dict) else {}
