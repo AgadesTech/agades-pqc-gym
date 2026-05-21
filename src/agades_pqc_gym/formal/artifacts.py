@@ -14,9 +14,12 @@ from agades_pqc_gym.formal.review import (
 )
 from agades_pqc_gym.utils.hashing import stable_sha256
 
-PROOF_ARTIFACT_SCHEMA = "agades.pqc.formal.proof_artifact.v1"
+PROOF_ARTIFACT_SCHEMA = "agades.pqc.formal.proof_artifact.v2"
 PROOF_ARTIFACT_VERIFICATION_SCHEMA = (
     "agades.pqc.formal.proof_artifact_verification.v1"
+)
+ATTACK_PLAN_SEMANTICS_BINDING_SCHEMA = (
+    "agades.pqc.formal.proof_artifact.attackplan_semantics_binding.v1"
 )
 ATTACK_PLAN_SCHEMA_CONTRACT_SCHEMA = "agades.pqc.attack_plan.schema_contract.v1"
 ATTACK_PLAN_SCHEMA_MODEL = "agades_pqc_gym.core.attack_plan.AttackPlan"
@@ -361,6 +364,7 @@ def build_attack_plan_proof_artifact_from_json(
         "schema_version": PROOF_ARTIFACT_SCHEMA,
         "backend": BACKEND,
         "formal_backend": _formal_backend_binding(project_root),
+        "attack_plan_semantics": _attack_plan_semantics_binding(project_root),
         "attack_plan": {
             "id": plan.attack_plan_id,
             "path": source_label,
@@ -575,6 +579,7 @@ def verify_attack_plan_proof_artifact(
     if artifact:
         _verify_artifact_shape(artifact, failures)
         _verify_formal_backend(artifact, project_root, failures)
+        _verify_attack_plan_semantics_binding(artifact, project_root, failures)
         _verify_artifact_hash(artifact, failures)
         _verify_plan_binding(artifact, project_root, failures)
         _verify_obligation_hashes(artifact, project_root, failures)
@@ -595,6 +600,12 @@ def verify_attack_plan_proof_artifact(
         "estimator_result_attached": (
             artifact.get("estimator_result_binding", {}).get("status")
             == "attached_unreviewed"
+        ),
+        "attackplan_semantics_attached": (
+            artifact.get("attack_plan_semantics", {}).get(
+                "verification_accepted"
+            )
+            is True
         ),
         "required_reviewers": len(
             artifact.get("review", {}).get("required_reviewers", [])
@@ -1160,6 +1171,7 @@ def _verify_artifact_shape(
         "proof_obligations",
         "review",
         "formal_backend",
+        "attack_plan_semantics",
         "artifact_sha256",
     ):
         if key not in artifact:
@@ -1574,6 +1586,103 @@ def _formal_backend_binding(
     }
 
 
+def _attack_plan_semantics_binding(
+    root: Path,
+    *,
+    failures: list[str] | None = None,
+) -> dict[str, Any]:
+    from agades_pqc_gym.formal.attack_plan_semantics import (
+        DEFAULT_ATTACKPLAN_SEMANTICS_PATH,
+        FORMAL_ATTACKPLAN_SEMANTICS_SCHEMA,
+        verify_formal_attackplan_semantics,
+    )
+
+    path = root / DEFAULT_ATTACKPLAN_SEMANTICS_PATH
+    try:
+        raw = path.read_bytes()
+        payload = json.loads(raw.decode("utf-8"))
+    except FileNotFoundError:
+        if failures is not None:
+            failures.append(
+                "Formal AttackPlan semantics artifact is missing: "
+                f"{DEFAULT_ATTACKPLAN_SEMANTICS_PATH.as_posix()}."
+            )
+        raw = b""
+        payload = {}
+    except json.JSONDecodeError as exc:
+        if failures is not None:
+            failures.append(
+                "Formal AttackPlan semantics artifact is invalid JSON at line "
+                f"{exc.lineno}."
+            )
+        raw = b""
+        payload = {}
+    if not isinstance(payload, dict):
+        if failures is not None:
+            failures.append("Formal AttackPlan semantics artifact must be an object.")
+        payload = {}
+
+    verification = (
+        verify_formal_attackplan_semantics(
+            DEFAULT_ATTACKPLAN_SEMANTICS_PATH,
+            root=root,
+        )
+        if raw
+        else {"accepted": False}
+    )
+    claim_policy = payload.get("claim_policy", {})
+    return {
+        "schema_version": ATTACK_PLAN_SEMANTICS_BINDING_SCHEMA,
+        "path": DEFAULT_ATTACKPLAN_SEMANTICS_PATH.as_posix(),
+        "semantics_schema_version": (
+            payload.get("schema_version") or FORMAL_ATTACKPLAN_SEMANTICS_SCHEMA
+        ),
+        "sha256": hashlib.sha256(raw).hexdigest() if raw else None,
+        "semantics_sha256": payload.get("semantics_sha256"),
+        "validation_rules": len(_list_or_empty(payload.get("validation_rules"))),
+        "formal_rules": len(_list_or_empty(payload.get("formal_rules"))),
+        "claim_policy_forbids_unreviewed_security_claims": (
+            isinstance(claim_policy, dict)
+            and claim_policy.get("security_claim_allowed_without_review") is False
+        ),
+        "verification_accepted": verification.get("accepted") is True,
+    }
+
+
+def _verify_attack_plan_semantics_binding(
+    artifact: dict[str, Any],
+    project_root: Path,
+    failures: list[str],
+) -> None:
+    binding = artifact.get("attack_plan_semantics")
+    if not isinstance(binding, dict):
+        failures.append(
+            "Proof artifact AttackPlan semantics binding must be a JSON object."
+        )
+        return
+    semantics_failures: list[str] = []
+    expected = _attack_plan_semantics_binding(
+        project_root,
+        failures=semantics_failures,
+    )
+    failures.extend(semantics_failures)
+    if binding != expected:
+        failures.append("Proof artifact AttackPlan semantics binding is not in sync.")
+    if binding.get("claim_policy_forbids_unreviewed_security_claims") is not True:
+        failures.append(
+            "Proof artifact AttackPlan semantics binding must forbid "
+            "unreviewed security claims."
+        )
+    if binding.get("verification_accepted") is not True:
+        failures.append(
+            "Proof artifact AttackPlan semantics binding must verify cleanly."
+        )
+
+
+def _list_or_empty(value: object) -> list[Any]:
+    return value if isinstance(value, list) else []
+
+
 def _verify_lean_bindings(
     artifact: dict[str, Any],
     project_root: Path,
@@ -1774,6 +1883,9 @@ def _review_artifact_binding(artifact: dict[str, Any]) -> dict[str, Any]:
     estimator_binding = artifact.get("estimator_result_binding", {})
     if not isinstance(estimator_binding, dict):
         estimator_binding = {}
+    attack_plan_semantics = artifact.get("attack_plan_semantics", {})
+    if not isinstance(attack_plan_semantics, dict):
+        attack_plan_semantics = {}
     proof_obligations = artifact.get("proof_obligations", [])
     if not isinstance(proof_obligations, list):
         proof_obligations = []
@@ -1787,6 +1899,9 @@ def _review_artifact_binding(artifact: dict[str, Any]) -> dict[str, Any]:
         "estimator_result_binding_status": estimator_binding.get("status"),
         "review_status": review.get("status"),
         "required_reviewers": review.get("required_reviewers"),
+        "attack_plan_semantics_sha256": attack_plan_semantics.get(
+            "semantics_sha256"
+        ),
         "proof_obligation_sha256": [
             obligation.get("obligation_sha256")
             for obligation in proof_obligations
