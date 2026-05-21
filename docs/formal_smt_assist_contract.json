@@ -221,7 +221,7 @@
       "type_rule_sha256": "dd086c22a21fed95aea00f3ab5b5693c27e385f359eaa8126ee315637a1354f5"
     }
   ],
-  "contract_sha256": "04698e2085497002637473e148c6273ffc10dc44ad978b3043e83e5857aa38a0",
+  "contract_sha256": "618d9d16b177f79d5705d56d0a878ca7c696829917be2f4c0a1498f0ec2bce04",
   "excluded_obligations": [
     {
       "family": "LWE",
@@ -355,11 +355,11 @@
   "linked_artifacts": {
     "formal_estimator_model": {
       "path": "docs/formal_estimator_model.json",
-      "sha256": "b3cbfa9dfbdc7877465d9af55089278d0e8f3698c90eea9f9b8c7756f8f78be2"
+      "sha256": "16df0db3a3f872aa1623ef7366dc46fb876e27e4ee18536614ac52db98181171"
     },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "e31b2c10dc703515f0a8632abeb3b7e25e32707fa4db377aa038b1668eb39375"
+      "sha256": "4351012e1e262423258d2efa404b3954e749892cf06dfd6144ce2fbd3721f913"
     },
     "formal_lean_backend": {
       "path": "docs/formal_lean_backend.json",
@@ -367,7 +367,7 @@
     },
     "formal_obligation_ledger": {
       "path": "docs/formal_obligation_ledger.json",
-      "sha256": "e3edaad609b7b24b3fe1287d694496f0d8cc82e574dc8672827be30bcf8ed9ce"
+      "sha256": "594bfc69de2b225374bf7a936b2a07ab1825325fa8c7815b1f3fc62fba82f725"
     },
     "formal_operator_semantics": {
       "path": "docs/formal_operator_semantics.json",

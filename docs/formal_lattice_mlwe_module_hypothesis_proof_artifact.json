@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "cca9a8dbbb347841b615533823307fcc9e2c5521865db255c0f3f0f4278e6adb",
+  "artifact_sha256": "a91fd2a770ef086e4be3fdcdaf90fce4c88a7fee6ccf82727310f51b1c062b3c",
   "attack_plan": {
     "canonical_sha256": "cd75f20024968e2d6bd6f019c623b23663aba3d1fff350d81770755c197e284d",
     "id": "lattice_mlwe_module_hypothesis_toy_v1",
@@ -136,6 +136,17 @@
       "semantics_id": "agades.pqc.operator_semantics.lattice.bkz_parameter_sweep.v1"
     }
   ],
+  "operator_semantics_contract": {
+    "claim_policy_forbids_unreviewed_security_claims": true,
+    "operators": 24,
+    "path": "docs/formal_operator_semantics.json",
+    "required_param_fields": 25,
+    "schema_version": "agades.pqc.formal.proof_artifact.operator_semantics_binding.v1",
+    "semantics_schema_version": "agades.pqc.formal.operator_semantics.v1",
+    "semantics_sha256": "51e5268e95519ee3f48806fe343e6c9b986b46b0c8b7ad7a16b8e54b0a633740",
+    "sha256": "9fa0bc4ee4cd2f5229d9352a2e9e490df323819bbfea5c6cf446a34fab2d231c",
+    "verification_accepted": true
+  },
   "proof_obligation_type_rules": [
     {
       "backend": "lean4",
