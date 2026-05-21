@@ -36,7 +36,7 @@
   "linked_artifacts": {
     "deepevolve_manifest": {
       "path": "docs/deepevolve_research_hooks_manifest.json",
-      "sha256": "d0f98291ad6ae06db986de59e52466d5f49fc1bb804cd39b841213e2b92345a2"
+      "sha256": "6b1123e0bb6bfe81cf69c0f934a1a4a19b34ae975a0a3eb3fbb78c1cdc0d989a"
     },
     "env_template": {
       "path": ".env.example",
@@ -48,7 +48,7 @@
     },
     "openevolve_config": {
       "path": "examples/openevolve/config.yaml",
-      "sha256": "4a0da93615504c54b263746ab5b6202f7bdc360d311385cfd7b43bf7b996e217"
+      "sha256": "781c4f5b50b6ca00a53ddde45b1fcf63e2997594d53c30f0ae6d0a930a7b3997"
     },
     "openevolve_smoke": {
       "path": "reports/openevolve_smoke.json",

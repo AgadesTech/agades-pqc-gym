@@ -14,6 +14,9 @@ from agades_pqc_gym.evolution.campaign import (
 from agades_pqc_gym.evolution.cron import HELDOUT_CRON_PLAN_SCHEMA
 from agades_pqc_gym.evolution.scheduler import HELDOUT_REVIEW_LOG_SCHEMA
 from agades_pqc_gym.evolution.snapshot import PRIVATE_ARCHIVE_SNAPSHOT_SCHEMA
+from agades_pqc_gym.integrations.private_training_config import (
+    PRIVATE_TRAINING_REQUIRED_ENV_VARS,
+)
 
 OPENEVOLVE_CONFIG_TEMPLATE_VERIFICATION_SCHEMA = (
     "agades.pqc.openevolve_config_template_verification.v1"
@@ -74,9 +77,14 @@ PRIVATE_QWEN_RESEARCH_ROLES = [
 PRIVATE_QWEN_RESEARCH_ENGINE = {
     "model": "Qwen3.6-27B-private",
     "model_artifact_env": "AGADES_QWEN_BASE_MODEL",
+    "lora_adapter_env": "AGADES_QWEN_LORA_ADAPTER_PATH",
+    "gguf_otq_5bit_env": "AGADES_QWEN_GGUF_OTQ_5BIT_PATH",
+    "required_env_vars": list(PRIVATE_TRAINING_REQUIRED_ENV_VARS),
     "training_manifest": "docs/private_training_config_manifest.json",
+    "training_readiness": "docs/private_training_readiness.json",
     "pedagogical_rl_method": "docs/pedagogical_rl_method.json",
     "dataset_curation_manifest": "docs/private_dataset_curation.json",
+    "public_model_id_allowed": False,
     "consumers": ["openevolve", "deepevolve"],
     "research_roles": list(PRIVATE_QWEN_RESEARCH_ROLES),
     "tracks": {
@@ -90,6 +98,7 @@ PRIVATE_QWEN_RESEARCH_ENGINE = {
             "publication_allowed": False,
             "requires_formal_validation": True,
             "requires_estimator_compatibility": True,
+            "requires_private_training_readiness": True,
             "requires_human_review_before_claim": True,
         },
     },
@@ -420,17 +429,26 @@ def _verify_private_qwen_research_engine(
         failures.append(f"{label} must be a mapping.")
         return
     expected = PRIVATE_QWEN_RESEARCH_ENGINE
+    runtime_contract_ok = True
     for key in (
         "model",
         "model_artifact_env",
+        "lora_adapter_env",
+        "gguf_otq_5bit_env",
+        "required_env_vars",
         "training_manifest",
+        "training_readiness",
         "pedagogical_rl_method",
         "dataset_curation_manifest",
+        "public_model_id_allowed",
         "consumers",
         "research_roles",
     ):
         if engine.get(key) != expected[key]:
+            runtime_contract_ok = False
             failures.append(f"{label} {key} is not synchronized.")
+    if not runtime_contract_ok:
+        failures.append("OpenEvolve private Qwen runtime contract is incomplete.")
 
     tracks = engine.get("tracks")
     if not isinstance(tracks, dict):
@@ -467,6 +485,10 @@ def _verify_private_qwen_research_engine(
     if private_track.get("requires_estimator_compatibility") is not True:
         failures.append(
             "OpenEvolve private Qwen track must require estimator compatibility."
+        )
+    if private_track.get("requires_private_training_readiness") is not True:
+        failures.append(
+            "OpenEvolve private Qwen track must require private training readiness."
         )
     if private_track.get("requires_human_review_before_claim") is not True:
         failures.append(

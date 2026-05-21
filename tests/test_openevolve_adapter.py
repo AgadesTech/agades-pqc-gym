@@ -3,6 +3,9 @@ from pathlib import Path
 
 import yaml
 
+from agades_pqc_gym.integrations.private_training_config import (
+    PRIVATE_TRAINING_REQUIRED_ENV_VARS,
+)
 from agades_pqc_gym.openevolve_adapter import (
     DEFAULT_CONFIG_TEMPLATE,
     OPENEVOLVE_CONFIG_TEMPLATE_VERIFICATION_SCHEMA,
@@ -23,9 +26,14 @@ def test_default_config_template_exposes_archive_driven_private_loop() -> None:
     assert template["private_qwen_research_engine"] == {
         "model": "Qwen3.6-27B-private",
         "model_artifact_env": "AGADES_QWEN_BASE_MODEL",
+        "lora_adapter_env": "AGADES_QWEN_LORA_ADAPTER_PATH",
+        "gguf_otq_5bit_env": "AGADES_QWEN_GGUF_OTQ_5BIT_PATH",
+        "required_env_vars": PRIVATE_TRAINING_REQUIRED_ENV_VARS,
         "training_manifest": "docs/private_training_config_manifest.json",
+        "training_readiness": "docs/private_training_readiness.json",
         "pedagogical_rl_method": "docs/pedagogical_rl_method.json",
         "dataset_curation_manifest": "docs/private_dataset_curation.json",
+        "public_model_id_allowed": False,
         "consumers": ["openevolve", "deepevolve"],
         "research_roles": [
             "generate_attackplan",
@@ -47,6 +55,7 @@ def test_default_config_template_exposes_archive_driven_private_loop() -> None:
                 "publication_allowed": False,
                 "requires_formal_validation": True,
                 "requires_estimator_compatibility": True,
+                "requires_private_training_readiness": True,
                 "requires_human_review_before_claim": True,
             },
         },
@@ -234,6 +243,24 @@ def test_openevolve_config_template_verifier_rejects_public_private_qwen(
     assert verification["summary"]["private_qwen_enabled"] is True
     assert (
         "OpenEvolve private Qwen research track must not be publishable."
+        in verification["failures"]
+    )
+
+
+def test_openevolve_config_template_verifier_rejects_incomplete_qwen_runtime_contract(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "config.yaml"
+    write_default_config_template(out)
+    config = yaml.safe_load(out.read_text(encoding="utf-8"))
+    config["private_qwen_research_engine"]["required_env_vars"] = ["HF_TOKEN"]
+    out.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+
+    verification = verify_default_config_template(out)
+
+    assert verification["accepted"] is False
+    assert (
+        "OpenEvolve private Qwen runtime contract is incomplete."
         in verification["failures"]
     )
 

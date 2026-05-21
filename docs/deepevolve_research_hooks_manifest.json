@@ -317,7 +317,10 @@
     }
   ],
   "private_qwen_research_binding": {
+    "base_model_env": "AGADES_QWEN_BASE_MODEL",
     "dataset_curation_manifest": "docs/private_dataset_curation.json",
+    "gguf_otq_5bit_env": "AGADES_QWEN_GGUF_OTQ_5BIT_PATH",
+    "lora_adapter_env": "AGADES_QWEN_LORA_ADAPTER_PATH",
     "model": "Qwen3.6-27B-private",
     "pedagogical_rl_method": "docs/pedagogical_rl_method.json",
     "proposal_gate": {
@@ -335,8 +338,19 @@
       "draft_family_invariants",
       "propose_evaluation_strategy"
     ],
+    "public_model_id_allowed": false,
     "public_publication_allowed": false,
-    "training_manifest": "docs/private_training_config_manifest.json"
+    "required_env_vars": [
+      "PRIME_API_KEY",
+      "PRIME_ORG",
+      "PRIME_ENVIRONMENT_SLUG",
+      "PRIME_VISIBILITY",
+      "HF_TOKEN",
+      "WANDB_API_KEY",
+      "AGADES_QWEN_BASE_MODEL"
+    ],
+    "training_manifest": "docs/private_training_config_manifest.json",
+    "training_readiness": "docs/private_training_readiness.json"
   },
   "project": {
     "name": "Agades PQC Gym",
