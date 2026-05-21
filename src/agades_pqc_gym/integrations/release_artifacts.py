@@ -15,6 +15,22 @@ from agades_pqc_gym.integrations.external_publication_review_packet import (
     verify_external_publication_review_packet,
     write_external_publication_review_packet,
 )
+from agades_pqc_gym.integrations.huggingface_publication_handoff import (
+    verify_huggingface_publication_handoff,
+    write_huggingface_publication_handoff,
+)
+from agades_pqc_gym.integrations.huggingface_space_manifest import (
+    verify_huggingface_space_manifest,
+    write_huggingface_space_manifest,
+)
+from agades_pqc_gym.integrations.nvidia_publication_handoff import (
+    verify_nvidia_publication_handoff,
+    write_nvidia_publication_handoff,
+)
+from agades_pqc_gym.integrations.publication_manifest import (
+    verify_publication_manifest,
+    write_publication_manifest,
+)
 from agades_pqc_gym.integrations.publication_preflight import (
     verify_publication_preflight,
     write_publication_preflight,
@@ -24,18 +40,32 @@ from agades_pqc_gym.integrations.release_status import (
     verify_release_status,
     write_release_status,
 )
+from agades_pqc_gym.integrations.reviewer_governance import (
+    verify_reviewer_governance,
+    write_reviewer_governance,
+)
+from agades_pqc_gym.integrations.rl_environment_contract import (
+    verify_rl_environment_contract,
+    write_rl_environment_contract,
+)
 from agades_pqc_gym.integrations.runbook_audit import write_runbook_audit
 
 RELEASE_ARTIFACTS_SCHEMA = "agades.pqc.release_artifacts.v1"
 ROOT = Path(__file__).resolve().parents[3]
 
 RELEASE_ARTIFACT_PATHS = (
+    Path("hf/space_manifest.json"),
+    Path("docs/huggingface_publication_handoff.json"),
+    Path("docs/nvidia_publication_handoff.json"),
+    Path("docs/publication_manifest.json"),
     Path("public/runbook_audit.json"),
     Path("public/release_audit.json"),
     Path("docs/release_status.json"),
     Path("public/publication_preflight.json"),
     Path("docs/external_publication_review_packet.json"),
     Path("reports/ecosystem_smoke.json"),
+    Path("docs/reviewer_governance.json"),
+    Path("docs/rl_environment_contract.json"),
 )
 
 ReleaseArtifactWriter = Callable[[Path], dict[str, Any]]
@@ -112,6 +142,32 @@ def _write_release_artifact_sequence(project_root: Path) -> None:
 def _release_artifact_sequence(project_root: Path) -> tuple[ReleaseArtifactStep, ...]:
     return (
         ReleaseArtifactStep(
+            id="hf-space-manifest",
+            path=Path("hf/space_manifest.json"),
+            write=lambda out: write_huggingface_space_manifest(out, root=project_root),
+        ),
+        ReleaseArtifactStep(
+            id="hf-publication-handoff",
+            path=Path("docs/huggingface_publication_handoff.json"),
+            write=lambda out: write_huggingface_publication_handoff(
+                out,
+                root=project_root,
+            ),
+        ),
+        ReleaseArtifactStep(
+            id="nvidia-publication-handoff",
+            path=Path("docs/nvidia_publication_handoff.json"),
+            write=lambda out: write_nvidia_publication_handoff(
+                out,
+                root=project_root,
+            ),
+        ),
+        ReleaseArtifactStep(
+            id="publication-manifest",
+            path=Path("docs/publication_manifest.json"),
+            write=lambda out: write_publication_manifest(out, root=project_root),
+        ),
+        ReleaseArtifactStep(
             id="runbook-audit",
             path=Path("public/runbook_audit.json"),
             write=lambda out: write_runbook_audit(out, root=project_root),
@@ -150,6 +206,16 @@ def _release_artifact_sequence(project_root: Path) -> tuple[ReleaseArtifactStep,
                 root=project_root,
             ),
         ),
+        ReleaseArtifactStep(
+            id="reviewer-governance",
+            path=Path("docs/reviewer_governance.json"),
+            write=lambda out: write_reviewer_governance(out, root=project_root),
+        ),
+        ReleaseArtifactStep(
+            id="rl-environment-contract",
+            path=Path("docs/rl_environment_contract.json"),
+            write=lambda out: write_rl_environment_contract(out, root=project_root),
+        ),
     )
 
 
@@ -180,6 +246,22 @@ def _verify_release_artifacts(project_root: Path) -> dict[str, dict[str, Any]]:
         label="release audit",
     )
     return {
+        "hf-space-manifest": verify_huggingface_space_manifest(
+            Path("hf/space_manifest.json"),
+            root=project_root,
+        ),
+        "hf-publication-handoff": verify_huggingface_publication_handoff(
+            Path("docs/huggingface_publication_handoff.json"),
+            root=project_root,
+        ),
+        "nvidia-publication-handoff": verify_nvidia_publication_handoff(
+            Path("docs/nvidia_publication_handoff.json"),
+            root=project_root,
+        ),
+        "publication-manifest": verify_publication_manifest(
+            Path("docs/publication_manifest.json"),
+            root=project_root,
+        ),
         "runbook-audit": runbook_audit,
         "release-audit": release_audit,
         "release-status": verify_release_status(
@@ -198,6 +280,14 @@ def _verify_release_artifacts(project_root: Path) -> dict[str, dict[str, Any]]:
         ),
         "ecosystem-smoke": verify_ecosystem_smoke_report(
             Path("reports/ecosystem_smoke.json"),
+            root=project_root,
+        ),
+        "reviewer-governance": verify_reviewer_governance(
+            Path("docs/reviewer_governance.json"),
+            root=project_root,
+        ),
+        "rl-environment-contract": verify_rl_environment_contract(
+            Path("docs/rl_environment_contract.json"),
             root=project_root,
         ),
     }
