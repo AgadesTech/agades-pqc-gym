@@ -9,6 +9,7 @@ from typer.testing import CliRunner
 from agades_pqc_gym.cli import app
 from agades_pqc_gym.integrations.private_training_config import (
     PRIVATE_TRAINING_CONFIG_VERIFICATION_SCHEMA,
+    PRIVATE_TRAINING_REQUIRED_ENV_VARS,
     build_private_training_manifest,
     verify_private_training_config,
     write_private_training_config,
@@ -38,8 +39,12 @@ def test_private_training_manifest_defines_prime_rl_qwen_and_dataset_controls(
         "dataset_curation_manifest_path": "docs/private_dataset_curation.json",
         "launch_command_template": (
             f"prime train {config.as_posix()} "
-            "--env-var HF_TOKEN --env-var WANDB_API_KEY"
+            "--env-var PRIME_API_KEY --env-var PRIME_ORG "
+            "--env-var PRIME_ENVIRONMENT_SLUG --env-var PRIME_VISIBILITY "
+            "--env-var HF_TOKEN --env-var WANDB_API_KEY "
+            "--env-var AGADES_QWEN_BASE_MODEL"
         ),
+        "required_env_vars": PRIVATE_TRAINING_REQUIRED_ENV_VARS,
         "eval_command": "prime eval run agades-pqc-verifier-env",
         "training_stack": "prime-rl",
         "launch_readiness": "blocked_until_private_model_and_dataset_review",
@@ -113,6 +118,9 @@ def test_private_training_manifest_defines_prime_rl_qwen_and_dataset_controls(
     assert payload["datasets"]["publication_allowed"] is False
     assert payload["model_consumers"]["openevolve"]["private_qwen_allowed"] is True
     assert payload["model_consumers"]["deepevolve"]["private_qwen_allowed"] is True
+    assert payload["privacy_controls"]["allowed_env_vars"] == (
+        PRIVATE_TRAINING_REQUIRED_ENV_VARS
+    )
     assert payload["linked_artifacts"]["formal_lean_backend"]["path"] == (
         "docs/formal_lean_backend.json"
     )
@@ -156,6 +164,9 @@ def test_private_prime_rl_toml_template_is_sanitized_and_parseable(
     assert data["run_config"]["private_outputs_only"] is True
     assert data["run_config"]["publish_to_hf_public"] is False
     assert data["run_config"]["publish_to_prime_public"] is False
+    assert data["run_config"]["required_env_vars"] == (
+        PRIVATE_TRAINING_REQUIRED_ENV_VARS
+    )
     assert data["run_config"]["dataset_curation_manifest"] == (
         "docs/private_dataset_curation.json"
     )
@@ -274,6 +285,30 @@ def test_private_training_config_rejects_env_file_upload(
     assert result["accepted"] is False
     assert "Prime RL config must not upload env_files." in result["failures"]
     assert "Prime RL config must not reference .env files." in result["failures"]
+
+
+def test_private_training_config_rejects_missing_prime_env_contract(
+    tmp_path: Path,
+) -> None:
+    config = tmp_path / "private_qwen_prime_rl.template.toml"
+    manifest = tmp_path / "private_training_config_manifest.json"
+    payload = write_private_training_config(config, manifest)
+    payload["prime_training"]["required_env_vars"] = [
+        "HF_TOKEN",
+        "WANDB_API_KEY",
+    ]
+    payload["privacy_controls"]["allowed_env_vars"] = [
+        "HF_TOKEN",
+        "WANDB_API_KEY",
+    ]
+    manifest.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+
+    result = verify_private_training_config(config, manifest)
+
+    assert result["accepted"] is False
+    assert "Private Prime training env contract is incomplete." in (
+        result["failures"]
+    )
 
 
 def test_private_training_config_cli_round_trip(tmp_path: Path) -> None:
