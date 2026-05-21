@@ -127,6 +127,30 @@ def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() ->
         "linked_artifact_hashes_excluded_from_contract": True,
         "verification_accepted": True,
     }
+    reviewer_governance_path = Path("docs/reviewer_governance.json")
+    reviewer_governance_payload = json.loads(
+        reviewer_governance_path.read_text(encoding="utf-8")
+    )
+    assert artifact["review_governance"] == {
+        "schema_version": (
+            "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+        ),
+        "path": reviewer_governance_path.as_posix(),
+        "governance_schema_version": "agades.pqc.reviewer_governance.v1",
+        "governance_contract_sha256": _reviewer_governance_contract_sha256(
+            reviewer_governance_payload
+        ),
+        "role_groups": 3,
+        "family_reviewers": 9,
+        "approval_gates": 4,
+        "review_artifact_format_schema": "agades.pqc.review_artifact.v1",
+        "required_reviewers_by_family": reviewer_governance_payload[
+            "formal_artifact_binding"
+        ]["required_reviewers_by_family"],
+        "claim_policy_forbids_unreviewed_security_claims": True,
+        "linked_artifact_hashes_excluded_from_contract": True,
+        "verification_accepted": True,
+    }
     assert artifact["family"] == "LWE"
     assert artifact["operator_semantics"][0] == {
         "operator": "primal_usvp",
@@ -698,6 +722,27 @@ def test_verify_attack_plan_proof_artifact_rejects_stale_formal_estimator_model(
     )
 
 
+def test_verify_attack_plan_proof_artifact_rejects_missing_reviewer_governance_binding(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+    )
+    artifact.pop("review_governance", None)
+    artifact["artifact_sha256"] = _artifact_payload_sha256(artifact)
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Proof artifact reviewer governance binding must be a JSON object."
+        in result["failures"]
+    )
+
+
 def test_verify_attack_plan_proof_artifact_rejects_stale_attack_plan_schema_contract(
     tmp_path: Path,
 ) -> None:
@@ -1125,5 +1170,17 @@ def _formal_estimator_model_contract_sha256(
             key: value
             for key, value in payload.items()
             if key not in {"linked_artifacts", "model_sha256"}
+        }
+    )
+
+
+def _reviewer_governance_contract_sha256(
+    payload: dict[str, object],
+) -> str:
+    return stable_sha256(
+        {
+            key: value
+            for key, value in payload.items()
+            if key not in {"linked_artifacts"}
         }
     )
