@@ -56,7 +56,7 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "09d3c70d4bb049456af3956598f6a524b747e090b52d5db2c063f8fc45d29077"
+      "sha256": "c682918bdf76f7354e4c221ec0f477c7ab92ba0bc0b0b17bd4ab902aff98f3c5"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
@@ -80,7 +80,7 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "81a406ab3304b9706cc54e2cd225a7b1385923d616b365c0d4d112b1dee4600f"
+      "sha256": "00cc8ddc73adb782e61daa7f1f75b17bc9ad002a87085ff104c1f0a9da7e6933"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
@@ -88,7 +88,7 @@
     },
     "rl_environment_contract": {
       "path": "docs/rl_environment_contract.json",
-      "sha256": "56efd3dfaa99b7ecb1075a5bee2372e7a5d3996ccfc92e1111f485fc49ec7a6e"
+      "sha256": "7372aaa7b70594d737fe3dd45368775d6dc5d5c5a6f1530028bee7a15af79b77"
     }
   },
   "project": {
@@ -134,6 +134,12 @@
       "blocks_launch": true,
       "evidence_required": "Private per-row provenance and hash manifests must exist before training.",
       "id": "dataset_provenance_manifest_complete",
+      "status": "blocked"
+    },
+    {
+      "blocks_launch": true,
+      "evidence_required": "Private exact, normalized, and near-duplicate reports must prove cross-source deduplication before training.",
+      "id": "dataset_deduplication_report_complete",
       "status": "blocked"
     },
     {

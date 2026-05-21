@@ -38,6 +38,7 @@ def test_private_pedagogical_trace_batch_writes_digest_only_private_records(
     assert manifest["summary"] == {
         "trace_count": 1,
         "accepted_records": 1,
+        "training_eligible_records": 0,
         "public_release_ok": False,
         "raw_private_signals_included": False,
     }
@@ -46,6 +47,8 @@ def test_private_pedagogical_trace_batch_writes_digest_only_private_records(
         "public_release_ok": False,
         "contains_raw_private_signals": False,
         "contains_forbidden_public_fields": False,
+        "training_eligible": False,
+        "requires_private_review_before_training": True,
         "writes_only_allowed_private_roots": True,
     }
     assert manifest["review_gate"]["human_crypto_review_required"] is True
@@ -82,6 +85,7 @@ def test_private_pedagogical_trace_batch_writes_digest_only_private_records(
         "summary": {
             "trace_count": 1,
             "accepted_records": 1,
+            "training_eligible_records": 0,
             "failure_count": 0,
             "manifest_in_sync": True,
             "public_release_ok": False,

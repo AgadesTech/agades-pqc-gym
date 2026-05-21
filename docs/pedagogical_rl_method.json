@@ -75,7 +75,7 @@
     },
     "private_trace_runtime": {
       "path": "src/agades_pqc_gym/rl/private_trace.py",
-      "sha256": "ecd233fc7855f5a15d95f54ae107239fd3a96261d3129a199cee3666db99560f"
+      "sha256": "435f4d4a4b12d003be54d3f008386034dcbed406110f9eda88f810de5a984405"
     },
     "rl_pedagogy_runtime": {
       "path": "src/agades_pqc_gym/rl/pedagogy.py",
@@ -135,6 +135,7 @@
       "pedagogical_reward",
       "formal_artifact_binding",
       "dataset_curation_digest",
+      "dataset_curation_gate",
       "review_gate",
       "privacy_boundary"
     ],
