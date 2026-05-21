@@ -101,6 +101,8 @@ def build_formal_obligation_ledger(root: Path | None = None) -> dict[str, Any]:
             "docs/formal_estimator_model.json",
             "uv run agades-pqc formal-operator-semantics-verify --semantics "
             "docs/formal_operator_semantics.json",
+            "uv run agades-pqc formal-smt-assist-verify --contract "
+            "docs/formal_smt_assist_contract.json",
         ],
     }
     ledger["ledger_sha256"] = _ledger_sha256(ledger)
