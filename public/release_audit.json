@@ -1596,7 +1596,7 @@
       "blocking": true,
       "detail": "Pedagogical RL is captured as a verifiable private method contract with teacher/student roles, spike-aware reward, surprisal-gated assimilation, and publication boundaries.",
       "evidence": {
-        "linked_artifacts": 10,
+        "linked_artifacts": 11,
         "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
         "privacy_preserving": true,
         "reward_terms": 8,
