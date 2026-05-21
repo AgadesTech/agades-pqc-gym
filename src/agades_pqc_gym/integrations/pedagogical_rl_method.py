@@ -7,17 +7,20 @@ from typing import Any
 
 from agades_pqc_gym.core.target import TargetFamily
 from agades_pqc_gym.formal.artifacts import MVP_VERTICAL_PROOF_ARTIFACT_PATHS
-from agades_pqc_gym.rl.environment import (
-    FORMAL_ARTIFACT_BINDING_SCHEMA,
-    RL_REWARD_REPORT_SCHEMA,
-)
 from agades_pqc_gym.rl.pedagogy import PEDAGOGICAL_REWARD_REPORT_SCHEMA
+from agades_pqc_gym.rl.private_trace import (
+    PRIVATE_PEDAGOGICAL_TRACE_SCHEMA,
+    PRIVATE_TRACE_FORBIDDEN_PUBLIC_FIELDS,
+    PRIVATE_TRACE_QUALITY_GATES,
+    PRIVATE_TRACE_REQUIRED_RECORD_FIELDS,
+    PRIVATE_TRACE_STORAGE_ROOTS,
+    private_pedagogical_trace_contract,
+)
 
 PEDAGOGICAL_RL_METHOD_SCHEMA = "agades.pqc.pedagogical_rl_method.v1"
 PEDAGOGICAL_RL_METHOD_VERIFICATION_SCHEMA = (
     "agades.pqc.pedagogical_rl_method_verification.v1"
 )
-PRIVATE_PEDAGOGICAL_TRACE_SCHEMA = "agades.pqc.rl.private_pedagogical_trace.v1"
 ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_METHOD_PATH = Path("docs/pedagogical_rl_method.json")
 PEDAGOGICAL_RL_SOURCE_URL = "https://noahziems.com/pedagogical-rl"
@@ -99,39 +102,6 @@ PRIVATE_DATASET_CONTROLS = [
     "contamination_audit",
 ]
 PRIVATE_DATASET_CURATION_MANIFEST_PATH = "docs/private_dataset_curation.json"
-PRIVATE_TRACE_STORAGE_ROOTS = [
-    "private/traces/pedagogical_rl",
-    "private/datasets/agades_pedagogical_rl",
-]
-PRIVATE_TRACE_REQUIRED_RECORD_FIELDS = [
-    "trace_id",
-    "task_digest",
-    "candidate_digest",
-    "reward_report_digest",
-    "pedagogical_reward",
-    "formal_artifact_binding",
-    "dataset_curation_digest",
-    "review_gate",
-    "privacy_boundary",
-]
-PRIVATE_TRACE_FORBIDDEN_PUBLIC_FIELDS = [
-    "teacher_prompt",
-    "teacher_completion",
-    "student_prompt",
-    "student_token_logprobs",
-    "surprise_gaps",
-    "reviewer_annotations",
-    "raw_dataset_rows",
-]
-PRIVATE_TRACE_QUALITY_GATES = [
-    "attackplan_schema_valid",
-    "formal_artifact_attached",
-    "proof_obligations_typed",
-    "dataset_license_reviewed",
-    "provenance_captured",
-    "human_crypto_review_required",
-    "publication_boundary_review_required",
-]
 LINKED_ARTIFACT_PATHS = {
     "formal_obligation_ledger": "docs/formal_obligation_ledger.json",
     "formal_estimator_model": "docs/formal_estimator_model.json",
@@ -147,6 +117,7 @@ LINKED_ARTIFACT_PATHS = {
     "prime_eval_config_manifest": "docs/prime_eval_config_manifest.json",
     "private_run_policy": "docs/private_run_policy.json",
     "rl_pedagogy_runtime": "src/agades_pqc_gym/rl/pedagogy.py",
+    "private_trace_runtime": "src/agades_pqc_gym/rl/private_trace.py",
 }
 FORBIDDEN_PUBLIC_CLAIMS = [
     "unreviewed_pqc_break_claims",
@@ -293,7 +264,7 @@ def build_pedagogical_rl_method(root: Path | None = None) -> dict[str, Any]:
             "fine_tuned_weights_publication_allowed": False,
             "sanitized_metadata_cards_allowed": True,
         },
-        "private_trace_contract": _private_trace_contract(),
+        "private_trace_contract": private_pedagogical_trace_contract(),
         "publication_boundary": {
             "public_claims_allowed": [
                 "environment_scoring_contracts",
@@ -523,7 +494,7 @@ def _verify_private_trace_contract(
     failures: list[str],
 ) -> None:
     contract = _dict_or_empty(method.get("private_trace_contract"))
-    expected = _private_trace_contract()
+    expected = private_pedagogical_trace_contract()
     if contract.get("schema_version") != PRIVATE_PEDAGOGICAL_TRACE_SCHEMA:
         failures.append("Private pedagogical RL trace schema is incorrect.")
     if contract.get("record_kind") != "private_teacher_student_trace":
@@ -615,27 +586,6 @@ def _linked_artifacts(root: Path) -> dict[str, dict[str, str | None]]:
             "sha256": _file_sha256(root / path),
         }
         for name, path in LINKED_ARTIFACT_PATHS.items()
-    }
-
-
-def _private_trace_contract() -> dict[str, Any]:
-    return {
-        "schema_version": PRIVATE_PEDAGOGICAL_TRACE_SCHEMA,
-        "record_kind": "private_teacher_student_trace",
-        "storage_roots": list(PRIVATE_TRACE_STORAGE_ROOTS),
-        "public_release_ok": False,
-        "raw_private_signals_included": False,
-        "required_bindings": {
-            "reward_report_schema": RL_REWARD_REPORT_SCHEMA,
-            "pedagogical_reward_schema": PEDAGOGICAL_REWARD_REPORT_SCHEMA,
-            "formal_artifact_binding_schema": FORMAL_ARTIFACT_BINDING_SCHEMA,
-            "dataset_curation_manifest_path": PRIVATE_DATASET_CURATION_MANIFEST_PATH,
-            "reviewer_governance_manifest_path": "docs/reviewer_governance.json",
-            "formal_obligation_ledger_path": "docs/formal_obligation_ledger.json",
-        },
-        "required_record_fields": list(PRIVATE_TRACE_REQUIRED_RECORD_FIELDS),
-        "forbidden_public_fields": list(PRIVATE_TRACE_FORBIDDEN_PUBLIC_FIELDS),
-        "quality_gates": list(PRIVATE_TRACE_QUALITY_GATES),
     }
 
 
