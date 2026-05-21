@@ -36,6 +36,11 @@ def test_reviewer_governance_defines_family_roles_and_review_gates(
             "library": "mathlib",
             "required_for_security_claims": True,
         },
+        "attack_plan_semantics": {
+            "contract_path": "docs/formal_attackplan_semantics.json",
+            "canonicalization": "json_sort_keys_minified_v1",
+            "security_claim_allowed_without_review": False,
+        },
         "smt_assist": {
             "backend": "z3",
             "scope": "optional_finite_decidable_obligations_only",
@@ -61,6 +66,9 @@ def test_reviewer_governance_defines_family_roles_and_review_gates(
     assert governance["formal_artifact_binding"]["formal_family_coverage_path"] == (
         "docs/formal_family_coverage.json"
     )
+    assert governance["formal_artifact_binding"][
+        "formal_attackplan_semantics_path"
+    ] == "docs/formal_attackplan_semantics.json"
     assert governance["formal_artifact_binding"][
         "formal_obligation_ledger_path"
     ] == "docs/formal_obligation_ledger.json"
@@ -114,6 +122,9 @@ def test_reviewer_governance_defines_family_roles_and_review_gates(
     assert governance["linked_artifacts"]["formal_family_coverage"]["path"] == (
         "docs/formal_family_coverage.json"
     )
+    assert governance["linked_artifacts"]["formal_attackplan_semantics"][
+        "path"
+    ] == "docs/formal_attackplan_semantics.json"
     assert governance["linked_artifacts"]["formal_estimator_model"]["path"] == (
         "docs/formal_estimator_model.json"
     )
@@ -154,7 +165,7 @@ def test_reviewer_governance_verify_accepts_committed_artifact() -> None:
             "family_reviewers": 9,
             "role_groups": 3,
             "approval_gates": 4,
-            "linked_artifacts": 12,
+            "linked_artifacts": 13,
             "failure_count": 0,
         },
         "failures": [],

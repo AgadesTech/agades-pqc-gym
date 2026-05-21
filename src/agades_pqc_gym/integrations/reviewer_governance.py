@@ -10,6 +10,9 @@ from agades_pqc_gym.formal.artifacts import (
     MVP_VERTICAL_PROOF_ARTIFACT_PATHS,
     REVIEW_EVIDENCE_SCHEMA,
 )
+from agades_pqc_gym.formal.attack_plan_semantics import (
+    DEFAULT_ATTACKPLAN_SEMANTICS_PATH,
+)
 from agades_pqc_gym.formal.review import (
     FAMILY_REVIEWER_ROLE_IDS,
     REVIEW_STATUSES,
@@ -87,6 +90,7 @@ ATTACHED_REVIEW_EVIDENCE_BINDING_FIELDS = [
     "claim_boundary",
 ]
 LINKED_ARTIFACT_PATHS = {
+    "formal_attackplan_semantics": DEFAULT_ATTACKPLAN_SEMANTICS_PATH.as_posix(),
     "formal_estimator_model": "docs/formal_estimator_model.json",
     "formal_family_coverage": "docs/formal_family_coverage.json",
     "formal_obligation_ledger": "docs/formal_obligation_ledger.json",
@@ -149,6 +153,11 @@ def build_reviewer_governance(root: Path | None = None) -> dict[str, Any]:
                 "library": "mathlib",
                 "required_for_security_claims": True,
             },
+            "attack_plan_semantics": {
+                "contract_path": DEFAULT_ATTACKPLAN_SEMANTICS_PATH.as_posix(),
+                "canonicalization": "json_sort_keys_minified_v1",
+                "security_claim_allowed_without_review": False,
+            },
             "smt_assist": {
                 "backend": "z3",
                 "scope": "optional_finite_decidable_obligations_only",
@@ -159,6 +168,9 @@ def build_reviewer_governance(root: Path | None = None) -> dict[str, Any]:
         "approval_gates": _approval_gates(),
         "review_artifact_format": _review_artifact_format(),
         "formal_artifact_binding": {
+            "formal_attackplan_semantics_path": (
+                DEFAULT_ATTACKPLAN_SEMANTICS_PATH.as_posix()
+            ),
             "formal_estimator_model_path": "docs/formal_estimator_model.json",
             "formal_family_coverage_path": "docs/formal_family_coverage.json",
             "formal_obligation_ledger_path": (
@@ -408,6 +420,7 @@ def _verify_formal_backend_policy(
         failures.append("Reviewer governance formal_backend_policy must be an object.")
         return
     primary = _dict_or_empty(policy.get("primary"))
+    attackplan = _dict_or_empty(policy.get("attack_plan_semantics"))
     smt = _dict_or_empty(policy.get("smt_assist"))
     if primary != {
         "backend": "lean4",
@@ -423,6 +436,12 @@ def _verify_formal_backend_policy(
         failures.append(
             "SMT assistance must be scoped to finite decidable obligations."
         )
+    if attackplan.get("contract_path") != DEFAULT_ATTACKPLAN_SEMANTICS_PATH.as_posix():
+        failures.append("AttackPlan semantics must bind the formal contract.")
+    if attackplan.get("canonicalization") != "json_sort_keys_minified_v1":
+        failures.append("AttackPlan semantics canonicalization is incorrect.")
+    if attackplan.get("security_claim_allowed_without_review") is not False:
+        failures.append("AttackPlan semantics must forbid unreviewed claims.")
     if smt.get("contract_path") != DEFAULT_SMT_ASSIST_PATH.as_posix():
         failures.append("SMT assistance must bind the formal SMT contract.")
     if smt.get("may_replace_primary_backend") is not False:
@@ -507,6 +526,12 @@ def _verify_formal_artifact_binding(
 ) -> None:
     binding = _dict_or_empty(governance.get("formal_artifact_binding"))
     proof_artifacts = binding.get("mvp_vertical_proof_artifacts")
+    if binding.get("formal_attackplan_semantics_path") != (
+        DEFAULT_ATTACKPLAN_SEMANTICS_PATH.as_posix()
+    ):
+        failures.append(
+            "Formal artifact binding must include AttackPlan semantics."
+        )
     if binding.get("formal_obligation_ledger_path") != (
         "docs/formal_obligation_ledger.json"
     ):

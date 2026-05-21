@@ -14,6 +14,9 @@ from agades_pqc_gym.formal.artifacts import (
     build_attack_plan_proof_artifact,
     proof_obligation_type_rules,
 )
+from agades_pqc_gym.formal.attack_plan_semantics import (
+    DEFAULT_ATTACKPLAN_SEMANTICS_PATH,
+)
 from agades_pqc_gym.formal.estimator_model import DEFAULT_ESTIMATOR_MODEL_PATH
 from agades_pqc_gym.formal.family_coverage import (
     DEFAULT_COVERAGE_PATH,
@@ -36,6 +39,7 @@ CLAIM_BOUNDARY = (
     "estimator-boundary, and reviewer obligations; it is not a PQC break claim"
 )
 LINKED_ARTIFACT_PATHS = {
+    "formal_attackplan_semantics": DEFAULT_ATTACKPLAN_SEMANTICS_PATH.as_posix(),
     "formal_family_coverage": DEFAULT_COVERAGE_PATH.as_posix(),
     "formal_operator_semantics": DEFAULT_OPERATOR_SEMANTICS_PATH.as_posix(),
     "formal_estimator_model": DEFAULT_ESTIMATOR_MODEL_PATH.as_posix(),
@@ -101,6 +105,8 @@ def build_formal_obligation_ledger(root: Path | None = None) -> dict[str, Any]:
             "docs/formal_estimator_model.json",
             "uv run agades-pqc formal-operator-semantics-verify --semantics "
             "docs/formal_operator_semantics.json",
+            "uv run agades-pqc formal-attackplan-semantics-verify --semantics "
+            "docs/formal_attackplan_semantics.json",
             "uv run agades-pqc formal-smt-assist-verify --contract "
             "docs/formal_smt_assist_contract.json",
         ],
