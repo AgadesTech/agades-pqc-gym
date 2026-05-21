@@ -272,7 +272,7 @@
     },
     "release_audit": {
       "path": "public/release_audit.json",
-      "sha256": "7938ae0c6d5cdca593fc472a30e05c590a0a2fe9115ac407d1810b3468ff91b0"
+      "sha256": "90bb000f23abf450ed6b031483d239b45158026f26bd060564b27a9feea80be4"
     }
   },
   "private_training_review": {

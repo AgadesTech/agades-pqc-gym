@@ -83,6 +83,12 @@ from agades_pqc_gym.integrations.private_training_config import (
 from agades_pqc_gym.integrations.private_training_config import (
     verify_private_training_config,
 )
+from agades_pqc_gym.integrations.private_training_readiness import (
+    DEFAULT_READINESS_PATH as PRIVATE_TRAINING_READINESS_PATH,
+)
+from agades_pqc_gym.integrations.private_training_readiness import (
+    verify_private_training_readiness,
+)
 from agades_pqc_gym.integrations.publication_preflight import (
     verify_publication_preflight,
 )
@@ -118,10 +124,12 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
     copied_root = _copy_repo(tmp_path)
     corrupted_semantics = copied_root / DEFAULT_OPERATOR_SEMANTICS_PATH
     corrupted_training = copied_root / PRIVATE_TRAINING_MANIFEST_PATH
+    corrupted_readiness = copied_root / PRIVATE_TRAINING_READINESS_PATH
     corrupted_deepevolve = copied_root / DEEPEVOLVE_MANIFEST_PATH
     corrupted_report = copied_root / "reports" / "ecosystem_smoke.json"
     corrupted_semantics.write_text("{}\n", encoding="utf-8")
     corrupted_training.write_text("{}\n", encoding="utf-8")
+    corrupted_readiness.write_text("{}\n", encoding="utf-8")
     corrupted_deepevolve.write_text("{}\n", encoding="utf-8")
     corrupted_report.write_text("{}\n", encoding="utf-8")
 
@@ -144,6 +152,11 @@ def test_release_artifact_convergence_repairs_dependent_artifacts(
         for path in release_pass["changed_artifacts"]
     }
     assert PRIVATE_TRAINING_MANIFEST_PATH.as_posix() in {
+        path
+        for release_pass in result["pass_summaries"]
+        for path in release_pass["changed_artifacts"]
+    }
+    assert PRIVATE_TRAINING_READINESS_PATH.as_posix() in {
         path
         for release_pass in result["pass_summaries"]
         for path in release_pass["changed_artifacts"]
@@ -273,6 +286,10 @@ def _assert_private_rl_prime_artifacts_verified(root: Path) -> None:
     assert verify_private_training_config(
         PRIVATE_TRAINING_CONFIG_PATH,
         PRIVATE_TRAINING_MANIFEST_PATH,
+        root=root,
+    )["accepted"] is True
+    assert verify_private_training_readiness(
+        PRIVATE_TRAINING_READINESS_PATH,
         root=root,
     )["accepted"] is True
     assert verify_default_config_template(OPENEVOLVE_CONFIG_PATH, root=root)[

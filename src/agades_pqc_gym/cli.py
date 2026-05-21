@@ -212,6 +212,10 @@ from agades_pqc_gym.integrations.private_training_config import (
     verify_private_training_config,
     write_private_training_config,
 )
+from agades_pqc_gym.integrations.private_training_readiness import (
+    verify_private_training_readiness,
+    write_private_training_readiness,
+)
 from agades_pqc_gym.integrations.public_benchmark_manifest import (
     verify_public_benchmark_manifest,
     write_public_benchmark_manifest,
@@ -1770,6 +1774,32 @@ def private_training_config_verify(
 ) -> None:
     """Verify the private Prime RL/Qwen training config template and manifest."""
     result = verify_private_training_config(config, manifest)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("private-training-readiness", hidden=True)
+def private_training_readiness(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("docs/private_training_readiness.json"),
+) -> None:
+    """Write the sanitized private Qwen/Prime RL launch readiness gate."""
+    write_private_training_readiness(out)
+    typer.echo(f"private_training_readiness={out}")
+
+
+@app.command("private-training-readiness-verify", hidden=True)
+def private_training_readiness_verify(
+    readiness: Annotated[
+        Path,
+        typer.Option("--readiness"),
+    ] = Path("docs/private_training_readiness.json"),
+) -> None:
+    """Verify the private Qwen/Prime RL launch readiness gate."""
+    result = verify_private_training_readiness(readiness)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)
