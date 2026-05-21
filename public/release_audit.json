@@ -110,6 +110,8 @@
           "verify-family-operator-catalog",
           "generate-formal-lean-backend",
           "verify-formal-lean-backend",
+          "smoke-build-formal-lean",
+          "verify-formal-lean-build-smoke",
           "generate-hf-dataset",
           "verify-hf-dataset",
           "generate-hf-space-manifest",

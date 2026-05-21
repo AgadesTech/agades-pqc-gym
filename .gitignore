@@ -13,6 +13,7 @@ build/
 *.egg-info/
 formal/lean/.lake/
 runs/
+reports/formal_lean_build_smoke.json
 public/*
 !public/run_export/
 !public/run_export/**

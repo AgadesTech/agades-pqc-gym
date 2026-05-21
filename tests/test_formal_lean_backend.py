@@ -98,6 +98,14 @@ def test_formal_lean_backend_manifest_binds_sources_and_ci(
     assert manifest["summary"]["theorem_declarations"] >= 20
     assert manifest["summary"]["ci_lean_build_gate"] is True
     assert manifest["summary"]["placeholder_failures"] == 0
+    assert (
+        "uv run agades-pqc formal-lean-build-smoke --out "
+        "reports/formal_lean_build_smoke.json"
+    ) in manifest["release_gates"]
+    assert (
+        "uv run agades-pqc formal-lean-build-smoke-verify --report "
+        "reports/formal_lean_build_smoke.json"
+    ) in manifest["release_gates"]
 
     source_paths = {source["path"] for source in manifest["lean_sources"]}
     assert "formal/lean/AgadesPQC.lean" in source_paths

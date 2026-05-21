@@ -70,6 +70,23 @@ and `valid=False` for the evaluated plan. That distinction is deliberate: the
 tool can record unsupported routes without pretending they are valid
 cryptanalytic results.
 
+## 5. Compile The Formal Contract Bundle
+
+If Lean/Lake is available, run the local formal smoke check:
+
+```bash
+uv run agades-pqc formal-lean-build-smoke --out reports/formal_lean_build_smoke.json
+uv run agades-pqc formal-lean-build-smoke-verify --report reports/formal_lean_build_smoke.json
+```
+
+This compiles the checked Lean 4 + Mathlib source bundle under `formal/lean/`
+and writes a bounded report with command argv, return code, output hashes, and
+short output tails. It does not capture environment variables or credentials.
+
+Passing this smoke check means the formal contracts compile. It is not a
+cryptographic soundness review, it does not run cryptanalytic estimators, and
+it does not authorize any public security claim.
+
 ## CLI Surface
 
 `uv run agades-pqc --help` shows the core workflow commands first:
