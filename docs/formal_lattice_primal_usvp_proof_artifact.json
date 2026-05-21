@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "0f4261fd10cb97f6c507d3fa9b7dd99aa82da11b045687b6d16989d0315c67b8",
+  "artifact_sha256": "cb6f6548c9fb4e19796f8ce970776ad930ebbea20dd0bb45c148fc73ef74e206",
   "attack_plan": {
     "canonical_sha256": "c06ca5ddc67e4a09af1cece6b5a368129068fef091b77f785694324028111d60",
     "id": "lattice_primal_usvp_toy_v1",
@@ -112,6 +112,20 @@
     "root": "formal/lean",
     "toolchain": "formal/lean/lean-toolchain",
     "toolchain_sha256": "e6930c662006db4d6dc76c651d60a608e4f6a18bcfd53e6b0167d70a125285d5"
+  },
+  "formal_estimator_model_contract": {
+    "claim_policy_forbids_unreviewed_security_claims": true,
+    "contract_sha256": "4ac49e9258c57c59ce37d909c9f4d218660ef033e32b3a88131834d148dc2552",
+    "families": 9,
+    "linked_artifact_hashes_excluded_from_contract": true,
+    "model_schema_version": "agades.pqc.formal.estimator_model.v1",
+    "path": "docs/formal_estimator_model.json",
+    "proof_artifact_binding_required_before_claim": true,
+    "result_binding_required_before_claim": 7,
+    "runtime_operator_count": 36,
+    "schema_only_no_estimator": 2,
+    "schema_version": "agades.pqc.formal.proof_artifact.formal_estimator_model_binding.v1",
+    "verification_accepted": true
   },
   "operator_semantics": [
     {

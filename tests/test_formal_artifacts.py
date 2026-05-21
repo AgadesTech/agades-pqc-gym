@@ -104,6 +104,29 @@ def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() ->
         "claim_policy_forbids_unreviewed_security_claims": True,
         "verification_accepted": True,
     }
+    estimator_model_path = Path("docs/formal_estimator_model.json")
+    estimator_model_payload = json.loads(
+        estimator_model_path.read_text(encoding="utf-8")
+    )
+    assert artifact["formal_estimator_model_contract"] == {
+        "schema_version": (
+            "agades.pqc.formal.proof_artifact."
+            "formal_estimator_model_binding.v1"
+        ),
+        "path": estimator_model_path.as_posix(),
+        "model_schema_version": "agades.pqc.formal.estimator_model.v1",
+        "contract_sha256": _formal_estimator_model_contract_sha256(
+            estimator_model_payload
+        ),
+        "families": 9,
+        "runtime_operator_count": 36,
+        "result_binding_required_before_claim": 7,
+        "schema_only_no_estimator": 2,
+        "proof_artifact_binding_required_before_claim": True,
+        "claim_policy_forbids_unreviewed_security_claims": True,
+        "linked_artifact_hashes_excluded_from_contract": True,
+        "verification_accepted": True,
+    }
     assert artifact["family"] == "LWE"
     assert artifact["operator_semantics"][0] == {
         "operator": "primal_usvp",
@@ -414,6 +437,7 @@ def test_write_and_verify_attack_plan_proof_artifact(tmp_path: Path) -> None:
             "estimator_result_attached": False,
             "attackplan_semantics_attached": True,
             "operator_semantics_contract_attached": True,
+            "formal_estimator_model_attached": True,
             "required_reviewers": 3,
             "failure_count": 0,
         },
@@ -556,6 +580,7 @@ def test_committed_mlwe_proof_artifact_is_in_sync_and_verifiable(
             "estimator_result_attached": True,
             "attackplan_semantics_attached": True,
             "operator_semantics_contract_attached": True,
+            "formal_estimator_model_attached": True,
             "required_reviewers": 3,
             "failure_count": 0,
         },
@@ -648,6 +673,27 @@ def test_verify_attack_plan_proof_artifact_rejects_stale_operator_semantics(
     assert result["accepted"] is False
     assert (
         "Proof artifact operator semantics contract binding is not in sync."
+        in result["failures"]
+    )
+
+
+def test_verify_attack_plan_proof_artifact_rejects_stale_formal_estimator_model(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+    )
+    artifact["formal_estimator_model_contract"]["contract_sha256"] = "0" * 64
+    artifact["artifact_sha256"] = _artifact_payload_sha256(artifact)
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Proof artifact formal estimator model binding is not in sync."
         in result["failures"]
     )
 
@@ -1039,6 +1085,9 @@ def _review_artifact_binding(artifact: dict[str, object]) -> dict[str, object]:
         "operator_semantics_sha256": artifact["operator_semantics_contract"][
             "semantics_sha256"
         ],
+        "formal_estimator_model_contract_sha256": artifact[
+            "formal_estimator_model_contract"
+        ]["contract_sha256"],
         "proof_obligation_sha256": [
             obligation["obligation_sha256"]
             for obligation in proof_obligations
@@ -1064,5 +1113,17 @@ def _artifact_payload_sha256(artifact: dict[str, object]) -> str:
             key: value
             for key, value in artifact.items()
             if key != "artifact_sha256"
+        }
+    )
+
+
+def _formal_estimator_model_contract_sha256(
+    payload: dict[str, object],
+) -> str:
+    return stable_sha256(
+        {
+            key: value
+            for key, value in payload.items()
+            if key not in {"linked_artifacts", "model_sha256"}
         }
     )

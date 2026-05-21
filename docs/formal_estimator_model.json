@@ -447,7 +447,7 @@
     },
     "formal_family_coverage": {
       "path": "docs/formal_family_coverage.json",
-      "sha256": "4351012e1e262423258d2efa404b3954e749892cf06dfd6144ce2fbd3721f913"
+      "sha256": "c393fd4eeef63d5d27c48c6e8d3c09df54d327bc4afeefc05431689888a4adfd"
     },
     "formal_lean_backend": {
       "path": "docs/formal_lean_backend.json",
@@ -455,14 +455,14 @@
     },
     "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "3a2740b2edb2a6d28b1f36d57308c518a252f3883b386a40d6123f84c8828f0b"
+      "sha256": "c1ab68a8cb78bab720316f44c6afec27e87bd800ccd236f40ebeb7ad242f22e8"
     },
     "formal_mlwe_proof_artifact": {
       "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
-      "sha256": "388de5bae239b5a0f486f384fb49524f1ef73e8cc12eacdee852982cb03b720c"
+      "sha256": "6a0d14e2667b5799edda3ad10a234a8f0ff6cb96d48547ad5f0f13942536a681"
     }
   },
-  "model_sha256": "79d5531c6c83bd9cf7be7817cccc32ac0c0ae4ee0d4252b4f64bd9242a232323",
+  "model_sha256": "e2a7762a49cc3deb00a4ef3b8274ba6abce3198f1859aaf76715a410782d2557",
   "project": {
     "name": "Agades PQC Gym",
     "package": "agades_pqc_gym",
