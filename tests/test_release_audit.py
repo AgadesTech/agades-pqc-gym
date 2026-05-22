@@ -960,12 +960,14 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "uv run agades-pqc formal-lean-build-smoke-verify --report "
         "reports/formal_lean_build_smoke.json" in workflow
     )
-    artifact_diff_line = next(
-        line for line in workflow.splitlines() if "git diff --exit-code --" in line
+    artifact_gate_start = workflow.index(
+        "- name: Check public release artifacts are committed"
     )
-    assert "docs/external_publication_review_packet.json" in artifact_diff_line
-    assert "docs/formal_lean_backend.json" in artifact_diff_line
-    assert "reports/openevolve_smoke.json" in artifact_diff_line
+    artifact_gate_end = workflow.index("- name: Build package", artifact_gate_start)
+    artifact_gate = workflow[artifact_gate_start:artifact_gate_end]
+    assert "docs/external_publication_review_packet.json" in artifact_gate
+    assert "docs/formal_lean_backend.json" in artifact_gate
+    assert "reports/openevolve_smoke.json" in artifact_gate
     assert checks["openevolve-config-template"]["status"] == "passed"
     assert checks["openevolve-config-template"]["blocking"] is True
     assert checks["openevolve-config-template"]["evidence"] == {

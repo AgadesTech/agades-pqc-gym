@@ -135,6 +135,25 @@ LWE_PLAN = Path("examples/attack_plans/lattice_primal_usvp_toy.json")
 MLWE_PLAN = Path("examples/attack_plans/lattice_mlwe_module_hypothesis_toy.json")
 
 
+def test_ci_committed_artifact_gate_covers_release_artifact_paths() -> None:
+    workflow = Path(".github/workflows/ci.yml").read_text(encoding="utf-8")
+    gate_start = workflow.index(
+        "- name: Check public release artifacts are committed"
+    )
+    gate_end = workflow.index("- name: Build package", gate_start)
+    committed_gate = workflow[gate_start:gate_end]
+
+    missing_paths = [
+        path.as_posix()
+        for path in RELEASE_ARTIFACT_PATHS
+        if path.as_posix() not in committed_gate
+    ]
+
+    assert "git diff --exit-code -- \\" in committed_gate
+    assert "reports/formal_lean_build_smoke.json" in committed_gate
+    assert missing_paths == []
+
+
 def test_release_artifact_convergence_repairs_dependent_artifacts(
     tmp_path: Path,
 ) -> None:
@@ -395,6 +414,7 @@ def _copy_repo(tmp_path: Path) -> Path:
             ".venv",
             ".pytest_cache",
             ".ruff_cache",
+            ".lake",
             "build",
             "dist",
             "*.egg-info",
