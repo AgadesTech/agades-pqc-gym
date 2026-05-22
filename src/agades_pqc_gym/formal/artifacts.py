@@ -392,15 +392,17 @@ def build_attack_plan_proof_artifact_from_json(
         "operator_semantics": [
             _operator_semantics(operator.type) for operator in plan.operators
         ],
-        "family_invariants": _family_invariants(plan),
+        "family_invariants": _family_invariants(plan, root=project_root),
         "estimator_model": _estimator_model(plan),
-        "proof_obligation_type_rules": proof_obligation_type_rules(),
+        "proof_obligation_type_rules": proof_obligation_type_rules(
+            root=project_root,
+        ),
         "estimator_result_binding": _estimator_result_binding(
             plan,
             estimator_result_path,
             root=project_root,
         ),
-        "proof_obligations": _proof_obligations(plan),
+        "proof_obligations": _proof_obligations(plan, root=project_root),
         "review": {
             "status": review_status,
             "required_reviewers": required_reviewers,
@@ -670,19 +672,26 @@ def _operator_semantics(operator_type: str) -> dict[str, str]:
     return operator_semantics_entry(operator_type)
 
 
-def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
+def _family_invariants(
+    plan: AttackPlan,
+    *,
+    root: Path | None = None,
+) -> list[dict[str, Any]]:
     family = plan.target.family
     if family is TargetFamily.LWE:
-        return _lwe_lattice_invariants()
+        return _lwe_lattice_invariants(root=root)
     if family is TargetFamily.MLWE:
         return [
-            *_lwe_lattice_invariants(),
+            *_lwe_lattice_invariants(root=root),
             {
                 "invariant_id": "lattice.mlwe.module_rank_present",
                 "statement": "MLWE module rank k is present and positive",
                 "lean_theorem": "AgadesPQC.Lattice.Target.module_rank_present",
             }
-            | _lean_source("AgadesPQC.Lattice.Target.module_rank_present"),
+            | _lean_source(
+                "AgadesPQC.Lattice.Target.module_rank_present",
+                root=root,
+            ),
         ]
     if family is TargetFamily.NTRU:
         return [
@@ -694,7 +703,10 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
                 ),
                 "lean_theorem": "AgadesPQC.Lattice.Target.ntru_schema_shape",
             }
-            | _lean_source("AgadesPQC.Lattice.Target.ntru_schema_shape")
+            | _lean_source(
+                "AgadesPQC.Lattice.Target.ntru_schema_shape",
+                root=root,
+            )
         ]
     if family is TargetFamily.SIS:
         return [
@@ -706,7 +718,10 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
                 ),
                 "lean_theorem": "AgadesPQC.Lattice.Target.sis_schema_shape",
             }
-            | _lean_source("AgadesPQC.Lattice.Target.sis_schema_shape")
+            | _lean_source(
+                "AgadesPQC.Lattice.Target.sis_schema_shape",
+                root=root,
+            )
         ]
     if family is TargetFamily.CODE_BASED:
         return [
@@ -715,7 +730,10 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
                 "statement": "n > 0, k > 0, w > 0, and k <= n",
                 "lean_theorem": "AgadesPQC.CodeBased.Target.parameters_well_formed",
             }
-            | _lean_source("AgadesPQC.CodeBased.Target.parameters_well_formed")
+            | _lean_source(
+                "AgadesPQC.CodeBased.Target.parameters_well_formed",
+                root=root,
+            )
         ]
     if family is TargetFamily.MULTIVARIATE:
         return [
@@ -729,7 +747,8 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
             }
             | _lean_source(
                 "AgadesPQC.Multivariate.Target."
-                "variables_equations_field_present"
+                "variables_equations_field_present",
+                root=root,
             )
         ]
     if family is TargetFamily.HASH_BASED:
@@ -746,7 +765,8 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
             }
             | _lean_source(
                 "AgadesPQC.HashBased.Target."
-                "hash_function_and_security_parameter_present"
+                "hash_function_and_security_parameter_present",
+                root=root,
             )
         ]
     if family is TargetFamily.ISOGENY_HISTORICAL:
@@ -763,7 +783,8 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
             }
             | _lean_source(
                 "AgadesPQC.IsogenyHistorical.Target."
-                "dimension_positive_historical_scope"
+                "dimension_positive_historical_scope",
+                root=root,
             )
         ]
     if family is TargetFamily.IMPLEMENTATION_SECURITY:
@@ -779,7 +800,8 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
                 ),
             }
             | _lean_source(
-                "AgadesPQC.ImplementationSecurity.Target.review_scope_declared"
+                "AgadesPQC.ImplementationSecurity.Target.review_scope_declared",
+                root=root,
             )
         ]
     return [
@@ -788,24 +810,33 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
             "statement": "TargetSpec family-specific validator accepted the shape",
             "lean_theorem": "AgadesPQC.Generic.Target.family_shape_validated",
         }
-        | _lean_source("AgadesPQC.Generic.Target.family_shape_validated")
+        | _lean_source(
+            "AgadesPQC.Generic.Target.family_shape_validated",
+            root=root,
+        )
     ]
 
 
-def _lwe_lattice_invariants() -> list[dict[str, Any]]:
+def _lwe_lattice_invariants(*, root: Path | None = None) -> list[dict[str, Any]]:
     return [
         {
             "invariant_id": "lattice.dimension_modulus_positive",
             "statement": "n > 0 and q > 1",
             "lean_theorem": "AgadesPQC.Lattice.Target.dimension_modulus_positive",
         }
-        | _lean_source("AgadesPQC.Lattice.Target.dimension_modulus_positive"),
+        | _lean_source(
+            "AgadesPQC.Lattice.Target.dimension_modulus_positive",
+            root=root,
+        ),
         {
             "invariant_id": "lattice.distributions_present",
             "statement": "secret and error distributions are present for LWE/MLWE",
             "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
         }
-        | _lean_source("AgadesPQC.Lattice.Target.distributions_present"),
+        | _lean_source(
+            "AgadesPQC.Lattice.Target.distributions_present",
+            root=root,
+        ),
     ]
 
 
@@ -874,7 +905,11 @@ def _estimator_result_binding(
     }
 
 
-def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
+def _proof_obligations(
+    plan: AttackPlan,
+    *,
+    root: Path | None = None,
+) -> list[dict[str, Any]]:
     family = plan.target.family
     obligations: list[dict[str, Any]] = []
     if family is TargetFamily.LWE:
@@ -888,12 +923,14 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                     ),
                     "AgadesPQC.Lattice.Target.parameters_positive",
                     family=family,
+                    root=root,
                 ),
                 _obligation(
                     "target.lwe.distributions.present",
                     "Secret and error distributions are specified for LWE/MLWE.",
                     "AgadesPQC.Lattice.Target.distributions_present",
                     family=family,
+                    root=root,
                 ),
             ]
         )
@@ -908,18 +945,21 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                     ),
                     "AgadesPQC.Lattice.Target.parameters_positive",
                     family=family,
+                    root=root,
                 ),
                 _obligation(
                     "target.mlwe.distributions.present",
                     "Secret and error distributions are specified for MLWE.",
                     "AgadesPQC.Lattice.Target.distributions_present",
                     family=family,
+                    root=root,
                 ),
                 _obligation(
                     "target.mlwe.module_rank.present",
                     "MLWE module rank k is positive.",
                     "AgadesPQC.Lattice.Target.module_rank_present",
                     family=family,
+                    root=root,
                 ),
             ]
         )
@@ -934,6 +974,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 "AgadesPQC.Lattice.PrimalUSVP.beta_valid_range",
                 family=family,
                 operator_type="primal_usvp",
+                root=root,
             )
         )
     if (
@@ -946,6 +987,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 "Schema-only NTRU plans must not emit cryptanalytic estimates.",
                 "AgadesPQC.Lattice.Target.ntru_schema_only_no_estimate",
                 family=family,
+                root=root,
             )
         )
     if (
@@ -958,6 +1000,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 "Schema-only SIS plans must not emit cryptanalytic estimates.",
                 "AgadesPQC.Lattice.Target.sis_schema_only_no_estimate",
                 family=family,
+                root=root,
             )
         )
     if (
@@ -970,6 +1013,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 "Schema-only code-based plans must not emit cryptanalytic estimates.",
                 "AgadesPQC.CodeBased.SchemaOnly.no_estimate",
                 family=family,
+                root=root,
             )
         )
     if family is TargetFamily.MULTIVARIATE:
@@ -982,6 +1026,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 ),
                 "AgadesPQC.Multivariate.Target.applicability_shape",
                 family=family,
+                root=root,
             )
         )
     if family is TargetFamily.HASH_BASED:
@@ -994,6 +1039,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 ),
                 "AgadesPQC.HashBased.Target.bound_check_is_not_attack_claim",
                 family=family,
+                root=root,
             )
         )
     if family is TargetFamily.ISOGENY_HISTORICAL:
@@ -1006,6 +1052,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 ),
                 "AgadesPQC.IsogenyHistorical.Target.historical_only",
                 family=family,
+                root=root,
             )
         )
     if family is TargetFamily.IMPLEMENTATION_SECURITY:
@@ -1018,6 +1065,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 ),
                 "AgadesPQC.ImplementationSecurity.Target.no_conformance_claim",
                 family=family,
+                root=root,
             )
         )
     obligations.append(
@@ -1029,19 +1077,27 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
             ),
             "AgadesPQC.Evaluator.no_security_claim",
             family=family,
+            root=root,
         )
     )
     return obligations
 
 
-def proof_obligation_type_rules() -> list[dict[str, Any]]:
+def proof_obligation_type_rules(
+    *,
+    root: Path | None = None,
+) -> list[dict[str, Any]]:
     return [
-        _proof_obligation_type_rule(kind)
+        _proof_obligation_type_rule(kind, root=root)
         for kind in PROOF_OBLIGATION_TYPE_RULES
     ]
 
 
-def _proof_obligation_type_rule(kind: str) -> dict[str, Any]:
+def _proof_obligation_type_rule(
+    kind: str,
+    *,
+    root: Path | None = None,
+) -> dict[str, Any]:
     rule = PROOF_OBLIGATION_TYPE_RULES[kind]
     payload = {
         "schema_version": PROOF_OBLIGATION_TYPE_RULE_SCHEMA,
@@ -1049,7 +1105,7 @@ def _proof_obligation_type_rule(kind: str) -> dict[str, Any]:
         "statement": rule["statement"],
         "backend": "lean4",
         "lean_theorem": rule["lean_theorem"],
-        **_lean_source(rule["lean_theorem"]),
+        **_lean_source(rule["lean_theorem"], root=root),
     }
     return {
         **payload,
@@ -1064,6 +1120,7 @@ def _obligation(
     *,
     family: TargetFamily,
     operator_type: str | None = None,
+    root: Path | None = None,
 ) -> dict[str, Any]:
     obligation_type = _obligation_type(
         obligation_id,
@@ -1075,9 +1132,12 @@ def _obligation(
         "statement": statement,
         "backend": "lean4",
         "obligation_type": obligation_type,
-        "type_rule": _proof_obligation_type_rule(obligation_type["kind"]),
+        "type_rule": _proof_obligation_type_rule(
+            obligation_type["kind"],
+            root=root,
+        ),
         "lean_theorem": lean_theorem,
-        **_lean_source(lean_theorem),
+        **_lean_source(lean_theorem, root=root),
         "status": "pending_review",
     }
     return {
@@ -1166,10 +1226,14 @@ def _artifact_sha256(artifact: dict[str, Any]) -> str:
     return stable_sha256(payload)
 
 
-def _lean_source(lean_theorem: str) -> dict[str, Any]:
+def _lean_source(
+    lean_theorem: str,
+    *,
+    root: Path | None = None,
+) -> dict[str, Any]:
     path = LEAN_THEOREM_SOURCES[lean_theorem]
     declaration = lean_theorem.rsplit(".", 1)[1]
-    source_path = ROOT / path
+    source_path = (root or ROOT) / path
     return {
         "lean_source": {
             "path": path,

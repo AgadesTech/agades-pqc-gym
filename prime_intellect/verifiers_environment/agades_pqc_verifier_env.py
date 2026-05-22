@@ -27,8 +27,31 @@ SYSTEM_PROMPT = (
 )
 
 
-def build_dataset_rows(num_examples: int | None = None) -> list[dict[str, Any]]:
+def build_dataset_rows(
+    num_examples: int | None = None,
+    *,
+    attack_plan_id: str | None = None,
+    target_family: str | None = None,
+) -> list[dict[str, Any]]:
     rows = [_row_for_plan(path) for path in TASK_PLAN_PATHS]
+    if attack_plan_id is not None:
+        rows = [
+            row
+            for row in rows
+            if row["info"]["attack_plan_id"] == attack_plan_id
+        ]
+    if target_family is not None:
+        rows = [
+            row
+            for row in rows
+            if row["info"]["target_family"] == target_family
+        ]
+    if not rows:
+        filters = {
+            "attack_plan_id": attack_plan_id,
+            "target_family": target_family,
+        }
+        raise ValueError(f"Prime environment task filter matched no rows: {filters}")
     if num_examples is None or num_examples < 0:
         return rows
     return rows[:num_examples]
@@ -39,12 +62,14 @@ def score_attack_plan_completion(
     *,
     info: dict[str, Any] | str | None = None,
     require_info: bool = False,
+    project_root: Path | str | None = None,
 ) -> float:
     return float(
         score_attack_plan_completion_report(
             completion,
             info=info,
             require_info=require_info,
+            project_root=project_root,
         )["aggregate_reward"]
     )
 
@@ -54,17 +79,23 @@ def score_attack_plan_completion_report(
     *,
     info: dict[str, Any] | str | None = None,
     require_info: bool = False,
+    project_root: Path | str | None = None,
 ) -> dict[str, Any]:
     candidate = _single_json_object_text(_last_content(completion))
     if candidate is None:
         return _blocked_reward_report("single_json_object")
 
+    root = _project_root(project_root)
     reward_report = score_attack_plan_candidate(
         candidate,
         task_info=normalize_task_metadata(info),
         require_task_match=require_info or info is not None,
+        root=root,
     )
-    formal_artifact_binding = build_formal_artifact_binding(candidate)
+    formal_artifact_binding = build_formal_artifact_binding(
+        candidate,
+        root=root,
+    )
     return _prime_reward_report(
         aggregate_reward=float(reward_report["reward"]),
         accepted=bool(reward_report["accepted"]),
@@ -82,7 +113,12 @@ def score_attack_plan_completion_report(
     )
 
 
-def build_rubric_functions() -> list[Any]:
+def build_rubric_functions(
+    *,
+    project_root: Path | str | None = None,
+) -> list[Any]:
+    root = _project_root(project_root)
+
     async def accepted_attack_plan(
         completion: list[dict[str, Any]],
         info: dict[str, Any] | str | None = None,
@@ -92,15 +128,22 @@ def build_rubric_functions() -> list[Any]:
             completion,
             "accepted_attack_plan",
             info=info,
+            project_root=root,
         )
 
     functions = [accepted_attack_plan]
     for term in REWARD_TERMS:
-        functions.append(_build_term_rubric_function(term))
+        functions.append(_build_term_rubric_function(term, project_root=root))
     return functions
 
 
-def load_environment(num_examples: int = -1, **kwargs: Any) -> Any:
+def load_environment(
+    num_examples: int = -1,
+    project_root: Path | str | None = None,
+    attack_plan_id: str | None = None,
+    target_family: str | None = None,
+    **kwargs: Any,
+) -> Any:
     try:
         import verifiers as vf
         from datasets import Dataset
@@ -111,8 +154,17 @@ def load_environment(num_examples: int = -1, **kwargs: Any) -> Any:
             "`prime_intellect/verifiers_environment`."
         ) from exc
 
-    dataset = Dataset.from_list(build_dataset_rows(num_examples=num_examples))
-    rubric = vf.Rubric(funcs=build_rubric_functions())
+    dataset = Dataset.from_list(
+        build_dataset_rows(
+            num_examples=num_examples,
+            attack_plan_id=attack_plan_id,
+            target_family=target_family,
+        )
+    )
+    rubric = vf.Rubric(
+        funcs=build_rubric_functions(project_root=project_root),
+        weights=build_rubric_weights(),
+    )
     return vf.SingleTurnEnv(
         dataset=dataset,
         rubric=rubric,
@@ -148,6 +200,10 @@ def _row_for_plan(path: Path) -> dict[str, Any]:
     }
 
 
+def build_rubric_weights() -> list[float]:
+    return [1.0, *[0.0 for _ in REWARD_TERMS]]
+
+
 def _last_content(completion: list[dict[str, Any]]) -> str:
     if not completion:
         return ""
@@ -172,13 +228,22 @@ def _single_json_object_text(text: str) -> str | None:
     return stripped
 
 
-def _build_term_rubric_function(term: str) -> Any:
+def _build_term_rubric_function(
+    term: str,
+    *,
+    project_root: Path | None,
+) -> Any:
     async def score_term(
         completion: list[dict[str, Any]],
         info: dict[str, Any] | str | None = None,
         **_: Any,
     ) -> float:
-        return _rubric_score(completion, term, info=info)
+        return _rubric_score(
+            completion,
+            term,
+            info=info,
+            project_root=project_root,
+        )
 
     score_term.__name__ = term
     return score_term
@@ -189,13 +254,52 @@ def _rubric_score(
     term: str,
     *,
     info: dict[str, Any] | str | None,
+    project_root: Path | None,
 ) -> float:
     report = score_attack_plan_completion_report(
         completion,
         info=info,
         require_info=True,
+        project_root=project_root,
     )
     return float(report["rubric_scores"][term])
+
+
+def _project_root(project_root: Path | str | None) -> Path | None:
+    if project_root is None:
+        if _has_required_formal_artifacts(PACKAGE_DIR):
+            return PACKAGE_DIR
+        return None
+    root = Path(project_root).expanduser().resolve()
+    _require_formal_artifacts(root)
+    return root
+
+
+def _has_required_formal_artifacts(root: Path) -> bool:
+    return all(path.exists() for path in _required_formal_artifact_paths(root))
+
+
+def _require_formal_artifacts(root: Path) -> None:
+    missing = [
+        path
+        for path in _required_formal_artifact_paths(root)
+        if not path.exists()
+    ]
+    if missing:
+        missing_labels = ", ".join(str(path) for path in missing)
+        raise ValueError(
+            "project_root does not contain required Agades formal artifacts: "
+            f"{missing_labels}"
+        )
+
+
+def _required_formal_artifact_paths(root: Path) -> tuple[Path, ...]:
+    return (
+        root / "docs" / "formal_attackplan_semantics.json",
+        root / "docs" / "formal_operator_semantics.json",
+        root / "docs" / "formal_estimator_model.json",
+        root / "formal" / "lean" / "AgadesPQC" / "AttackPlan.lean",
+    )
 
 
 def _blocked_reward_report(reason: str) -> dict[str, Any]:

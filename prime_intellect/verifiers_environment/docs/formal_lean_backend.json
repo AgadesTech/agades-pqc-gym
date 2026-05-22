@@ -1,0 +1,354 @@
+{
+  "backend": {
+    "library": "mathlib",
+    "primary": "lean4",
+    "smt_assist": "z3_optional_finite_decidable_obligations_only"
+  },
+  "ci": {
+    "build": true,
+    "job": "test",
+    "lake_package_directory": "formal/lean",
+    "lint": false,
+    "step_name": "Build Lean formal backend",
+    "test": false,
+    "uses": "leanprover/lean-action@v1",
+    "workflow_path": ".github/workflows/ci.yml"
+  },
+  "lean_project": {
+    "build_command": "lake build",
+    "entry_module": "formal/lean/AgadesPQC.lean",
+    "lake_manifest": "formal/lean/lake-manifest.json",
+    "lake_manifest_packages": [
+      {
+        "input_rev": "main",
+        "name": "Cli",
+        "rev": "2cf1030dc2ae6b3632c84a09350b675ef3e347d0",
+        "url": "https://github.com/leanprover/lean4-cli"
+      },
+      {
+        "input_rev": "main",
+        "name": "LeanSearchClient",
+        "rev": "2ba60fa2c384a94735454db11a2d523612eaabff",
+        "url": "https://github.com/leanprover-community/LeanSearchClient"
+      },
+      {
+        "input_rev": "master",
+        "name": "Qq",
+        "rev": "2c8ae451ce9ffc83554322b14437159c1a9703f9",
+        "url": "https://github.com/leanprover-community/quote4"
+      },
+      {
+        "input_rev": "master",
+        "name": "aesop",
+        "rev": "28fa80508edc97d96ed6342c9a771a67189e0baa",
+        "url": "https://github.com/leanprover-community/aesop"
+      },
+      {
+        "input_rev": "main",
+        "name": "batteries",
+        "rev": "4756e0fc48acce0cc808df0ad149de5973240df6",
+        "url": "https://github.com/leanprover-community/batteries"
+      },
+      {
+        "input_rev": "main",
+        "name": "importGraph",
+        "rev": "e285a7ade149c551c17a4b24f127e1ef782e4bb1",
+        "url": "https://github.com/leanprover-community/import-graph"
+      },
+      {
+        "input_rev": "v4.12.0",
+        "name": "mathlib",
+        "rev": "809c3fb3b5c8f5d7dace56e200b426187516535a",
+        "url": "https://github.com/leanprover-community/mathlib4.git"
+      },
+      {
+        "input_rev": "v0.0.42",
+        "name": "proofwidgets",
+        "rev": "eb08eee94098fe530ccd6d8751a86fe405473d4c",
+        "url": "https://github.com/leanprover-community/ProofWidgets4"
+      }
+    ],
+    "lake_manifest_sha256": "d357bd51e4ae12c2d62ca0289f78874e1a01eb14597e7fda54217042645e282f",
+    "lakefile": "formal/lean/lakefile.lean",
+    "lakefile_sha256": "1ba611ea7d88d72fdc37b2bde34540266ed760c1f35a6676f17cecd8e7ca4990",
+    "root": "formal/lean",
+    "toolchain": "formal/lean/lean-toolchain",
+    "toolchain_sha256": "e6930c662006db4d6dc76c651d60a608e4f6a18bcfd53e6b0167d70a125285d5",
+    "toolchain_value": "leanprover/lean4:v4.12.0"
+  },
+  "lean_sources": [
+    {
+      "imports": [],
+      "path": "formal/lean/AgadesPQC/AttackPlan.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "e90999b0b54da67dad2b35ebaf38d9f7eeca154ac0081753740f94e8ba8aa0c2",
+      "theorems": [
+        "AgadesPQC.AttackPlan.schema_contract_well_formed",
+        "AgadesPQC.AttackPlan.canonicalization_stable",
+        "AgadesPQC.AttackPlan.operators_nonempty",
+        "AgadesPQC.AttackPlan.unsupported_operator_rejected",
+        "AgadesPQC.AttackPlan.unreviewed_security_claim_forbidden"
+      ]
+    },
+    {
+      "imports": [],
+      "path": "formal/lean/AgadesPQC/CodeBased/SchemaOnly.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "95d12133df951c5f56a93bf4c6dac67aea1e0c13b265add3046ef215d11887af",
+      "theorems": [
+        "AgadesPQC.CodeBased.SchemaOnly.no_estimate"
+      ]
+    },
+    {
+      "imports": [
+        "Mathlib.Data.Nat.Basic"
+      ],
+      "path": "formal/lean/AgadesPQC/CodeBased/Target.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "99a39887fb4702230be43be4383720f8b15c698986efef4d43fa680dc582dbc4",
+      "theorems": [
+        "AgadesPQC.CodeBased.Target.parameters_well_formed"
+      ]
+    },
+    {
+      "imports": [],
+      "path": "formal/lean/AgadesPQC/EstimatorModel.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "dbd283b471d5babbe14f8b050d48bc78e29285ccbab670a583621ca09b40be50",
+      "theorems": [
+        "AgadesPQC.EstimatorModel.operator_compatibility_declared",
+        "AgadesPQC.EstimatorModel.result_binding_required_before_claim",
+        "AgadesPQC.EstimatorModel.schema_only_no_estimator"
+      ]
+    },
+    {
+      "imports": [],
+      "path": "formal/lean/AgadesPQC/Evaluator.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa",
+      "theorems": [
+        "AgadesPQC.Evaluator.no_security_claim",
+        "AgadesPQC.Evaluator.attached_unreviewed_no_security_claim",
+        "AgadesPQC.Evaluator.schema_only_no_estimator_no_security_claim"
+      ]
+    },
+    {
+      "imports": [],
+      "path": "formal/lean/AgadesPQC/Generic/Target.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "1005a1f3e12e55287a3ab198db67c86df4c1c7644271bd39bf983f196d0bc8c7",
+      "theorems": [
+        "AgadesPQC.Generic.Target.family_shape_validated"
+      ]
+    },
+    {
+      "imports": [
+        "Mathlib.Data.Nat.Basic"
+      ],
+      "path": "formal/lean/AgadesPQC/HashBased/Target.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "7846d27d945cb0bf642c6fe564c91130b1965d9ae5ca5d76bcddaef5651730b6",
+      "theorems": [
+        "AgadesPQC.HashBased.Target.hash_function_and_security_parameter_present",
+        "AgadesPQC.HashBased.Target.bound_check_is_not_attack_claim"
+      ]
+    },
+    {
+      "imports": [],
+      "path": "formal/lean/AgadesPQC/ImplementationSecurity/Target.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "4c529327d3e2c473f917bf3d16dc87a9880a39d52c03857671d69ff6cbb15bd6",
+      "theorems": [
+        "AgadesPQC.ImplementationSecurity.Target.review_scope_declared",
+        "AgadesPQC.ImplementationSecurity.Target.no_conformance_claim"
+      ]
+    },
+    {
+      "imports": [
+        "Mathlib.Data.Nat.Basic"
+      ],
+      "path": "formal/lean/AgadesPQC/IsogenyHistorical/Target.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "f7d7c437572d26a361137953885b9bb14468b08f7b9edd7390fc94842e407adf",
+      "theorems": [
+        "AgadesPQC.IsogenyHistorical.Target.dimension_positive_historical_scope",
+        "AgadesPQC.IsogenyHistorical.Target.historical_only"
+      ]
+    },
+    {
+      "imports": [
+        "Mathlib.Data.Nat.Basic"
+      ],
+      "path": "formal/lean/AgadesPQC/Lattice/PrimalUSVP.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "680e394604173883de8b974719b80b91c341e4c6d829eba2437c5a5e0d059dd5",
+      "theorems": [
+        "AgadesPQC.Lattice.PrimalUSVP.beta_valid_range"
+      ]
+    },
+    {
+      "imports": [
+        "Mathlib.Data.Nat.Basic"
+      ],
+      "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "fb935c6996f30bb0e224f5b10c1de28aef63a946357c7252d12e1ad54de91e0c",
+      "theorems": [
+        "AgadesPQC.Lattice.Target.dimension_modulus_positive",
+        "AgadesPQC.Lattice.Target.distributions_present",
+        "AgadesPQC.Lattice.Target.parameters_positive",
+        "AgadesPQC.Lattice.Target.module_rank_present",
+        "AgadesPQC.Lattice.Target.ntru_schema_shape",
+        "AgadesPQC.Lattice.Target.sis_schema_shape",
+        "AgadesPQC.Lattice.Target.ntru_schema_only_no_estimate",
+        "AgadesPQC.Lattice.Target.sis_schema_only_no_estimate"
+      ]
+    },
+    {
+      "imports": [
+        "Mathlib.Data.Nat.Basic"
+      ],
+      "path": "formal/lean/AgadesPQC/Multivariate/Target.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "5f4836e7c2fdddcc87503ce2acdde5ce06f727e47ff77c10796378ddf43302d8",
+      "theorems": [
+        "AgadesPQC.Multivariate.Target.variables_equations_field_present",
+        "AgadesPQC.Multivariate.Target.applicability_shape"
+      ]
+    },
+    {
+      "imports": [],
+      "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347",
+      "theorems": [
+        "AgadesPQC.OperatorSemantics.required_parameter_bound",
+        "AgadesPQC.OperatorSemantics.family_binding_valid",
+        "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+        "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden"
+      ]
+    },
+    {
+      "imports": [],
+      "path": "formal/lean/AgadesPQC/ProofObligation.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "b962de98a021b1945061e2b41f79570fa15650c19a732d14e3caf2ca01abd115",
+      "theorems": [
+        "AgadesPQC.ProofObligation.target_invariant_typed",
+        "AgadesPQC.ProofObligation.operator_precondition_typed",
+        "AgadesPQC.ProofObligation.schema_only_boundary_typed",
+        "AgadesPQC.ProofObligation.family_applicability_boundary_typed",
+        "AgadesPQC.ProofObligation.estimator_claim_boundary_typed",
+        "AgadesPQC.ProofObligation.unreviewed_obligation_blocks_security_claim"
+      ]
+    },
+    {
+      "imports": [
+        "AgadesPQC.Lattice.Target",
+        "AgadesPQC.Lattice.PrimalUSVP",
+        "AgadesPQC.EstimatorModel",
+        "AgadesPQC.AttackPlan",
+        "AgadesPQC.OperatorSemantics",
+        "AgadesPQC.ProofObligation",
+        "AgadesPQC.CodeBased.Target",
+        "AgadesPQC.CodeBased.SchemaOnly",
+        "AgadesPQC.Evaluator",
+        "AgadesPQC.Generic.Target",
+        "AgadesPQC.Multivariate.Target",
+        "AgadesPQC.HashBased.Target",
+        "AgadesPQC.IsogenyHistorical.Target",
+        "AgadesPQC.ImplementationSecurity.Target"
+      ],
+      "path": "formal/lean/AgadesPQC.lean",
+      "placeholder_scan": {
+        "contains_admit": false,
+        "contains_axiom": false,
+        "contains_sorry": false
+      },
+      "sha256": "087ecc559a75efae5d1932b16ada6c0618592388ea6f4ceef78a16cfd64b4c7e",
+      "theorems": []
+    }
+  ],
+  "manifest_sha256": "656657789b889089a6764991faa0d2fabed032eb7f7b43c561ee411247989ca4",
+  "placeholder_scan": {
+    "contains_admit": false,
+    "contains_axiom": false,
+    "contains_sorry": false
+  },
+  "project": {
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "release_gates": [
+    "uv run pytest tests/test_formal_lean_backend.py -q",
+    "uv run agades-pqc formal-lean-backend --out docs/formal_lean_backend.json",
+    "uv run agades-pqc formal-lean-backend-verify --backend docs/formal_lean_backend.json",
+    "uv run agades-pqc formal-lean-build-smoke --out reports/formal_lean_build_smoke.json",
+    "uv run agades-pqc formal-lean-build-smoke-verify --report reports/formal_lean_build_smoke.json",
+    "GitHub CI: Build Lean formal backend via leanprover/lean-action@v1"
+  ],
+  "schema_version": "agades.pqc.formal.lean_backend.v1",
+  "summary": {
+    "ci_lean_build_gate": true,
+    "placeholder_failures": 0,
+    "source_modules": 15,
+    "theorem_declarations": 41
+  }
+}

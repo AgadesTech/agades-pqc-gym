@@ -1,0 +1,436 @@
+{
+  "backend_policy": {
+    "assist_backend": "z3",
+    "assist_role": "optional_secondary_check",
+    "may_discharge_security_claims": false,
+    "may_replace_primary_backend": false,
+    "primary_backend": "lean4",
+    "primary_library": "mathlib",
+    "requires_lean_type_rule": true,
+    "requires_reviewer_approval": true
+  },
+  "candidate_obligations": [
+    {
+      "attack_plan_id": "lattice_primal_usvp_toy_v1",
+      "claim_policy": {
+        "requires_lean_theorem": true,
+        "requires_reviewer_approval": true,
+        "security_claim_allowed": false
+      },
+      "family": "LWE",
+      "lean_source": {
+        "declaration": "parameters_positive",
+        "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+        "sha256": "fb935c6996f30bb0e224f5b10c1de28aef63a946357c7252d12e1ad54de91e0c"
+      },
+      "lean_theorem": "AgadesPQC.Lattice.Target.parameters_positive",
+      "ledger_entry_id": "LWE:target.lwe.parameters.positive",
+      "obligation_id": "target.lwe.parameters.positive",
+      "obligation_sha256": "a1b1194c6f58c34f1f9b7c9d05d4e30dc09919f29dc9efd0de778aa4e28a7a33",
+      "obligation_type": {
+        "claim_policy": {
+          "public_interpretation": "applicability_check_only",
+          "review_required_before_claim": true,
+          "security_claim_allowed": false
+        },
+        "kind": "target_invariant",
+        "schema_version": "agades.pqc.formal.proof_obligation_type.v1",
+        "subject": {
+          "family": "LWE",
+          "scope": "target",
+          "target_family": "LWE"
+        }
+      },
+      "smt_role": "optional_secondary_finite_decidable_check",
+      "smt_status": "candidate_not_encoded",
+      "type_rule_sha256": "dd086c22a21fed95aea00f3ab5b5693c27e385f359eaa8126ee315637a1354f5"
+    },
+    {
+      "attack_plan_id": "lattice_primal_usvp_toy_v1",
+      "claim_policy": {
+        "requires_lean_theorem": true,
+        "requires_reviewer_approval": true,
+        "security_claim_allowed": false
+      },
+      "family": "LWE",
+      "lean_source": {
+        "declaration": "distributions_present",
+        "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+        "sha256": "fb935c6996f30bb0e224f5b10c1de28aef63a946357c7252d12e1ad54de91e0c"
+      },
+      "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
+      "ledger_entry_id": "LWE:target.lwe.distributions.present",
+      "obligation_id": "target.lwe.distributions.present",
+      "obligation_sha256": "876054832003e1cbdea7cab9e0e7a34ca68e377fe6df3f01f59d41a72b439520",
+      "obligation_type": {
+        "claim_policy": {
+          "public_interpretation": "applicability_check_only",
+          "review_required_before_claim": true,
+          "security_claim_allowed": false
+        },
+        "kind": "target_invariant",
+        "schema_version": "agades.pqc.formal.proof_obligation_type.v1",
+        "subject": {
+          "family": "LWE",
+          "scope": "target",
+          "target_family": "LWE"
+        }
+      },
+      "smt_role": "optional_secondary_finite_decidable_check",
+      "smt_status": "candidate_not_encoded",
+      "type_rule_sha256": "dd086c22a21fed95aea00f3ab5b5693c27e385f359eaa8126ee315637a1354f5"
+    },
+    {
+      "attack_plan_id": "lattice_primal_usvp_toy_v1",
+      "claim_policy": {
+        "requires_lean_theorem": true,
+        "requires_reviewer_approval": true,
+        "security_claim_allowed": false
+      },
+      "family": "LWE",
+      "lean_source": {
+        "declaration": "beta_valid_range",
+        "path": "formal/lean/AgadesPQC/Lattice/PrimalUSVP.lean",
+        "sha256": "680e394604173883de8b974719b80b91c341e4c6d829eba2437c5a5e0d059dd5"
+      },
+      "lean_theorem": "AgadesPQC.Lattice.PrimalUSVP.beta_valid_range",
+      "ledger_entry_id": "LWE:operator.primal_usvp.beta.valid_range",
+      "obligation_id": "operator.primal_usvp.beta.valid_range",
+      "obligation_sha256": "b5acc8e22683aa71db608709acfa38a02f20bb7691b608c5318884b8e63dd4db",
+      "obligation_type": {
+        "claim_policy": {
+          "public_interpretation": "applicability_check_only",
+          "review_required_before_claim": true,
+          "security_claim_allowed": false
+        },
+        "kind": "operator_precondition",
+        "schema_version": "agades.pqc.formal.proof_obligation_type.v1",
+        "subject": {
+          "family": "LWE",
+          "operator": "primal_usvp",
+          "scope": "operator"
+        }
+      },
+      "smt_role": "optional_secondary_finite_decidable_check",
+      "smt_status": "candidate_not_encoded",
+      "type_rule_sha256": "68d856bc6e248e225cc7b2169a103a898825995d87bb620f04677bc3ee50041b"
+    },
+    {
+      "attack_plan_id": "lattice_mlwe_module_hypothesis_toy_v1",
+      "claim_policy": {
+        "requires_lean_theorem": true,
+        "requires_reviewer_approval": true,
+        "security_claim_allowed": false
+      },
+      "family": "MLWE",
+      "lean_source": {
+        "declaration": "parameters_positive",
+        "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+        "sha256": "fb935c6996f30bb0e224f5b10c1de28aef63a946357c7252d12e1ad54de91e0c"
+      },
+      "lean_theorem": "AgadesPQC.Lattice.Target.parameters_positive",
+      "ledger_entry_id": "MLWE:target.mlwe.parameters.positive",
+      "obligation_id": "target.mlwe.parameters.positive",
+      "obligation_sha256": "7f1b81036e2c287711e357c16aa9a0e7f8d275179d97b7aaa8e95bdb1ef27c1d",
+      "obligation_type": {
+        "claim_policy": {
+          "public_interpretation": "applicability_check_only",
+          "review_required_before_claim": true,
+          "security_claim_allowed": false
+        },
+        "kind": "target_invariant",
+        "schema_version": "agades.pqc.formal.proof_obligation_type.v1",
+        "subject": {
+          "family": "MLWE",
+          "scope": "target",
+          "target_family": "MLWE"
+        }
+      },
+      "smt_role": "optional_secondary_finite_decidable_check",
+      "smt_status": "candidate_not_encoded",
+      "type_rule_sha256": "dd086c22a21fed95aea00f3ab5b5693c27e385f359eaa8126ee315637a1354f5"
+    },
+    {
+      "attack_plan_id": "lattice_mlwe_module_hypothesis_toy_v1",
+      "claim_policy": {
+        "requires_lean_theorem": true,
+        "requires_reviewer_approval": true,
+        "security_claim_allowed": false
+      },
+      "family": "MLWE",
+      "lean_source": {
+        "declaration": "distributions_present",
+        "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+        "sha256": "fb935c6996f30bb0e224f5b10c1de28aef63a946357c7252d12e1ad54de91e0c"
+      },
+      "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
+      "ledger_entry_id": "MLWE:target.mlwe.distributions.present",
+      "obligation_id": "target.mlwe.distributions.present",
+      "obligation_sha256": "9a0f200647cf0591e9d770cd4717703aae63e3c69b3a10c2f84c160b9a3574e0",
+      "obligation_type": {
+        "claim_policy": {
+          "public_interpretation": "applicability_check_only",
+          "review_required_before_claim": true,
+          "security_claim_allowed": false
+        },
+        "kind": "target_invariant",
+        "schema_version": "agades.pqc.formal.proof_obligation_type.v1",
+        "subject": {
+          "family": "MLWE",
+          "scope": "target",
+          "target_family": "MLWE"
+        }
+      },
+      "smt_role": "optional_secondary_finite_decidable_check",
+      "smt_status": "candidate_not_encoded",
+      "type_rule_sha256": "dd086c22a21fed95aea00f3ab5b5693c27e385f359eaa8126ee315637a1354f5"
+    },
+    {
+      "attack_plan_id": "lattice_mlwe_module_hypothesis_toy_v1",
+      "claim_policy": {
+        "requires_lean_theorem": true,
+        "requires_reviewer_approval": true,
+        "security_claim_allowed": false
+      },
+      "family": "MLWE",
+      "lean_source": {
+        "declaration": "module_rank_present",
+        "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+        "sha256": "fb935c6996f30bb0e224f5b10c1de28aef63a946357c7252d12e1ad54de91e0c"
+      },
+      "lean_theorem": "AgadesPQC.Lattice.Target.module_rank_present",
+      "ledger_entry_id": "MLWE:target.mlwe.module_rank.present",
+      "obligation_id": "target.mlwe.module_rank.present",
+      "obligation_sha256": "53fd04b2d605efc8e60c3499f433d84336cc1a68bb7f105dc7d5b195f7553a34",
+      "obligation_type": {
+        "claim_policy": {
+          "public_interpretation": "applicability_check_only",
+          "review_required_before_claim": true,
+          "security_claim_allowed": false
+        },
+        "kind": "target_invariant",
+        "schema_version": "agades.pqc.formal.proof_obligation_type.v1",
+        "subject": {
+          "family": "MLWE",
+          "scope": "target",
+          "target_family": "MLWE"
+        }
+      },
+      "smt_role": "optional_secondary_finite_decidable_check",
+      "smt_status": "candidate_not_encoded",
+      "type_rule_sha256": "dd086c22a21fed95aea00f3ab5b5693c27e385f359eaa8126ee315637a1354f5"
+    }
+  ],
+  "contract_sha256": "99b8644131e122638792d8d4a274f1e5d9aaa40feb0fd15e25bbd8285022cfa5",
+  "excluded_obligations": [
+    {
+      "family": "LWE",
+      "kind": "estimator_claim_boundary",
+      "ledger_entry_id": "LWE:estimator.boundary.no_security_claim",
+      "obligation_id": "estimator.boundary.no_security_claim",
+      "obligation_sha256": "e2b8516d37b64d8b5cea07ae886f6e5c58a03b46c83cbbc194b4c8172f8ac595",
+      "reason": "estimator claim boundaries cannot be discharged by SMT"
+    },
+    {
+      "family": "MLWE",
+      "kind": "estimator_claim_boundary",
+      "ledger_entry_id": "MLWE:estimator.boundary.no_security_claim",
+      "obligation_id": "estimator.boundary.no_security_claim",
+      "obligation_sha256": "4677331075f7eeff0e0e4fea72acec72b8a073e8239570f4908808aaff0b5cfc",
+      "reason": "estimator claim boundaries cannot be discharged by SMT"
+    },
+    {
+      "family": "NTRU",
+      "kind": "schema_only_boundary",
+      "ledger_entry_id": "NTRU:family.ntru.schema_only.no_estimate",
+      "obligation_id": "family.ntru.schema_only.no_estimate",
+      "obligation_sha256": "20916392766d3a771a8834d7732a47ca99f385ec76ccfd55785af8fa4f356c09",
+      "reason": "schema-only estimator boundaries are policy/review obligations"
+    },
+    {
+      "family": "NTRU",
+      "kind": "estimator_claim_boundary",
+      "ledger_entry_id": "NTRU:estimator.boundary.no_security_claim",
+      "obligation_id": "estimator.boundary.no_security_claim",
+      "obligation_sha256": "2c76aae7d7b931ec4352467d44b708a0c8c8d91f731ed5c09185cecc2ca0f6ac",
+      "reason": "estimator claim boundaries cannot be discharged by SMT"
+    },
+    {
+      "family": "SIS",
+      "kind": "schema_only_boundary",
+      "ledger_entry_id": "SIS:family.sis.schema_only.no_estimate",
+      "obligation_id": "family.sis.schema_only.no_estimate",
+      "obligation_sha256": "f8a0781f173ba7b29c09ced08790c73ec777d630ee38042d8135b7a441daa900",
+      "reason": "schema-only estimator boundaries are policy/review obligations"
+    },
+    {
+      "family": "SIS",
+      "kind": "estimator_claim_boundary",
+      "ledger_entry_id": "SIS:estimator.boundary.no_security_claim",
+      "obligation_id": "estimator.boundary.no_security_claim",
+      "obligation_sha256": "3c4d58e4adfd4069178f310fc29ac36fa943433646fe43a33392e55a28e79233",
+      "reason": "estimator claim boundaries cannot be discharged by SMT"
+    },
+    {
+      "family": "CODE_BASED",
+      "kind": "schema_only_boundary",
+      "ledger_entry_id": "CODE_BASED:family.code_based.schema_only.no_estimate",
+      "obligation_id": "family.code_based.schema_only.no_estimate",
+      "obligation_sha256": "d1e0bfd86f89ec09e7e8bdeddb16e91cc18c29c90a70818892f8b4264f7fd1be",
+      "reason": "schema-only estimator boundaries are policy/review obligations"
+    },
+    {
+      "family": "CODE_BASED",
+      "kind": "estimator_claim_boundary",
+      "ledger_entry_id": "CODE_BASED:estimator.boundary.no_security_claim",
+      "obligation_id": "estimator.boundary.no_security_claim",
+      "obligation_sha256": "5eafbad5da7f002c7bc4f03b74ac7e0cd878eaca350bee01c3aa56e2eb6caa83",
+      "reason": "estimator claim boundaries cannot be discharged by SMT"
+    },
+    {
+      "family": "MULTIVARIATE",
+      "kind": "family_applicability_boundary",
+      "ledger_entry_id": "MULTIVARIATE:family.multivariate.applicability_shape",
+      "obligation_id": "family.multivariate.applicability_shape",
+      "obligation_sha256": "6d2d899f05601c805e32449ee6d0d4d3b23babdb43e3dec1e49cd294ac24843a",
+      "reason": "family applicability requires cryptography domain review"
+    },
+    {
+      "family": "MULTIVARIATE",
+      "kind": "estimator_claim_boundary",
+      "ledger_entry_id": "MULTIVARIATE:estimator.boundary.no_security_claim",
+      "obligation_id": "estimator.boundary.no_security_claim",
+      "obligation_sha256": "509af6ec79eac7c4c38f8b5861dd5144176ae46df17b69108b82c07be912b116",
+      "reason": "estimator claim boundaries cannot be discharged by SMT"
+    },
+    {
+      "family": "HASH_BASED",
+      "kind": "family_applicability_boundary",
+      "ledger_entry_id": "HASH_BASED:family.hash_based.bound_check_is_not_attack_claim",
+      "obligation_id": "family.hash_based.bound_check_is_not_attack_claim",
+      "obligation_sha256": "0475aeb4ea2a639e38c57e060ffb3026449e42b18b21c33f92d20d1237df878c",
+      "reason": "family applicability requires cryptography domain review"
+    },
+    {
+      "family": "HASH_BASED",
+      "kind": "estimator_claim_boundary",
+      "ledger_entry_id": "HASH_BASED:estimator.boundary.no_security_claim",
+      "obligation_id": "estimator.boundary.no_security_claim",
+      "obligation_sha256": "b41adac9ccaf7497f3e41abcc98c68cd4ca60eceac6350040ff5993b5f6d5226",
+      "reason": "estimator claim boundaries cannot be discharged by SMT"
+    },
+    {
+      "family": "ISOGENY_HISTORICAL",
+      "kind": "family_applicability_boundary",
+      "ledger_entry_id": "ISOGENY_HISTORICAL:family.isogeny_historical.historical_only",
+      "obligation_id": "family.isogeny_historical.historical_only",
+      "obligation_sha256": "991cdcb6ba251760c21e228a9dd44a158814cd36224f7e3650fcd8b018ec341f",
+      "reason": "family applicability requires cryptography domain review"
+    },
+    {
+      "family": "ISOGENY_HISTORICAL",
+      "kind": "estimator_claim_boundary",
+      "ledger_entry_id": "ISOGENY_HISTORICAL:estimator.boundary.no_security_claim",
+      "obligation_id": "estimator.boundary.no_security_claim",
+      "obligation_sha256": "d1833d3c3cd642fd063080acb4bb02d1ec1cde19792118b8b3ae45b2b5f1832c",
+      "reason": "estimator claim boundaries cannot be discharged by SMT"
+    },
+    {
+      "family": "IMPLEMENTATION_SECURITY",
+      "kind": "family_applicability_boundary",
+      "ledger_entry_id": "IMPLEMENTATION_SECURITY:family.implementation_security.no_conformance_claim",
+      "obligation_id": "family.implementation_security.no_conformance_claim",
+      "obligation_sha256": "48c926806a48bab5cb3ca796ccf1f72d8c7c6f435cb9d717d90b5f417117a14f",
+      "reason": "family applicability requires cryptography domain review"
+    },
+    {
+      "family": "IMPLEMENTATION_SECURITY",
+      "kind": "estimator_claim_boundary",
+      "ledger_entry_id": "IMPLEMENTATION_SECURITY:estimator.boundary.no_security_claim",
+      "obligation_id": "estimator.boundary.no_security_claim",
+      "obligation_sha256": "91b268e0855a063eda139a020a4c0163783bfe35693546ffd6cb36e7b8f91fd5",
+      "reason": "estimator claim boundaries cannot be discharged by SMT"
+    }
+  ],
+  "linked_artifacts": {
+    "formal_estimator_model": {
+      "path": "docs/formal_estimator_model.json",
+      "sha256": "9f617361ad810ee3a2351e46631f4965a62bfc28a28413b870e07933ac55519b"
+    },
+    "formal_family_coverage": {
+      "path": "docs/formal_family_coverage.json",
+      "sha256": "1b251f77b15dd11cdc5256ed81c1cd6fcb1575d848ee503f9cb682f8abe9363a"
+    },
+    "formal_lean_backend": {
+      "path": "docs/formal_lean_backend.json",
+      "sha256": "36793f0ba088ef4e4d692616b119bbff6f3e3653923aea3ebe39ceec6595d526"
+    },
+    "formal_obligation_ledger": {
+      "path": "docs/formal_obligation_ledger.json",
+      "sha256": "049658dfe84d435de2486edf9045ec3c5e2477832c5c952363f579cdca2045e7"
+    },
+    "formal_operator_semantics": {
+      "path": "docs/formal_operator_semantics.json",
+      "sha256": "9fa0bc4ee4cd2f5229d9352a2e9e490df323819bbfea5c6cf446a34fab2d231c"
+    }
+  },
+  "project": {
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "release_gates": [
+    "uv run pytest tests/test_formal_smt_assist.py -q",
+    "uv run agades-pqc formal-smt-assist --out docs/formal_smt_assist_contract.json",
+    "uv run agades-pqc formal-smt-assist-verify --contract docs/formal_smt_assist_contract.json",
+    "uv run agades-pqc formal-obligation-ledger-verify --ledger docs/formal_obligation_ledger.json",
+    "uv run agades-pqc formal-lean-backend-verify --backend docs/formal_lean_backend.json"
+  ],
+  "review_gate": {
+    "requires_crypto_domain_reviewer_for_claims": true,
+    "requires_formal_methods_reviewer": true,
+    "requires_lean_artifact_binding": true,
+    "security_claim_allowed": false,
+    "status": "assist_contract_only",
+    "z3_execution_required_for_public_release": false
+  },
+  "schema_version": "agades.pqc.formal.smt_assist_contract.v1",
+  "scope": {
+    "allowed_obligation_kinds": [
+      "target_invariant",
+      "operator_precondition"
+    ],
+    "allowed_theory_fragments": [
+      "quantifier_free_integer_arithmetic",
+      "finite_enumeration_membership",
+      "boolean_shape_constraints"
+    ],
+    "excluded_obligation_kinds": [
+      "schema_only_boundary",
+      "family_applicability_boundary",
+      "estimator_claim_boundary"
+    ],
+    "forbidden_uses": [
+      "cryptographic_security_claim",
+      "estimator_cost_model_validation",
+      "replacement_for_lean_theorem",
+      "replacement_for_crypto_domain_review",
+      "public_claim_automation"
+    ]
+  },
+  "summary": {
+    "candidate_kinds": {
+      "operator_precondition": 1,
+      "target_invariant": 5
+    },
+    "candidate_obligations": 6,
+    "excluded_kinds": {
+      "estimator_claim_boundary": 9,
+      "family_applicability_boundary": 4,
+      "schema_only_boundary": 3
+    },
+    "excluded_obligations": 16,
+    "security_claim_allowed": false,
+    "total_obligations": 22
+  }
+}

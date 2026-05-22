@@ -1,0 +1,629 @@
+{
+  "benchmark_source_catalog_edges": [
+    {
+      "source_catalog_id": "ctgrind",
+      "source_catalog_integration_status": "future_reviewed_adapter",
+      "source_catalog_platform": "github",
+      "source_id": "ctgrind-secret-taint-analysis",
+      "target_family": "implementation_security"
+    },
+    {
+      "source_catalog_id": "dudect",
+      "source_catalog_integration_status": "future_reviewed_adapter",
+      "source_catalog_platform": "github",
+      "source_id": "dudect-statistical-timing-leakage",
+      "target_family": "implementation_security"
+    },
+    {
+      "source_catalog_id": "facebook-lwe-benchmarking",
+      "source_catalog_integration_status": "future_reviewed_adapter",
+      "source_catalog_platform": "github",
+      "source_id": "facebook-lwe-benchmarking",
+      "target_family": "lattice"
+    },
+    {
+      "source_catalog_id": "facebook-tapas",
+      "source_catalog_integration_status": "future_reviewed_adapter",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "facebook-tapas",
+      "target_family": "lattice"
+    },
+    {
+      "source_catalog_id": "hf-post-quantum-crypto-en",
+      "source_catalog_integration_status": "future_reviewed_adapter",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-en-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "source_catalog_id": "hf-post-quantum-crypto-fr",
+      "source_catalog_integration_status": "future_reviewed_adapter",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-fr-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "source_catalog_id": "hf-pqc-ssl-scans",
+      "source_catalog_integration_status": "future_reviewed_adapter",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-pqc-ssl-scans-migration-scoring",
+      "target_family": "all"
+    },
+    {
+      "source_catalog_id": "hf-sc2026-side-channel",
+      "source_catalog_integration_status": "future_reviewed_adapter",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-sc2026-side-channel-research",
+      "target_family": "implementation_security"
+    },
+    {
+      "source_catalog_id": "liboqs",
+      "source_catalog_integration_status": "future_reviewed_adapter",
+      "source_catalog_platform": "github",
+      "source_id": "liboqs-implementation-harness",
+      "target_family": "implementation_security"
+    },
+    {
+      "source_catalog_id": "nist-acvp",
+      "source_catalog_integration_status": "future_reviewed_adapter",
+      "source_catalog_platform": "nist",
+      "source_id": "nist-acvp-pqc-vectors",
+      "target_family": "implementation_security"
+    },
+    {
+      "source_catalog_id": "nist-additional-signatures-round3",
+      "source_catalog_integration_status": "future_reviewed_adapter",
+      "source_catalog_platform": "nist",
+      "source_id": "nist-additional-signatures-round3-multivariate",
+      "target_family": "multivariate"
+    },
+    {
+      "source_catalog_id": "nist-bike-round4-status",
+      "source_catalog_integration_status": "future_reviewed_adapter",
+      "source_catalog_platform": "nist",
+      "source_id": "nist-bike-round4-status",
+      "target_family": "code_based"
+    },
+    {
+      "source_catalog_id": "nist-classic-mceliece-round4-status",
+      "source_catalog_integration_status": "future_reviewed_adapter",
+      "source_catalog_platform": "nist",
+      "source_id": "nist-classic-mceliece-round4-status",
+      "target_family": "code_based"
+    },
+    {
+      "source_catalog_id": "nist-fips-205",
+      "source_catalog_integration_status": "public_reference",
+      "source_catalog_platform": "nist",
+      "source_id": "nist-fips-205-slh-dsa-reference",
+      "target_family": "hash_based"
+    },
+    {
+      "source_catalog_id": "nist-hqc-selection",
+      "source_catalog_integration_status": "future_reviewed_adapter",
+      "source_catalog_platform": "nist",
+      "source_id": "nist-hqc-standardization-track",
+      "target_family": "code_based"
+    },
+    {
+      "source_catalog_id": "pq-code-package",
+      "source_catalog_integration_status": "future_reviewed_adapter",
+      "source_catalog_platform": "github",
+      "source_id": "pq-code-package-native-implementations",
+      "target_family": "implementation_security"
+    },
+    {
+      "source_catalog_id": "pqm4",
+      "source_catalog_integration_status": "future_reviewed_adapter",
+      "source_catalog_platform": "github",
+      "source_id": "pqm4-cortexm4-benchmarking",
+      "target_family": "implementation_security"
+    },
+    {
+      "source_catalog_id": "timecop-supercop",
+      "source_catalog_integration_status": "future_reviewed_adapter",
+      "source_catalog_platform": "ebacs",
+      "source_id": "timecop-supercop-policy-checks",
+      "target_family": "implementation_security"
+    }
+  ],
+  "family_source_edges": [
+    {
+      "family": "CODE_BASED",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "nist-bike-round4-status",
+      "source_catalog_platform": "nist",
+      "source_id": "nist-bike-round4-status",
+      "target_family": "code_based"
+    },
+    {
+      "family": "CODE_BASED",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "nist-classic-mceliece-round4-status",
+      "source_catalog_platform": "nist",
+      "source_id": "nist-classic-mceliece-round4-status",
+      "target_family": "code_based"
+    },
+    {
+      "family": "CODE_BASED",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "nist-hqc-selection",
+      "source_catalog_platform": "nist",
+      "source_id": "nist-hqc-standardization-track",
+      "target_family": "code_based"
+    },
+    {
+      "family": "CODE_BASED",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-post-quantum-crypto-en",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-en-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "family": "CODE_BASED",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-post-quantum-crypto-fr",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-fr-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "family": "CODE_BASED",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-pqc-ssl-scans",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-pqc-ssl-scans-migration-scoring",
+      "target_family": "all"
+    },
+    {
+      "family": "HASH_BASED",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "nist-fips-205",
+      "source_catalog_platform": "nist",
+      "source_id": "nist-fips-205-slh-dsa-reference",
+      "target_family": "hash_based"
+    },
+    {
+      "family": "HASH_BASED",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-post-quantum-crypto-en",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-en-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "family": "HASH_BASED",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-post-quantum-crypto-fr",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-fr-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "family": "HASH_BASED",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-pqc-ssl-scans",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-pqc-ssl-scans-migration-scoring",
+      "target_family": "all"
+    },
+    {
+      "family": "IMPLEMENTATION_SECURITY",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "ctgrind",
+      "source_catalog_platform": "github",
+      "source_id": "ctgrind-secret-taint-analysis",
+      "target_family": "implementation_security"
+    },
+    {
+      "family": "IMPLEMENTATION_SECURITY",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "dudect",
+      "source_catalog_platform": "github",
+      "source_id": "dudect-statistical-timing-leakage",
+      "target_family": "implementation_security"
+    },
+    {
+      "family": "IMPLEMENTATION_SECURITY",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "hf-sc2026-side-channel",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-sc2026-side-channel-research",
+      "target_family": "implementation_security"
+    },
+    {
+      "family": "IMPLEMENTATION_SECURITY",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "liboqs",
+      "source_catalog_platform": "github",
+      "source_id": "liboqs-implementation-harness",
+      "target_family": "implementation_security"
+    },
+    {
+      "family": "IMPLEMENTATION_SECURITY",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "nist-acvp",
+      "source_catalog_platform": "nist",
+      "source_id": "nist-acvp-pqc-vectors",
+      "target_family": "implementation_security"
+    },
+    {
+      "family": "IMPLEMENTATION_SECURITY",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "pq-code-package",
+      "source_catalog_platform": "github",
+      "source_id": "pq-code-package-native-implementations",
+      "target_family": "implementation_security"
+    },
+    {
+      "family": "IMPLEMENTATION_SECURITY",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "pqm4",
+      "source_catalog_platform": "github",
+      "source_id": "pqm4-cortexm4-benchmarking",
+      "target_family": "implementation_security"
+    },
+    {
+      "family": "IMPLEMENTATION_SECURITY",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "timecop-supercop",
+      "source_catalog_platform": "ebacs",
+      "source_id": "timecop-supercop-policy-checks",
+      "target_family": "implementation_security"
+    },
+    {
+      "family": "IMPLEMENTATION_SECURITY",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-post-quantum-crypto-en",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-en-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "family": "IMPLEMENTATION_SECURITY",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-post-quantum-crypto-fr",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-fr-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "family": "IMPLEMENTATION_SECURITY",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-pqc-ssl-scans",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-pqc-ssl-scans-migration-scoring",
+      "target_family": "all"
+    },
+    {
+      "family": "ISOGENY_HISTORICAL",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-post-quantum-crypto-en",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-en-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "family": "ISOGENY_HISTORICAL",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-post-quantum-crypto-fr",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-fr-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "family": "ISOGENY_HISTORICAL",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-pqc-ssl-scans",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-pqc-ssl-scans-migration-scoring",
+      "target_family": "all"
+    },
+    {
+      "family": "LWE",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "facebook-lwe-benchmarking",
+      "source_catalog_platform": "github",
+      "source_id": "facebook-lwe-benchmarking",
+      "target_family": "lattice"
+    },
+    {
+      "family": "LWE",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "facebook-tapas",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "facebook-tapas",
+      "target_family": "lattice"
+    },
+    {
+      "family": "LWE",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-post-quantum-crypto-en",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-en-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "family": "LWE",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-post-quantum-crypto-fr",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-fr-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "family": "LWE",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-pqc-ssl-scans",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-pqc-ssl-scans-migration-scoring",
+      "target_family": "all"
+    },
+    {
+      "family": "MLWE",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "facebook-lwe-benchmarking",
+      "source_catalog_platform": "github",
+      "source_id": "facebook-lwe-benchmarking",
+      "target_family": "lattice"
+    },
+    {
+      "family": "MLWE",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "facebook-tapas",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "facebook-tapas",
+      "target_family": "lattice"
+    },
+    {
+      "family": "MLWE",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-post-quantum-crypto-en",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-en-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "family": "MLWE",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-post-quantum-crypto-fr",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-fr-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "family": "MLWE",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-pqc-ssl-scans",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-pqc-ssl-scans-migration-scoring",
+      "target_family": "all"
+    },
+    {
+      "family": "MULTIVARIATE",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "nist-additional-signatures-round3",
+      "source_catalog_platform": "nist",
+      "source_id": "nist-additional-signatures-round3-multivariate",
+      "target_family": "multivariate"
+    },
+    {
+      "family": "MULTIVARIATE",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-post-quantum-crypto-en",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-en-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "family": "MULTIVARIATE",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-post-quantum-crypto-fr",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-fr-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "family": "MULTIVARIATE",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-pqc-ssl-scans",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-pqc-ssl-scans-migration-scoring",
+      "target_family": "all"
+    },
+    {
+      "family": "NTRU",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "facebook-lwe-benchmarking",
+      "source_catalog_platform": "github",
+      "source_id": "facebook-lwe-benchmarking",
+      "target_family": "lattice"
+    },
+    {
+      "family": "NTRU",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "facebook-tapas",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "facebook-tapas",
+      "target_family": "lattice"
+    },
+    {
+      "family": "NTRU",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-post-quantum-crypto-en",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-en-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "family": "NTRU",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-post-quantum-crypto-fr",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-fr-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "family": "NTRU",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-pqc-ssl-scans",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-pqc-ssl-scans-migration-scoring",
+      "target_family": "all"
+    },
+    {
+      "family": "SIS",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "facebook-lwe-benchmarking",
+      "source_catalog_platform": "github",
+      "source_id": "facebook-lwe-benchmarking",
+      "target_family": "lattice"
+    },
+    {
+      "family": "SIS",
+      "relationship": "future_reviewed_adapter",
+      "source_catalog_id": "facebook-tapas",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "facebook-tapas",
+      "target_family": "lattice"
+    },
+    {
+      "family": "SIS",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-post-quantum-crypto-en",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-en-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "family": "SIS",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-post-quantum-crypto-fr",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-post-quantum-crypto-fr-instruction-seed",
+      "target_family": "all"
+    },
+    {
+      "family": "SIS",
+      "relationship": "cross_family_review_source",
+      "source_catalog_id": "hf-pqc-ssl-scans",
+      "source_catalog_platform": "hugging_face",
+      "source_id": "hf-pqc-ssl-scans-migration-scoring",
+      "target_family": "all"
+    }
+  ],
+  "inputs": {
+    "benchmark_source_contracts": "docs/benchmark_source_contracts.json",
+    "family_support_matrix": "docs/family_support_matrix.json",
+    "source_catalog": "docs/source_catalog.json"
+  },
+  "prime_ecosystem": {
+    "source_ids": [
+      "agades-prime-environment",
+      "agades-prime-publication-handoff",
+      "agades-public-run-export",
+      "prime-autonanogpt-speedrun",
+      "prime-autonomous-speedrunning-experiments",
+      "prime-quickstart",
+      "prime-rl",
+      "prime-verifiers"
+    ],
+    "visibility_anchor_ids": [
+      "prime-autonanogpt-speedrun",
+      "prime-autonomous-speedrunning-experiments",
+      "prime-quickstart"
+    ]
+  },
+  "project": {
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "release_gates": [
+    "uv run pytest tests/test_ecosystem_source_graph.py -q",
+    "uv run agades-pqc ecosystem-source-graph --out docs/ecosystem_source_graph.json",
+    "uv run agades-pqc ecosystem-source-graph-verify --graph docs/ecosystem_source_graph.json",
+    "uv run agades-pqc source-catalog-verify --catalog docs/source_catalog.json",
+    "uv run agades-pqc benchmark-source-verify --contracts docs/benchmark_source_contracts.json",
+    "uv run agades-pqc family-support-verify --matrix docs/family_support_matrix.json"
+  ],
+  "safety": {
+    "contains_private_traces": false,
+    "current_public_verifier_uses_future_sources": false,
+    "publishes_private_candidates": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.ecosystem_source_graph.v1",
+  "source_catalog": {
+    "platform_counts": {
+      "ebacs": 1,
+      "github": 14,
+      "hugging_face": 8,
+      "nist": 7,
+      "nvidia": 3,
+      "prime_intellect": 8
+    },
+    "source_ids": [
+      "agades-benchmark-source-contracts",
+      "agades-family-plugin-manifest",
+      "agades-family-registry-manifest",
+      "agades-family-support-matrix",
+      "agades-hf-collection",
+      "agades-hf-dataset",
+      "agades-hf-space",
+      "agades-lattice-estimator-baseline-contracts",
+      "agades-nvidia-accelerator",
+      "agades-nvidia-publication-handoff",
+      "agades-prime-environment",
+      "agades-prime-publication-handoff",
+      "agades-public-run-export",
+      "agades-publication-manifest",
+      "ctgrind",
+      "dudect",
+      "facebook-lwe-benchmarking",
+      "facebook-tapas",
+      "hf-post-quantum-crypto-en",
+      "hf-post-quantum-crypto-fr",
+      "hf-pqc-ssl-scans",
+      "hf-sc2026-side-channel",
+      "lattice-estimator",
+      "liboqs",
+      "nist-acvp",
+      "nist-additional-signatures-round3",
+      "nist-bike-round4-status",
+      "nist-classic-mceliece-round4-status",
+      "nist-fips-203",
+      "nist-fips-205",
+      "nist-hqc-selection",
+      "nvidia-inception",
+      "pq-code-package",
+      "pqclean",
+      "pqm4",
+      "prime-autonanogpt-speedrun",
+      "prime-autonomous-speedrunning-experiments",
+      "prime-quickstart",
+      "prime-rl",
+      "prime-verifiers",
+      "timecop-supercop"
+    ]
+  },
+  "summary": {
+    "benchmark_source_catalog_links": 18,
+    "benchmark_source_contracts": 18,
+    "family_count": 9,
+    "family_cross_family_source_links": 27,
+    "family_future_source_links": 21,
+    "prime_source_ids": 8,
+    "prime_visibility_anchor_ids": 3,
+    "source_catalog_sources": 41,
+    "unique_family_cross_family_source_ids": 3,
+    "unique_family_future_source_ids": 15,
+    "unresolved_benchmark_source_catalog_links": 0,
+    "unresolved_family_source_links": 0
+  },
+  "unresolved": {
+    "benchmark_source_catalog_links": [],
+    "family_source_links": []
+  }
+}
