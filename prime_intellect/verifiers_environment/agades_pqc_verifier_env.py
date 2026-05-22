@@ -19,7 +19,34 @@ PACKAGE_DIR = Path(__file__).resolve().parent
 DATA_DIR = PACKAGE_DIR / "data"
 TASK_PLAN_PATHS = sorted(DATA_DIR.glob("*.json"))
 PRIME_REWARD_REPORT_SCHEMA = "agades.pqc.prime.reward_report.v1"
-PRIME_RUBRIC_TERMS = ("accepted_attack_plan", *REWARD_TERMS)
+PRIME_RUBRIC_TERMS = ("accepted_attack_plan", "single_json_object", *REWARD_TERMS)
+STRICT_REWARD_PROFILE = "strict"
+PEDAGOGICAL_DENSE_REWARD_PROFILE = "pedagogical_dense"
+PRIME_REWARD_PROFILES = (
+    STRICT_REWARD_PROFILE,
+    PEDAGOGICAL_DENSE_REWARD_PROFILE,
+)
+_STRICT_RUBRIC_WEIGHTS = {
+    "accepted_attack_plan": 1.0,
+    "single_json_object": 0.0,
+    **{term: 0.0 for term in REWARD_TERMS},
+}
+_PEDAGOGICAL_DENSE_RUBRIC_WEIGHTS = {
+    "accepted_attack_plan": 0.30,
+    "single_json_object": 0.10,
+    "formal_validity": 0.15,
+    "cryptographic_applicability": 0.10,
+    "no_security_overclaim": 0.10,
+    "student_readability": 0.07,
+    "reproducibility": 0.05,
+    "reviewer_quality": 0.05,
+    "task_match": 0.04,
+    "proof_obligation_coverage": 0.04,
+}
+_RUBRIC_WEIGHTS_BY_PROFILE = {
+    STRICT_REWARD_PROFILE: _STRICT_RUBRIC_WEIGHTS,
+    PEDAGOGICAL_DENSE_REWARD_PROFILE: _PEDAGOGICAL_DENSE_RUBRIC_WEIGHTS,
+}
 SYSTEM_PROMPT = (
     "You submit JSON AttackPlan candidates for Agades PQC Gym. "
     "Return only a single AttackPlan JSON object. Do not submit Python, shell, "
@@ -63,6 +90,7 @@ def score_attack_plan_completion(
     info: dict[str, Any] | str | None = None,
     require_info: bool = False,
     project_root: Path | str | None = None,
+    reward_profile: str = STRICT_REWARD_PROFILE,
 ) -> float:
     return float(
         score_attack_plan_completion_report(
@@ -70,6 +98,7 @@ def score_attack_plan_completion(
             info=info,
             require_info=require_info,
             project_root=project_root,
+            reward_profile=reward_profile,
         )["aggregate_reward"]
     )
 
@@ -80,10 +109,15 @@ def score_attack_plan_completion_report(
     info: dict[str, Any] | str | None = None,
     require_info: bool = False,
     project_root: Path | str | None = None,
+    reward_profile: str = STRICT_REWARD_PROFILE,
 ) -> dict[str, Any]:
+    weights = _weights_by_term(reward_profile)
     candidate = _single_json_object_text(_last_content(completion))
     if candidate is None:
-        return _blocked_reward_report("single_json_object")
+        return _blocked_reward_report(
+            "single_json_object",
+            reward_profile=reward_profile,
+        )
 
     root = _project_root(project_root)
     reward_report = score_attack_plan_candidate(
@@ -96,17 +130,20 @@ def score_attack_plan_completion_report(
         candidate,
         root=root,
     )
+    rubric_scores = {
+        "accepted_attack_plan": float(reward_report["reward"]),
+        "single_json_object": 1.0,
+        **{
+            term: float(reward_report["terms"][term])
+            for term in REWARD_TERMS
+        },
+    }
     return _prime_reward_report(
-        aggregate_reward=float(reward_report["reward"]),
+        aggregate_reward=_weighted_reward(rubric_scores, weights),
         accepted=bool(reward_report["accepted"]),
         single_json_object=True,
-        rubric_scores={
-            "accepted_attack_plan": float(reward_report["reward"]),
-            **{
-                term: float(reward_report["terms"][term])
-                for term in REWARD_TERMS
-            },
-        },
+        reward_profile=reward_profile,
+        rubric_scores=rubric_scores,
         blocking_reasons=list(reward_report["blocking_reasons"]),
         reward_report=reward_report,
         formal_artifact_binding=formal_artifact_binding,
@@ -132,6 +169,9 @@ def build_rubric_functions(
         )
 
     functions = [accepted_attack_plan]
+    functions.append(
+        _build_term_rubric_function("single_json_object", project_root=root)
+    )
     for term in REWARD_TERMS:
         functions.append(_build_term_rubric_function(term, project_root=root))
     return functions
@@ -142,6 +182,7 @@ def load_environment(
     project_root: Path | str | None = None,
     attack_plan_id: str | None = None,
     target_family: str | None = None,
+    reward_profile: str = STRICT_REWARD_PROFILE,
     **kwargs: Any,
 ) -> Any:
     try:
@@ -163,7 +204,7 @@ def load_environment(
     )
     rubric = vf.Rubric(
         funcs=build_rubric_functions(project_root=project_root),
-        weights=build_rubric_weights(),
+        weights=build_rubric_weights(reward_profile),
     )
     return vf.SingleTurnEnv(
         dataset=dataset,
@@ -200,8 +241,11 @@ def _row_for_plan(path: Path) -> dict[str, Any]:
     }
 
 
-def build_rubric_weights() -> list[float]:
-    return [1.0, *[0.0 for _ in REWARD_TERMS]]
+def build_rubric_weights(
+    reward_profile: str = STRICT_REWARD_PROFILE,
+) -> list[float]:
+    weights = _weights_by_term(reward_profile)
+    return [weights[term] for term in PRIME_RUBRIC_TERMS]
 
 
 def _last_content(completion: list[dict[str, Any]]) -> str:
@@ -302,11 +346,44 @@ def _required_formal_artifact_paths(root: Path) -> tuple[Path, ...]:
     )
 
 
-def _blocked_reward_report(reason: str) -> dict[str, Any]:
+def _weights_by_term(reward_profile: str) -> dict[str, float]:
+    try:
+        weights = _RUBRIC_WEIGHTS_BY_PROFILE[reward_profile]
+    except KeyError as exc:
+        expected = ", ".join(PRIME_REWARD_PROFILES)
+        raise ValueError(
+            f"unknown Prime reward profile: {reward_profile!r}; "
+            f"expected one of: {expected}"
+        ) from exc
+    if set(weights) != set(PRIME_RUBRIC_TERMS):
+        raise RuntimeError(f"Prime reward profile is malformed: {reward_profile}")
+    total_weight = sum(weights.values())
+    if abs(total_weight - 1.0) > 1e-12:
+        raise RuntimeError(
+            f"Prime reward profile weights must sum to 1.0: {reward_profile}"
+        )
+    return weights
+
+
+def _weighted_reward(
+    rubric_scores: dict[str, float],
+    weights: dict[str, float],
+) -> float:
+    return float(
+        sum(float(rubric_scores[term]) * weight for term, weight in weights.items())
+    )
+
+
+def _blocked_reward_report(
+    reason: str,
+    *,
+    reward_profile: str,
+) -> dict[str, Any]:
     return _prime_reward_report(
         aggregate_reward=0.0,
         accepted=False,
         single_json_object=False,
+        reward_profile=reward_profile,
         rubric_scores=dict.fromkeys(PRIME_RUBRIC_TERMS, 0.0),
         blocking_reasons=[reason],
         reward_report=None,
@@ -319,6 +396,7 @@ def _prime_reward_report(
     aggregate_reward: float,
     accepted: bool,
     single_json_object: bool,
+    reward_profile: str,
     rubric_scores: dict[str, float],
     blocking_reasons: list[str],
     reward_report: dict[str, Any] | None,
@@ -330,6 +408,7 @@ def _prime_reward_report(
         "aggregate_reward": aggregate_reward,
         "accepted": accepted,
         "single_json_object": single_json_object,
+        "reward_profile": reward_profile,
         "rubric_scores": rubric_scores,
         "blocking_reasons": blocking_reasons,
         "formal_summary": (

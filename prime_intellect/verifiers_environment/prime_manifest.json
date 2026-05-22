@@ -143,6 +143,41 @@
     "requires_single_json_object": true,
     "review_governance_binding_schema": "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1",
     "reviewer_quality_requires_governance": true,
+    "reward_profiles": {
+      "pedagogical_dense": {
+        "accepted_candidates_still_require_strict_acceptance": true,
+        "aggregate_rule": "weighted training signal over JSON-format compliance and existing verifier sub-scores",
+        "intended_use": "private_prime_rl_training",
+        "rubric_weights": {
+          "accepted_attack_plan": 0.3,
+          "cryptographic_applicability": 0.1,
+          "formal_validity": 0.15,
+          "no_security_overclaim": 0.1,
+          "proof_obligation_coverage": 0.04,
+          "reproducibility": 0.05,
+          "reviewer_quality": 0.05,
+          "single_json_object": 0.1,
+          "student_readability": 0.07,
+          "task_match": 0.04
+        }
+      },
+      "strict": {
+        "aggregate_rule": "accepted_attack_plan only",
+        "intended_use": "public_eval",
+        "rubric_weights": {
+          "accepted_attack_plan": 1.0,
+          "cryptographic_applicability": 0.0,
+          "formal_validity": 0.0,
+          "no_security_overclaim": 0.0,
+          "proof_obligation_coverage": 0.0,
+          "reproducibility": 0.0,
+          "reviewer_quality": 0.0,
+          "single_json_object": 0.0,
+          "student_readability": 0.0,
+          "task_match": 0.0
+        }
+      }
+    },
     "reward_range": [
       0.0,
       1.0

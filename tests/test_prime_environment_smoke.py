@@ -53,6 +53,7 @@ def test_prime_environment_smoke_report_exercises_packaged_verifier(
         "accepted_score": 1.0,
         "accepted_rubric_scores": {
             "accepted_attack_plan": 1.0,
+            "single_json_object": 1.0,
             "formal_validity": 1.0,
             "cryptographic_applicability": 1.0,
             "no_security_overclaim": 1.0,
@@ -75,6 +76,7 @@ def test_prime_environment_smoke_report_exercises_packaged_verifier(
         "reviewer_quality": 1.0,
         "rubric_terms": [
             "accepted_attack_plan",
+            "single_json_object",
             "formal_validity",
             "cryptographic_applicability",
             "no_security_overclaim",
@@ -143,7 +145,7 @@ def test_prime_environment_smoke_verify_accepts_committed_report() -> None:
             "prefixed_json_score": 0.0,
             "review_governance_ok": True,
             "reviewer_quality": 1.0,
-            "rubric_terms": 9,
+            "rubric_terms": 10,
             "unsupported_score": 0.0,
         },
         "failures": [],

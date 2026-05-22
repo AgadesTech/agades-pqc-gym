@@ -50,6 +50,8 @@ def test_prime_verifiers_pyproject_declares_installable_environment() -> None:
         "README.md",
         "prime_manifest.json",
         "data/*.json",
+        "docs/*.json",
+        "formal/lean/**/*",
     ]
     assert data["tool"]["verifiers"]["eval"]["num_examples"] == 2
     assert data["tool"]["verifiers"]["eval"]["rollouts_per_example"] == 1

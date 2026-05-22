@@ -45,7 +45,7 @@
     },
     "gitignore": {
       "path": ".gitignore",
-      "sha256": "04fb0a3fb7c06520453b7d85e91a3a57ead002e5dfba008a35b3b1a3a987b2e0"
+      "sha256": "8f350beab28d3cd0eea30f83ca1b6a2ae8147930f3a958332085a5e9c0d5ec80"
     },
     "openevolve_config": {
       "path": "examples/openevolve/config.yaml",
@@ -57,15 +57,15 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "63ada0b3a03d889bc21dd3decd9dd7970730cc0287093fcc35e7305507b974b4"
+      "sha256": "b2215023d48dcd9d913d78ba76971f7c98334d1e44658e1aff201159e324f9a6"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
-      "sha256": "250dda41e6208ea5374f6b417474bc48697de52cfd7c1a95c8317105597cec80"
+      "sha256": "4efc1f4962608261aeda41a32b7daddcfe24e58eb38f503d4e6767c8830ab92a"
     },
     "prime_eval_config_manifest": {
       "path": "docs/prime_eval_config_manifest.json",
-      "sha256": "8c1663fdc0bf07fa4d265f401a3755e4d0eb407df32c07c754cc701af54501b3"
+      "sha256": "99a1660c918e83122fb864ce4bc1bdb4b9e5a43f94ea2713d319a2b6e765c619"
     },
     "prime_training_template": {
       "path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
@@ -85,15 +85,15 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "586b03eae476ec01dadeabac814b03059b652ee41eed8b2e149807b4a72c6dab"
+      "sha256": "a17af53cbac532fcb54d7f8cd8ef58286022b61f332e0f8bccf61d94fbbef326"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "723698d9fb685ccfbd67caf264bc1264f9e25f0f217d3f59289272a518085b5f"
+      "sha256": "3fa87f3ab24077e4d324679367972b3eca9eb77568964af011bb8a7720e4a02a"
     },
     "rl_environment_contract": {
       "path": "docs/rl_environment_contract.json",
-      "sha256": "d2f54a68f7d51ab29618b84f68c2f45a65587f876ec71a70727cc83b4aea3bd9"
+      "sha256": "8d31e42604cc8fab5716346f9b171819be4bee3a01b547b50ee63a46194df019"
     }
   },
   "project": {

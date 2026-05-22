@@ -56,6 +56,7 @@
       "proof_obligation_coverage": 1.0,
       "reproducibility": 1.0,
       "reviewer_quality": 1.0,
+      "single_json_object": 1.0,
       "student_readability": 1.0,
       "task_match": 1.0
     },
@@ -69,6 +70,7 @@
     "reviewer_quality": 1.0,
     "rubric_terms": [
       "accepted_attack_plan",
+      "single_json_object",
       "formal_validity",
       "cryptographic_applicability",
       "no_security_overclaim",

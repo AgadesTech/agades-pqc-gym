@@ -1133,11 +1133,11 @@
       "blocking": true,
       "detail": "Checked-in release gates that depend on release-audit must first declare ecosystem-smoke-verify, including nested Hugging Face dataset metadata.",
       "evidence": {
-        "checked_release_gate_artifacts": 43,
-        "ecosystem_smoke_gate_artifacts": 27,
+        "checked_release_gate_artifacts": 75,
+        "ecosystem_smoke_gate_artifacts": 43,
         "late_ecosystem_smoke_gate": [],
         "missing_ecosystem_smoke_gate": [],
-        "release_audit_gate_artifacts": 25
+        "release_audit_gate_artifacts": 40
       },
       "failures": [],
       "id": "release-gate-closure",
