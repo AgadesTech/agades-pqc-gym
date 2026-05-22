@@ -377,44 +377,75 @@ GITHUB_ACTIONS_LEAN_GATE_REQUIRED_INPUTS: dict[str, Any] = {
     "auto-config": False,
     "use-mathlib-cache": True,
 }
+GITHUB_ACTIONS_ARTIFACT_DIFF_PATHS = (
+    "docs/benchmark_source_contracts.json",
+    "docs/source_catalog.json",
+    "docs/deepevolve_research_hooks_manifest.json",
+    "docs/family_registry_manifest.json",
+    "docs/family_plugin_manifest.json",
+    "docs/family_support_matrix.json",
+    "docs/ecosystem_source_graph.json",
+    "docs/family_operator_catalog.json",
+    "docs/formal_lean_backend.json",
+    "docs/formal_operator_semantics.json",
+    "docs/formal_attackplan_semantics.json",
+    "docs/formal_lattice_primal_usvp_evaluator_result.json",
+    "docs/formal_lattice_mlwe_module_hypothesis_evaluator_result.json",
+    "docs/formal_lattice_primal_usvp_proof_artifact.json",
+    "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
+    "docs/formal_family_coverage.json",
+    "docs/formal_estimator_model.json",
+    "docs/formal_obligation_ledger.json",
+    "docs/formal_smt_assist_contract.json",
+    "docs/lattice_estimator_manifest.json",
+    "docs/lattice_estimator_baseline_contracts.json",
+    "docs/runbook_input_manifest.json",
+    "docs/public_benchmark_manifest.json",
+    "public/run_export",
+    "hf/dataset",
+    "hf/dataset/MANIFEST.sha256",
+    "hf/space_manifest.json",
+    "hf/collection_manifest.json",
+    "docs/huggingface_publication_handoff.json",
+    "nvidia/accelerator_manifest.json",
+    "docs/nvidia_publication_handoff.json",
+    "docs/publication_manifest.json",
+    "docs/external_publication_review_packet.json",
+    "docs/private_run_policy.json",
+    "docs/private_dataset_curation.json",
+    "docs/pedagogical_rl_method.json",
+    "prime_intellect/training/private_qwen_prime_rl.template.toml",
+    "docs/private_training_config_manifest.json",
+    "docs/private_training_readiness.json",
+    "examples/openevolve/config.yaml",
+    "docs/prime_publication_handoff.json",
+    "docs/prime_speedrun_handoff.json",
+    "docs/prime_eval_config_manifest.json",
+    "prime_intellect/evals/agades_pqc_eval.template.toml",
+    "prime_intellect/verifiers_environment/prime_manifest.json",
+    "prime_intellect/schemas/attack_plan.schema.json",
+    "prime_intellect/schemas/verifier_result.schema.json",
+    "prime_intellect/schemas/schema_manifest.json",
+    "prime_intellect/schemas/task_metadata.schema.json",
+    "public/runbook_audit.json",
+    "public/release_audit.json",
+    "docs/release_status.json",
+    "public/publication_preflight.json",
+    "reports/formal_lean_build_smoke.json",
+    "reports/ecosystem_smoke.json",
+    "reports/hf_space_smoke.json",
+    "reports/openevolve_smoke.json",
+    "reports/prime_environment_smoke.json",
+    "reports/nvidia_manifest_safety.json",
+    "docs/reviewer_governance.json",
+    "docs/rl_environment_contract.json",
+)
 GITHUB_ACTIONS_REQUIRED_COMMANDS = (
     ("build-package", "uv build"),
     ("build-prime-environment", "uv build prime_intellect/verifiers_environment"),
     (
         "check-artifact-diff",
-        "git diff --exit-code -- docs/benchmark_source_contracts.json "
-        "docs/source_catalog.json docs/deepevolve_research_hooks_manifest.json "
-        "docs/family_registry_manifest.json "
-        "docs/family_plugin_manifest.json "
-        "docs/family_support_matrix.json "
-        "docs/ecosystem_source_graph.json "
-        "docs/family_operator_catalog.json "
-        "docs/formal_lean_backend.json "
-        "docs/lattice_estimator_manifest.json "
-        "docs/lattice_estimator_baseline_contracts.json "
-        "docs/runbook_input_manifest.json "
-        "docs/public_benchmark_manifest.json public/run_export "
-        "hf/dataset hf/space_manifest.json hf/collection_manifest.json "
-        "docs/huggingface_publication_handoff.json "
-        "nvidia/accelerator_manifest.json "
-        "docs/nvidia_publication_handoff.json "
-        "docs/publication_manifest.json "
-        "docs/external_publication_review_packet.json "
-        "docs/private_run_policy.json docs/private_dataset_curation.json "
-        "docs/pedagogical_rl_method.json "
-        "docs/prime_publication_handoff.json docs/prime_speedrun_handoff.json "
-        "docs/prime_eval_config_manifest.json "
-        "prime_intellect/evals/agades_pqc_eval.template.toml "
-        "prime_intellect/verifiers_environment/prime_manifest.json "
-        "prime_intellect/schemas/attack_plan.schema.json "
-        "prime_intellect/schemas/verifier_result.schema.json "
-        "prime_intellect/schemas/schema_manifest.json "
-        "prime_intellect/schemas/task_metadata.schema.json "
-        "public/runbook_audit.json public/release_audit.json "
-        "docs/release_status.json public/publication_preflight.json "
-        "reports/ecosystem_smoke.json reports/hf_space_smoke.json "
-        "reports/openevolve_smoke.json reports/prime_environment_smoke.json "
-        "reports/nvidia_manifest_safety.json",
+        "git diff --exit-code -- " + " ".join(GITHUB_ACTIONS_ARTIFACT_DIFF_PATHS),
     ),
     ("check-whitespace", "git diff --check"),
     (
@@ -5656,11 +5687,25 @@ def _workflow_steps(jobs: dict[str, Any]) -> list[dict[str, Any]]:
 
 
 def _normalized_run_commands(run: str) -> list[str]:
-    return [
-        " ".join(line.strip().split())
-        for line in run.splitlines()
-        if line.strip() and not line.strip().startswith("#")
-    ]
+    commands: list[str] = []
+    continued_parts: list[str] = []
+    for raw_line in run.splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+
+        continues = line.endswith("\\")
+        if continues:
+            line = line[:-1].strip()
+        continued_parts.append(line)
+
+        if not continues:
+            commands.append(" ".join(" ".join(continued_parts).split()))
+            continued_parts = []
+
+    if continued_parts:
+        commands.append(" ".join(" ".join(continued_parts).split()))
+    return commands
 
 
 def _valid_public_example_families(root: Path) -> tuple[set[str], list[str]]:
