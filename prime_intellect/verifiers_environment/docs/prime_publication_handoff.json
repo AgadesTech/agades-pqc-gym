@@ -1,0 +1,220 @@
+{
+  "family_support": {
+    "benchmark_count": 78,
+    "cross_family_review_source_count": 3,
+    "families_with_future_reviewed_adapters": [
+      "CODE_BASED",
+      "HASH_BASED",
+      "IMPLEMENTATION_SECURITY",
+      "LWE",
+      "MLWE",
+      "MULTIVARIATE",
+      "NTRU",
+      "SIS"
+    ],
+    "family_count": 9,
+    "implemented": [
+      "LWE",
+      "MLWE"
+    ],
+    "per_family_future_reviewed_adapter_source_counts": {
+      "CODE_BASED": 3,
+      "HASH_BASED": 1,
+      "IMPLEMENTATION_SECURITY": 8,
+      "ISOGENY_HISTORICAL": 0,
+      "LWE": 2,
+      "MLWE": 2,
+      "MULTIVARIATE": 1,
+      "NTRU": 2,
+      "SIS": 2
+    },
+    "plugin_count": 6,
+    "plugins": [
+      "code_based",
+      "hash_based",
+      "implementation_security",
+      "isogeny_historical",
+      "lattice",
+      "multivariate"
+    ],
+    "public_example_count": 79,
+    "review_required_before_claims": true,
+    "schema_only": [
+      "NTRU",
+      "SIS"
+    ],
+    "support_level_counts": {
+      "implemented": 2,
+      "schema_only": 2,
+      "toy_evaluator": 5
+    },
+    "toy_evaluators": [
+      "CODE_BASED",
+      "HASH_BASED",
+      "IMPLEMENTATION_SECURITY",
+      "ISOGENY_HISTORICAL",
+      "MULTIVARIATE"
+    ],
+    "unique_future_reviewed_adapter_source_count": 15
+  },
+  "local_package": {
+    "artifact_paths": [
+      "prime_intellect/environment_card.md",
+      "prime_intellect/evals/agades_pqc_eval.template.toml",
+      "prime_intellect/verifier_spec.md",
+      "prime_intellect/verifiers_environment/README.md",
+      "prime_intellect/verifiers_environment/pyproject.toml",
+      "prime_intellect/verifiers_environment/agades_pqc_verifier_env.py",
+      "prime_intellect/verifiers_environment/prime_manifest.json",
+      "prime_intellect/schemas/attack_plan.schema.json",
+      "prime_intellect/schemas/verifier_result.schema.json",
+      "prime_intellect/schemas/task_metadata.schema.json",
+      "prime_intellect/schemas/schema_manifest.json",
+      "docs/prime_eval_config_manifest.json"
+    ],
+    "artifact_sha256": {
+      "docs/prime_eval_config_manifest.json": "8c1663fdc0bf07fa4d265f401a3755e4d0eb407df32c07c754cc701af54501b3",
+      "prime_intellect/environment_card.md": "e7476a86add4e7464636565db91e83dcfab57488ed2d48a18157e0ce52163011",
+      "prime_intellect/evals/agades_pqc_eval.template.toml": "8a653d4d2258e3e51561676c479edd30ef756b4f66c09ef24f3be1b461e4e152",
+      "prime_intellect/schemas/attack_plan.schema.json": "4d8a4e49974d6c0df0d466f5ee3b488e54893af4ef23e61e00af4a0cbb7ea592",
+      "prime_intellect/schemas/schema_manifest.json": "f448d41c640e6dc02a462af1bf695a93045676a191cee53403a121cab833fbeb",
+      "prime_intellect/schemas/task_metadata.schema.json": "95ee9534b21fce15122c5d65aafcaa181210a0e898c284b5b8b46a0cdcbd3e07",
+      "prime_intellect/schemas/verifier_result.schema.json": "dca189a653db3cfc7b70ad099ba8a627f7940402ffc3846b10ec33989cb468a4",
+      "prime_intellect/verifier_spec.md": "90ef567a4f2421b5468a88669413bb0004134c7ac9fc3869037a02e7860f7131",
+      "prime_intellect/verifiers_environment/README.md": "39ec4ff9d9d609ab1e2533d08a623b8ccfd7a6dca086f000bc5e9a6de15ea662",
+      "prime_intellect/verifiers_environment/agades_pqc_verifier_env.py": "e0c4922f5670b06e7732d3f8c684502b69e6fab4be2a2a7323c923b51c2de98d",
+      "prime_intellect/verifiers_environment/prime_manifest.json": "250dda41e6208ea5374f6b417474bc48697de52cfd7c1a95c8317105597cec80",
+      "prime_intellect/verifiers_environment/pyproject.toml": "f3a01ff6dde5b20ace513244eefa6f00831fbd5636f362f5f0e615bd4cc6a6a5"
+    },
+    "build_command": "uv build prime_intellect/verifiers_environment",
+    "eval_config_verify_command": "uv run agades-pqc prime-eval-config-verify --config prime_intellect/evals/agades_pqc_eval.template.toml --manifest docs/prime_eval_config_manifest.json",
+    "manifest_verify_command": "uv run agades-pqc prime-manifest-verify --manifest prime_intellect/verifiers_environment/prime_manifest.json",
+    "schemas_verify_command": "uv run agades-pqc prime-schemas-verify --schemas prime_intellect/schemas"
+  },
+  "platform": {
+    "ecosystem": "prime_intellect",
+    "environment_manifest": "prime_intellect/verifiers_environment/prime_manifest.json",
+    "environment_package": "agades-pqc-verifier-env",
+    "handoff_status": "local_package_ready_external_publication_blocked",
+    "release_plan": "docs/PRIME_INTELLECT_RELEASE_PLAN.md",
+    "schema_manifest": "prime_intellect/schemas/schema_manifest.json"
+  },
+  "prime_quickstart_alignment": {
+    "agades_environment_command": "prime eval run <owner>/agades-pqc-verifier-env",
+    "credentials_checked_at_generation": false,
+    "external_prime_execution_performed": false,
+    "onboarding_commands": [
+      {
+        "command": "uv tool install -U prime",
+        "id": "install_prime_cli",
+        "purpose": "Install the Prime CLI from the public quickstart."
+      },
+      {
+        "command": "prime login",
+        "id": "browser_login",
+        "purpose": "Authenticate the local Prime CLI session."
+      },
+      {
+        "command": "prime lab setup",
+        "id": "workspace_setup",
+        "purpose": "Prepare local agent and Prime workspace configuration."
+      }
+    ],
+    "reference_eval_commands": [
+      {
+        "command": "prime eval run primeintellect/reverse-text -m openai/gpt-oss-20b -p prime -n 1 -r 1 -t 512 -s -A",
+        "id": "quick_text_eval",
+        "purpose": "Prime quickstart one-example evaluation smoke."
+      },
+      {
+        "command": "prime eval run primeintellect/aime2026 -m openai/gpt-oss-20b -p prime -n 1 -r 1 -t 2048 -s -A",
+        "id": "reasoning_eval",
+        "purpose": "Prime quickstart reasoning evaluation example."
+      }
+    ],
+    "requires_billing_for_hosted_compute": true,
+    "requires_credentials": true,
+    "source_anchor_id": "prime-quickstart",
+    "source_observed_date": "2026-05-18",
+    "source_url": "https://app.primeintellect.ai/dashboard/home/quickstart"
+  },
+  "project": {
+    "cli": "agades-pqc",
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "readiness": {
+    "credentials_checked_at_generation": false,
+    "credentials_present_in_artifact": false,
+    "environment_manifest_accepted": true,
+    "eval_config_accepted": true,
+    "external_publication_requires_review": true,
+    "family_count": 9,
+    "json_only_scoring": true,
+    "local_package_ready": true,
+    "prime_hub_publication_performed": false,
+    "public_examples_mirrored": true,
+    "requires_credentials": true,
+    "schemas_accepted": true,
+    "task_count": 79
+  },
+  "release_gates": [
+    "uv run pytest tests/test_prime_publication_handoff.py -q",
+    "uv run agades-pqc prime-publication-handoff --out docs/prime_publication_handoff.json",
+    "uv run agades-pqc prime-publication-handoff-verify --handoff docs/prime_publication_handoff.json",
+    "uv run agades-pqc prime-manifest-verify --manifest prime_intellect/verifiers_environment/prime_manifest.json",
+    "uv run agades-pqc prime-schemas-verify --schemas prime_intellect/schemas",
+    "uv run agades-pqc prime-eval-config-verify --config prime_intellect/evals/agades_pqc_eval.template.toml --manifest docs/prime_eval_config_manifest.json",
+    "uv build prime_intellect/verifiers_environment",
+    "uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json",
+    "uv run agades-pqc release-audit --out public/release_audit.json"
+  ],
+  "review_required_before_publish": [
+    "Confirm Prime account, organization, and target namespace.",
+    "Run the local Prime environment build and verifier smoke gates.",
+    "Review the Prime eval config before any credentialed eval run.",
+    "Review all public cards for no private traces and no security claims.",
+    "Publish first as private/unlisted if Prime Hub supports the target workflow.",
+    "Record external Prime Hub URL only after credentialed review."
+  ],
+  "safety": {
+    "arbitrary_code_execution": false,
+    "claims_external_publication": false,
+    "contains_private_traces": false,
+    "live_targeting": false,
+    "publishes_private_candidates": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.prime_publication_handoff.v1",
+  "source_anchors": [
+    {
+      "current_use": "current_operator_onboarding_reference",
+      "id": "prime-quickstart",
+      "source_catalog_required": true
+    },
+    {
+      "current_use": "public_evaluator_observability_pattern",
+      "id": "prime-autonomous-speedrunning-experiments",
+      "source_catalog_required": true
+    },
+    {
+      "current_use": "public_benchmark_story_anchor",
+      "id": "prime-autonanogpt-speedrun",
+      "source_catalog_required": true
+    }
+  ],
+  "source_catalog_scope": {
+    "non_lattice_toy_evaluator_count": 41,
+    "non_lattice_toy_operator_families": [
+      "CODE_BASED",
+      "HASH_BASED",
+      "IMPLEMENTATION_SECURITY",
+      "ISOGENY_HISTORICAL",
+      "MULTIVARIATE"
+    ],
+    "non_lattice_toy_operator_security_claims": 0,
+    "non_lattice_toy_operator_variant_count": 41,
+    "source_count": 41
+  }
+}

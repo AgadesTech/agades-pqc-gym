@@ -595,6 +595,7 @@ def build_formal_artifact_binding(
         artifact = build_attack_plan_proof_artifact_from_json(
             candidate_json,
             source_label="<rl-candidate>",
+            root=root,
         )
     except (json.JSONDecodeError, ValidationError, ValueError):
         return {

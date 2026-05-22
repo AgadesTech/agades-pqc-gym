@@ -1,12 +1,17 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 from pathlib import Path
 from types import ModuleType
 
+SOURCE_DOCS = Path("docs")
+SOURCE_LEAN = Path("formal/lean")
 ENV_MODULE = Path(
     "prime_intellect/verifiers_environment/agades_pqc_verifier_env.py"
 )
+PACKAGED_DOCS = Path("prime_intellect/verifiers_environment/docs")
+PACKAGED_LEAN = Path("prime_intellect/verifiers_environment/formal/lean")
 LATTICE_PLAN = Path(
     "prime_intellect/verifiers_environment/data/lattice_primal_usvp_toy.json"
 )
@@ -72,12 +77,103 @@ def test_prime_verifiers_environment_blocks_prefixed_json_in_term_report() -> No
     assert all(score == 0.0 for score in report["rubric_scores"].values())
 
 
+def test_prime_verifiers_environment_accepts_explicit_project_root() -> None:
+    module = _load_environment_module()
+    raw_plan = LATTICE_PLAN.read_text(encoding="utf-8")
+
+    report = module.score_attack_plan_completion_report(
+        _assistant_completion(raw_plan),
+        info=_task_info_for(module, "lattice_primal_usvp_toy_v1"),
+        require_info=True,
+        project_root=Path.cwd(),
+    )
+
+    assert report["aggregate_reward"] == 1.0
+    assert report["formal_artifact_binding"]["status"] == "attached"
+
+
+def test_prime_verifiers_environment_uses_packaged_formal_artifacts() -> None:
+    module = _load_environment_module()
+    raw_plan = LATTICE_PLAN.read_text(encoding="utf-8")
+
+    assert module._project_root(None) == module.PACKAGE_DIR
+
+    report = module.score_attack_plan_completion_report(
+        _assistant_completion(raw_plan),
+        info=_task_info_for(module, "lattice_primal_usvp_toy_v1"),
+        require_info=True,
+    )
+
+    assert report["aggregate_reward"] == 1.0
+    assert report["formal_artifact_binding"]["status"] == "attached"
+
+
+def test_prime_verifiers_environment_packaged_artifacts_match_source() -> None:
+    assert _file_digests(PACKAGED_DOCS, suffix=".json") == _file_digests(
+        SOURCE_DOCS,
+        suffix=".json",
+    )
+    assert _file_digests(PACKAGED_LEAN) == _file_digests(
+        SOURCE_LEAN,
+        ignored_parts=frozenset({".lake"}),
+    )
+
+
+def test_prime_verifiers_environment_rejects_bad_project_root(tmp_path: Path) -> None:
+    module = _load_environment_module()
+    raw_plan = LATTICE_PLAN.read_text(encoding="utf-8")
+
+    try:
+        module.score_attack_plan_completion_report(
+            _assistant_completion(raw_plan),
+            info=_task_info_for(module, "lattice_primal_usvp_toy_v1"),
+            require_info=True,
+            project_root=tmp_path,
+        )
+    except ValueError as exc:
+        assert "required Agades formal artifacts" in str(exc)
+    else:
+        raise AssertionError("bad project_root should be rejected")
+
+
 def test_prime_verifiers_environment_builds_named_rubric_functions() -> None:
     module = _load_environment_module()
 
     functions = module.build_rubric_functions()
 
     assert [func.__name__ for func in functions] == list(module.PRIME_RUBRIC_TERMS)
+
+
+def test_prime_verifiers_environment_weights_only_primary_reward() -> None:
+    module = _load_environment_module()
+
+    assert module.build_rubric_weights() == [
+        1.0,
+        *[0.0 for _ in module.REWARD_TERMS],
+    ]
+
+
+def test_prime_verifiers_environment_filters_dataset_rows() -> None:
+    module = _load_environment_module()
+
+    rows = module.build_dataset_rows(
+        attack_plan_id="lattice_primal_usvp_toy_v1"
+    )
+
+    assert len(rows) == 1
+    assert rows[0]["info"]["target_family"] == "LWE"
+    assert module.build_dataset_rows(target_family="LWE")
+
+
+def test_prime_verifiers_environment_rejects_empty_dataset_filter() -> None:
+    module = _load_environment_module()
+
+    try:
+        module.build_dataset_rows(attack_plan_id="does_not_exist")
+    except ValueError as exc:
+        assert "task filter matched no rows" in str(exc)
+    else:
+        raise AssertionError("empty Prime task filter should be rejected")
 
 
 def _assistant_completion(content: str) -> list[dict[str, str]]:
@@ -102,3 +198,20 @@ def _task_info_for(module: ModuleType, attack_plan_id: str) -> dict[str, object]
         if info["attack_plan_id"] == attack_plan_id:
             return info
     raise AssertionError(f"missing task info for {attack_plan_id}")
+
+
+def _file_digests(
+    root: Path,
+    *,
+    suffix: str | None = None,
+    ignored_parts: frozenset[str] = frozenset(),
+) -> dict[str, str]:
+    digests: dict[str, str] = {}
+    for path in sorted(root.rglob("*")):
+        relative = path.relative_to(root)
+        if not path.is_file() or ignored_parts.intersection(relative.parts):
+            continue
+        if suffix is not None and path.suffix != suffix:
+            continue
+        digests[relative.as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
+    return digests

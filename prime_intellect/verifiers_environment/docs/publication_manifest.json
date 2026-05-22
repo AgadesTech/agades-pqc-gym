@@ -1,0 +1,691 @@
+{
+  "family_support": {
+    "families_with_future_reviewed_adapters": [
+      "CODE_BASED",
+      "HASH_BASED",
+      "IMPLEMENTATION_SECURITY",
+      "LWE",
+      "MLWE",
+      "MULTIVARIATE",
+      "NTRU",
+      "SIS"
+    ],
+    "family_count": 9,
+    "future_reviewed_adapter_sources_by_family": 21,
+    "implemented": [
+      "LWE",
+      "MLWE"
+    ],
+    "platform_support": {
+      "family_counts_match": true,
+      "missing_claim_review_gate": [],
+      "platforms": [
+        "huggingface_collection",
+        "nvidia",
+        "prime_intellect"
+      ],
+      "platforms_with_claim_review_gate": [
+        "huggingface_collection",
+        "nvidia",
+        "prime_intellect"
+      ],
+      "surface_count": 3
+    },
+    "review_required_before_claims": true,
+    "schema_only": [
+      "NTRU",
+      "SIS"
+    ],
+    "toy_evaluators": [
+      "CODE_BASED",
+      "HASH_BASED",
+      "IMPLEMENTATION_SECURITY",
+      "ISOGENY_HISTORICAL",
+      "MULTIVARIATE"
+    ],
+    "unique_future_reviewed_adapter_source_count": 15
+  },
+  "private_holdback": [
+    "serious evolution traces",
+    "private prompts and prompt-ranking policies",
+    "evaluator weighting and anti-gaming heuristics",
+    "unreleased candidate strategies",
+    "responsible-disclosure material"
+  ],
+  "project": {
+    "cli": "agades-pqc",
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "public_run_bundles": [
+    {
+      "artifact_paths": [
+        "examples/public_runs/code_based_toy_classic_mceliece_v0/README.md",
+        "examples/public_runs/code_based_toy_classic_mceliece_v0/run_ledger.json",
+        "examples/public_runs/code_based_toy_classic_mceliece_v0/trace_public.jsonl",
+        "examples/public_runs/code_based_toy_classic_mceliece_v0/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "examples/public_runs/code_based_toy_classic_mceliece_v0/MANIFEST.sha256": "8365a7b9d3178d23bae1dfec573cd4b17ce4fe8bc594bea57af976c7c7b446bc",
+        "examples/public_runs/code_based_toy_classic_mceliece_v0/README.md": "81fd55e950e12324a34aff1f9a126b7c71c192a4b2d9bfcf19b4d0fee9b64bec",
+        "examples/public_runs/code_based_toy_classic_mceliece_v0/run_ledger.json": "3d0c537c733d839518af44590877694cc9ea692710f95121fd14a8f8b687c206",
+        "examples/public_runs/code_based_toy_classic_mceliece_v0/trace_public.jsonl": "80743ab370dcc68057489ce0da76751879b570eb873bfccb2e74a19277533459"
+      },
+      "benchmark_path": "benchmarks/code_based_toy_classic_mceliece",
+      "family": "CODE_BASED",
+      "id": "code_based_toy_classic_mceliece_v0",
+      "publishes_private_candidates": false,
+      "security_claim": false
+    },
+    {
+      "artifact_paths": [
+        "examples/public_runs/code_based_toy_hqc_v0/README.md",
+        "examples/public_runs/code_based_toy_hqc_v0/run_ledger.json",
+        "examples/public_runs/code_based_toy_hqc_v0/trace_public.jsonl",
+        "examples/public_runs/code_based_toy_hqc_v0/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "examples/public_runs/code_based_toy_hqc_v0/MANIFEST.sha256": "b9042dfc684a6c24a5293070ee2e7f64e5756717a6b62f3cb9957b749bfeabf3",
+        "examples/public_runs/code_based_toy_hqc_v0/README.md": "8fe0963f3964a4bf3f65f88f9af6c1c6652415525b87feddf3256d6e1c9b0c75",
+        "examples/public_runs/code_based_toy_hqc_v0/run_ledger.json": "91df21dd121524c7c9b955ec6c334f8c2a13c03c7a9b59651215c607c2b20590",
+        "examples/public_runs/code_based_toy_hqc_v0/trace_public.jsonl": "eda8755c52b8733b916bd907347c72502458b238986df5a54db09be6d7ed8020"
+      },
+      "benchmark_path": "benchmarks/code_based_toy_hqc",
+      "family": "CODE_BASED",
+      "id": "code_based_toy_hqc_v0",
+      "publishes_private_candidates": false,
+      "security_claim": false
+    },
+    {
+      "artifact_paths": [
+        "examples/public_runs/code_based_toy_isd_v0/README.md",
+        "examples/public_runs/code_based_toy_isd_v0/run_ledger.json",
+        "examples/public_runs/code_based_toy_isd_v0/trace_public.jsonl",
+        "examples/public_runs/code_based_toy_isd_v0/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "examples/public_runs/code_based_toy_isd_v0/MANIFEST.sha256": "5e3b6100c8bea9774ab7938011fd50b97949ab703dbd89aff8cdbe05f7b54ee0",
+        "examples/public_runs/code_based_toy_isd_v0/README.md": "03e4bf1971f557eb652ed8383184ec21a7ec2fb3a38702668b68ed465560256a",
+        "examples/public_runs/code_based_toy_isd_v0/run_ledger.json": "06e7414f1a6166e048069d539327766a69ba8b06cb0b2eafe64b42287eef4a7c",
+        "examples/public_runs/code_based_toy_isd_v0/trace_public.jsonl": "4d1373fa9b7caaf2b34615dfa8ee599189d2afbda06258f2b8ca473d2ed67484"
+      },
+      "benchmark_path": "benchmarks/code_based_toy_isd",
+      "family": "CODE_BASED",
+      "id": "code_based_toy_isd_v0",
+      "publishes_private_candidates": false,
+      "security_claim": false
+    },
+    {
+      "artifact_paths": [
+        "examples/public_runs/code_based_toy_mdpc_v0/README.md",
+        "examples/public_runs/code_based_toy_mdpc_v0/run_ledger.json",
+        "examples/public_runs/code_based_toy_mdpc_v0/trace_public.jsonl",
+        "examples/public_runs/code_based_toy_mdpc_v0/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "examples/public_runs/code_based_toy_mdpc_v0/MANIFEST.sha256": "3037c0d9bda76aca00e1bd7200f56c2978e5c12f3bfd7821d34f577f27c2e287",
+        "examples/public_runs/code_based_toy_mdpc_v0/README.md": "af9fcf4dc5612affe7b1e3b7c2b1d3f91fb633594a5949c0e56ecc386c338060",
+        "examples/public_runs/code_based_toy_mdpc_v0/run_ledger.json": "7b8bd2b7bf1118cf49a9c79a731ceea80c607d4e3e849beb085c54b79fe852af",
+        "examples/public_runs/code_based_toy_mdpc_v0/trace_public.jsonl": "2cb9e6a1f5b5545fddc8cac3d4b9b78aa380a39c77bfcf7c485e812d3d769cb8"
+      },
+      "benchmark_path": "benchmarks/code_based_toy_mdpc",
+      "family": "CODE_BASED",
+      "id": "code_based_toy_mdpc_v0",
+      "publishes_private_candidates": false,
+      "security_claim": false
+    },
+    {
+      "artifact_paths": [
+        "examples/public_runs/hash_based_toy_bound_v0/README.md",
+        "examples/public_runs/hash_based_toy_bound_v0/run_ledger.json",
+        "examples/public_runs/hash_based_toy_bound_v0/trace_public.jsonl",
+        "examples/public_runs/hash_based_toy_bound_v0/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "examples/public_runs/hash_based_toy_bound_v0/MANIFEST.sha256": "a4dec5f0cec8462b5553142d0345c4f4e5b6c06e1db8bc919739ee025caca3ce",
+        "examples/public_runs/hash_based_toy_bound_v0/README.md": "af9fcf4dc5612affe7b1e3b7c2b1d3f91fb633594a5949c0e56ecc386c338060",
+        "examples/public_runs/hash_based_toy_bound_v0/run_ledger.json": "235dab965446b82af495a4a6c4aaf2fb4b592bc5e6e16db1f662b3d32edc46f6",
+        "examples/public_runs/hash_based_toy_bound_v0/trace_public.jsonl": "ba7220414941b28a30c2a033a9f89d25665923a9505c29829fa647702fdc56ed"
+      },
+      "benchmark_path": "benchmarks/hash_based_toy_bound",
+      "family": "HASH_BASED",
+      "id": "hash_based_toy_bound_v0",
+      "publishes_private_candidates": false,
+      "security_claim": false
+    },
+    {
+      "artifact_paths": [
+        "examples/public_runs/hash_based_toy_misuse_v0/README.md",
+        "examples/public_runs/hash_based_toy_misuse_v0/run_ledger.json",
+        "examples/public_runs/hash_based_toy_misuse_v0/trace_public.jsonl",
+        "examples/public_runs/hash_based_toy_misuse_v0/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "examples/public_runs/hash_based_toy_misuse_v0/MANIFEST.sha256": "dd6edbecf6aef0507abda30e3bdf144c50e5816a6c82ca35aa9ec7ca45c1c1df",
+        "examples/public_runs/hash_based_toy_misuse_v0/README.md": "7ad2046805dabb79556c7c6a6d58f4cc31ddda7fcc7248b77f9f2cf677cc9ae8",
+        "examples/public_runs/hash_based_toy_misuse_v0/run_ledger.json": "c0bb3c699d75d1c862abfa13494a184ffb389d23132ffbf7820512c73f82e295",
+        "examples/public_runs/hash_based_toy_misuse_v0/trace_public.jsonl": "d2262f90415f77b01a2e53f2fd2352ad9a40f6025b7ede48d976453bdbe0fd51"
+      },
+      "benchmark_path": "benchmarks/hash_based_toy_misuse",
+      "family": "HASH_BASED",
+      "id": "hash_based_toy_misuse_v0",
+      "publishes_private_candidates": false,
+      "security_claim": false
+    },
+    {
+      "artifact_paths": [
+        "examples/public_runs/hash_based_toy_signature_v0/README.md",
+        "examples/public_runs/hash_based_toy_signature_v0/run_ledger.json",
+        "examples/public_runs/hash_based_toy_signature_v0/trace_public.jsonl",
+        "examples/public_runs/hash_based_toy_signature_v0/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "examples/public_runs/hash_based_toy_signature_v0/MANIFEST.sha256": "c669380c712d78b0ea30a4ac451a5b3d82ddd430f90622f5114e3cfb9770b5a1",
+        "examples/public_runs/hash_based_toy_signature_v0/README.md": "9d8ee5be112799df8d6027a37f9b5db4f306089c2add37650d90c0254b0438f2",
+        "examples/public_runs/hash_based_toy_signature_v0/run_ledger.json": "7fecae40223233ee91fde5846767830b48d197c841837b35d5937eb3f320b594",
+        "examples/public_runs/hash_based_toy_signature_v0/trace_public.jsonl": "31bbfb93c1c824e3d1ddbf39509b5b232a29dbb3698e937c3a4dcb59452a580d"
+      },
+      "benchmark_path": "benchmarks/hash_based_toy_signature",
+      "family": "HASH_BASED",
+      "id": "hash_based_toy_signature_v0",
+      "publishes_private_candidates": false,
+      "security_claim": false
+    },
+    {
+      "artifact_paths": [
+        "examples/public_runs/implementation_security_toy_benchmark_v0/README.md",
+        "examples/public_runs/implementation_security_toy_benchmark_v0/run_ledger.json",
+        "examples/public_runs/implementation_security_toy_benchmark_v0/trace_public.jsonl",
+        "examples/public_runs/implementation_security_toy_benchmark_v0/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "examples/public_runs/implementation_security_toy_benchmark_v0/MANIFEST.sha256": "fbe6ae17d70b79cef67607bfecfee4b9052eeb84a7ba7614765e30b2599fefef",
+        "examples/public_runs/implementation_security_toy_benchmark_v0/README.md": "9d8ee5be112799df8d6027a37f9b5db4f306089c2add37650d90c0254b0438f2",
+        "examples/public_runs/implementation_security_toy_benchmark_v0/run_ledger.json": "b70dbdaa758e9867c7cb101ddd5440e47d189a411f921cc8245e770d5fe18220",
+        "examples/public_runs/implementation_security_toy_benchmark_v0/trace_public.jsonl": "aa06552e545786d6a2a643ab59746ceee28164984c1118b5c952abe8d6b7f1b8"
+      },
+      "benchmark_path": "benchmarks/implementation_security_toy_benchmark",
+      "family": "IMPLEMENTATION_SECURITY",
+      "id": "implementation_security_toy_benchmark_v0",
+      "publishes_private_candidates": false,
+      "security_claim": false
+    },
+    {
+      "artifact_paths": [
+        "examples/public_runs/implementation_security_toy_kat_v0/README.md",
+        "examples/public_runs/implementation_security_toy_kat_v0/run_ledger.json",
+        "examples/public_runs/implementation_security_toy_kat_v0/trace_public.jsonl",
+        "examples/public_runs/implementation_security_toy_kat_v0/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "examples/public_runs/implementation_security_toy_kat_v0/MANIFEST.sha256": "d5f62da3352e100aa40a5bec3ba64cf54269b0b58574d6abd8dfdceb7d4fbefa",
+        "examples/public_runs/implementation_security_toy_kat_v0/README.md": "395ee6d4f04f2ed0cd73931ea74a75f854f2a7eaf2084075571c40035563c519",
+        "examples/public_runs/implementation_security_toy_kat_v0/run_ledger.json": "c91d472978ca822a3edcc869b0a06fed1b7b51fdb9a962f790361cb865b242ec",
+        "examples/public_runs/implementation_security_toy_kat_v0/trace_public.jsonl": "84670b7d18ccc29126646742fe76d038ef68bb5d11d96857b3078fd2f723dd04"
+      },
+      "benchmark_path": "benchmarks/implementation_security_toy_kat",
+      "family": "IMPLEMENTATION_SECURITY",
+      "id": "implementation_security_toy_kat_v0",
+      "publishes_private_candidates": false,
+      "security_claim": false
+    },
+    {
+      "artifact_paths": [
+        "examples/public_runs/implementation_security_toy_timing_v0/README.md",
+        "examples/public_runs/implementation_security_toy_timing_v0/run_ledger.json",
+        "examples/public_runs/implementation_security_toy_timing_v0/trace_public.jsonl",
+        "examples/public_runs/implementation_security_toy_timing_v0/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "examples/public_runs/implementation_security_toy_timing_v0/MANIFEST.sha256": "987ede4f5de22631f20232955283f6d6987a82f0905d431fe6a3543298292a18",
+        "examples/public_runs/implementation_security_toy_timing_v0/README.md": "af9fcf4dc5612affe7b1e3b7c2b1d3f91fb633594a5949c0e56ecc386c338060",
+        "examples/public_runs/implementation_security_toy_timing_v0/run_ledger.json": "0bd9dc5d188aca2affc3b611c6dcb78960fdde8d5c0e999da936a3b432d079dd",
+        "examples/public_runs/implementation_security_toy_timing_v0/trace_public.jsonl": "b467530f0f38fa244508f22ad5423a456bc8d40bb76bf5e9791454bf6324d8b1"
+      },
+      "benchmark_path": "benchmarks/implementation_security_toy_timing",
+      "family": "IMPLEMENTATION_SECURITY",
+      "id": "implementation_security_toy_timing_v0",
+      "publishes_private_candidates": false,
+      "security_claim": false
+    },
+    {
+      "artifact_paths": [
+        "examples/public_runs/isogeny_historical_toy_path_v0/README.md",
+        "examples/public_runs/isogeny_historical_toy_path_v0/run_ledger.json",
+        "examples/public_runs/isogeny_historical_toy_path_v0/trace_public.jsonl",
+        "examples/public_runs/isogeny_historical_toy_path_v0/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "examples/public_runs/isogeny_historical_toy_path_v0/MANIFEST.sha256": "3fb23fae34ff97cf433b2854a8a99ba77bd6b5a5f566eccc7c5868a314424468",
+        "examples/public_runs/isogeny_historical_toy_path_v0/README.md": "9d8ee5be112799df8d6027a37f9b5db4f306089c2add37650d90c0254b0438f2",
+        "examples/public_runs/isogeny_historical_toy_path_v0/run_ledger.json": "3c396113f6ccc5817885a96cab824398b7858a56a7c6223b2d64565c587cf90d",
+        "examples/public_runs/isogeny_historical_toy_path_v0/trace_public.jsonl": "c3e29360cd487fb888bce78d58f007faeb5ba5c508bff4f9c98ae93eb3553496"
+      },
+      "benchmark_path": "benchmarks/isogeny_historical_toy_path",
+      "family": "ISOGENY_HISTORICAL",
+      "id": "isogeny_historical_toy_path_v0",
+      "publishes_private_candidates": false,
+      "security_claim": false
+    },
+    {
+      "artifact_paths": [
+        "examples/public_runs/lattice_downscaled_lwe_instance_solve_v0/README.md",
+        "examples/public_runs/lattice_downscaled_lwe_instance_solve_v0/run_ledger.json",
+        "examples/public_runs/lattice_downscaled_lwe_instance_solve_v0/trace_public.jsonl",
+        "examples/public_runs/lattice_downscaled_lwe_instance_solve_v0/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "examples/public_runs/lattice_downscaled_lwe_instance_solve_v0/MANIFEST.sha256": "782ae92198a0704b355551315d9a3e69811545f113e7e06155d96ab8d94d874f",
+        "examples/public_runs/lattice_downscaled_lwe_instance_solve_v0/README.md": "af9fcf4dc5612affe7b1e3b7c2b1d3f91fb633594a5949c0e56ecc386c338060",
+        "examples/public_runs/lattice_downscaled_lwe_instance_solve_v0/run_ledger.json": "a79338957a31650c4d1a2d713f4d522fc82dc75d590ec4e2df4bbad4c1545d23",
+        "examples/public_runs/lattice_downscaled_lwe_instance_solve_v0/trace_public.jsonl": "5abcbb0255182b608f1ab6027ea3d4ddf87ed678fad6091557a261157345fd42"
+      },
+      "benchmark_path": "benchmarks/lattice_downscaled_lwe_instance_solve",
+      "family": "LWE",
+      "id": "lattice_downscaled_lwe_instance_solve_v0",
+      "publishes_private_candidates": false,
+      "security_claim": false
+    },
+    {
+      "artifact_paths": [
+        "examples/public_runs/lattice_downscaled_mlwe_instance_solve_v0/README.md",
+        "examples/public_runs/lattice_downscaled_mlwe_instance_solve_v0/run_ledger.json",
+        "examples/public_runs/lattice_downscaled_mlwe_instance_solve_v0/trace_public.jsonl",
+        "examples/public_runs/lattice_downscaled_mlwe_instance_solve_v0/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "examples/public_runs/lattice_downscaled_mlwe_instance_solve_v0/MANIFEST.sha256": "4b588cc593db46196000986ea92bd240ba6567d55ed239298e4d5165b13f79a5",
+        "examples/public_runs/lattice_downscaled_mlwe_instance_solve_v0/README.md": "7ad2046805dabb79556c7c6a6d58f4cc31ddda7fcc7248b77f9f2cf677cc9ae8",
+        "examples/public_runs/lattice_downscaled_mlwe_instance_solve_v0/run_ledger.json": "2abba169cc3354ac54bbe5b285522c983e1f56e2e63cc246f4a7b924cb8050a7",
+        "examples/public_runs/lattice_downscaled_mlwe_instance_solve_v0/trace_public.jsonl": "aa2db2cb6b08006f0aa2841d1a745b320e00d1deebd8704ed5512a0b5ec43a16"
+      },
+      "benchmark_path": "benchmarks/lattice_downscaled_mlwe_instance_solve",
+      "family": "MLWE",
+      "id": "lattice_downscaled_mlwe_instance_solve_v0",
+      "publishes_private_candidates": false,
+      "security_claim": false
+    },
+    {
+      "artifact_paths": [
+        "examples/public_runs/lattice_mlwe_downscaled_v0/README.md",
+        "examples/public_runs/lattice_mlwe_downscaled_v0/run_ledger.json",
+        "examples/public_runs/lattice_mlwe_downscaled_v0/trace_public.jsonl",
+        "examples/public_runs/lattice_mlwe_downscaled_v0/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "examples/public_runs/lattice_mlwe_downscaled_v0/MANIFEST.sha256": "b7d980492b467cbce5fd566716e661e196cf8e570f09dc7a53193c5c7c0b51d2",
+        "examples/public_runs/lattice_mlwe_downscaled_v0/README.md": "7ad2046805dabb79556c7c6a6d58f4cc31ddda7fcc7248b77f9f2cf677cc9ae8",
+        "examples/public_runs/lattice_mlwe_downscaled_v0/run_ledger.json": "ec5289d5beecfbbee098dc919a6cc91cdf74bac21188907ad3f01d32058f8bcf",
+        "examples/public_runs/lattice_mlwe_downscaled_v0/trace_public.jsonl": "2c87f6f608e1fe12ebdbbec91aa1afa6ea68688c34e5ae456caca8c58d926934"
+      },
+      "benchmark_path": "benchmarks/lattice_mlkem_like",
+      "family": "MLWE",
+      "id": "lattice_mlwe_downscaled_v0",
+      "publishes_private_candidates": false,
+      "security_claim": false
+    },
+    {
+      "artifact_paths": [
+        "examples/public_runs/lattice_toy_lwe_v0/README.md",
+        "examples/public_runs/lattice_toy_lwe_v0/run_ledger.json",
+        "examples/public_runs/lattice_toy_lwe_v0/trace_public.jsonl",
+        "examples/public_runs/lattice_toy_lwe_v0/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "examples/public_runs/lattice_toy_lwe_v0/MANIFEST.sha256": "59a48093584b4baf2fbfbc9904ae06744ba4588a34ba27548b37348a2d82aeb0",
+        "examples/public_runs/lattice_toy_lwe_v0/README.md": "81fd55e950e12324a34aff1f9a126b7c71c192a4b2d9bfcf19b4d0fee9b64bec",
+        "examples/public_runs/lattice_toy_lwe_v0/run_ledger.json": "5740adba0e35cbf129b8e96c68e2c1114603a669c023ef95c18d403c400319fc",
+        "examples/public_runs/lattice_toy_lwe_v0/trace_public.jsonl": "443b0f474596310f916fed2f8f958e166a52ea52f6b1ea36a0d32e7f74035d2a"
+      },
+      "benchmark_path": "benchmarks/lattice_toy_lwe",
+      "family": "LWE",
+      "id": "lattice_toy_lwe_v0",
+      "publishes_private_candidates": false,
+      "security_claim": false
+    },
+    {
+      "artifact_paths": [
+        "examples/public_runs/multivariate_toy_minrank_v0/README.md",
+        "examples/public_runs/multivariate_toy_minrank_v0/run_ledger.json",
+        "examples/public_runs/multivariate_toy_minrank_v0/trace_public.jsonl",
+        "examples/public_runs/multivariate_toy_minrank_v0/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "examples/public_runs/multivariate_toy_minrank_v0/MANIFEST.sha256": "ec307e4c6859f15ee6db14f98170c03fdbb60c1d17736fcdc577ec9ab40e0c1a",
+        "examples/public_runs/multivariate_toy_minrank_v0/README.md": "af9fcf4dc5612affe7b1e3b7c2b1d3f91fb633594a5949c0e56ecc386c338060",
+        "examples/public_runs/multivariate_toy_minrank_v0/run_ledger.json": "cecbb2dd1650316d4aaa1b7d6699cf3c90382a2942edb6d98f2d07a89109d936",
+        "examples/public_runs/multivariate_toy_minrank_v0/trace_public.jsonl": "9ca9753aaa2465052cfdabcd062077cd15b67fb21f08730101d6fd05ad756b51"
+      },
+      "benchmark_path": "benchmarks/multivariate_toy_minrank",
+      "family": "MULTIVARIATE",
+      "id": "multivariate_toy_minrank_v0",
+      "publishes_private_candidates": false,
+      "security_claim": false
+    },
+    {
+      "artifact_paths": [
+        "examples/public_runs/multivariate_toy_mq_v0/README.md",
+        "examples/public_runs/multivariate_toy_mq_v0/run_ledger.json",
+        "examples/public_runs/multivariate_toy_mq_v0/trace_public.jsonl",
+        "examples/public_runs/multivariate_toy_mq_v0/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "examples/public_runs/multivariate_toy_mq_v0/MANIFEST.sha256": "739f58fa4f923b7acb1f615b4aa272f828e05256bcec7e9792a159750ed83872",
+        "examples/public_runs/multivariate_toy_mq_v0/README.md": "8fe0963f3964a4bf3f65f88f9af6c1c6652415525b87feddf3256d6e1c9b0c75",
+        "examples/public_runs/multivariate_toy_mq_v0/run_ledger.json": "003483da373528b2d63b6450d0af5502324ac84a3c2a9d7b1f83e544a621a39d",
+        "examples/public_runs/multivariate_toy_mq_v0/trace_public.jsonl": "db2960ecffee355ccbe69bbe98acf8300305f067f2528517af99269660c83781"
+      },
+      "benchmark_path": "benchmarks/multivariate_toy_mq",
+      "family": "MULTIVARIATE",
+      "id": "multivariate_toy_mq_v0",
+      "publishes_private_candidates": false,
+      "security_claim": false
+    },
+    {
+      "artifact_paths": [
+        "examples/public_runs/multivariate_toy_uov_v0/README.md",
+        "examples/public_runs/multivariate_toy_uov_v0/run_ledger.json",
+        "examples/public_runs/multivariate_toy_uov_v0/trace_public.jsonl",
+        "examples/public_runs/multivariate_toy_uov_v0/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "examples/public_runs/multivariate_toy_uov_v0/MANIFEST.sha256": "95de346f1d86ee3cf6c69e7aa2ee38cf3e99ec54aa006b1e9cd1673f8b274605",
+        "examples/public_runs/multivariate_toy_uov_v0/README.md": "7ad2046805dabb79556c7c6a6d58f4cc31ddda7fcc7248b77f9f2cf677cc9ae8",
+        "examples/public_runs/multivariate_toy_uov_v0/run_ledger.json": "b884acb28aa86f6b1feccaa719b4a370214ceb7e0d6347c79d25c8b6c617b0e0",
+        "examples/public_runs/multivariate_toy_uov_v0/trace_public.jsonl": "6680c7d3f42d004082353abc359a2b0ef656e5c82f642b93cf4b24266699f03b"
+      },
+      "benchmark_path": "benchmarks/multivariate_toy_uov",
+      "family": "MULTIVARIATE",
+      "id": "multivariate_toy_uov_v0",
+      "publishes_private_candidates": false,
+      "security_claim": false
+    }
+  ],
+  "release_gates": [
+    "uv run pytest tests/test_publication_manifest.py -q",
+    "uv run agades-pqc publication-manifest --out docs/publication_manifest.json",
+    "uv run agades-pqc publication-manifest-verify --manifest docs/publication_manifest.json",
+    "uv run agades-pqc public-benchmark-manifest --out docs/public_benchmark_manifest.json",
+    "uv run agades-pqc public-benchmark-verify --manifest docs/public_benchmark_manifest.json",
+    "uv run agades-pqc public-run-export --out public/run_export",
+    "uv run agades-pqc public-run-export-verify --export public/run_export",
+    "uv run agades-pqc source-catalog-verify --catalog docs/source_catalog.json",
+    "uv run agades-pqc benchmark-source-verify --contracts docs/benchmark_source_contracts.json",
+    "uv run agades-pqc family-registry-manifest-verify --manifest docs/family_registry_manifest.json",
+    "uv run agades-pqc family-plugin-manifest-verify --manifest docs/family_plugin_manifest.json",
+    "uv run agades-pqc hf-publication-handoff-verify --handoff docs/huggingface_publication_handoff.json",
+    "uv run agades-pqc prime-publication-handoff-verify --handoff docs/prime_publication_handoff.json",
+    "uv run agades-pqc prime-speedrun-handoff-verify --handoff docs/prime_speedrun_handoff.json",
+    "uv run agades-pqc nvidia-publication-handoff-verify --handoff docs/nvidia_publication_handoff.json",
+    "uv run agades-pqc family-support-verify --matrix docs/family_support_matrix.json",
+    "uv run agades-pqc lattice-estimator-baseline-contracts-verify --contracts docs/lattice_estimator_baseline_contracts.json",
+    "uv run agades-pqc private-run-policy --out docs/private_run_policy.json",
+    "uv run agades-pqc private-run-policy-verify --policy docs/private_run_policy.json",
+    "uv run agades-pqc runbook-input-manifest-verify --manifest docs/runbook_input_manifest.json",
+    "uv run agades-pqc external-publication-review-packet --out docs/external_publication_review_packet.json",
+    "uv run agades-pqc external-publication-review-packet-verify --packet docs/external_publication_review_packet.json",
+    "uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json",
+    "uv run agades-pqc release-audit --out public/release_audit.json",
+    "uv run agades-pqc release-status --out docs/release_status.json"
+  ],
+  "safety": {
+    "arbitrary_code_execution": false,
+    "contains_private_traces": false,
+    "external_publication_requires_review": true,
+    "live_targeting": false,
+    "publishes_private_candidates": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.publication_manifest.v1",
+  "surfaces": [
+    {
+      "artifact_digest_exclusions": {
+        "docs/external_publication_review_packet.json": "derived_from_preflight_status_and_platform_manifests",
+        "docs/release_status.json": "derived_from_release_audit_and_publication_manifest",
+        "public/release_audit.json": "recursive_release_audit_artifact"
+      },
+      "artifact_paths": [
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/FAMILY_ADAPTERS.md",
+        "docs/benchmark_source_contracts.json",
+        "docs/source_catalog.json",
+        "docs/family_support_matrix.json",
+        "docs/family_registry_manifest.json",
+        "docs/family_plugin_manifest.json",
+        "docs/family_operator_catalog.json",
+        "docs/runbook_input_manifest.json",
+        "docs/huggingface_publication_handoff.json",
+        "docs/prime_publication_handoff.json",
+        "docs/prime_speedrun_handoff.json",
+        "docs/nvidia_publication_handoff.json",
+        "docs/lattice_estimator_manifest.json",
+        "docs/lattice_estimator_baseline_contracts.json",
+        "docs/public_benchmark_manifest.json",
+        "public/run_export/manifest.json",
+        "public/run_export/runs.jsonl",
+        "public/run_export/runs.csv",
+        "public/run_export/MANIFEST.sha256",
+        "docs/MOAT_AND_OPEN_SOURCE_STRATEGY.md",
+        "examples/paper_cards/code_based_isd_overview.yaml",
+        "examples/paper_cards/hash_based_slh_dsa_overview.yaml",
+        "examples/paper_cards/implementation_security_public_harnesses.yaml",
+        "examples/paper_cards/isogeny_historical_sidh_lessons.yaml",
+        "examples/paper_cards/multivariate_minrank_overview.yaml",
+        "examples/paper_cards/predicting_module_lattice_reduction.yaml",
+        "examples/paper_cards/salsa.yaml",
+        "examples/paper_cards/tapas_lwe_benchmarking.yaml",
+        "docs/private_run_policy.json",
+        "docs/external_publication_review_packet.json",
+        "docs/release_status.json",
+        "public/release_audit.json"
+      ],
+      "artifact_sha256": {
+        "README.md": "52f06f89c2c99379ef304e682a67a9f214af7d13d8f4fe6365fd5e629266603a",
+        "docs/ARCHITECTURE.md": "46fbdcb6dba081593b277adeff09ef8b97831e1b6efe0dd0b5b2602c98796e1f",
+        "docs/FAMILY_ADAPTERS.md": "808df8b36e7495c4cf97487b59261179204e856c2ed7be42b91c1d21388f247c",
+        "docs/MOAT_AND_OPEN_SOURCE_STRATEGY.md": "80df04f80c1c89f3af2ee3281ecefe4f8e15a8633d8cecdae6e7a6f3faec5ec7",
+        "docs/benchmark_source_contracts.json": "bba24a17efc45917619df008a822e816f41cd9a7d3c4e95b1e3d7f139e5f74a1",
+        "docs/family_operator_catalog.json": "37594fa76194d271d80e7f2d227179feb0dc207ca0db135f451e1a29bae12d32",
+        "docs/family_plugin_manifest.json": "c6fca7e84e9abcb06772f866e47f7b19dc0713e3a8b2dbdbea26dc97a2386745",
+        "docs/family_registry_manifest.json": "d84193b0e5f2ad3fd82497d1bf59188f847fb43fcebffe9ae8f951fc2bd73b58",
+        "docs/family_support_matrix.json": "60a981d8f32be7ce17613855c3b9655ffb22de6ffd24d09dbcc37c549653fd29",
+        "docs/huggingface_publication_handoff.json": "c3a569d071be4d955a5087d3ae31c815fb60b9f557e8bedf3d57917b517e690d",
+        "docs/lattice_estimator_baseline_contracts.json": "09100e2ba4733daffee5c82e58153ed8585210589b2112467ff29e86ba2bf2a5",
+        "docs/lattice_estimator_manifest.json": "0b52a47bd0217a194d1004ce3433ea5c9e0404f85e0a05415e8c37bbe240c2cb",
+        "docs/nvidia_publication_handoff.json": "4d9f82777f21800eb08d9db843246b3ca2669f89ca32faa2b7c9c82abb5c7723",
+        "docs/prime_publication_handoff.json": "2271fffcfc83f09122391725e47de6659e9971fd82263851f05f8e451476790b",
+        "docs/prime_speedrun_handoff.json": "47f02575417e376cf2b06b282266e35cdf40cc9b615b491b13d847aec13388f0",
+        "docs/private_run_policy.json": "08c0adb2e5b3cb0407d6c16e93f0eac8f636cb8b0dc8a53570b1cc18583f24f6",
+        "docs/public_benchmark_manifest.json": "c45741efde84f27edfd6feab0e3217f68c88a5be4d56a038b2973ea2296722f7",
+        "docs/runbook_input_manifest.json": "c5b8adbb47849f7684ede4a52113902f2f60f205b74893b9170a60093904d6fe",
+        "docs/source_catalog.json": "9648bc812ae0465cf9bf28e410d3fcbdc63ec6d17060c35b4e05e98ea55dc058",
+        "examples/paper_cards/code_based_isd_overview.yaml": "e2092a690cc4037761ee640d527e6251e066c931b9fd876b61a5fedd403eb5c9",
+        "examples/paper_cards/hash_based_slh_dsa_overview.yaml": "2c9e9288f6cd6d21ebb434ceb63e35fbd42b6793682ac2f43840b2c04b1d45ee",
+        "examples/paper_cards/implementation_security_public_harnesses.yaml": "e0bef760694b892274c6593747326496dd0f2e265a938571e1454effa088bc9f",
+        "examples/paper_cards/isogeny_historical_sidh_lessons.yaml": "37c654a4e63e09ff17f231a4f69d8416ff0f5fd03fd4435c971f67cc8ee73008",
+        "examples/paper_cards/multivariate_minrank_overview.yaml": "34fb99ea3fe056aafe9e7bd710f324ae5107b93f8692053dc820f5b83838476e",
+        "examples/paper_cards/predicting_module_lattice_reduction.yaml": "16440d9307bf4383d612cab6aa1c6a95aa6ae2b2915bcaea24e047348db70a0b",
+        "examples/paper_cards/salsa.yaml": "6f22f02ce484c3adb4a1086f5a745d743bf3d66b2b02f246298c3429bf88b764",
+        "examples/paper_cards/tapas_lwe_benchmarking.yaml": "29af3e229328485eb4985c866c57176b609b1cd35fe0993853c19a12a5367b5c",
+        "public/run_export/MANIFEST.sha256": "1f06e65d058b38a2e466218dccee8debf9838ab69ce9e092084dff07fd9d7f2c",
+        "public/run_export/manifest.json": "333ad57c7b04eec2e3a20c6e190fc74bdf01c4a84d9d8e57f01c5118e832dadb",
+        "public/run_export/runs.csv": "e0b69c289374f7074c7af96c768ee15305b2cc1fdcc1afd7664167952fbfca4a",
+        "public/run_export/runs.jsonl": "cec50810e4083e8a33152009850a6b8e89eb9b52f902511fec5c42d3937598fe"
+      },
+      "id": "github-repository",
+      "platform": "github",
+      "public": true,
+      "publication_status": "draft_pr_ready",
+      "publish_notes": [
+        "Repository is the canonical public OSS surface.",
+        "Merge only after release-audit and CI pass."
+      ],
+      "publishes_private_candidates": false,
+      "requires_credentials": false,
+      "review_required_before_publish": true,
+      "security_claim": false,
+      "smoke_gate": "github-actions-ci"
+    },
+    {
+      "artifact_paths": [
+        "hf/dataset/README.md",
+        "hf/dataset/dataset_info.json",
+        "hf/dataset/attack_plans.jsonl",
+        "hf/dataset/task_metadata.jsonl",
+        "hf/dataset/verifier_outputs.jsonl",
+        "hf/dataset/MANIFEST.sha256"
+      ],
+      "artifact_sha256": {
+        "hf/dataset/MANIFEST.sha256": "23f362bad82b19ed2749592214fa0b61751f7a3c975babe413f04c9992b4bcdc",
+        "hf/dataset/README.md": "e8e354eccacc48786080acf98b788eaea6670802617489bc55d3b7826cefb92d",
+        "hf/dataset/attack_plans.jsonl": "2d6a3c4b8a11a1a891c238abc58a865833febbd72bcb8e0fe01af05b224bfa35",
+        "hf/dataset/dataset_info.json": "1866d14ab9c5810abcfa4d93add5cd1757c84e987eda05c7cf7f3ad0b4d25a6c",
+        "hf/dataset/task_metadata.jsonl": "c2e31a25a20585b2b0186d114a9101a15e3130f69255bdace0926890d96ab43b",
+        "hf/dataset/verifier_outputs.jsonl": "6eb3197c422b72dd386fcb32968aca5095a9342a2cea52fce871555b65705f74"
+      },
+      "id": "huggingface-dataset",
+      "platform": "hugging_face",
+      "public": true,
+      "publication_status": "local_artifact_ready",
+      "publish_notes": [
+        "Publish only toy/schema-only AttackPlans and verifier rows.",
+        "Do not publish private evolution traces or candidate strategies."
+      ],
+      "publishes_private_candidates": false,
+      "requires_credentials": true,
+      "review_required_before_publish": true,
+      "security_claim": false,
+      "smoke_gate": "hf-dataset-safety"
+    },
+    {
+      "artifact_paths": [
+        "hf/app.py",
+        "hf/requirements.txt",
+        "hf/space_README.md",
+        "hf/space_manifest.json"
+      ],
+      "artifact_sha256": {
+        "hf/app.py": "991630be214ffefb0656f904de48863c101a1a08557fba4b2a39e8378632fa0c",
+        "hf/requirements.txt": "ff3c22bb08d4114228f12c0a07e14d10d85e7928167acc5054396ecbc110fdbf",
+        "hf/space_README.md": "39ac38c14394f4509eeffb0ccf2de6db5b2eb8821d78e2a3c009566158458bf6",
+        "hf/space_manifest.json": "2047b59eff8b8cade5b3f848f1e7680954808b61e3d819fd890679f1d394568f"
+      },
+      "id": "huggingface-space",
+      "platform": "hugging_face",
+      "public": true,
+      "publication_status": "local_artifact_ready",
+      "publish_notes": [
+        "Space demo must run on public examples only.",
+        "Summary text must keep the not-a-security-claim boundary."
+      ],
+      "publishes_private_candidates": false,
+      "requires_credentials": true,
+      "review_required_before_publish": true,
+      "security_claim": false,
+      "smoke_gate": "hf-space-smoke"
+    },
+    {
+      "artifact_paths": [
+        "hf/collection_manifest.json",
+        "hf/dataset_card.md",
+        "hf/benchmark_card.md",
+        "hf/space_manifest.json",
+        "docs/source_catalog.json",
+        "docs/public_benchmark_manifest.json",
+        "docs/huggingface_publication_handoff.json"
+      ],
+      "artifact_sha256": {
+        "docs/huggingface_publication_handoff.json": "c3a569d071be4d955a5087d3ae31c815fb60b9f557e8bedf3d57917b517e690d",
+        "docs/public_benchmark_manifest.json": "c45741efde84f27edfd6feab0e3217f68c88a5be4d56a038b2973ea2296722f7",
+        "docs/source_catalog.json": "9648bc812ae0465cf9bf28e410d3fcbdc63ec6d17060c35b4e05e98ea55dc058",
+        "hf/benchmark_card.md": "e29827f9fe4e8bd4c45bab2a7238b6029a589aac9eda1701e43086c2e0fdbdef",
+        "hf/collection_manifest.json": "e1490c5b6c991b947ac7df19ca8f6c03e7c170f386151fa71e03982952a85e91",
+        "hf/dataset_card.md": "e8e354eccacc48786080acf98b788eaea6670802617489bc55d3b7826cefb92d",
+        "hf/space_manifest.json": "2047b59eff8b8cade5b3f848f1e7680954808b61e3d819fd890679f1d394568f"
+      },
+      "id": "huggingface-collection",
+      "platform": "hugging_face",
+      "public": true,
+      "publication_status": "local_manifest_ready_review_required",
+      "publish_notes": [
+        "Collection links the GitHub repo, toy dataset, Space, benchmark card, source map, and public benchmark manifest.",
+        "Publish only after dataset and Space review are complete."
+      ],
+      "publishes_private_candidates": false,
+      "requires_credentials": true,
+      "review_required_before_publish": true,
+      "security_claim": false,
+      "smoke_gate": "hf-collection-manifest"
+    },
+    {
+      "artifact_paths": [
+        "prime_intellect/environment_card.md",
+        "prime_intellect/verifier_spec.md",
+        "prime_intellect/verifiers_environment/README.md",
+        "prime_intellect/verifiers_environment/pyproject.toml",
+        "prime_intellect/verifiers_environment/agades_pqc_verifier_env.py",
+        "prime_intellect/verifiers_environment/prime_manifest.json",
+        "prime_intellect/schemas/attack_plan.schema.json",
+        "prime_intellect/schemas/verifier_result.schema.json",
+        "prime_intellect/schemas/task_metadata.schema.json",
+        "prime_intellect/schemas/schema_manifest.json",
+        "docs/prime_speedrun_handoff.json"
+      ],
+      "artifact_sha256": {
+        "docs/prime_speedrun_handoff.json": "47f02575417e376cf2b06b282266e35cdf40cc9b615b491b13d847aec13388f0",
+        "prime_intellect/environment_card.md": "e7476a86add4e7464636565db91e83dcfab57488ed2d48a18157e0ce52163011",
+        "prime_intellect/schemas/attack_plan.schema.json": "4d8a4e49974d6c0df0d466f5ee3b488e54893af4ef23e61e00af4a0cbb7ea592",
+        "prime_intellect/schemas/schema_manifest.json": "f448d41c640e6dc02a462af1bf695a93045676a191cee53403a121cab833fbeb",
+        "prime_intellect/schemas/task_metadata.schema.json": "95ee9534b21fce15122c5d65aafcaa181210a0e898c284b5b8b46a0cdcbd3e07",
+        "prime_intellect/schemas/verifier_result.schema.json": "dca189a653db3cfc7b70ad099ba8a627f7940402ffc3846b10ec33989cb468a4",
+        "prime_intellect/verifier_spec.md": "90ef567a4f2421b5468a88669413bb0004134c7ac9fc3869037a02e7860f7131",
+        "prime_intellect/verifiers_environment/README.md": "39ec4ff9d9d609ab1e2533d08a623b8ccfd7a6dca086f000bc5e9a6de15ea662",
+        "prime_intellect/verifiers_environment/agades_pqc_verifier_env.py": "e0c4922f5670b06e7732d3f8c684502b69e6fab4be2a2a7323c923b51c2de98d",
+        "prime_intellect/verifiers_environment/prime_manifest.json": "250dda41e6208ea5374f6b417474bc48697de52cfd7c1a95c8317105597cec80",
+        "prime_intellect/verifiers_environment/pyproject.toml": "f3a01ff6dde5b20ace513244eefa6f00831fbd5636f362f5f0e615bd4cc6a6a5"
+      },
+      "id": "prime-verifiers-environment",
+      "platform": "prime_intellect",
+      "public": true,
+      "publication_status": "local_package_ready",
+      "publish_notes": [
+        "Environment accepts JSON AttackPlan submissions only.",
+        "Prime Hub publication requires credentials and release review."
+      ],
+      "publishes_private_candidates": false,
+      "requires_credentials": true,
+      "review_required_before_publish": true,
+      "security_claim": false,
+      "smoke_gate": "prime-environment-smoke"
+    },
+    {
+      "artifact_paths": [
+        "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md",
+        "nvidia/README.md",
+        "nvidia/accelerator_manifest.json",
+        "docs/nvidia_publication_handoff.json"
+      ],
+      "artifact_sha256": {
+        "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md": "2c7ac9e3d7d2144f01524501c46162a0649fcdd035cc4973be682d8c87224e99",
+        "docs/nvidia_publication_handoff.json": "4d9f82777f21800eb08d9db843246b3ca2669f89ca32faa2b7c9c82abb5c7723",
+        "nvidia/README.md": "18568265697f8a33eef8fab9d0d1b1312d32c9d1f365eae588fbc35a1c194f62",
+        "nvidia/accelerator_manifest.json": "4220fb49bd07624af90e5be1dfe2fbd8a72a7c4a968782d46e3ccc12f15b04cc"
+      },
+      "id": "nvidia-accelerator-story",
+      "platform": "nvidia",
+      "public": true,
+      "publication_status": "strategy_ready_review_required",
+      "publish_notes": [
+        "Current MVP is CPU/verifier-only.",
+        "GPU work remains future reviewed reproduction infrastructure."
+      ],
+      "publishes_private_candidates": false,
+      "requires_credentials": false,
+      "review_required_before_publish": true,
+      "security_claim": false,
+      "smoke_gate": "nvidia-manifest-safety"
+    }
+  ]
+}
