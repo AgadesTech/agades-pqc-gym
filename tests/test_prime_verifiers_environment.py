@@ -32,8 +32,10 @@ def test_prime_verifiers_environment_exposes_term_level_reward_report() -> None:
     assert report["aggregate_reward"] == 1.0
     assert report["accepted"] is True
     assert report["single_json_object"] is True
+    assert report["reward_profile"] == "strict"
     assert report["rubric_scores"] == {
         "accepted_attack_plan": 1.0,
+        "single_json_object": 1.0,
         "formal_validity": 1.0,
         "cryptographic_applicability": 1.0,
         "no_security_overclaim": 1.0,
@@ -149,7 +151,45 @@ def test_prime_verifiers_environment_weights_only_primary_reward() -> None:
 
     assert module.build_rubric_weights() == [
         1.0,
+        0.0,
         *[0.0 for _ in module.REWARD_TERMS],
+    ]
+
+
+def test_prime_verifiers_environment_dense_profile_is_training_only_signal() -> None:
+    module = _load_environment_module()
+    invalid_json_object = '{"not": "an attack plan"}'
+    task_info = _task_info_for(module, "lattice_primal_usvp_toy_v1")
+
+    strict_report = module.score_attack_plan_completion_report(
+        _assistant_completion(invalid_json_object),
+        info=task_info,
+        reward_profile="strict",
+    )
+    dense_report = module.score_attack_plan_completion_report(
+        _assistant_completion(invalid_json_object),
+        info=task_info,
+        reward_profile="pedagogical_dense",
+    )
+
+    assert strict_report["aggregate_reward"] == 0.0
+    assert strict_report["accepted"] is False
+    assert dense_report["aggregate_reward"] == 0.10
+    assert dense_report["accepted"] is False
+    assert dense_report["single_json_object"] is True
+    assert dense_report["rubric_scores"]["single_json_object"] == 1.0
+    assert sum(module.build_rubric_weights("pedagogical_dense")) == 1.0
+    assert module.build_rubric_weights("pedagogical_dense") == [
+        0.30,
+        0.10,
+        0.15,
+        0.10,
+        0.10,
+        0.07,
+        0.05,
+        0.05,
+        0.04,
+        0.04,
     ]
 
 

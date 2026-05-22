@@ -163,6 +163,44 @@ def build_prime_environment_manifest(root: Path | None = None) -> dict[str, Any]
                 "target_family, target_name, support_level, and ordered "
                 "operator_types; attack_plan_id may change"
             ),
+            "reward_profiles": {
+                "strict": {
+                    "intended_use": "public_eval",
+                    "aggregate_rule": "accepted_attack_plan only",
+                    "rubric_weights": {
+                        "accepted_attack_plan": 1.0,
+                        "single_json_object": 0.0,
+                        "formal_validity": 0.0,
+                        "cryptographic_applicability": 0.0,
+                        "no_security_overclaim": 0.0,
+                        "student_readability": 0.0,
+                        "reproducibility": 0.0,
+                        "reviewer_quality": 0.0,
+                        "task_match": 0.0,
+                        "proof_obligation_coverage": 0.0,
+                    },
+                },
+                "pedagogical_dense": {
+                    "intended_use": "private_prime_rl_training",
+                    "aggregate_rule": (
+                        "weighted training signal over JSON-format compliance "
+                        "and existing verifier sub-scores"
+                    ),
+                    "accepted_candidates_still_require_strict_acceptance": True,
+                    "rubric_weights": {
+                        "accepted_attack_plan": 0.30,
+                        "single_json_object": 0.10,
+                        "formal_validity": 0.15,
+                        "cryptographic_applicability": 0.10,
+                        "no_security_overclaim": 0.10,
+                        "student_readability": 0.07,
+                        "reproducibility": 0.05,
+                        "reviewer_quality": 0.05,
+                        "task_match": 0.04,
+                        "proof_obligation_coverage": 0.04,
+                    },
+                },
+            },
             "task_info_fields": [
                 "schema_version",
                 "source_path",
@@ -368,6 +406,33 @@ def _verify_scoring_contract(
         failures.append("Prime manifest reviewer governance schema drifted.")
     if scoring_contract.get("reviewer_quality_requires_governance") is not True:
         failures.append("Prime manifest reviewer quality is not governance-bound.")
+    reward_profiles = scoring_contract.get("reward_profiles")
+    if not isinstance(reward_profiles, dict):
+        failures.append("Prime manifest reward_profiles must be an object.")
+    else:
+        strict_profile = reward_profiles.get("strict")
+        dense_profile = reward_profiles.get("pedagogical_dense")
+        if not isinstance(strict_profile, dict):
+            failures.append("Prime manifest lacks strict reward profile.")
+        elif strict_profile.get("rubric_weights", {}).get(
+            "accepted_attack_plan"
+        ) != 1.0:
+            failures.append("Prime strict profile must weight accepted plans only.")
+        if not isinstance(dense_profile, dict):
+            failures.append("Prime manifest lacks pedagogical_dense reward profile.")
+        elif dense_profile.get(
+            "accepted_candidates_still_require_strict_acceptance"
+        ) is not True:
+            failures.append("Prime dense profile weakens accepted-candidate rule.")
+        for name, profile in reward_profiles.items():
+            if not isinstance(profile, dict):
+                continue
+            weights = profile.get("rubric_weights")
+            if not isinstance(weights, dict):
+                failures.append(f"Prime reward profile {name} lacks weights.")
+                continue
+            if abs(sum(float(value) for value in weights.values()) - 1.0) > 1e-12:
+                failures.append(f"Prime reward profile {name} weights do not sum to 1.")
     if scoring_contract.get("formal_binding_rule") != (
         "accepted Prime rewards must attach an "
         "agades.pqc.rl.formal_artifact_binding.v1 proof binding with "

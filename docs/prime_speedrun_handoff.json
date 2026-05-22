@@ -111,13 +111,13 @@
       "public/run_export/MANIFEST.sha256"
     ],
     "artifact_sha256": {
-      "docs/prime_publication_handoff.json": "2271fffcfc83f09122391725e47de6659e9971fd82263851f05f8e451476790b",
+      "docs/prime_publication_handoff.json": "3e405de6783c17f11801451aa6c80e16a817cf58788669bc562e728bf981a7f8",
       "docs/source_catalog.json": "9648bc812ae0465cf9bf28e410d3fcbdc63ec6d17060c35b4e05e98ea55dc058",
       "prime_intellect/schemas/task_metadata.schema.json": "95ee9534b21fce15122c5d65aafcaa181210a0e898c284b5b8b46a0cdcbd3e07",
       "prime_intellect/schemas/verifier_result.schema.json": "dca189a653db3cfc7b70ad099ba8a627f7940402ffc3846b10ec33989cb468a4",
-      "prime_intellect/verifiers_environment/README.md": "39ec4ff9d9d609ab1e2533d08a623b8ccfd7a6dca086f000bc5e9a6de15ea662",
-      "prime_intellect/verifiers_environment/agades_pqc_verifier_env.py": "e0c4922f5670b06e7732d3f8c684502b69e6fab4be2a2a7323c923b51c2de98d",
-      "prime_intellect/verifiers_environment/prime_manifest.json": "250dda41e6208ea5374f6b417474bc48697de52cfd7c1a95c8317105597cec80",
+      "prime_intellect/verifiers_environment/README.md": "3d606dffe3839855c1288ab836c32bba774171c036a974236d7d754e9d576d47",
+      "prime_intellect/verifiers_environment/agades_pqc_verifier_env.py": "0d28d0e7851c9d667f3cb1f6a8bff1e58e88af9f03d7d17df0b70b68f69c0fcd",
+      "prime_intellect/verifiers_environment/prime_manifest.json": "4efc1f4962608261aeda41a32b7daddcfe24e58eb38f503d4e6767c8830ab92a",
       "public/run_export/MANIFEST.sha256": "1f06e65d058b38a2e466218dccee8debf9838ab69ce9e092084dff07fd9d7f2c",
       "public/run_export/manifest.json": "333ad57c7b04eec2e3a20c6e190fc74bdf01c4a84d9d8e57f01c5118e832dadb",
       "public/run_export/runs.csv": "e0b69c289374f7074c7af96c768ee15305b2cc1fdcc1afd7664167952fbfca4a",

@@ -248,6 +248,7 @@ def _validate_smoke_contract(
         failures.append("Prime environment reviewer quality failed.")
     if scoring["rubric_terms"] != [
         "accepted_attack_plan",
+        "single_json_object",
         "formal_validity",
         "cryptographic_applicability",
         "no_security_overclaim",
@@ -410,6 +411,7 @@ def _verify_scoring(report: dict[str, Any], failures: list[str]) -> None:
     accepted_rubric_scores = scoring.get("accepted_rubric_scores")
     if rubric_terms != [
         "accepted_attack_plan",
+        "single_json_object",
         "formal_validity",
         "cryptographic_applicability",
         "no_security_overclaim",

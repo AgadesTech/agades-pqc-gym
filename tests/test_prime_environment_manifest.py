@@ -238,6 +238,44 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
             "target_family, target_name, support_level, and ordered "
             "operator_types; attack_plan_id may change"
         ),
+        "reward_profiles": {
+            "strict": {
+                "intended_use": "public_eval",
+                "aggregate_rule": "accepted_attack_plan only",
+                "rubric_weights": {
+                    "accepted_attack_plan": 1.0,
+                    "single_json_object": 0.0,
+                    "formal_validity": 0.0,
+                    "cryptographic_applicability": 0.0,
+                    "no_security_overclaim": 0.0,
+                    "student_readability": 0.0,
+                    "reproducibility": 0.0,
+                    "reviewer_quality": 0.0,
+                    "task_match": 0.0,
+                    "proof_obligation_coverage": 0.0,
+                },
+            },
+            "pedagogical_dense": {
+                "intended_use": "private_prime_rl_training",
+                "aggregate_rule": (
+                    "weighted training signal over JSON-format compliance "
+                    "and existing verifier sub-scores"
+                ),
+                "accepted_candidates_still_require_strict_acceptance": True,
+                "rubric_weights": {
+                    "accepted_attack_plan": 0.30,
+                    "single_json_object": 0.10,
+                    "formal_validity": 0.15,
+                    "cryptographic_applicability": 0.10,
+                    "no_security_overclaim": 0.10,
+                    "student_readability": 0.07,
+                    "reproducibility": 0.05,
+                    "reviewer_quality": 0.05,
+                    "task_match": 0.04,
+                    "proof_obligation_coverage": 0.04,
+                },
+            },
+        },
         "task_info_fields": [
             "schema_version",
             "source_path",
