@@ -346,6 +346,7 @@ def _formal_summary(
     artifact = build_attack_plan_proof_artifact_from_json(
         candidate_json,
         source_label="<rl-candidate>",
+        root=root,
     )
     proof_obligations = artifact["proof_obligations"]
     family_invariants = artifact["family_invariants"]

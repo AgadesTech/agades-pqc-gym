@@ -137,6 +137,48 @@ def test_pedagogical_reward_blocks_untyped_formal_obligations(
     assert report["formal_summary"]["typed_proof_obligations"] == 3
 
 
+def test_pedagogical_reward_passes_project_root_to_proof_artifacts(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task_info = _task_info(LATTICE_PLAN)
+    expected_root = Path.cwd().resolve()
+    observed_root: Path | None = None
+
+    def build_artifact_with_root_capture(
+        raw_json: str,
+        *,
+        source_label: str,
+        estimator_result_path: Path | None = None,
+        review_status: str = "pending_review",
+        root: Path | None = None,
+    ) -> dict[str, Any]:
+        nonlocal observed_root
+        observed_root = root
+        return build_attack_plan_proof_artifact_from_json(
+            raw_json,
+            source_label=source_label,
+            estimator_result_path=estimator_result_path,
+            review_status=review_status,
+            root=root,
+        )
+
+    monkeypatch.setattr(
+        rl_environment,
+        "build_attack_plan_proof_artifact_from_json",
+        build_artifact_with_root_capture,
+    )
+
+    report = score_attack_plan_candidate(
+        LATTICE_PLAN.read_text(encoding="utf-8"),
+        task_info=task_info,
+        require_task_match=True,
+        root=expected_root,
+    )
+
+    assert report["reward"] == 1.0
+    assert observed_root == expected_root
+
+
 def test_pedagogical_reward_blocks_missing_reviewer_governance(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
