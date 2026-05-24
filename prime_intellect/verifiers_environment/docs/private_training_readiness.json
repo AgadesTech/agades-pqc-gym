@@ -41,7 +41,7 @@
     },
     "env_template": {
       "path": ".env.example",
-      "sha256": "95b816768fa2a261a9e81274caffc290d6376daebdefa421f0306bc787cd1df1"
+      "sha256": "f471a935fb2cc3d493248a28cde15d3ba5f9e603feb40b02520378c08e73ebc9"
     },
     "gitignore": {
       "path": ".gitignore",
@@ -89,11 +89,11 @@
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "3fa87f3ab24077e4d324679367972b3eca9eb77568964af011bb8a7720e4a02a"
+      "sha256": "054eab41b0b7dee2ad53997e51a4a60bfbae37866b7c1dac023cdad999154db1"
     },
     "rl_environment_contract": {
       "path": "docs/rl_environment_contract.json",
-      "sha256": "8d31e42604cc8fab5716346f9b171819be4bee3a01b547b50ee63a46194df019"
+      "sha256": "1c85511336a52643691f5f1f39e334d4e466a70cd9b06e7de4812af8dbc8564e"
     }
   },
   "project": {

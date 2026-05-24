@@ -206,8 +206,8 @@
           "NTRU",
           "SIS"
         ],
-        "hub_create_command_template": "hf repos create AgadesTech/agades-pqc-gym-agent-env --type=space --space-sdk gradio --private --exist-ok",
-        "hub_upload_command_template": "hf upload AgadesTech/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Agent Environment\"",
+        "hub_create_command_template": "hf repos create agades/agades-pqc-gym-agent-env --type=space --space-sdk gradio --private --exist-ok",
+        "hub_upload_command_template": "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Agent Environment\"",
         "labels_match_valid_dataset_rows": true
       },
       "failures": [],
@@ -251,7 +251,7 @@
       "blocking": true,
       "detail": "Hugging Face publication handoff is checked in, synchronized with the local dataset, Space, and Collection artifacts, and keeps Hub publication behind credentials and release review.",
       "evidence": {
-        "artifact_count": 17,
+        "artifact_count": 18,
         "attack_plan_count": 80,
         "collection_entry_count": 7,
         "external_publication_requires_review": true,
@@ -1041,7 +1041,7 @@
         "review_required_before_claims": true,
         "review_required_surfaces": 6,
         "surface_artifact_digest_exclusions": 3,
-        "surface_artifact_digests": 63,
+        "surface_artifact_digests": 64,
         "surfaces": 6
       },
       "failures": [],

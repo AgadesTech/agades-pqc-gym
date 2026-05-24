@@ -237,7 +237,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "review_required_before_claims": True,
         "review_required_surfaces": 6,
         "surface_artifact_digest_exclusions": 3,
-        "surface_artifact_digests": 63,
+        "surface_artifact_digests": 64,
         "surfaces": 6,
     }
     assert checks["external-publication-review-packet"]["status"] == "passed"
@@ -730,11 +730,11 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
             "SIS",
         ],
         "hub_create_command_template": (
-            "hf repos create AgadesTech/agades-pqc-gym-agent-env --type=space "
+            "hf repos create agades/agades-pqc-gym-agent-env --type=space "
             "--space-sdk gradio --private --exist-ok"
         ),
         "hub_upload_command_template": (
-            "hf upload AgadesTech/agades-pqc-gym-agent-env hf . --repo-type=space "
+            "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space "
             '--commit-message "Sync Agades PQC Gym Agent Environment"'
         ),
         "labels_match_valid_dataset_rows": True,
@@ -768,7 +768,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert checks["hf-publication-handoff"]["status"] == "passed"
     assert checks["hf-publication-handoff"]["blocking"] is True
     assert checks["hf-publication-handoff"]["evidence"] == {
-        "artifact_count": 17,
+        "artifact_count": 18,
         "attack_plan_count": 80,
         "collection_entry_count": 7,
         "external_publication_requires_review": True,

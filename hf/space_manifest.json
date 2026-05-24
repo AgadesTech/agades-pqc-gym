@@ -145,14 +145,16 @@
   "runtime": {
     "dataset_source": "hf/dataset/attack_plans.jsonl",
     "fallback_source": "examples/attack_plans",
+    "hf_spaces_injected_gradio": "gradio[oauth,mcp]==6.14.0",
     "requirements": [
       "agades-pqc-gym @ git+https://github.com/AgadesTech/agades-pqc-gym.git@main",
-      "gradio>=4,<6",
+      "gradio>=4,<7",
       "pydantic>=2.7,<3",
       "pyyaml>=6.0.1,<7",
       "rich>=13.7,<15",
       "typer>=0.12,<1"
     ],
+    "requirements_compatible_with_injected_gradio": true,
     "requires_gradio_to_import_for_audit": false,
     "requires_gradio_to_launch": true,
     "rollout_examples_source": "hf/dataset/rl_rollouts.jsonl",
@@ -170,8 +172,8 @@
     "app_file": "hf/app.py",
     "category": "agent-environment",
     "dataset_bundle": "hf/dataset",
-    "hub_create_command_template": "hf repos create AgadesTech/agades-pqc-gym-agent-env --type=space --space-sdk gradio --private --exist-ok",
-    "hub_upload_command_template": "hf upload AgadesTech/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Agent Environment\"",
+    "hub_create_command_template": "hf repos create agades/agades-pqc-gym-agent-env --type=space --space-sdk gradio --private --exist-ok",
+    "hub_upload_command_template": "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Agent Environment\"",
     "public_push_requires_review": true,
     "requirements_file": "hf/requirements.txt",
     "sdk": "gradio",
@@ -193,8 +195,8 @@
       ],
       "title": "Agades PQC Gym Agent Environment"
     },
-    "space_readme_sha256": "cebae59c06ae86febf08868862f52757d2cf014016a1c231e91c39b7c0941f80",
-    "suggested_space_id": "AgadesTech/agades-pqc-gym-agent-env"
+    "space_readme_sha256": "99fd52e2a4dd79d514f27a940a0d67c052f1b0fd3b80542098589a94217e41b5",
+    "suggested_space_id": "agades/agades-pqc-gym-agent-env"
   },
   "verifier_contract": {
     "accepts_arbitrary_code": false,

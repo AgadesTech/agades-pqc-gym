@@ -332,7 +332,7 @@ def test_release_status_summarizes_current_public_evidence(tmp_path: Path) -> No
             "huggingface-space",
             "prime-verifiers-environment",
         ],
-        "surface_artifact_digests": 63,
+            "surface_artifact_digests": 64,
         "surface_artifact_digest_exclusions": 3,
         "public_run_bundles": 18,
         "public_run_bundle_artifacts": 72,

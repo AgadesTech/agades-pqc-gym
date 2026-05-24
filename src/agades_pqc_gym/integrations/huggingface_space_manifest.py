@@ -24,6 +24,8 @@ HF_SPACE_MANIFEST_VERIFICATION_SCHEMA = (
 )
 ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_LABEL = "LWE / lattice_primal_usvp_toy_v1"
+DEFAULT_PRIVATE_SPACE_ID = "agades/agades-pqc-gym-agent-env"
+HF_SPACES_INJECTED_GRADIO = "gradio[oauth,mcp]==6.14.0"
 SPACE_README_PATH = Path("hf/README.md")
 SPACE_README_METADATA = {
     "title": "Agades PQC Gym Agent Environment",
@@ -76,7 +78,7 @@ def build_huggingface_space_manifest(root: Path | None = None) -> dict[str, Any]
             "app_path": "hf/app.py",
         },
         "space": {
-            "suggested_space_id": "AgadesTech/agades-pqc-gym-agent-env",
+            "suggested_space_id": DEFAULT_PRIVATE_SPACE_ID,
             "sdk": "gradio",
             "category": "agent-environment",
             "app_file": "hf/app.py",
@@ -86,11 +88,11 @@ def build_huggingface_space_manifest(root: Path | None = None) -> dict[str, Any]
             "requirements_file": "hf/requirements.txt",
             "dataset_bundle": "hf/dataset",
             "hub_create_command_template": (
-                "hf repos create AgadesTech/agades-pqc-gym-agent-env --type=space "
+                f"hf repos create {DEFAULT_PRIVATE_SPACE_ID} --type=space "
                 "--space-sdk gradio --private --exist-ok"
             ),
             "hub_upload_command_template": (
-                "hf upload AgadesTech/agades-pqc-gym-agent-env hf "
+                f"hf upload {DEFAULT_PRIVATE_SPACE_ID} hf "
                 '. --repo-type=space --commit-message "Sync Agades PQC Gym '
                 'Agent Environment"'
             ),
@@ -104,6 +106,12 @@ def build_huggingface_space_manifest(root: Path | None = None) -> dict[str, Any]
             "fallback_source": "examples/attack_plans",
             "requires_gradio_to_launch": True,
             "requires_gradio_to_import_for_audit": False,
+            "hf_spaces_injected_gradio": HF_SPACES_INJECTED_GRADIO,
+            "requirements_compatible_with_injected_gradio": (
+                _requirements_allow_injected_gradio(
+                    project_root / "hf" / "requirements.txt"
+                )
+            ),
         },
         "agent_environment_contract": {
             "environment_class": (
@@ -381,6 +389,15 @@ def _verify_runtime(
         return
     if runtime.get("requirements") != _requirements(root / "hf" / "requirements.txt"):
         failures.append("Hugging Face Space manifest requirements are not in sync.")
+    if runtime.get("hf_spaces_injected_gradio") != HF_SPACES_INJECTED_GRADIO:
+        failures.append(
+            "Hugging Face Space manifest injected Gradio runtime drifted."
+        )
+    if runtime.get("requirements_compatible_with_injected_gradio") is not True:
+        failures.append(
+            "Hugging Face Space requirements conflict with the Gradio version "
+            "injected by HF Spaces."
+        )
     if runtime.get("dataset_source") != "hf/dataset/attack_plans.jsonl":
         failures.append("Hugging Face Space manifest dataset_source is incorrect.")
     if runtime.get("task_metadata_source") != "hf/dataset/task_metadata.jsonl":
@@ -797,6 +814,17 @@ def _requirements(path: Path) -> list[str]:
         for line in path.read_text(encoding="utf-8").splitlines()
         if line.strip() and not line.lstrip().startswith("#")
     ]
+
+
+def _requirements_allow_injected_gradio(path: Path) -> bool:
+    requirements = _requirements(path)
+    for requirement in requirements:
+        normalized = requirement.replace(" ", "").lower()
+        if not normalized.startswith("gradio"):
+            continue
+        if "<6" in normalized or "<=5" in normalized:
+            return False
+    return True
 
 
 def _dict_or_empty(value: object) -> dict[str, Any]:

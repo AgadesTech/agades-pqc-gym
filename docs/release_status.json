@@ -524,7 +524,7 @@
     "public_run_bundles": 18,
     "review_required_surfaces": 6,
     "surface_artifact_digest_exclusions": 3,
-    "surface_artifact_digests": 63,
+    "surface_artifact_digests": 64,
     "surfaces": 6
   },
   "release_gates": [

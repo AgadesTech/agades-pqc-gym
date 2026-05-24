@@ -132,7 +132,7 @@ EXPECTED_CREDENTIAL_REVIEW_QUEUE = [
         "smoke_gate": "hf-dataset-safety",
     },
     {
-        "artifact_count": 4,
+        "artifact_count": 5,
         "credential_material_included": False,
         "first_publication_target": "private_or_draft_review_surface",
         "id": "huggingface-space",
@@ -193,14 +193,14 @@ EXPECTED_PUBLICATION_DRY_RUN_PLAN = [
         "source_manifest": "hf/dataset/dataset_info.json",
     },
     {
-        "artifact_count": 4,
+        "artifact_count": 5,
         "command_templates": [
             (
-                "hf repos create AgadesTech/agades-pqc-gym-agent-env "
+                "hf repos create agades/agades-pqc-gym-agent-env "
                 "--type=space --space-sdk gradio --private --exist-ok"
             ),
             (
-                "hf upload AgadesTech/agades-pqc-gym-agent-env hf "
+                "hf upload agades/agades-pqc-gym-agent-env hf "
                 ". --repo-type=space --commit-message "
                 '"Sync Agades PQC Gym Agent Environment"'
             ),
@@ -247,7 +247,7 @@ EXPECTED_PLATFORM_REVIEW_MATRIX = {
         "surface_ids": ["github-repository"],
     },
     "hugging_face": {
-        "artifact_count": 17,
+        "artifact_count": 18,
         "credentialed_surface_count": 3,
         "publication_statuses": [
             "local_artifact_ready",
