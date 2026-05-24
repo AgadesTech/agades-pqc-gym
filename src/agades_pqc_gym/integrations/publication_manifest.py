@@ -210,6 +210,7 @@ def _surfaces(root: Path) -> list[dict[str, Any]]:
             "publishes_private_candidates": False,
             "security_claim": False,
             "artifact_paths": [
+                "hf/README.md",
                 "hf/app.py",
                 "hf/requirements.txt",
                 "hf/space_README.md",

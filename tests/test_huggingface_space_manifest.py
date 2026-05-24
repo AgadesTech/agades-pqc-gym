@@ -7,6 +7,7 @@ from typer.testing import CliRunner
 
 from agades_pqc_gym.cli import app
 from agades_pqc_gym.integrations.huggingface_space_manifest import (
+    _requirements_allow_injected_gradio,
     build_huggingface_space_manifest,
     verify_huggingface_space_manifest,
     write_huggingface_space_manifest,
@@ -31,7 +32,7 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "app_path": "hf/app.py",
     }
     assert manifest["space"] == {
-        "suggested_space_id": "AgadesTech/agades-pqc-gym-agent-env",
+        "suggested_space_id": "agades/agades-pqc-gym-agent-env",
         "sdk": "gradio",
         "category": "agent-environment",
         "app_file": "hf/app.py",
@@ -59,15 +60,19 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "requirements_file": "hf/requirements.txt",
         "dataset_bundle": "hf/dataset",
         "hub_create_command_template": (
-            "hf repos create AgadesTech/agades-pqc-gym-agent-env --type=space "
+            "hf repos create agades/agades-pqc-gym-agent-env --type=space "
             "--space-sdk gradio --private --exist-ok"
         ),
         "hub_upload_command_template": (
-            'hf upload AgadesTech/agades-pqc-gym-agent-env hf . --repo-type=space '
+            'hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space '
             '--commit-message "Sync Agades PQC Gym Agent Environment"'
         ),
         "public_push_requires_review": True,
     }
+    assert manifest["runtime"]["hf_spaces_injected_gradio"] == (
+        "gradio[oauth,mcp]==6.14.0"
+    )
+    assert manifest["runtime"]["requirements_compatible_with_injected_gradio"] is True
     assert len(manifest["space"]["space_readme_sha256"]) == 64
     assert space_readme.is_file()
     space_readme_text = space_readme.read_text(encoding="utf-8")
@@ -297,15 +302,27 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
 def test_huggingface_space_readme_matches_hub_workflow_contract() -> None:
     readme = Path("hf/space_README.md").read_text(encoding="utf-8")
 
-    assert "hf repos create AgadesTech/agades-pqc-gym-agent-env --type=space" in readme
+    assert "hf repos create agades/agades-pqc-gym-agent-env --type=space" in readme
     assert (
-        "hf upload AgadesTech/agades-pqc-gym-agent-env hf . --repo-type=space"
+        "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space"
         in readme
     )
     assert "HF_TOKEN" in readme
     assert "Agent Environment" in readme
     assert "rl_rollouts.jsonl" in readme
     assert "Use a private Space first" in readme
+
+
+def test_huggingface_space_requirements_allow_hf_injected_gradio(
+    tmp_path: Path,
+) -> None:
+    compatible = tmp_path / "compatible.txt"
+    incompatible = tmp_path / "incompatible.txt"
+    compatible.write_text("gradio>=4,<7\n", encoding="utf-8")
+    incompatible.write_text("gradio>=4,<6\n", encoding="utf-8")
+
+    assert _requirements_allow_injected_gradio(compatible) is True
+    assert _requirements_allow_injected_gradio(incompatible) is False
 
 
 def test_committed_huggingface_space_manifest_is_in_sync(tmp_path: Path) -> None:

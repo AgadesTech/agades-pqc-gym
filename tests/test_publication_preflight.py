@@ -155,7 +155,7 @@ EXPECTED_CREDENTIAL_REVIEW_QUEUE = [
         "smoke_gate": "hf-dataset-safety",
     },
     {
-        "artifact_count": 4,
+        "artifact_count": 5,
         "credential_material_included": False,
         "first_publication_target": "private_or_draft_review_surface",
         "id": "huggingface-space",
@@ -186,7 +186,7 @@ EXPECTED_PLATFORM_REVIEW_MATRIX = {
         "surface_ids": ["github-repository"],
     },
     "hugging_face": {
-        "artifact_count": 17,
+        "artifact_count": 18,
         "credentialed_surface_count": 3,
         "publication_statuses": [
             "local_artifact_ready",

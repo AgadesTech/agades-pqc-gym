@@ -65,6 +65,7 @@
       "hf/dataset/task_metadata.jsonl",
       "hf/dataset/verifier_outputs.jsonl",
       "hf/dataset/MANIFEST.sha256",
+      "hf/README.md",
       "hf/app.py",
       "hf/requirements.txt",
       "hf/space_README.md",
@@ -78,12 +79,13 @@
       "docs/HUGGINGFACE_RELEASE_PLAN.md"
     ],
     "artifact_sha256": {
-      "docs/HUGGINGFACE_RELEASE_PLAN.md": "f6b7ec48b5c1baa5acf7977e9a601511cf6a9703d96dc177f45f7d46242787e4",
+      "docs/HUGGINGFACE_RELEASE_PLAN.md": "95926b4b0924f551dc8b1a250692d1cc399657a093d60965713639c217a6104c",
       "docs/public_benchmark_manifest.json": "c45741efde84f27edfd6feab0e3217f68c88a5be4d56a038b2973ea2296722f7",
       "docs/source_catalog.json": "9648bc812ae0465cf9bf28e410d3fcbdc63ec6d17060c35b4e05e98ea55dc058",
+      "hf/README.md": "99fd52e2a4dd79d514f27a940a0d67c052f1b0fd3b80542098589a94217e41b5",
       "hf/app.py": "991630be214ffefb0656f904de48863c101a1a08557fba4b2a39e8378632fa0c",
       "hf/benchmark_card.md": "e29827f9fe4e8bd4c45bab2a7238b6029a589aac9eda1701e43086c2e0fdbdef",
-      "hf/collection_manifest.json": "e1490c5b6c991b947ac7df19ca8f6c03e7c170f386151fa71e03982952a85e91",
+      "hf/collection_manifest.json": "b3ddafd0f3c1b78f443851a2069f5cedddd3e0d8c97f499e6c1f7ee1000eacbe",
       "hf/dataset/MANIFEST.sha256": "23f362bad82b19ed2749592214fa0b61751f7a3c975babe413f04c9992b4bcdc",
       "hf/dataset/README.md": "e8e354eccacc48786080acf98b788eaea6670802617489bc55d3b7826cefb92d",
       "hf/dataset/attack_plans.jsonl": "2d6a3c4b8a11a1a891c238abc58a865833febbd72bcb8e0fe01af05b224bfa35",
@@ -91,9 +93,9 @@
       "hf/dataset/task_metadata.jsonl": "c2e31a25a20585b2b0186d114a9101a15e3130f69255bdace0926890d96ab43b",
       "hf/dataset/verifier_outputs.jsonl": "6eb3197c422b72dd386fcb32968aca5095a9342a2cea52fce871555b65705f74",
       "hf/dataset_card.md": "e8e354eccacc48786080acf98b788eaea6670802617489bc55d3b7826cefb92d",
-      "hf/requirements.txt": "ff3c22bb08d4114228f12c0a07e14d10d85e7928167acc5054396ecbc110fdbf",
-      "hf/space_README.md": "39ac38c14394f4509eeffb0ccf2de6db5b2eb8821d78e2a3c009566158458bf6",
-      "hf/space_manifest.json": "2047b59eff8b8cade5b3f848f1e7680954808b61e3d819fd890679f1d394568f",
+      "hf/requirements.txt": "a1161753e498c0569be2677a964d752b861f4923318bcadec273a446b8baf313",
+      "hf/space_README.md": "2a4771284bc466ad5711d44fcb5376ec5272d8052c4fdbdb5011ab7c9822a37e",
+      "hf/space_manifest.json": "e7e91170712e5a12ca0cb921728ca74ad789f1f02bd9c18cb6e8037c9acbbf34",
       "public/run_export/manifest.json": "333ad57c7b04eec2e3a20c6e190fc74bdf01c4a84d9d8e57f01c5118e832dadb"
     }
   },
@@ -105,7 +107,7 @@
     "handoff_status": "local_artifacts_ready_external_publication_blocked",
     "release_plan": "docs/HUGGINGFACE_RELEASE_PLAN.md",
     "space_repo_type": "space",
-    "space_suggested_repo_id": "agades/pqc-gym"
+    "space_suggested_repo_id": "agades/agades-pqc-gym-agent-env"
   },
   "project": {
     "cli": "agades-pqc",
@@ -117,8 +119,8 @@
     "collection_manual_review_required": true,
     "dataset_private_create": "hf repos create <owner>/pqc-gym-toy --type=dataset --private --exist-ok",
     "dataset_upload": "hf upload <owner>/pqc-gym-toy hf/dataset . --repo-type=dataset --commit-message \"Sync Agades PQC Gym dataset\"",
-    "space_private_create": "hf repos create <owner>/pqc-gym --type=space --space-sdk gradio --private --exist-ok",
-    "space_upload": "hf upload <owner>/pqc-gym hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Space\""
+    "space_private_create": "hf repos create agades/agades-pqc-gym-agent-env --type=space --space-sdk gradio --private --exist-ok",
+    "space_upload": "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Agent Environment\""
   },
   "readiness": {
     "attack_plan_count": 80,

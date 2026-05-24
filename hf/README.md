@@ -29,6 +29,8 @@ reviewer annotations, prompts, model weights, or serious-research rollouts.
 ## Public Surfaces
 
 - `app.py` launches the Gradio UI.
+- `requirements.txt` installs the public package and stays compatible with the
+  Gradio version injected by Hugging Face Spaces.
 - `dataset/attack_plans.jsonl` contains public toy/schema-only AttackPlan rows.
 - `dataset/task_metadata.jsonl` contains task constraints for scoring.
 - `dataset/rl_rollouts.jsonl` contains public example rollout traces.

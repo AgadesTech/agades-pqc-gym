@@ -937,7 +937,7 @@ def test_publication_manifest_verify_accepts_committed_manifest() -> None:
             "review_required_before_claims": True,
             "review_required_surfaces": 6,
             "surface_artifact_digest_exclusions": 3,
-                "surface_artifact_digests": 63,
+                "surface_artifact_digests": 64,
             "surfaces": 6,
         },
         "failures": [],

@@ -29,7 +29,7 @@ PRIME_REWARD_PROFILES = (
 _STRICT_RUBRIC_WEIGHTS = {
     "accepted_attack_plan": 1.0,
     "single_json_object": 0.0,
-    **{term: 0.0 for term in REWARD_TERMS},
+    **dict.fromkeys(REWARD_TERMS, 0.0),
 }
 _PEDAGOGICAL_DENSE_RUBRIC_WEIGHTS = {
     "accepted_attack_plan": 0.30,
