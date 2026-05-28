@@ -22,9 +22,11 @@ PRIME_REWARD_REPORT_SCHEMA = "agades.pqc.prime.reward_report.v1"
 PRIME_RUBRIC_TERMS = ("accepted_attack_plan", "single_json_object", *REWARD_TERMS)
 STRICT_REWARD_PROFILE = "strict"
 PEDAGOGICAL_DENSE_REWARD_PROFILE = "pedagogical_dense"
+FORMAT_REPAIR_DENSE_REWARD_PROFILE = "format_repair_dense"
 PRIME_REWARD_PROFILES = (
     STRICT_REWARD_PROFILE,
     PEDAGOGICAL_DENSE_REWARD_PROFILE,
+    FORMAT_REPAIR_DENSE_REWARD_PROFILE,
 )
 _STRICT_RUBRIC_WEIGHTS = {
     "accepted_attack_plan": 1.0,
@@ -43,9 +45,22 @@ _PEDAGOGICAL_DENSE_RUBRIC_WEIGHTS = {
     "task_match": 0.04,
     "proof_obligation_coverage": 0.04,
 }
+_FORMAT_REPAIR_DENSE_RUBRIC_WEIGHTS = {
+    "accepted_attack_plan": 0.20,
+    "single_json_object": 0.20,
+    "formal_validity": 0.20,
+    "cryptographic_applicability": 0.05,
+    "no_security_overclaim": 0.15,
+    "student_readability": 0.08,
+    "reproducibility": 0.03,
+    "reviewer_quality": 0.03,
+    "task_match": 0.04,
+    "proof_obligation_coverage": 0.02,
+}
 _RUBRIC_WEIGHTS_BY_PROFILE = {
     STRICT_REWARD_PROFILE: _STRICT_RUBRIC_WEIGHTS,
     PEDAGOGICAL_DENSE_REWARD_PROFILE: _PEDAGOGICAL_DENSE_RUBRIC_WEIGHTS,
+    FORMAT_REPAIR_DENSE_REWARD_PROFILE: _FORMAT_REPAIR_DENSE_RUBRIC_WEIGHTS,
 }
 SYSTEM_PROMPT = (
     "You submit JSON AttackPlan candidates for Agades PQC Gym. "
@@ -54,9 +69,11 @@ SYSTEM_PROMPT = (
 )
 DEFAULT_PROMPT_PROFILE = "attackplan_json"
 FORMAT_FIRST_PROMPT_PROFILE = "format_first_copy_seed"
+FORMAT_REPAIR_PROMPT_PROFILE = "format_repair_extract_seed"
 PROMPT_PROFILES = (
     DEFAULT_PROMPT_PROFILE,
     FORMAT_FIRST_PROMPT_PROFILE,
+    FORMAT_REPAIR_PROMPT_PROFILE,
 )
 
 
@@ -131,8 +148,16 @@ def score_attack_plan_completion_report(
     reward_profile: str = STRICT_REWARD_PROFILE,
 ) -> dict[str, Any]:
     weights = _weights_by_term(reward_profile)
-    candidate = _single_json_object_text(_last_content(completion))
+    completion_text = _last_content(completion)
+    candidate = _single_json_object_text(completion_text)
     if candidate is None:
+        if reward_profile == FORMAT_REPAIR_DENSE_REWARD_PROFILE:
+            return _format_repair_reward_report(
+                completion_text,
+                info=info,
+                project_root=project_root,
+                reward_profile=reward_profile,
+            )
         return _blocked_reward_report(
             "single_json_object",
             reward_profile=reward_profile,
@@ -172,8 +197,10 @@ def score_attack_plan_completion_report(
 def build_rubric_functions(
     *,
     project_root: Path | str | None = None,
+    reward_profile: str = STRICT_REWARD_PROFILE,
 ) -> list[Any]:
     root = _project_root(project_root)
+    _weights_by_term(reward_profile)
 
     async def accepted_attack_plan(
         completion: list[dict[str, Any]],
@@ -185,14 +212,25 @@ def build_rubric_functions(
             "accepted_attack_plan",
             info=info,
             project_root=root,
+            reward_profile=reward_profile,
         )
 
     functions = [accepted_attack_plan]
     functions.append(
-        _build_term_rubric_function("single_json_object", project_root=root)
+        _build_term_rubric_function(
+            "single_json_object",
+            project_root=root,
+            reward_profile=reward_profile,
+        )
     )
     for term in REWARD_TERMS:
-        functions.append(_build_term_rubric_function(term, project_root=root))
+        functions.append(
+            _build_term_rubric_function(
+                term,
+                project_root=root,
+                reward_profile=reward_profile,
+            )
+        )
     return functions
 
 
@@ -226,7 +264,10 @@ def load_environment(
         )
     )
     rubric = vf.Rubric(
-        funcs=build_rubric_functions(project_root=project_root),
+        funcs=build_rubric_functions(
+            project_root=project_root,
+            reward_profile=reward_profile,
+        ),
         weights=build_rubric_weights(reward_profile),
     )
     return vf.SingleTurnEnv(
@@ -282,6 +323,27 @@ def _question_for_seed_attack_plan(raw_json: str, *, prompt_profile: str) -> str
                 raw_json,
             ]
         )
+    if prompt_profile == FORMAT_REPAIR_PROMPT_PROFILE:
+        return "\n".join(
+            [
+                "Repair the broken model output below.",
+                "It contains one public toy AttackPlan JSON object wrapped in "
+                "extra prose and a markdown code fence.",
+                "Return only the corrected AttackPlan JSON object.",
+                "Do not include markdown, prose, analysis, comments, code "
+                "fences, or wrapper text.",
+                "The first non-whitespace character must be { and the final "
+                "non-whitespace character must be }.",
+                "Toy/demo verifier output only; do not claim real-world PQC breaks.",
+                "",
+                "Broken model output:",
+                "Here is the AttackPlan candidate:",
+                "```json",
+                raw_json,
+                "```",
+                "This is only a toy/demo verifier example, not a security claim.",
+            ]
+        )
     raise ValueError(f"unsupported Prime prompt profile: {prompt_profile}")
 
 
@@ -325,6 +387,7 @@ def _build_term_rubric_function(
     term: str,
     *,
     project_root: Path | None,
+    reward_profile: str,
 ) -> Any:
     async def score_term(
         completion: list[dict[str, Any]],
@@ -336,6 +399,7 @@ def _build_term_rubric_function(
             term,
             info=info,
             project_root=project_root,
+            reward_profile=reward_profile,
         )
 
     score_term.__name__ = term
@@ -348,12 +412,14 @@ def _rubric_score(
     *,
     info: dict[str, Any] | str | None,
     project_root: Path | None,
+    reward_profile: str = STRICT_REWARD_PROFILE,
 ) -> float:
     report = score_attack_plan_completion_report(
         completion,
         info=info,
         require_info=True,
         project_root=project_root,
+        reward_profile=reward_profile,
     )
     return float(report["rubric_scores"][term])
 
@@ -421,6 +487,119 @@ def _weighted_reward(
     return float(
         sum(float(rubric_scores[term]) * weight for term, weight in weights.items())
     )
+
+
+def _format_repair_reward_report(
+    text: str,
+    *,
+    info: dict[str, Any] | str | None,
+    project_root: Path | str | None,
+    reward_profile: str,
+) -> dict[str, Any]:
+    embedded_json = _embedded_json_object_text(text)
+    root = _project_root(project_root)
+    normalized_info = normalize_task_metadata(info)
+    rubric_scores = dict.fromkeys(PRIME_RUBRIC_TERMS, 0.0)
+    rubric_scores["no_security_overclaim"] = _no_security_overclaim_score(text)
+    rubric_scores["student_readability"] = _format_readability_score(text)
+
+    blocking_reasons = ["single_json_object"]
+    reward_report = None
+    formal_artifact_binding = None
+    if embedded_json is not None:
+        reward_report = score_attack_plan_candidate(
+            embedded_json,
+            task_info=normalized_info,
+            require_task_match=info is not None,
+            root=root,
+        )
+        formal_artifact_binding = build_formal_artifact_binding(
+            embedded_json,
+            root=root,
+        )
+        rubric_scores.update(
+            {
+                "accepted_attack_plan": float(reward_report["reward"]) * 0.5,
+                "formal_validity": float(
+                    reward_report["terms"]["formal_validity"]
+                ),
+                "cryptographic_applicability": float(
+                    reward_report["terms"]["cryptographic_applicability"]
+                )
+                * 0.5,
+                "no_security_overclaim": float(
+                    reward_report["terms"]["no_security_overclaim"]
+                ),
+                "student_readability": max(
+                    rubric_scores["student_readability"],
+                    0.5 * float(reward_report["terms"]["student_readability"]),
+                ),
+                "reproducibility": 0.5
+                * float(reward_report["terms"]["reproducibility"]),
+                "reviewer_quality": 0.5
+                * float(reward_report["terms"]["reviewer_quality"]),
+                "task_match": float(reward_report["terms"]["task_match"]),
+                "proof_obligation_coverage": 0.5
+                * float(reward_report["terms"]["proof_obligation_coverage"]),
+            }
+        )
+        if reward_report["accepted"]:
+            blocking_reasons.append("wrapped_or_prefixed_json")
+        else:
+            blocking_reasons.extend(reward_report["blocking_reasons"])
+
+    weights = _weights_by_term(reward_profile)
+    return _prime_reward_report(
+        aggregate_reward=_weighted_reward(rubric_scores, weights),
+        accepted=False,
+        single_json_object=False,
+        reward_profile=reward_profile,
+        rubric_scores=rubric_scores,
+        blocking_reasons=blocking_reasons,
+        reward_report=reward_report,
+        formal_artifact_binding=formal_artifact_binding,
+    )
+
+
+def _embedded_json_object_text(text: str) -> str | None:
+    decoder = json.JSONDecoder()
+    for index, character in enumerate(text):
+        if character != "{":
+            continue
+        try:
+            value, end = decoder.raw_decode(text[index:])
+        except json.JSONDecodeError:
+            continue
+        if isinstance(value, dict):
+            return text[index : index + end]
+    return None
+
+
+def _no_security_overclaim_score(text: str) -> float:
+    lowered = text.lower()
+    banned_fragments = (
+        "breaks kyber",
+        "breaks dilithium",
+        "breaks ml-kem",
+        "breaks ml-dsa",
+        "pqc is broken",
+        "real-world break",
+    )
+    return 0.0 if any(fragment in lowered for fragment in banned_fragments) else 1.0
+
+
+def _format_readability_score(text: str) -> float:
+    stripped = text.strip()
+    if not stripped:
+        return 0.0
+    score = 0.0
+    if stripped.startswith("{"):
+        score += 0.4
+    if stripped.endswith("}"):
+        score += 0.4
+    if "```" not in stripped:
+        score += 0.2
+    return score
 
 
 def _blocked_reward_report(
