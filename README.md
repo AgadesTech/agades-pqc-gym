@@ -80,13 +80,14 @@ See `docs/QUICKSTART.md` for the guided walkthrough.
 Manual core-loop commands:
 
 ```bash
+uv run agades-pqc examples
 uv run agades-pqc validate examples/attack_plans/lattice_primal_usvp_toy.json
 uv run agades-pqc evaluate examples/attack_plans/lattice_primal_usvp_toy.json --out runs/demo_trace.jsonl
 uv run agades-pqc report runs/demo_trace.jsonl --out reports/demo_report.md
 ```
 
 Schema-only examples validate structurally but return `status=unsupported`
-instead of cryptanalytic estimates:
+with `accepted=False` instead of cryptanalytic estimates:
 
 ```bash
 uv run agades-pqc validate examples/attack_plans/code_based_isd_placeholder.json

@@ -39,6 +39,7 @@ def test_help_prioritizes_core_gym_commands() -> None:
 
     assert result.exit_code == 0
     assert "quickstart" in result.output
+    assert "examples" in result.output
     assert "validate" in result.output
     assert "evaluate" in result.output
     assert "benchmark" in result.output
@@ -63,6 +64,9 @@ def test_quickstart_command_runs_guided_gym_demo(tmp_path: Path) -> None:
     assert "quickstart complete" in result.output.lower()
     assert "lattice_primal_usvp_toy_v1" in result.output
     assert "unsupported example" in result.output.lower()
+    assert "accepted=False" in result.output
+    assert "plan_valid=True" in result.output
+    assert "No estimate was produced" in result.output
     assert (out_dir / "lattice_trace.jsonl").exists()
     assert (out_dir / "lattice_report.md").exists()
     assert (out_dir / "lattice_benchmark.jsonl").exists()
@@ -71,6 +75,17 @@ def test_quickstart_command_runs_guided_gym_demo(tmp_path: Path) -> None:
     assert "Mock Vs Real Estimator Status" in (
         out_dir / "lattice_report.md"
     ).read_text(encoding="utf-8")
+
+
+def test_examples_command_lists_safe_guided_examples() -> None:
+    result = CliRunner().invoke(app, ["examples"])
+
+    assert result.exit_code == 0, result.output
+    assert "lattice-ok" in result.output
+    assert "code-based-toy" in result.output
+    assert "schema-only-unsupported" in result.output
+    assert "invalid-plan" in result.output
+    assert "status=unsupported" in result.output
 
 
 def test_evaluate_export_and_report_commands(tmp_path: Path) -> None:
@@ -120,9 +135,26 @@ def test_evaluate_command_explains_unsupported_results(tmp_path: Path) -> None:
 
     assert result.exit_code == 0, result.output
     assert "status=unsupported" in result.output
-    assert "valid=False" in result.output
+    assert "accepted=False" in result.output
+    assert "plan_valid=True" in result.output
     assert "CODE_BASED evaluator is not implemented" in result.output
+    assert "No estimate was produced" in result.output
     assert trace_path.exists()
+
+
+def test_validate_command_formats_schema_errors_without_pydantic_url() -> None:
+    result = CliRunner().invoke(
+        app,
+        ["validate", "examples/attack_plans/invalid_plan_should_fail.json"],
+    )
+
+    assert result.exit_code == 1
+    assert "invalid" in result.output.lower()
+    assert "AttackPlan: Value error" in result.output
+    assert "module_lattice_reduction_hypothesis requires an MLWE target" in (
+        result.output
+    )
+    assert "errors.pydantic.dev" not in result.output
 
 
 def test_verify_command_outputs_public_verifier_json() -> None:

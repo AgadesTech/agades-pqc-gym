@@ -26,14 +26,14 @@ The command writes these local files under `runs/quickstart/`:
 The important line in the terminal is the evaluation status:
 
 ```text
-status=ok ... valid=True ...
+status=ok ... accepted=True ... plan_valid=True ...
 ```
 
 For a family route that is intentionally not implemented yet, the gym says so
 explicitly:
 
 ```text
-status=unsupported ... valid=False ... reason=CODE_BASED evaluator is not implemented
+status=unsupported ... accepted=False ... plan_valid=True ... reason=CODE_BASED evaluator is not implemented
 ```
 
 `unsupported` means the JSON shape was understood, but the gym refused to invent
@@ -66,11 +66,24 @@ uv run agades-pqc evaluate examples/attack_plans/code_based_isd_placeholder.json
 ```
 
 This should exit successfully as a CLI command but report `status=unsupported`
-and `valid=False` for the evaluated plan. That distinction is deliberate: the
-tool can record unsupported routes without pretending they are valid
-cryptanalytic results.
+with `plan_valid=True` and `accepted=False` for the evaluated plan. That
+distinction is deliberate: the JSON is structurally valid, but the gym refuses
+to accept or estimate a route that has no reviewed evaluator.
 
-## 5. Compile The Formal Contract Bundle
+## 5. List Guided Examples
+
+```bash
+uv run agades-pqc examples
+```
+
+This prints the smallest safe example set:
+
+- `lattice-ok`: toy LWE path, expected `status=ok`.
+- `code-based-toy`: bounded public Prange-style toy path, expected `status=ok`.
+- `schema-only-unsupported`: placeholder path, expected `status=unsupported`.
+- `invalid-plan`: expected validation failure.
+
+## 6. Compile The Formal Contract Bundle
 
 If Lean/Lake is available, run the local formal smoke check:
 
@@ -92,6 +105,7 @@ it does not authorize any public security claim.
 `uv run agades-pqc --help` shows the core workflow commands first:
 
 - `quickstart`
+- `examples`
 - `validate`
 - `evaluate`
 - `verify`
