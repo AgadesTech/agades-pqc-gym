@@ -255,7 +255,7 @@ def write_prime_environment_manifest(
     root: Path | None = None,
 ) -> dict[str, Any]:
     project_root = (root or ROOT).resolve()
-    _sync_packaged_task_data(
+    _sync_packaged_environment_assets(
         project_root,
         project_root / ENVIRONMENT_DIR,
     )
@@ -811,6 +811,23 @@ def _packaged_task_rows(environment_dir: Path) -> list[dict[str, Any]]:
     return rows
 
 
+def _sync_packaged_environment_assets(
+    project_root: Path,
+    environment_dir: Path,
+) -> None:
+    _sync_packaged_task_data(project_root, environment_dir)
+    _sync_directory(
+        source_dir=project_root / "docs",
+        target_dir=environment_dir / "docs",
+        suffix=".json",
+    )
+    _sync_directory(
+        source_dir=project_root / "formal" / "lean",
+        target_dir=environment_dir / "formal" / "lean",
+        ignored_parts=frozenset({".lake"}),
+    )
+
+
 def _sync_packaged_task_data(project_root: Path, environment_dir: Path) -> None:
     data_dir = environment_dir / "data"
     source_paths = _valid_public_attack_plan_paths(project_root)
@@ -828,6 +845,43 @@ def _sync_packaged_task_data(project_root: Path, environment_dir: Path) -> None:
             or packaged_path.read_bytes() != source_path.read_bytes()
         ):
             shutil.copyfile(source_path, packaged_path)
+
+
+def _sync_directory(
+    *,
+    source_dir: Path,
+    target_dir: Path,
+    suffix: str | None = None,
+    ignored_parts: frozenset[str] = frozenset(),
+) -> None:
+    source_files = {
+        path.relative_to(source_dir): path
+        for path in sorted(source_dir.rglob("*"))
+        if path.is_file()
+        and not ignored_parts.intersection(path.relative_to(source_dir).parts)
+        and (suffix is None or path.suffix == suffix)
+    }
+    target_files = {
+        path.relative_to(target_dir): path
+        for path in sorted(target_dir.rglob("*"))
+        if path.is_file()
+        and not ignored_parts.intersection(path.relative_to(target_dir).parts)
+        and (suffix is None or path.suffix == suffix)
+    }
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    for relative_path, target_path in target_files.items():
+        if relative_path not in source_files:
+            target_path.unlink()
+
+    for relative_path, source_path in source_files.items():
+        target_path = target_dir / relative_path
+        target_path.parent.mkdir(parents=True, exist_ok=True)
+        if (
+            not target_path.is_file()
+            or target_path.read_bytes() != source_path.read_bytes()
+        ):
+            shutil.copyfile(source_path, target_path)
 
 
 def _source_mirror_contract(

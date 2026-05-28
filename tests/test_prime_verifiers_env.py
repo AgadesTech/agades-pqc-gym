@@ -159,6 +159,29 @@ def test_prime_verifiers_format_first_profile_instructs_seed_copy() -> None:
     assert rows[0]["info"]["attack_plan_id"] == "lattice_primal_usvp_toy_v1"
 
 
+def test_prime_verifiers_dataset_filters_seed_acceptance() -> None:
+    module = _load_env_module()
+
+    accepted_lwe_rows = module.build_dataset_rows(
+        target_family="LWE",
+        seed_accepted=True,
+    )
+    unsupported_lwe_rows = module.build_dataset_rows(
+        target_family="LWE",
+        seed_accepted=False,
+    )
+
+    assert accepted_lwe_rows
+    assert unsupported_lwe_rows
+    assert all(row["info"]["target_family"] == "LWE" for row in accepted_lwe_rows)
+    assert all(row["info"]["seed_accepted"] is True for row in accepted_lwe_rows)
+    assert all(row["info"]["seed_accepted"] is False for row in unsupported_lwe_rows)
+    assert {
+        row["info"]["attack_plan_id"]
+        for row in unsupported_lwe_rows
+    } >= {"lattice_lwe_modulus_switching_primary_v1"}
+
+
 def test_prime_verifiers_rejects_unknown_prompt_profile() -> None:
     module = _load_env_module()
 
