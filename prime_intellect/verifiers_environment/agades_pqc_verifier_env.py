@@ -52,6 +52,12 @@ SYSTEM_PROMPT = (
     "Return only a single AttackPlan JSON object. Do not submit Python, shell, "
     "network requests, exploit chains, or live-target instructions."
 )
+DEFAULT_PROMPT_PROFILE = "attackplan_json"
+FORMAT_FIRST_PROMPT_PROFILE = "format_first_copy_seed"
+PROMPT_PROFILES = (
+    DEFAULT_PROMPT_PROFILE,
+    FORMAT_FIRST_PROMPT_PROFILE,
+)
 
 
 def build_dataset_rows(
@@ -59,8 +65,13 @@ def build_dataset_rows(
     *,
     attack_plan_id: str | None = None,
     target_family: str | None = None,
+    prompt_profile: str = DEFAULT_PROMPT_PROFILE,
 ) -> list[dict[str, Any]]:
-    rows = [_row_for_plan(path) for path in TASK_PLAN_PATHS]
+    _validate_prompt_profile(prompt_profile)
+    rows = [
+        _row_for_plan(path, prompt_profile=prompt_profile)
+        for path in TASK_PLAN_PATHS
+    ]
     if attack_plan_id is not None:
         rows = [
             row
@@ -182,6 +193,7 @@ def load_environment(
     project_root: Path | str | None = None,
     attack_plan_id: str | None = None,
     target_family: str | None = None,
+    prompt_profile: str = DEFAULT_PROMPT_PROFILE,
     reward_profile: str = STRICT_REWARD_PROFILE,
     **kwargs: Any,
 ) -> Any:
@@ -200,6 +212,7 @@ def load_environment(
             num_examples=num_examples,
             attack_plan_id=attack_plan_id,
             target_family=target_family,
+            prompt_profile=prompt_profile,
         )
     )
     rubric = vf.Rubric(
@@ -214,7 +227,7 @@ def load_environment(
     )
 
 
-def _row_for_plan(path: Path) -> dict[str, Any]:
+def _row_for_plan(path: Path, *, prompt_profile: str) -> dict[str, Any]:
     raw_json = path.read_text(encoding="utf-8")
     plan = AttackPlan.model_validate_json(raw_json)
     info = task_metadata_for_plan(
@@ -222,16 +235,7 @@ def _row_for_plan(path: Path) -> dict[str, Any]:
         source_path=str(path.relative_to(PACKAGE_DIR)),
         seed_attack_plan_json=raw_json,
     )
-    question = "\n".join(
-        [
-            "Submit exactly one AttackPlan JSON object for the target below.",
-            "Do not submit Python or any executable code.",
-            "Toy/demo verifier output only; do not claim real-world PQC breaks.",
-            "",
-            "Seed AttackPlan:",
-            raw_json,
-        ]
-    )
+    question = _question_for_seed_attack_plan(raw_json, prompt_profile=prompt_profile)
     return {
         "prompt": [{"role": "user", "content": question}],
         "answer": (
@@ -239,6 +243,41 @@ def _row_for_plan(path: Path) -> dict[str, Any]:
         ),
         "info": info,
     }
+
+
+def _question_for_seed_attack_plan(raw_json: str, *, prompt_profile: str) -> str:
+    if prompt_profile == DEFAULT_PROMPT_PROFILE:
+        return "\n".join(
+            [
+                "Submit exactly one AttackPlan JSON object for the target below.",
+                "Do not submit Python or any executable code.",
+                "Toy/demo verifier output only; do not claim real-world PQC breaks.",
+                "",
+                "Seed AttackPlan:",
+                raw_json,
+            ]
+        )
+    if prompt_profile == FORMAT_FIRST_PROMPT_PROFILE:
+        return "\n".join(
+            [
+                "Return the Seed AttackPlan below unchanged as exactly one "
+                "JSON object.",
+                "Preserve every field, value, key spelling, and array item.",
+                "Do not add markdown, prose, analysis, comments, or code fences.",
+                "The first non-whitespace character must be { and the final "
+                "non-whitespace character must be }.",
+                "Toy/demo verifier output only; do not claim real-world PQC breaks.",
+                "",
+                "Seed AttackPlan:",
+                raw_json,
+            ]
+        )
+    raise ValueError(f"unsupported Prime prompt profile: {prompt_profile}")
+
+
+def _validate_prompt_profile(prompt_profile: str) -> None:
+    if prompt_profile not in PROMPT_PROFILES:
+        raise ValueError(f"unsupported Prime prompt profile: {prompt_profile}")
 
 
 def build_rubric_weights(

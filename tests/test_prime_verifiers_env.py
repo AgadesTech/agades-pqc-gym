@@ -91,6 +91,10 @@ def test_prime_verifiers_dataset_rows_cover_all_public_valid_families() -> None:
     assert rows[0]["prompt"][0]["role"] == "user"
     assert "Submit exactly one AttackPlan JSON object" in first_prompt
     assert "Do not submit Python" in first_prompt
+    assert module.PROMPT_PROFILES == (
+        "attackplan_json",
+        "format_first_copy_seed",
+    )
     assert first_info["schema_version"] == TASK_METADATA_SCHEMA
     assert first_info["source_path"].startswith("data/")
     assert first_info["target_name"]
@@ -137,6 +141,33 @@ def test_prime_verifiers_dataset_respects_num_examples_limit() -> None:
     rows = module.build_dataset_rows(num_examples=3)
 
     assert len(rows) == 3
+
+
+def test_prime_verifiers_format_first_profile_instructs_seed_copy() -> None:
+    module = _load_env_module()
+
+    rows = module.build_dataset_rows(
+        attack_plan_id="lattice_primal_usvp_toy_v1",
+        prompt_profile="format_first_copy_seed",
+    )
+
+    prompt = rows[0]["prompt"][0]["content"]
+    assert "Return the Seed AttackPlan below unchanged" in prompt
+    assert "Preserve every field" in prompt
+    assert "Do not add markdown" in prompt
+    assert "first non-whitespace character must be {" in prompt
+    assert rows[0]["info"]["attack_plan_id"] == "lattice_primal_usvp_toy_v1"
+
+
+def test_prime_verifiers_rejects_unknown_prompt_profile() -> None:
+    module = _load_env_module()
+
+    try:
+        module.build_dataset_rows(prompt_profile="unknown")
+    except ValueError as exc:
+        assert "unsupported Prime prompt profile" in str(exc)
+    else:
+        raise AssertionError("unknown Prime prompt profile should be rejected")
 
 
 def test_prime_verifiers_reward_scores_public_verifier_results() -> None:
