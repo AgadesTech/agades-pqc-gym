@@ -95,6 +95,7 @@ def test_prime_verifiers_dataset_rows_cover_all_public_valid_families() -> None:
         "attackplan_json",
         "format_first_copy_seed",
         "format_repair_extract_seed",
+        "claims_guard_repair",
     )
     assert first_info["schema_version"] == TASK_METADATA_SCHEMA
     assert first_info["source_path"].startswith("data/")
@@ -174,6 +175,25 @@ def test_prime_verifiers_format_repair_profile_instructs_json_extraction() -> No
     assert "Return only the corrected AttackPlan JSON object." in prompt
     assert "```json" in prompt
     assert rows[0]["info"]["attack_plan_id"] == "lattice_primal_usvp_toy_v1"
+
+
+def test_prime_verifiers_claims_guard_profile_instructs_claim_repair() -> None:
+    module = _load_env_module()
+
+    rows = module.build_dataset_rows(
+        attack_plan_id="lattice_bdd_toy_v1",
+        prompt_profile="claims_guard_repair",
+    )
+
+    prompt = rows[0]["prompt"][0]["content"]
+    assert "Repair the invalid AttackPlan JSON object below." in prompt
+    assert "pre-evaluation estimates" in prompt
+    assert "estimated_time_bits=null" in prompt
+    assert "estimated_memory_bits=null" in prompt
+    assert "success_probability=null" in prompt
+    assert "Do not add external_claim or source" in prompt
+    assert "```" not in prompt
+    assert rows[0]["info"]["attack_plan_id"] == "lattice_bdd_toy_v1"
 
 
 def test_prime_verifiers_dataset_filters_seed_acceptance() -> None:

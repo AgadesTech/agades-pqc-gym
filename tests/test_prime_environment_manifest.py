@@ -238,6 +238,34 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
             "target_family, target_name, support_level, and ordered "
             "operator_types; attack_plan_id may change"
         ),
+        "prompt_profiles": {
+            "attackplan_json": {
+                "intended_use": "private_training_or_eval",
+                "contract": (
+                    "submit one AttackPlan JSON object for the seed task; "
+                    "do not invent pre-evaluation claims"
+                ),
+            },
+            "format_first_copy_seed": {
+                "intended_use": "format_smoke_and_supported_strict_eval",
+                "contract": "copy the seed AttackPlan unchanged as one JSON object",
+            },
+            "format_repair_extract_seed": {
+                "intended_use": "private_format_curriculum",
+                "contract": (
+                    "extract the public seed AttackPlan from wrapped prose "
+                    "and markdown"
+                ),
+            },
+            "claims_guard_repair": {
+                "intended_use": "private_claims_repair_curriculum",
+                "contract": (
+                    "repair invalid pre-evaluation claim estimates by "
+                    "restoring unknown null claims without adding external "
+                    "claim evidence"
+                ),
+            },
+        },
         "reward_profiles": {
             "strict": {
                 "intended_use": "public_eval",
@@ -273,6 +301,27 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
                     "reviewer_quality": 0.05,
                     "task_match": 0.04,
                     "proof_obligation_coverage": 0.04,
+                },
+            },
+            "format_repair_dense": {
+                "intended_use": "private_prime_rl_training",
+                "aggregate_rule": (
+                    "weighted format-repair signal; exact valid JSON can "
+                    "receive full reward, wrapped JSON can receive partial "
+                    "non-accepted reward"
+                ),
+                "accepted_candidates_still_require_strict_acceptance": True,
+                "rubric_weights": {
+                    "accepted_attack_plan": 0.20,
+                    "single_json_object": 0.20,
+                    "formal_validity": 0.20,
+                    "cryptographic_applicability": 0.05,
+                    "no_security_overclaim": 0.15,
+                    "student_readability": 0.08,
+                    "reproducibility": 0.03,
+                    "reviewer_quality": 0.03,
+                    "task_match": 0.04,
+                    "proof_obligation_coverage": 0.02,
                 },
             },
         },

@@ -70,10 +70,12 @@ SYSTEM_PROMPT = (
 DEFAULT_PROMPT_PROFILE = "attackplan_json"
 FORMAT_FIRST_PROMPT_PROFILE = "format_first_copy_seed"
 FORMAT_REPAIR_PROMPT_PROFILE = "format_repair_extract_seed"
+CLAIMS_GUARD_REPAIR_PROMPT_PROFILE = "claims_guard_repair"
 PROMPT_PROFILES = (
     DEFAULT_PROMPT_PROFILE,
     FORMAT_FIRST_PROMPT_PROFILE,
     FORMAT_REPAIR_PROMPT_PROFILE,
+    CLAIMS_GUARD_REPAIR_PROMPT_PROFILE,
 )
 
 
@@ -302,6 +304,9 @@ def _question_for_seed_attack_plan(raw_json: str, *, prompt_profile: str) -> str
             [
                 "Submit exactly one AttackPlan JSON object for the target below.",
                 "Do not submit Python or any executable code.",
+                "Do not invent pre-evaluation estimates. Keep claims unknown "
+                "unless the JSON already contains reviewed external_claim "
+                "evidence with a source.",
                 "Toy/demo verifier output only; do not claim real-world PQC breaks.",
                 "",
                 "Seed AttackPlan:",
@@ -342,6 +347,28 @@ def _question_for_seed_attack_plan(raw_json: str, *, prompt_profile: str) -> str
                 raw_json,
                 "```",
                 "This is only a toy/demo verifier example, not a security claim.",
+            ]
+        )
+    if prompt_profile == CLAIMS_GUARD_REPAIR_PROMPT_PROFILE:
+        return "\n".join(
+            [
+                "Repair the invalid AttackPlan JSON object below.",
+                "It is invalid because claims contains pre-evaluation estimates "
+                "without reviewed external_claim evidence.",
+                "Return exactly one valid AttackPlan JSON object.",
+                "Repair claims by setting estimated_time_bits=null, "
+                "estimated_memory_bits=null, and success_probability=null.",
+                "Do not add external_claim or source.",
+                "Preserve target, operators, constraints, metadata, and "
+                "attack_plan_id exactly.",
+                "Do not include markdown, prose, analysis, comments, code "
+                "fences, or wrapper text.",
+                "The first non-whitespace character must be { and the final "
+                "non-whitespace character must be }.",
+                "Toy/demo verifier output only; do not claim real-world PQC breaks.",
+                "",
+                "Invalid AttackPlan JSON:",
+                _claims_guard_invalid_output(raw_json),
             ]
         )
     raise ValueError(f"unsupported Prime prompt profile: {prompt_profile}")
@@ -573,6 +600,20 @@ def _embedded_json_object_text(text: str) -> str | None:
         if isinstance(value, dict):
             return text[index : index + end]
     return None
+
+
+def _claims_guard_invalid_output(raw_json: str) -> str:
+    payload = json.loads(raw_json)
+    claims = payload.get("claims")
+    if not isinstance(claims, dict):
+        claims = {}
+        payload["claims"] = claims
+    claims["estimated_time_bits"] = 64.0
+    claims["estimated_memory_bits"] = 32.0
+    claims["success_probability"] = 0.5
+    claims.pop("external_claim", None)
+    claims.pop("source", None)
+    return json.dumps(payload, indent=2)
 
 
 def _no_security_overclaim_score(text: str) -> float:

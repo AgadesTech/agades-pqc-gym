@@ -36,6 +36,13 @@ single-object JSON can still receive full verifier reward, while wrapped or
 prefixed JSON receives partial private-training reward without being accepted as
 a valid final answer.
 
+The `prompt_profile="claims_guard_repair"` curriculum targets a concrete model
+failure mode: adding pre-evaluation estimates inside `claims` without reviewed
+`external_claim` evidence. It shows the model an invalid public toy AttackPlan
+and asks it to restore unknown `null` claims while preserving the rest of the
+task. This is a private training/eval curriculum only; public quality claims
+still require strict eval.
+
 Dataset rows can be filtered with `attack_plan_id`, `target_family`, and
 `seed_accepted`. Use `seed_accepted=true` for supported-only strict quality
 evals, and run unsupported tasks as a separate safety eval so unsupported seeds

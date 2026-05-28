@@ -163,6 +163,34 @@ def build_prime_environment_manifest(root: Path | None = None) -> dict[str, Any]
                 "target_family, target_name, support_level, and ordered "
                 "operator_types; attack_plan_id may change"
             ),
+            "prompt_profiles": {
+                "attackplan_json": {
+                    "intended_use": "private_training_or_eval",
+                    "contract": (
+                        "submit one AttackPlan JSON object for the seed task; "
+                        "do not invent pre-evaluation claims"
+                    ),
+                },
+                "format_first_copy_seed": {
+                    "intended_use": "format_smoke_and_supported_strict_eval",
+                    "contract": "copy the seed AttackPlan unchanged as one JSON object",
+                },
+                "format_repair_extract_seed": {
+                    "intended_use": "private_format_curriculum",
+                    "contract": (
+                        "extract the public seed AttackPlan from wrapped prose "
+                        "and markdown"
+                    ),
+                },
+                "claims_guard_repair": {
+                    "intended_use": "private_claims_repair_curriculum",
+                    "contract": (
+                        "repair invalid pre-evaluation claim estimates by "
+                        "restoring unknown null claims without adding external "
+                        "claim evidence"
+                    ),
+                },
+            },
             "reward_profiles": {
                 "strict": {
                     "intended_use": "public_eval",
@@ -198,6 +226,27 @@ def build_prime_environment_manifest(root: Path | None = None) -> dict[str, Any]
                         "reviewer_quality": 0.05,
                         "task_match": 0.04,
                         "proof_obligation_coverage": 0.04,
+                    },
+                },
+                "format_repair_dense": {
+                    "intended_use": "private_prime_rl_training",
+                    "aggregate_rule": (
+                        "weighted format-repair signal; exact valid JSON can "
+                        "receive full reward, wrapped JSON can receive partial "
+                        "non-accepted reward"
+                    ),
+                    "accepted_candidates_still_require_strict_acceptance": True,
+                    "rubric_weights": {
+                        "accepted_attack_plan": 0.20,
+                        "single_json_object": 0.20,
+                        "formal_validity": 0.20,
+                        "cryptographic_applicability": 0.05,
+                        "no_security_overclaim": 0.15,
+                        "student_readability": 0.08,
+                        "reproducibility": 0.03,
+                        "reviewer_quality": 0.03,
+                        "task_match": 0.04,
+                        "proof_obligation_coverage": 0.02,
                     },
                 },
             },
@@ -412,6 +461,7 @@ def _verify_scoring_contract(
     else:
         strict_profile = reward_profiles.get("strict")
         dense_profile = reward_profiles.get("pedagogical_dense")
+        format_repair_profile = reward_profiles.get("format_repair_dense")
         if not isinstance(strict_profile, dict):
             failures.append("Prime manifest lacks strict reward profile.")
         elif strict_profile.get("rubric_weights", {}).get(
@@ -424,6 +474,14 @@ def _verify_scoring_contract(
             "accepted_candidates_still_require_strict_acceptance"
         ) is not True:
             failures.append("Prime dense profile weakens accepted-candidate rule.")
+        if not isinstance(format_repair_profile, dict):
+            failures.append("Prime manifest lacks format_repair_dense reward profile.")
+        elif format_repair_profile.get(
+            "accepted_candidates_still_require_strict_acceptance"
+        ) is not True:
+            failures.append(
+                "Prime format-repair profile weakens accepted-candidate rule."
+            )
         for name, profile in reward_profiles.items():
             if not isinstance(profile, dict):
                 continue
@@ -433,6 +491,18 @@ def _verify_scoring_contract(
                 continue
             if abs(sum(float(value) for value in weights.values()) - 1.0) > 1e-12:
                 failures.append(f"Prime reward profile {name} weights do not sum to 1.")
+    prompt_profiles = scoring_contract.get("prompt_profiles")
+    if not isinstance(prompt_profiles, dict):
+        failures.append("Prime manifest prompt_profiles must be an object.")
+    else:
+        expected_prompt_profiles = {
+            "attackplan_json",
+            "format_first_copy_seed",
+            "format_repair_extract_seed",
+            "claims_guard_repair",
+        }
+        if set(prompt_profiles) != expected_prompt_profiles:
+            failures.append("Prime manifest prompt_profiles drifted.")
     if scoring_contract.get("formal_binding_rule") != (
         "accepted Prime rewards must attach an "
         "agades.pqc.rl.formal_artifact_binding.v1 proof binding with "
