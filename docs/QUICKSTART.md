@@ -33,7 +33,7 @@ For a family route that is intentionally not implemented yet, the gym says so
 explicitly:
 
 ```text
-status=unsupported ... accepted=False ... plan_valid=True ... reason=CODE_BASED evaluator is not implemented
+status=unsupported score=n/a accepted=False plan_valid=True ... reason=CODE_BASED evaluator is not implemented
 ```
 
 `unsupported` means the JSON shape was understood, but the gym refused to invent
