@@ -89,11 +89,11 @@
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "054eab41b0b7dee2ad53997e51a4a60bfbae37866b7c1dac023cdad999154db1"
+      "sha256": "779ed80ad166d9d55a54001bcf4500ac8b05b3870c26ba651a41316fcc49e022"
     },
     "rl_environment_contract": {
       "path": "docs/rl_environment_contract.json",
-      "sha256": "1c85511336a52643691f5f1f39e334d4e466a70cd9b06e7de4812af8dbc8564e"
+      "sha256": "087f00db875ca31b32f3d26dc5ef4d866fda224c5b5046ec0269253738de3db9"
     }
   },
   "project": {

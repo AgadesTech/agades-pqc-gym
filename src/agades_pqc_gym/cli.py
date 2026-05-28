@@ -290,6 +290,7 @@ from agades_pqc_gym.traces.public_ledger import (
     render_public_trace_jsonl,
 )
 from agades_pqc_gym.traces.writer import JsonlTraceWriter
+from agades_pqc_gym.utils.validation_errors import stable_validation_error_messages
 from agades_pqc_gym.validators.static import validate_attack_plan
 from agades_pqc_gym.verifier import EstimatorChoice, verify_attack_plan_path
 
@@ -297,10 +298,10 @@ app = typer.Typer(
     no_args_is_help=True,
     rich_markup_mode=None,
     help=(
-        "Run Agades PQC Gym experiments. Start with `quickstart`, then use "
-        "`validate`, `evaluate`, `benchmark`, and `report` for the core loop. "
-        "Advanced release and ecosystem commands remain available by name but "
-        "are hidden from this first-screen help."
+        "Run Agades PQC Gym experiments. Start with `quickstart`, inspect "
+        "`examples`, then use `validate`, `evaluate`, `benchmark`, and `report` "
+        "for the core loop. Advanced release and ecosystem commands remain "
+        "available by name but are hidden from this first-screen help."
     ),
 )
 console = Console()
@@ -316,6 +317,32 @@ QUICKSTART_UNSUPPORTED_PLAN = Path(
     "examples/attack_plans/code_based_isd_placeholder.json"
 )
 QUICKSTART_LATTICE_BENCHMARK = Path("benchmarks/lattice_toy_lwe")
+GUIDED_EXAMPLES = (
+    {
+        "id": "lattice-ok",
+        "path": "examples/attack_plans/lattice_primal_usvp_toy.json",
+        "expected": "status=ok",
+        "purpose": "toy LWE primal uSVP evaluator path",
+    },
+    {
+        "id": "code-based-toy",
+        "path": "examples/attack_plans/code_based_prange_toy.json",
+        "expected": "status=ok",
+        "purpose": "bounded public Prange-style toy path",
+    },
+    {
+        "id": "schema-only-unsupported",
+        "path": "examples/attack_plans/code_based_isd_placeholder.json",
+        "expected": "status=unsupported",
+        "purpose": "schema-only placeholder; no estimate is produced",
+    },
+    {
+        "id": "invalid-plan",
+        "path": "examples/attack_plans/invalid_plan_should_fail.json",
+        "expected": "validate exits non-zero",
+        "purpose": "family/operator mismatch error example",
+    },
+)
 
 
 class EstimatorBackend(StrEnum):
@@ -396,13 +423,34 @@ def quickstart(
     typer.echo("next=Read docs/QUICKSTART.md for the guided walkthrough.")
 
 
+@app.command("examples")
+def examples_command() -> None:
+    """Show safe example AttackPlans and the expected CLI outcome."""
+    typer.echo("Safe guided examples:")
+    for example in GUIDED_EXAMPLES:
+        typer.echo(
+            f"{example['id']}: {example['path']} -> {example['expected']} "
+            f"({example['purpose']})"
+        )
+    typer.echo(
+        "tip=Run `uv run agades-pqc evaluate <path> --out runs/demo.jsonl` "
+        "for status=ok or status=unsupported examples."
+    )
+
+
 @app.command()
 def validate(plan_path: Path) -> None:
     """Validate an AttackPlan JSON file."""
     try:
         plan = AttackPlan.model_validate_json(plan_path.read_text())
-    except (OSError, ValidationError) as exc:
-        console.print(f"[red]invalid[/red]: {exc}")
+    except OSError as exc:
+        console.print(f"[red]invalid[/red]: {plan_path}")
+        console.print(f"- {exc}", soft_wrap=True)
+        raise typer.Exit(1) from exc
+    except ValidationError as exc:
+        console.print(f"[red]invalid[/red]: {plan_path}")
+        for error in stable_validation_error_messages(exc):
+            console.print(f"- {error}", soft_wrap=True)
         raise typer.Exit(1) from exc
 
     result = validate_attack_plan(plan)
@@ -412,7 +460,7 @@ def validate(plan_path: Path) -> None:
 
     console.print(f"[red]invalid[/red]: {plan.attack_plan_id}")
     for error in result.errors:
-        console.print(f"- {error}")
+        console.print(f"- {error}", soft_wrap=True)
     raise typer.Exit(1)
 
 
@@ -3241,11 +3289,19 @@ def format_evaluation_summary(result: CascadeResult, out: Path) -> str:
     if status is None:
         status = "invalid" if not result.validation.valid else "unknown"
     score = result.metrics.get("combined_score")
-    summary = f"status={status} score={score} valid={result.valid} trace={out}"
+    summary = (
+        f"status={status} score={score} accepted={result.valid} "
+        f"plan_valid={result.validation.valid} trace={out}"
+    )
     if status != "ok" and result.warnings:
         summary += f" reason={result.warnings[0]}"
     elif status != "ok" and result.validation.errors:
         summary += f" reason={result.validation.errors[0]}"
+    if status == "unsupported":
+        summary += (
+            " next=No estimate was produced; use an implemented toy route or "
+            "add a reviewed adapter before expecting estimates."
+        )
     return summary
 
 
