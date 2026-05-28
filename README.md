@@ -129,6 +129,17 @@ uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json
 uv run agades-pqc release-artifacts --max-passes 6
 ```
 
+Optional private live check after uploading the Space:
+
+```bash
+uv run agades-pqc hf-live-space-smoke --out reports/hf_live_space_smoke.json
+uv run agades-pqc hf-live-space-smoke-verify --report reports/hf_live_space_smoke.json
+```
+
+The live check exercises the deployed Gradio API through
+`/gradio_api/call/<api_name>`. The report is intentionally Git-ignored because
+it proves access to a private Space and may contain deployment metadata.
+
 Additional checked artifacts:
 
 - `docs/family_support_matrix.json`

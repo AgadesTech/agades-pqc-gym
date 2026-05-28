@@ -5301,6 +5301,8 @@ def _release_gate_closure(root: Path) -> dict[str, Any]:
 
     for path in _release_gate_artifact_paths(root):
         data = _read_json(path)
+        if not isinstance(data, dict):
+            continue
         release_gates = data.get("release_gates")
         if not isinstance(release_gates, list):
             continue
@@ -5357,16 +5359,28 @@ def _release_gate_closure(root: Path) -> dict[str, Any]:
 
 
 def _release_gate_artifact_paths(root: Path) -> list[Path]:
+    candidates = [
+        *root.joinpath("docs").glob("*.json"),
+        *root.joinpath("hf").rglob("*.json"),
+        *root.joinpath("nvidia").glob("*.json"),
+        *root.joinpath("prime_intellect").glob("**/*.json"),
+        *root.joinpath("public").glob("*.json"),
+        *root.joinpath("reports").glob("*.json"),
+    ]
     return sorted(
-        [
-            *root.joinpath("docs").glob("*.json"),
-            *root.joinpath("hf").rglob("*.json"),
-            *root.joinpath("nvidia").glob("*.json"),
-            *root.joinpath("prime_intellect").glob("**/*.json"),
-            *root.joinpath("public").glob("*.json"),
-            *root.joinpath("reports").glob("*.json"),
-        ],
+        (
+            path
+            for path in candidates
+            if not _contains_generated_or_hidden_part(path.relative_to(root))
+        ),
         key=lambda path: path.relative_to(root).as_posix(),
+    )
+
+
+def _contains_generated_or_hidden_part(path: Path) -> bool:
+    return any(
+        part.startswith(".") or part in {"__pycache__", "site-packages"}
+        for part in path.parts
     )
 
 
