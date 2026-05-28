@@ -65,6 +65,7 @@ def build_dataset_rows(
     *,
     attack_plan_id: str | None = None,
     target_family: str | None = None,
+    seed_accepted: bool | None = None,
     prompt_profile: str = DEFAULT_PROMPT_PROFILE,
 ) -> list[dict[str, Any]]:
     _validate_prompt_profile(prompt_profile)
@@ -84,10 +85,17 @@ def build_dataset_rows(
             for row in rows
             if row["info"]["target_family"] == target_family
         ]
+    if seed_accepted is not None:
+        rows = [
+            row
+            for row in rows
+            if row["info"]["seed_accepted"] is seed_accepted
+        ]
     if not rows:
         filters = {
             "attack_plan_id": attack_plan_id,
             "target_family": target_family,
+            "seed_accepted": seed_accepted,
         }
         raise ValueError(f"Prime environment task filter matched no rows: {filters}")
     if num_examples is None or num_examples < 0:
@@ -193,6 +201,7 @@ def load_environment(
     project_root: Path | str | None = None,
     attack_plan_id: str | None = None,
     target_family: str | None = None,
+    seed_accepted: bool | None = None,
     prompt_profile: str = DEFAULT_PROMPT_PROFILE,
     reward_profile: str = STRICT_REWARD_PROFILE,
     **kwargs: Any,
@@ -212,6 +221,7 @@ def load_environment(
             num_examples=num_examples,
             attack_plan_id=attack_plan_id,
             target_family=target_family,
+            seed_accepted=seed_accepted,
             prompt_profile=prompt_profile,
         )
     )

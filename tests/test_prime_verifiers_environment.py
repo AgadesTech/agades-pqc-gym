@@ -204,6 +204,25 @@ def test_prime_verifiers_environment_filters_dataset_rows() -> None:
     assert rows[0]["info"]["target_family"] == "LWE"
     assert module.build_dataset_rows(target_family="LWE")
 
+    accepted_lwe_rows = module.build_dataset_rows(
+        target_family="LWE",
+        seed_accepted=True,
+    )
+    unsupported_lwe_rows = module.build_dataset_rows(
+        target_family="LWE",
+        seed_accepted=False,
+    )
+
+    assert accepted_lwe_rows
+    assert unsupported_lwe_rows
+    assert all(row["info"]["seed_accepted"] is True for row in accepted_lwe_rows)
+    assert all(row["info"]["target_family"] == "LWE" for row in accepted_lwe_rows)
+    assert all(row["info"]["seed_accepted"] is False for row in unsupported_lwe_rows)
+    assert {
+        row["info"]["attack_plan_id"]
+        for row in unsupported_lwe_rows
+    } >= {"lattice_lwe_modulus_switching_primary_v1"}
+
 
 def test_prime_verifiers_environment_rejects_empty_dataset_filter() -> None:
     module = _load_environment_module()
@@ -214,6 +233,16 @@ def test_prime_verifiers_environment_rejects_empty_dataset_filter() -> None:
         assert "task filter matched no rows" in str(exc)
     else:
         raise AssertionError("empty Prime task filter should be rejected")
+
+    try:
+        module.build_dataset_rows(
+            attack_plan_id="lattice_primal_usvp_toy_v1",
+            seed_accepted=False,
+        )
+    except ValueError as exc:
+        assert "seed_accepted" in str(exc)
+    else:
+        raise AssertionError("contradictory Prime task filter should be rejected")
 
 
 def _assistant_completion(content: str) -> list[dict[str, str]]:
