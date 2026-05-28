@@ -140,10 +140,45 @@
     "formal_artifact_binding_schema": "agades.pqc.rl.formal_artifact_binding.v1",
     "formal_binding_rule": "accepted Prime rewards must attach an agades.pqc.rl.formal_artifact_binding.v1 proof binding with review_governance_ok == true",
     "invalid_reward": 0.0,
+    "prompt_profiles": {
+      "attackplan_json": {
+        "contract": "submit one AttackPlan JSON object for the seed task; do not invent pre-evaluation claims",
+        "intended_use": "private_training_or_eval"
+      },
+      "claims_guard_repair": {
+        "contract": "repair invalid pre-evaluation claim estimates by restoring unknown null claims without adding external claim evidence",
+        "intended_use": "private_claims_repair_curriculum"
+      },
+      "format_first_copy_seed": {
+        "contract": "copy the seed AttackPlan unchanged as one JSON object",
+        "intended_use": "format_smoke_and_supported_strict_eval"
+      },
+      "format_repair_extract_seed": {
+        "contract": "extract the public seed AttackPlan from wrapped prose and markdown",
+        "intended_use": "private_format_curriculum"
+      }
+    },
     "requires_single_json_object": true,
     "review_governance_binding_schema": "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1",
     "reviewer_quality_requires_governance": true,
     "reward_profiles": {
+      "format_repair_dense": {
+        "accepted_candidates_still_require_strict_acceptance": true,
+        "aggregate_rule": "weighted format-repair signal; exact valid JSON can receive full reward, wrapped JSON can receive partial non-accepted reward",
+        "intended_use": "private_prime_rl_training",
+        "rubric_weights": {
+          "accepted_attack_plan": 0.2,
+          "cryptographic_applicability": 0.05,
+          "formal_validity": 0.2,
+          "no_security_overclaim": 0.15,
+          "proof_obligation_coverage": 0.02,
+          "reproducibility": 0.03,
+          "reviewer_quality": 0.03,
+          "single_json_object": 0.2,
+          "student_readability": 0.08,
+          "task_match": 0.04
+        }
+      },
       "pedagogical_dense": {
         "accepted_candidates_still_require_strict_acceptance": true,
         "aggregate_rule": "weighted training signal over JSON-format compliance and existing verifier sub-scores",
