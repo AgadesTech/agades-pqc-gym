@@ -193,6 +193,77 @@ def test_prime_verifiers_environment_dense_profile_is_training_only_signal() -> 
     ]
 
 
+def test_prime_verifiers_environment_grades_format_repair_wrapped_json() -> None:
+    module = _load_environment_module()
+    raw_plan = LATTICE_PLAN.read_text(encoding="utf-8")
+    wrapped_plan = f"Here is the plan:\n```json\n{raw_plan}\n```"
+    task_info = _task_info_for(module, "lattice_primal_usvp_toy_v1")
+
+    strict_report = module.score_attack_plan_completion_report(
+        _assistant_completion(wrapped_plan),
+        info=task_info,
+        reward_profile="strict",
+    )
+    repair_report = module.score_attack_plan_completion_report(
+        _assistant_completion(wrapped_plan),
+        info=task_info,
+        reward_profile="format_repair_dense",
+    )
+    exact_report = module.score_attack_plan_completion_report(
+        _assistant_completion(raw_plan),
+        info=task_info,
+        reward_profile="format_repair_dense",
+    )
+
+    assert strict_report["aggregate_reward"] == 0.0
+    assert repair_report["accepted"] is False
+    assert repair_report["single_json_object"] is False
+    assert 0.0 < repair_report["aggregate_reward"] < exact_report["aggregate_reward"]
+    assert "wrapped_or_prefixed_json" in repair_report["blocking_reasons"]
+    assert repair_report["rubric_scores"]["accepted_attack_plan"] == 0.5
+    assert repair_report["rubric_scores"]["formal_validity"] == 1.0
+    assert exact_report["aggregate_reward"] == 1.0
+    assert sum(module.build_rubric_weights("format_repair_dense")) == 1.0
+    assert module.build_rubric_weights("format_repair_dense") == [
+        0.20,
+        0.20,
+        0.20,
+        0.05,
+        0.15,
+        0.08,
+        0.03,
+        0.03,
+        0.04,
+        0.02,
+    ]
+
+
+def test_prime_verifiers_environment_format_rubric_uses_profile() -> None:
+    module = _load_environment_module()
+    raw_plan = LATTICE_PLAN.read_text(encoding="utf-8")
+    wrapped_completion = _assistant_completion(
+        f"Here is the plan:\n```json\n{raw_plan}\n```"
+    )
+    task_info = _task_info_for(module, "lattice_primal_usvp_toy_v1")
+
+    strict_formal_score = module._rubric_score(
+        wrapped_completion,
+        "formal_validity",
+        info=task_info,
+        project_root=None,
+    )
+    repair_formal_score = module._rubric_score(
+        wrapped_completion,
+        "formal_validity",
+        info=task_info,
+        project_root=None,
+        reward_profile="format_repair_dense",
+    )
+
+    assert strict_formal_score == 0.0
+    assert repair_formal_score == 1.0
+
+
 def test_prime_verifiers_environment_filters_dataset_rows() -> None:
     module = _load_environment_module()
 

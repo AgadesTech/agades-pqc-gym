@@ -94,6 +94,7 @@ def test_prime_verifiers_dataset_rows_cover_all_public_valid_families() -> None:
     assert module.PROMPT_PROFILES == (
         "attackplan_json",
         "format_first_copy_seed",
+        "format_repair_extract_seed",
     )
     assert first_info["schema_version"] == TASK_METADATA_SCHEMA
     assert first_info["source_path"].startswith("data/")
@@ -156,6 +157,22 @@ def test_prime_verifiers_format_first_profile_instructs_seed_copy() -> None:
     assert "Preserve every field" in prompt
     assert "Do not add markdown" in prompt
     assert "first non-whitespace character must be {" in prompt
+    assert rows[0]["info"]["attack_plan_id"] == "lattice_primal_usvp_toy_v1"
+
+
+def test_prime_verifiers_format_repair_profile_instructs_json_extraction() -> None:
+    module = _load_env_module()
+
+    rows = module.build_dataset_rows(
+        attack_plan_id="lattice_primal_usvp_toy_v1",
+        prompt_profile="format_repair_extract_seed",
+    )
+
+    prompt = rows[0]["prompt"][0]["content"]
+    assert "Repair the broken model output below." in prompt
+    assert "markdown code fence" in prompt
+    assert "Return only the corrected AttackPlan JSON object." in prompt
+    assert "```json" in prompt
     assert rows[0]["info"]["attack_plan_id"] == "lattice_primal_usvp_toy_v1"
 
 
