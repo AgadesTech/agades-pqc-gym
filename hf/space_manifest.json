@@ -204,7 +204,7 @@
       ],
       "title": "Agades PQC Gym Agent Environment"
     },
-    "space_readme_sha256": "b2224a8c0eb195bc267a88d95c55d51b0b43b445a2178c03149b96e773bb57df",
+    "space_readme_sha256": "294b96a0450bf866034e5908feaf44a9e4d69d758c2b3910a36a04920ced9896",
     "suggested_space_id": "agades/agades-pqc-gym-agent-env"
   },
   "verifier_contract": {

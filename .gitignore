@@ -16,6 +16,7 @@ prime_intellect/verifiers_environment/uv.lock
 formal/lean/.lake/
 runs/
 reports/formal_lean_build_smoke.json
+reports/hf_live_space_smoke.json
 public/*
 !public/run_export/
 !public/run_export/**

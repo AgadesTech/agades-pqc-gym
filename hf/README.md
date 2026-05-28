@@ -47,3 +47,14 @@ reviewer annotations, prompts, model weights, or serious-research rollouts.
   weights must stay outside this Space.
 - Public publication requires release review after the local manifest and smoke
   gates pass.
+
+## Private Live Smoke
+
+After a private Space upload, validate the deployed Gradio API with:
+
+```bash
+uv run agades-pqc hf-live-space-smoke --out reports/hf_live_space_smoke.json
+uv run agades-pqc hf-live-space-smoke-verify --report reports/hf_live_space_smoke.json
+```
+
+This check uses `/gradio_api/call/<api_name>` and keeps the report Git-ignored.

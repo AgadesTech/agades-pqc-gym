@@ -3,25 +3,23 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from agades_pqc_gym.integrations.release_audit import _release_gate_artifact_paths
+
 
 def test_release_audit_gates_are_preceded_by_ecosystem_smoke_gate() -> None:
-    checked_artifacts = [
-        *Path("docs").glob("*.json"),
-        *Path("hf").rglob("*.json"),
-        *Path("nvidia").glob("*.json"),
-        *Path("prime_intellect").glob("**/*.json"),
-        *Path("public").glob("*.json"),
-        *Path("reports").glob("*.json"),
-    ]
+    checked_artifacts = _release_gate_artifact_paths(Path("."))
     checked_artifact_paths = [path.as_posix() for path in sorted(checked_artifacts)]
     release_audit_artifacts: list[str] = []
     ecosystem_smoke_artifacts: list[str] = []
     missing: list[str] = []
 
     assert "hf/dataset/dataset_info.json" in checked_artifact_paths
+    assert all("/.venv/" not in path for path in checked_artifact_paths)
 
     for path in sorted(checked_artifacts):
         data = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            continue
         release_gates = data.get("release_gates")
         if not isinstance(release_gates, list):
             continue

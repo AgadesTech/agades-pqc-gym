@@ -127,6 +127,13 @@ from agades_pqc_gym.integrations.huggingface_dataset import (
     verify_huggingface_dataset_bundle,
     write_huggingface_dataset_bundle,
 )
+from agades_pqc_gym.integrations.huggingface_live_space_smoke import (
+    DEFAULT_SPACE_URL as DEFAULT_HF_LIVE_SPACE_URL,
+)
+from agades_pqc_gym.integrations.huggingface_live_space_smoke import (
+    verify_huggingface_live_space_smoke_report,
+    write_huggingface_live_space_smoke_report,
+)
 from agades_pqc_gym.integrations.huggingface_publication_handoff import (
     verify_huggingface_publication_handoff,
     write_huggingface_publication_handoff,
@@ -1417,6 +1424,70 @@ def hf_space_smoke_verify(
 ) -> None:
     """Verify the checked Hugging Face Space smoke report."""
     result = verify_huggingface_space_smoke_report(report)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("hf-live-space-smoke", hidden=True)
+def hf_live_space_smoke(
+    out: Annotated[
+        Path,
+        typer.Option(
+            "--out",
+            help="Local private-review report path. This file is Git-ignored.",
+        ),
+    ] = Path("reports/hf_live_space_smoke.json"),
+    space_url: Annotated[
+        str,
+        typer.Option(
+            "--space-url",
+            help="Live Hugging Face Space URL to exercise.",
+        ),
+    ] = DEFAULT_HF_LIVE_SPACE_URL,
+    token_env: Annotated[
+        str,
+        typer.Option(
+            "--token-env",
+            help="Environment variable containing a Hugging Face token.",
+        ),
+    ] = "HF_TOKEN",
+    use_token_cache: Annotated[
+        bool,
+        typer.Option(
+            "--use-token-cache/--no-use-token-cache",
+            help=(
+                "Use the standard local Hugging Face token cache if token-env "
+                "is unset."
+            ),
+        ),
+    ] = True,
+    timeout: Annotated[
+        float,
+        typer.Option("--timeout", help="HTTP timeout in seconds."),
+    ] = 60.0,
+) -> None:
+    """Exercise the deployed private HF Space through /gradio_api/call."""
+    report = write_huggingface_live_space_smoke_report(
+        out,
+        space_url=space_url,
+        token_env=token_env,
+        use_token_cache=use_token_cache,
+        timeout=timeout,
+    )
+    typer.echo(f"hf_live_space_smoke={out}")
+    if not report["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("hf-live-space-smoke-verify", hidden=True)
+def hf_live_space_smoke_verify(
+    report: Annotated[Path, typer.Option("--report")] = Path(
+        "reports/hf_live_space_smoke.json"
+    ),
+) -> None:
+    """Verify a local private-review Hugging Face live Space smoke report."""
+    result = verify_huggingface_live_space_smoke_report(report)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)
