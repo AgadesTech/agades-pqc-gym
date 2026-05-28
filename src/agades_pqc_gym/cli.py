@@ -3360,8 +3360,11 @@ def format_evaluation_summary(result: CascadeResult, out: Path) -> str:
     if status is None:
         status = "invalid" if not result.validation.valid else "unknown"
     score = result.metrics.get("combined_score")
+    displayed_score: object = score
+    if status == "unsupported":
+        displayed_score = "n/a"
     summary = (
-        f"status={status} score={score} accepted={result.valid} "
+        f"status={status} score={displayed_score} accepted={result.valid} "
         f"plan_valid={result.validation.valid} trace={out}"
     )
     if status != "ok" and result.warnings:
