@@ -27,6 +27,9 @@ DEFAULT_LABEL = "LWE / lattice_primal_usvp_toy_v1"
 DEFAULT_PRIVATE_SPACE_ID = "agades/agades-pqc-gym-agent-env"
 HF_SPACES_INJECTED_GRADIO = "gradio[oauth,mcp]==6.14.0"
 SPACE_README_PATH = Path("hf/README.md")
+SPACE_FORMAL_DOCS_PATH = Path("hf/docs")
+SPACE_FORMAL_LEAN_PATH = Path("hf/formal/lean")
+SPACE_CI_WORKFLOW_PATH = Path("hf/.github/workflows/ci.yml")
 SPACE_README_METADATA = {
     "title": "Agades PQC Gym Agent Environment",
     "sdk": "gradio",
@@ -112,6 +115,7 @@ def build_huggingface_space_manifest(root: Path | None = None) -> dict[str, Any]
                     project_root / "hf" / "requirements.txt"
                 )
             ),
+            "formal_runtime_bundle": _space_formal_runtime_bundle(project_root),
         },
         "agent_environment_contract": {
             "environment_class": (
@@ -397,6 +401,14 @@ def _verify_runtime(
         failures.append(
             "Hugging Face Space requirements conflict with the Gradio version "
             "injected by HF Spaces."
+        )
+    expected_bundle = _space_formal_runtime_bundle(root)
+    if runtime.get("formal_runtime_bundle") != expected_bundle:
+        failures.append("Hugging Face Space formal runtime bundle drifted.")
+    bundle = _dict_or_empty(runtime.get("formal_runtime_bundle"))
+    if bundle.get("required_files_present") is not True:
+        failures.append(
+            "Hugging Face Space formal runtime bundle is missing required files."
         )
     if runtime.get("dataset_source") != "hf/dataset/attack_plans.jsonl":
         failures.append("Hugging Face Space manifest dataset_source is incorrect.")
@@ -752,6 +764,9 @@ def _verification_result(
             "requires_gradio_to_import_for_audit": runtime.get(
                 "requires_gradio_to_import_for_audit"
             ),
+            "formal_runtime_bundle_ready": _dict_or_empty(
+                runtime.get("formal_runtime_bundle")
+            ).get("required_files_present"),
             "uses_shared_verifier": verifier_contract.get("uses_shared_verifier"),
         },
         "failures": failures,
@@ -825,6 +840,46 @@ def _requirements_allow_injected_gradio(path: Path) -> bool:
         if "<6" in normalized or "<=5" in normalized:
             return False
     return True
+
+
+def _space_formal_runtime_bundle(root: Path) -> dict[str, Any]:
+    docs_dir = root / SPACE_FORMAL_DOCS_PATH
+    lean_dir = root / SPACE_FORMAL_LEAN_PATH
+    workflow_path = root / SPACE_CI_WORKFLOW_PATH
+    required_paths = (
+        docs_dir / "formal_attackplan_semantics.json",
+        docs_dir / "formal_operator_semantics.json",
+        docs_dir / "formal_estimator_model.json",
+        docs_dir / "reviewer_governance.json",
+        lean_dir / "AgadesPQC" / "AttackPlan.lean",
+        lean_dir / "AgadesPQC" / "ProofObligation.lean",
+        workflow_path,
+    )
+    docs = sorted(path for path in docs_dir.glob("*.json") if path.is_file())
+    lean_files = sorted(path for path in lean_dir.rglob("*") if path.is_file())
+    bundle_files = [*docs, *lean_files]
+    if workflow_path.is_file():
+        bundle_files.append(workflow_path)
+    return {
+        "docs_path": SPACE_FORMAL_DOCS_PATH.as_posix(),
+        "docs_json_count": len(docs),
+        "lean_path": SPACE_FORMAL_LEAN_PATH.as_posix(),
+        "lean_file_count": len(lean_files),
+        "ci_workflow_path": SPACE_CI_WORKFLOW_PATH.as_posix(),
+        "required_files_present": all(path.is_file() for path in required_paths),
+        "bundle_sha256": _bundle_sha256(root, bundle_files),
+    }
+
+
+def _bundle_sha256(root: Path, files: list[Path]) -> str:
+    digest = hashlib.sha256()
+    for path in sorted(files):
+        relative = path.relative_to(root).as_posix()
+        digest.update(relative.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(hashlib.sha256(path.read_bytes()).hexdigest().encode("ascii"))
+        digest.update(b"\0")
+    return digest.hexdigest()
 
 
 def _dict_or_empty(value: object) -> dict[str, Any]:

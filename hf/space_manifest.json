@@ -145,6 +145,15 @@
   "runtime": {
     "dataset_source": "hf/dataset/attack_plans.jsonl",
     "fallback_source": "examples/attack_plans",
+    "formal_runtime_bundle": {
+      "bundle_sha256": "76be953bff365a898b0ae75ed7c69b5859dff79d95e2301294e809165679a2b6",
+      "ci_workflow_path": "hf/.github/workflows/ci.yml",
+      "docs_json_count": 38,
+      "docs_path": "hf/docs",
+      "lean_file_count": 18,
+      "lean_path": "hf/formal/lean",
+      "required_files_present": true
+    },
     "hf_spaces_injected_gradio": "gradio[oauth,mcp]==6.14.0",
     "requirements": [
       "agades-pqc-gym @ git+https://github.com/AgadesTech/agades-pqc-gym.git@main",
@@ -195,7 +204,7 @@
       ],
       "title": "Agades PQC Gym Agent Environment"
     },
-    "space_readme_sha256": "99fd52e2a4dd79d514f27a940a0d67c052f1b0fd3b80542098589a94217e41b5",
+    "space_readme_sha256": "b2224a8c0eb195bc267a88d95c55d51b0b43b445a2178c03149b96e773bb57df",
     "suggested_space_id": "agades/agades-pqc-gym-agent-env"
   },
   "verifier_contract": {

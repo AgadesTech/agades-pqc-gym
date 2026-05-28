@@ -1,0 +1,88 @@
+{
+  "environment": {
+    "families": [
+      "CODE_BASED",
+      "HASH_BASED",
+      "IMPLEMENTATION_SECURITY",
+      "ISOGENY_HISTORICAL",
+      "LWE",
+      "MLWE",
+      "MULTIVARIATE",
+      "NTRU",
+      "SIS"
+    ],
+    "family_count": 9,
+    "manifest_path": "prime_intellect/verifiers_environment/prime_manifest.json",
+    "manifest_sha256": "4efc1f4962608261aeda41a32b7daddcfe24e58eb38f503d4e6767c8830ab92a",
+    "public_examples_only": true,
+    "schema_manifest_path": "prime_intellect/schemas/schema_manifest.json",
+    "schema_manifest_sha256": "f448d41c640e6dc02a462af1bf695a93045676a191cee53403a121cab833fbeb",
+    "support_levels": [
+      "implemented",
+      "schema_only"
+    ],
+    "task_count": 79
+  },
+  "prime_eval": {
+    "config_format": "agades.local.prime_eval_template.toml",
+    "config_path": "prime_intellect/evals/agades_pqc_eval.template.toml",
+    "config_sha256": "8a653d4d2258e3e51561676c479edd30ef756b4f66c09ef24f3be1b461e4e152",
+    "credentialed_eval_command_template": "prime eval run ${AGADES_PRIME_ENV_REF} -m ${AGADES_EVAL_MODEL} -p prime -n 32 -r 2 -t 2048 -s -A",
+    "environment_id": "agades-pqc-verifier-env",
+    "environment_ref_env": "AGADES_PRIME_ENV_REF",
+    "launch_readiness": "blocked_until_prime_credentials_namespace_and_model_review",
+    "local_verifiers_smoke_command": "cd prime_intellect/verifiers_environment && uv run vf-eval agades-pqc-verifier-env",
+    "max_tokens": 2048,
+    "model_env": "AGADES_EVAL_MODEL",
+    "num_examples": 32,
+    "provider": "prime",
+    "rollouts_per_example": 2
+  },
+  "project": {
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "release_gates": [
+    "uv run pytest tests/test_prime_eval_config.py -q",
+    "uv run agades-pqc prime-eval-config --config prime_intellect/evals/agades_pqc_eval.template.toml --manifest docs/prime_eval_config_manifest.json",
+    "uv run agades-pqc prime-eval-config-verify --config prime_intellect/evals/agades_pqc_eval.template.toml --manifest docs/prime_eval_config_manifest.json",
+    "uv run agades-pqc prime-manifest-verify --manifest prime_intellect/verifiers_environment/prime_manifest.json",
+    "uv run agades-pqc prime-environment-smoke-verify --report reports/prime_environment_smoke.json",
+    "uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json",
+    "uv run agades-pqc release-audit --out public/release_audit.json"
+  ],
+  "review": {
+    "operator_checklist": "confirm_prime_org_namespace_model_and_billing",
+    "required_reviewers": [
+      "prime_operator",
+      "cryptography_domain_reviewer",
+      "release_owner"
+    ],
+    "requires_billing_review": true,
+    "requires_model_review": true,
+    "requires_prime_credentials": true
+  },
+  "reward_contract": {
+    "accepted_reward": 1.0,
+    "accepts_executable_code": false,
+    "invalid_reward": 0.0,
+    "requires_single_json_object": true,
+    "requires_task_match": true,
+    "reward_range": [
+      0.0,
+      1.0
+    ],
+    "unsupported_reward": 0.0
+  },
+  "safety": {
+    "credentials_checked_at_generation": false,
+    "credentials_present_in_artifact": false,
+    "external_prime_execution_performed": false,
+    "publish_outputs_publicly": false,
+    "publish_private_traces": false,
+    "security_claim": false,
+    "template_only": true
+  },
+  "schema_version": "agades.pqc.prime_eval_config.v1"
+}

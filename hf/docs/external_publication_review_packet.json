@@ -1,0 +1,594 @@
+{
+  "credential_review_queue": [
+    {
+      "artifact_count": 7,
+      "credential_material_included": false,
+      "first_publication_target": "private_or_draft_review_surface",
+      "id": "huggingface-collection",
+      "platform": "hugging_face",
+      "publication_status": "local_manifest_ready_review_required",
+      "review_required_before_publish": true,
+      "smoke_gate": "hf-collection-manifest"
+    },
+    {
+      "artifact_count": 6,
+      "credential_material_included": false,
+      "first_publication_target": "private_or_draft_review_surface",
+      "id": "huggingface-dataset",
+      "platform": "hugging_face",
+      "publication_status": "local_artifact_ready",
+      "review_required_before_publish": true,
+      "smoke_gate": "hf-dataset-safety"
+    },
+    {
+      "artifact_count": 5,
+      "credential_material_included": false,
+      "first_publication_target": "private_or_draft_review_surface",
+      "id": "huggingface-space",
+      "platform": "hugging_face",
+      "publication_status": "local_artifact_ready",
+      "review_required_before_publish": true,
+      "smoke_gate": "hf-space-smoke"
+    },
+    {
+      "artifact_count": 11,
+      "credential_material_included": false,
+      "first_publication_target": "private_or_draft_review_surface",
+      "id": "prime-verifiers-environment",
+      "platform": "prime_intellect",
+      "publication_status": "local_package_ready",
+      "review_required_before_publish": true,
+      "smoke_gate": "prime-environment-smoke"
+    }
+  ],
+  "ecosystem_focus": {
+    "family_support": {
+      "families_with_future_reviewed_adapters": [
+        "CODE_BASED",
+        "HASH_BASED",
+        "IMPLEMENTATION_SECURITY",
+        "LWE",
+        "MLWE",
+        "MULTIVARIATE",
+        "NTRU",
+        "SIS"
+      ],
+      "family_count": 9,
+      "future_reviewed_adapter_sources_by_family": 21,
+      "implemented": [
+        "LWE",
+        "MLWE"
+      ],
+      "platform_support": {
+        "family_counts_match": true,
+        "missing_claim_review_gate": [],
+        "platforms": [
+          "huggingface_collection",
+          "nvidia",
+          "prime_intellect"
+        ],
+        "platforms_with_claim_review_gate": [
+          "huggingface_collection",
+          "nvidia",
+          "prime_intellect"
+        ],
+        "surface_count": 3
+      },
+      "review_required_before_claims": true,
+      "schema_only": [
+        "NTRU",
+        "SIS"
+      ],
+      "toy_evaluators": [
+        "CODE_BASED",
+        "HASH_BASED",
+        "IMPLEMENTATION_SECURITY",
+        "ISOGENY_HISTORICAL",
+        "MULTIVARIATE"
+      ],
+      "unique_future_reviewed_adapter_source_count": 15
+    },
+    "hugging_face": {
+      "collection_entries": 7,
+      "dataset_valid_attack_plan_rows": 79,
+      "space_examples": 79
+    },
+    "nvidia": {
+      "current_gpu_required_workload_count": 0,
+      "gpu_future_workload_count": 1,
+      "workload_count": 27
+    },
+    "prime_intellect": {
+      "environment_task_count": 79,
+      "family_count": 9,
+      "prime_hub_publication_performed": false,
+      "source_anchors": [
+        "prime-autonanogpt-speedrun",
+        "prime-autonomous-speedrunning-experiments",
+        "prime-quickstart"
+      ]
+    },
+    "public_private_boundary": {
+      "report_generator_redaction": {
+        "blocking": true,
+        "check_id": "report-generator-redaction",
+        "private_evaluator_output_absent": true,
+        "private_mapping_evaluator_output_absent": true,
+        "private_mapping_score_absent": true,
+        "private_mapping_target_absent": true,
+        "private_mutation_absent": true,
+        "private_score_absent": true,
+        "raw_mapping_redaction_covered": true,
+        "redacted_records": 2,
+        "sensitive_target_absent": true,
+        "status": "passed",
+        "typed_trace_redaction_covered": true
+      }
+    },
+    "runbook_architecture": {
+      "core_symbol_count": 14,
+      "core_symbol_import_count": 14,
+      "family_plugin_count": 6,
+      "family_plugin_manifest_digests_match": true,
+      "family_plugin_module_count": 55,
+      "family_plugin_module_digest_count": 55,
+      "family_plugin_module_import_count": 55,
+      "family_registry_family_count_matches_plugin_manifest": true,
+      "family_registry_plugin_count_matches_plugin_manifest": true,
+      "family_registry_plugin_manifest_module_digest_count": 55,
+      "family_registry_plugin_manifest_synced": true,
+      "family_registry_runtime_adapter_entries_match_plugin_manifest": true,
+      "lattice_is_first_implemented_plugin": true,
+      "planned_family_plugin_count": 5,
+      "public_runbook_audit_checks": 7,
+      "public_runbook_audit_synced": true
+    },
+    "source_catalog_scope": {
+      "non_lattice_toy_evaluator_count": 41,
+      "non_lattice_toy_operator_families": [
+        "CODE_BASED",
+        "HASH_BASED",
+        "IMPLEMENTATION_SECURITY",
+        "ISOGENY_HISTORICAL",
+        "MULTIVARIATE"
+      ],
+      "non_lattice_toy_operator_security_claims": 0,
+      "non_lattice_toy_operator_variant_count": 41,
+      "platform_source_catalog_scope_counts_match": true,
+      "platform_source_catalog_scope_security_claims": 0,
+      "platform_source_catalog_scope_surfaces": 3,
+      "source_count": 41
+    }
+  },
+  "family_readiness_matrix": {
+    "CODE_BASED": {
+      "benchmark_count": 21,
+      "cross_family_review_source_count": 3,
+      "default_estimator": "toy-code-based-isd-estimator",
+      "evaluator_status": "implemented_toy",
+      "future_reviewed_adapter_source_count": 3,
+      "lattice_estimator_enabled": false,
+      "operator_count": 2,
+      "plugin": "code_based",
+      "public_example_count": 21,
+      "reproduction_status": "toy_syndrome_hqc_mdpc_and_classic_mceliece_fixture_solvers_available_for_public_fixtures",
+      "review_required_before_claims": true,
+      "support_level": "toy_evaluator"
+    },
+    "HASH_BASED": {
+      "benchmark_count": 9,
+      "cross_family_review_source_count": 3,
+      "default_estimator": "toy-hash-bound-estimator",
+      "evaluator_status": "implemented_toy",
+      "future_reviewed_adapter_source_count": 1,
+      "lattice_estimator_enabled": false,
+      "operator_count": 3,
+      "plugin": "hash_based",
+      "public_example_count": 8,
+      "reproduction_status": "toy_preimage_collision_signature_merkle_fors_slh_dsa_and_misuse_verifiers_available_for_public_fixtures",
+      "review_required_before_claims": true,
+      "support_level": "toy_evaluator"
+    },
+    "IMPLEMENTATION_SECURITY": {
+      "benchmark_count": 21,
+      "cross_family_review_source_count": 3,
+      "default_estimator": "toy-implementation-security-estimator",
+      "evaluator_status": "implemented_toy",
+      "future_reviewed_adapter_source_count": 8,
+      "lattice_estimator_enabled": false,
+      "operator_count": 3,
+      "plugin": "implementation_security",
+      "public_example_count": 20,
+      "reproduction_status": "toy_kat_acvp_timing_and_benchmark_verifiers_available_for_public_json_only_fixtures",
+      "review_required_before_claims": true,
+      "support_level": "toy_evaluator"
+    },
+    "ISOGENY_HISTORICAL": {
+      "benchmark_count": 5,
+      "cross_family_review_source_count": 3,
+      "default_estimator": "toy-isogeny-historical-path-estimator",
+      "evaluator_status": "implemented_toy",
+      "future_reviewed_adapter_source_count": 0,
+      "lattice_estimator_enabled": false,
+      "operator_count": 1,
+      "plugin": "isogeny_historical",
+      "public_example_count": 4,
+      "reproduction_status": "historical_toy_path_verifier_available_for_public_fixtures",
+      "review_required_before_claims": true,
+      "support_level": "toy_evaluator"
+    },
+    "LWE": {
+      "benchmark_count": 5,
+      "cross_family_review_source_count": 3,
+      "default_estimator": "mock-lattice-estimator",
+      "evaluator_status": "implemented",
+      "future_reviewed_adapter_source_count": 2,
+      "lattice_estimator_enabled": true,
+      "operator_count": 12,
+      "plugin": "lattice",
+      "public_example_count": 10,
+      "reproduction_status": "downscaled_lwe_mlwe_fixture_solvers_and_estimator_replay_available_for_public_toy_targets",
+      "review_required_before_claims": true,
+      "support_level": "implemented"
+    },
+    "MLWE": {
+      "benchmark_count": 2,
+      "cross_family_review_source_count": 3,
+      "default_estimator": "mock-lattice-estimator",
+      "evaluator_status": "implemented",
+      "future_reviewed_adapter_source_count": 2,
+      "lattice_estimator_enabled": true,
+      "operator_count": 12,
+      "plugin": "lattice",
+      "public_example_count": 2,
+      "reproduction_status": "downscaled_lwe_mlwe_fixture_solvers_and_estimator_replay_available_for_public_toy_targets",
+      "review_required_before_claims": true,
+      "support_level": "implemented"
+    },
+    "MULTIVARIATE": {
+      "benchmark_count": 13,
+      "cross_family_review_source_count": 3,
+      "default_estimator": "toy-multivariate-estimator",
+      "evaluator_status": "implemented_toy",
+      "future_reviewed_adapter_source_count": 1,
+      "lattice_estimator_enabled": false,
+      "operator_count": 3,
+      "plugin": "multivariate",
+      "public_example_count": 12,
+      "reproduction_status": "toy_mq_and_minrank_solvers_available_for_public_gf2_fixtures",
+      "review_required_before_claims": true,
+      "support_level": "toy_evaluator"
+    },
+    "NTRU": {
+      "benchmark_count": 1,
+      "cross_family_review_source_count": 3,
+      "default_estimator": null,
+      "evaluator_status": "unsupported_until_review",
+      "future_reviewed_adapter_source_count": 2,
+      "lattice_estimator_enabled": false,
+      "operator_count": 0,
+      "plugin": "lattice",
+      "public_example_count": 1,
+      "reproduction_status": "not_implemented",
+      "review_required_before_claims": true,
+      "support_level": "schema_only"
+    },
+    "SIS": {
+      "benchmark_count": 1,
+      "cross_family_review_source_count": 3,
+      "default_estimator": null,
+      "evaluator_status": "unsupported_until_review",
+      "future_reviewed_adapter_source_count": 2,
+      "lattice_estimator_enabled": false,
+      "operator_count": 0,
+      "plugin": "lattice",
+      "public_example_count": 1,
+      "reproduction_status": "not_implemented",
+      "review_required_before_claims": true,
+      "support_level": "schema_only"
+    }
+  },
+  "input_sha256": {
+    "docs/huggingface_publication_handoff.json": "2bb86402a774769d61218e250ce5d833519c2830d2fb4c05ead4a31912d8a320",
+    "docs/nvidia_publication_handoff.json": "ec484b7dc6527355e0ac946a1bc37b807b0226329764d72a246cb6785271d79c",
+    "docs/prime_publication_handoff.json": "6f09419ff273cbfffc51d42c6b44cc51a6332962f6128735b6713159cfcc35d8",
+    "docs/publication_manifest.json": "9c11770976bd3e3bb9541319acd12650a2666c86070d1c9a3e59cd38b8734ad4",
+    "docs/release_status.json": "630beeb873cfd9d965dd16bfd6dcb9cc2c0abe82178948aa73e8aa0df1fd8172",
+    "hf/collection_manifest.json": "b3ddafd0f3c1b78f443851a2069f5cedddd3e0d8c97f499e6c1f7ee1000eacbe",
+    "hf/space_manifest.json": "e7e91170712e5a12ca0cb921728ca74ad789f1f02bd9c18cb6e8037c9acbbf34",
+    "nvidia/accelerator_manifest.json": "4220fb49bd07624af90e5be1dfe2fbd8a72a7c4a968782d46e3ccc12f15b04cc",
+    "prime_intellect/verifiers_environment/prime_manifest.json": "4efc1f4962608261aeda41a32b7daddcfe24e58eb38f503d4e6767c8830ab92a",
+    "public/publication_preflight.json": "51b43540af1806409f6cf702b68d50440a8c54211ba696558c58b87739927d7b"
+  },
+  "inputs": {
+    "huggingface_collection_manifest": "hf/collection_manifest.json",
+    "huggingface_publication_handoff": "docs/huggingface_publication_handoff.json",
+    "huggingface_space_manifest": "hf/space_manifest.json",
+    "nvidia_accelerator_manifest": "nvidia/accelerator_manifest.json",
+    "nvidia_publication_handoff": "docs/nvidia_publication_handoff.json",
+    "prime_environment_manifest": "prime_intellect/verifiers_environment/prime_manifest.json",
+    "prime_publication_handoff": "docs/prime_publication_handoff.json",
+    "publication_manifest": "docs/publication_manifest.json",
+    "publication_preflight": "public/publication_preflight.json",
+    "release_status": "docs/release_status.json"
+  },
+  "platform_review_matrix": {
+    "github": {
+      "artifact_count": 34,
+      "credentialed_surface_count": 0,
+      "publication_statuses": [
+        "draft_pr_ready"
+      ],
+      "review_required_surface_count": 1,
+      "smoke_gates": [
+        "github-actions-ci"
+      ],
+      "surface_count": 1,
+      "surface_ids": [
+        "github-repository"
+      ]
+    },
+    "hugging_face": {
+      "artifact_count": 18,
+      "credentialed_surface_count": 3,
+      "publication_statuses": [
+        "local_artifact_ready",
+        "local_manifest_ready_review_required"
+      ],
+      "review_required_surface_count": 3,
+      "smoke_gates": [
+        "hf-collection-manifest",
+        "hf-dataset-safety",
+        "hf-space-smoke"
+      ],
+      "surface_count": 3,
+      "surface_ids": [
+        "huggingface-collection",
+        "huggingface-dataset",
+        "huggingface-space"
+      ]
+    },
+    "nvidia": {
+      "artifact_count": 4,
+      "credentialed_surface_count": 0,
+      "publication_statuses": [
+        "strategy_ready_review_required"
+      ],
+      "review_required_surface_count": 1,
+      "smoke_gates": [
+        "nvidia-manifest-safety"
+      ],
+      "surface_count": 1,
+      "surface_ids": [
+        "nvidia-accelerator-story"
+      ]
+    },
+    "prime_intellect": {
+      "artifact_count": 11,
+      "credentialed_surface_count": 1,
+      "publication_statuses": [
+        "local_package_ready"
+      ],
+      "review_required_surface_count": 1,
+      "smoke_gates": [
+        "prime-environment-smoke"
+      ],
+      "surface_count": 1,
+      "surface_ids": [
+        "prime-verifiers-environment"
+      ]
+    }
+  },
+  "project": {
+    "cli": "agades-pqc",
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "publication_dry_run_plan": [
+    {
+      "artifact_count": 7,
+      "command_templates": [],
+      "contains_credentials": false,
+      "external_publication_performed": false,
+      "external_url_recorded": false,
+      "first_publication_target": "private_or_draft_review_surface",
+      "id": "huggingface-collection",
+      "manual_review_action": "Create or update the Hugging Face Collection from hf/collection_manifest.json only after dataset and Space private review pass.",
+      "platform": "hugging_face",
+      "review_required_before_publish": true,
+      "source_manifest": "hf/collection_manifest.json"
+    },
+    {
+      "artifact_count": 6,
+      "command_templates": [
+        "hf repos create <owner>/pqc-gym-toy --type=dataset --private --exist-ok",
+        "hf upload <owner>/pqc-gym-toy hf/dataset . --repo-type=dataset --commit-message \"Sync Agades PQC Gym Dataset\""
+      ],
+      "contains_credentials": false,
+      "external_publication_performed": false,
+      "external_url_recorded": false,
+      "first_publication_target": "private_or_draft_review_surface",
+      "id": "huggingface-dataset",
+      "manual_review_action": null,
+      "platform": "hugging_face",
+      "review_required_before_publish": true,
+      "source_manifest": "hf/dataset/dataset_info.json"
+    },
+    {
+      "artifact_count": 5,
+      "command_templates": [
+        "hf repos create agades/agades-pqc-gym-agent-env --type=space --space-sdk gradio --private --exist-ok",
+        "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Agent Environment\""
+      ],
+      "contains_credentials": false,
+      "external_publication_performed": false,
+      "external_url_recorded": false,
+      "first_publication_target": "private_or_draft_review_surface",
+      "id": "huggingface-space",
+      "manual_review_action": null,
+      "platform": "hugging_face",
+      "review_required_before_publish": true,
+      "source_manifest": "hf/space_manifest.json"
+    },
+    {
+      "artifact_count": 11,
+      "command_templates": [
+        "prime env push --path prime_intellect/verifiers_environment --visibility PRIVATE"
+      ],
+      "contains_credentials": false,
+      "external_publication_performed": false,
+      "external_url_recorded": false,
+      "first_publication_target": "private_or_draft_review_surface",
+      "id": "prime-verifiers-environment",
+      "manual_review_action": null,
+      "platform": "prime_intellect",
+      "review_required_before_publish": true,
+      "source_manifest": "prime_intellect/verifiers_environment/prime_manifest.json"
+    }
+  ],
+  "readiness": {
+    "blocker_ids": [
+      "credential_review_not_approved",
+      "external_release_review_not_approved"
+    ],
+    "credentialed_surface_count": 4,
+    "credentials_reviewed": false,
+    "external_release_review_approved": false,
+    "local_artifacts_ready": true,
+    "ready_for_external_publication": false,
+    "review_required_surface_count": 6,
+    "warning_evidence": {
+      "prime-hub-publication": {
+        "external_execution_requires_review": true,
+        "external_publication_requires_review": true,
+        "local_package_ready": true,
+        "prime_hub_publication_performed": false,
+        "publication_artifact_count": 12,
+        "publication_family_count": 9,
+        "publication_task_count": 79,
+        "requires_credentials": true,
+        "speedrun_artifact_count": 11,
+        "speedrun_bundle_count": 18,
+        "speedrun_family_count": 9,
+        "speedrun_run_count": 59,
+        "speedrun_task_count": 79
+      }
+    },
+    "warning_ids": [
+      "prime-hub-publication"
+    ]
+  },
+  "release_gates": [
+    "uv run agades-pqc external-publication-review-packet --out docs/external_publication_review_packet.json",
+    "uv run agades-pqc external-publication-review-packet-verify --packet docs/external_publication_review_packet.json",
+    "uv run agades-pqc publication-preflight-verify --preflight public/publication_preflight.json",
+    "uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json",
+    "uv run agades-pqc hf-publication-handoff-verify --handoff docs/huggingface_publication_handoff.json",
+    "uv run agades-pqc prime-publication-handoff-verify --handoff docs/prime_publication_handoff.json",
+    "uv run agades-pqc nvidia-publication-handoff-verify --handoff docs/nvidia_publication_handoff.json",
+    "uv run agades-pqc release-audit --out public/release_audit.json"
+  ],
+  "review_questions": [
+    "Confirm external release review approval before publishing any surface.",
+    "Confirm credentials and target namespaces for Hugging Face and Prime.",
+    "Review every public card for no private traces and no security claims.",
+    "Publish credentialed surfaces as draft, private, or unlisted first when supported.",
+    "Record external URLs only after the publication review accepts them."
+  ],
+  "reviewer_summary": {
+    "blockers": 2,
+    "claims_external_publication": false,
+    "contains_credentials": false,
+    "contains_private_traces": false,
+    "credential_review_queue_items": 4,
+    "credentialed_surface_count": 4,
+    "family_count": 9,
+    "family_readiness_lattice_estimator_families": 2,
+    "family_readiness_non_lattice_lattice_estimator_families": 0,
+    "implemented_family_count": 2,
+    "non_lattice_toy_operator_security_claims": 0,
+    "platform_count": 4,
+    "platform_review_matrix_credentialed_surfaces": 4,
+    "platform_review_matrix_review_required_surfaces": 6,
+    "platform_review_matrix_surfaces": 6,
+    "platforms_with_family_claim_review_gate": 3,
+    "publication_dry_run_commands": 5,
+    "publication_dry_run_entries": 4,
+    "publication_dry_run_private_first": true,
+    "ready_for_external_publication": false,
+    "review_required_surface_count": 6,
+    "schema_only_family_count": 2,
+    "security_claim": false,
+    "surface_count": 6,
+    "toy_evaluator_family_count": 5,
+    "warning_evidence_items": 1,
+    "warnings": 1
+  },
+  "safety": {
+    "arbitrary_code_execution": false,
+    "claims_external_publication": false,
+    "contains_credentials": false,
+    "contains_private_traces": false,
+    "live_targeting": false,
+    "publishes_private_candidates": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.external_publication_review_packet.v1",
+  "surface_review_queue": [
+    {
+      "artifact_count": 34,
+      "id": "github-repository",
+      "platform": "github",
+      "publication_status": "draft_pr_ready",
+      "requires_credentials": false,
+      "review_required_before_publish": true,
+      "smoke_gate": "github-actions-ci"
+    },
+    {
+      "artifact_count": 7,
+      "id": "huggingface-collection",
+      "platform": "hugging_face",
+      "publication_status": "local_manifest_ready_review_required",
+      "requires_credentials": true,
+      "review_required_before_publish": true,
+      "smoke_gate": "hf-collection-manifest"
+    },
+    {
+      "artifact_count": 6,
+      "id": "huggingface-dataset",
+      "platform": "hugging_face",
+      "publication_status": "local_artifact_ready",
+      "requires_credentials": true,
+      "review_required_before_publish": true,
+      "smoke_gate": "hf-dataset-safety"
+    },
+    {
+      "artifact_count": 5,
+      "id": "huggingface-space",
+      "platform": "hugging_face",
+      "publication_status": "local_artifact_ready",
+      "requires_credentials": true,
+      "review_required_before_publish": true,
+      "smoke_gate": "hf-space-smoke"
+    },
+    {
+      "artifact_count": 4,
+      "id": "nvidia-accelerator-story",
+      "platform": "nvidia",
+      "publication_status": "strategy_ready_review_required",
+      "requires_credentials": false,
+      "review_required_before_publish": true,
+      "smoke_gate": "nvidia-manifest-safety"
+    },
+    {
+      "artifact_count": 11,
+      "id": "prime-verifiers-environment",
+      "platform": "prime_intellect",
+      "publication_status": "local_package_ready",
+      "requires_credentials": true,
+      "review_required_before_publish": true,
+      "smoke_gate": "prime-environment-smoke"
+    }
+  ]
+}

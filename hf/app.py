@@ -197,7 +197,22 @@ def _environment_for_raw_plan(
         source_path=source_path,
         seed_attack_plan_json=raw_plan,
     )
-    return AgadesPQCGymEnvironment([task])
+    return AgadesPQCGymEnvironment([task], root=SPACE_RUNTIME_ROOT)
+
+
+def _space_runtime_bundle_exists(path: Path) -> bool:
+    required_paths = (
+        path / "docs" / "formal_attackplan_semantics.json",
+        path / "docs" / "formal_operator_semantics.json",
+        path / "docs" / "formal_estimator_model.json",
+        path / "docs" / "reviewer_governance.json",
+        path / "formal" / "lean" / "AgadesPQC" / "AttackPlan.lean",
+        path / "formal" / "lean" / "AgadesPQC" / "ProofObligation.lean",
+    )
+    return all(required.is_file() for required in required_paths)
+
+
+SPACE_RUNTIME_ROOT = APP_DIR if _space_runtime_bundle_exists(APP_DIR) else ROOT
 
 
 def _json_safe(value: Any) -> Any:
