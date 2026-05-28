@@ -58,6 +58,20 @@ def test_huggingface_space_smoke_report_exercises_public_demo(
         "private_fields_present": False,
         "claims_pqc_break": False,
     }
+    assert report["example_runtime"] == {
+        "all_claims_pqc_break_false": True,
+        "all_observations_have_prompt": True,
+        "all_private_fields_absent": True,
+        "all_traces_public_release_ok": True,
+        "blocked_reward_count": 20,
+        "checked_example_count": 79,
+        "failure_count": 0,
+        "failures": [],
+        "ok_count": 59,
+        "other_status_count": 0,
+        "rewarded_count": 59,
+        "unsupported_count": 20,
+    }
     assert report["safety"] == {
         "arbitrary_code_execution": False,
         "contains_private_traces": False,
@@ -98,6 +112,7 @@ def test_huggingface_space_smoke_verify_accepts_committed_report() -> None:
         "summary": {
             "default_label": "LWE / lattice_primal_usvp_toy_v1",
             "example_count": 79,
+            "example_runtime_failures": 0,
             "failure_count": 0,
             "imports_without_gradio": True,
             "summary_contains_not_security_claim": True,

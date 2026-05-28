@@ -67,6 +67,20 @@ def build_huggingface_space_smoke_report(
         "private_fields_present": None,
         "claims_pqc_break": None,
     }
+    example_runtime = {
+        "checked_example_count": 0,
+        "ok_count": 0,
+        "unsupported_count": 0,
+        "other_status_count": 0,
+        "rewarded_count": 0,
+        "blocked_reward_count": 0,
+        "failure_count": 0,
+        "all_observations_have_prompt": False,
+        "all_traces_public_release_ok": False,
+        "all_private_fields_absent": False,
+        "all_claims_pqc_break_false": False,
+        "failures": [],
+    }
 
     try:
         module = _load_python_module(app_path, "agades_pqc_hf_space_smoke")
@@ -85,6 +99,7 @@ def build_huggingface_space_smoke_report(
         observation = json.loads(observation_payload)
         reward_report = json.loads(reward_payload)
         trace = json.loads(trace_payload)
+        example_runtime = _exercise_all_examples(module, choices)
     except Exception as exc:  # noqa: BLE001 - smoke report must capture app issues.
         failures.append(f"Hugging Face Space smoke failed: {exc}")
     else:
@@ -139,6 +154,7 @@ def build_huggingface_space_smoke_report(
             reward_summary,
             failures,
         )
+        _validate_example_runtime(examples, example_runtime, failures)
 
     safety = dict.fromkeys(_FALSE_SAFETY_FLAGS, False)
     return {
@@ -146,6 +162,7 @@ def build_huggingface_space_smoke_report(
         "accepted": not failures,
         "app": app,
         "agent_environment": agent_environment,
+        "example_runtime": example_runtime,
         "examples": examples,
         "evaluation": evaluation,
         "safety": safety,
@@ -184,6 +201,7 @@ def verify_huggingface_space_smoke_report(
     _verify_schema(report, failures)
     _verify_app(report, failures)
     _verify_agent_environment(report, failures)
+    _verify_example_runtime(report, failures)
     _verify_examples(report, failures)
     _verify_evaluation(report, failures)
     _verify_safety(report, failures)
@@ -262,6 +280,121 @@ def _validate_smoke_contract(
         failures.append("Hugging Face Space Agent Environment summary lacks boundary.")
 
 
+def _exercise_all_examples(module: Any, choices: list[str]) -> dict[str, Any]:
+    failures: list[dict[str, str]] = []
+    checked_example_count = 0
+    ok_count = 0
+    unsupported_count = 0
+    other_status_count = 0
+    rewarded_count = 0
+    blocked_reward_count = 0
+    all_observations_have_prompt = True
+    all_traces_public_release_ok = True
+    all_private_fields_absent = True
+    all_claims_pqc_break_false = True
+
+    for label in choices:
+        checked_example_count += 1
+        try:
+            raw_plan = module.load_example_plan(label)
+            _, verifier_payload = module.evaluate_attack_plan_json(raw_plan)
+            observation_payload = module.load_environment_observation(label)
+            _, reward_payload, trace_payload = module.score_attack_plan_for_task(
+                label,
+                raw_plan,
+            )
+            verifier_result = json.loads(verifier_payload)
+            observation = json.loads(observation_payload)
+            reward_report = json.loads(reward_payload)
+            trace = json.loads(trace_payload)
+        except Exception as exc:  # noqa: BLE001 - smoke report must capture app issues.
+            failures.append(
+                {
+                    "label": label,
+                    "error_type": type(exc).__name__,
+                    "message": str(exc),
+                }
+            )
+            continue
+
+        status = verifier_result.get("evaluation_status")
+        if status == "ok":
+            ok_count += 1
+        elif status == "unsupported":
+            unsupported_count += 1
+        else:
+            other_status_count += 1
+
+        if reward_report.get("accepted") is True:
+            rewarded_count += 1
+        else:
+            blocked_reward_count += 1
+
+        all_observations_have_prompt = (
+            all_observations_have_prompt and bool(observation.get("prompt"))
+        )
+        all_traces_public_release_ok = (
+            all_traces_public_release_ok and trace.get("public_release_ok") is True
+        )
+        all_private_fields_absent = (
+            all_private_fields_absent
+            and trace.get("private_fields_present") is False
+        )
+        all_claims_pqc_break_false = (
+            all_claims_pqc_break_false
+            and _dict_or_empty(trace.get("claim_boundary")).get("claims_pqc_break")
+            is False
+        )
+
+    return {
+        "checked_example_count": checked_example_count,
+        "ok_count": ok_count,
+        "unsupported_count": unsupported_count,
+        "other_status_count": other_status_count,
+        "rewarded_count": rewarded_count,
+        "blocked_reward_count": blocked_reward_count,
+        "failure_count": len(failures),
+        "all_observations_have_prompt": all_observations_have_prompt,
+        "all_traces_public_release_ok": all_traces_public_release_ok,
+        "all_private_fields_absent": all_private_fields_absent,
+        "all_claims_pqc_break_false": all_claims_pqc_break_false,
+        "failures": failures,
+    }
+
+
+def _validate_example_runtime(
+    examples: dict[str, Any],
+    example_runtime: dict[str, Any],
+    failures: list[str],
+) -> None:
+    if example_runtime.get("checked_example_count") != examples.get("example_count"):
+        failures.append("Hugging Face Space did not exercise every public example.")
+    if example_runtime.get("failure_count") != 0:
+        failures.append("Hugging Face Space example runtime has failures.")
+    if not _positive_count(example_runtime.get("ok_count")):
+        failures.append("Hugging Face Space has no accepted example path.")
+    if not _positive_count(example_runtime.get("unsupported_count")):
+        failures.append("Hugging Face Space has no unsupported example path.")
+    if example_runtime.get("other_status_count") != 0:
+        failures.append("Hugging Face Space example runtime has unknown statuses.")
+    if not _positive_count(example_runtime.get("rewarded_count")):
+        failures.append("Hugging Face Space has no positive-reward example.")
+    if not _positive_count(example_runtime.get("blocked_reward_count")):
+        failures.append("Hugging Face Space has no blocked-reward safety example.")
+    if example_runtime.get("all_observations_have_prompt") is not True:
+        failures.append("Hugging Face Space example observations lack prompts.")
+    if example_runtime.get("all_traces_public_release_ok") is not True:
+        failures.append("Hugging Face Space example traces are not public-safe.")
+    if example_runtime.get("all_private_fields_absent") is not True:
+        failures.append("Hugging Face Space example traces expose private fields.")
+    if example_runtime.get("all_claims_pqc_break_false") is not True:
+        failures.append("Hugging Face Space example traces claim PQC breaks.")
+
+
+def _positive_count(value: Any) -> bool:
+    return isinstance(value, int) and value >= 1
+
+
 def _read_report(path: Path, failures: list[str]) -> dict[str, Any]:
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
@@ -338,6 +471,26 @@ def _verify_agent_environment(report: dict[str, Any], failures: list[str]) -> No
         failures.append("Hugging Face Space smoke report Agent Environment drifted.")
 
 
+def _verify_example_runtime(report: dict[str, Any], failures: list[str]) -> None:
+    example_runtime = report.get("example_runtime")
+    examples = report.get("examples")
+    if not isinstance(example_runtime, dict):
+        failures.append(
+            "Hugging Face Space smoke report example_runtime must be an object."
+        )
+        return
+    if not isinstance(examples, dict):
+        failures.append(
+            "Hugging Face Space smoke report examples must be an object."
+        )
+        return
+    _validate_example_runtime(examples, example_runtime, failures)
+    if example_runtime.get("failures") != []:
+        failures.append(
+            "Hugging Face Space smoke report example_runtime failures must be empty."
+        )
+
+
 def _verify_examples(report: dict[str, Any], failures: list[str]) -> None:
     examples = report.get("examples")
     if not isinstance(examples, dict):
@@ -407,6 +560,11 @@ def _verification_summary(
     return {
         "default_label": examples.get("default_label"),
         "example_count": examples.get("example_count"),
+        "example_runtime_failures": (
+            report.get("example_runtime", {}).get("failure_count")
+            if isinstance(report.get("example_runtime"), dict)
+            else None
+        ),
         "failure_count": len(failures),
         "imports_without_gradio": app.get("imports_without_gradio"),
         "summary_contains_not_security_claim": evaluation.get(

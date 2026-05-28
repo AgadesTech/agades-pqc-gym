@@ -29,6 +29,20 @@
     "summary_contains_not_security_claim": true,
     "target_family": "LWE"
   },
+  "example_runtime": {
+    "all_claims_pqc_break_false": true,
+    "all_observations_have_prompt": true,
+    "all_private_fields_absent": true,
+    "all_traces_public_release_ok": true,
+    "blocked_reward_count": 20,
+    "checked_example_count": 79,
+    "failure_count": 0,
+    "failures": [],
+    "ok_count": 59,
+    "other_status_count": 0,
+    "rewarded_count": 59,
+    "unsupported_count": 20
+  },
   "examples": {
     "default_is_selectable": true,
     "default_label": "LWE / lattice_primal_usvp_toy_v1",
