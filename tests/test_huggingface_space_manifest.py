@@ -73,6 +73,14 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "gradio[oauth,mcp]==6.14.0"
     )
     assert manifest["runtime"]["requirements_compatible_with_injected_gradio"] is True
+    formal_bundle = manifest["runtime"]["formal_runtime_bundle"]
+    assert formal_bundle["docs_path"] == "hf/docs"
+    assert formal_bundle["docs_json_count"] >= 10
+    assert formal_bundle["lean_path"] == "hf/formal/lean"
+    assert formal_bundle["lean_file_count"] >= 10
+    assert formal_bundle["ci_workflow_path"] == "hf/.github/workflows/ci.yml"
+    assert formal_bundle["required_files_present"] is True
+    assert len(formal_bundle["bundle_sha256"]) == 64
     assert len(manifest["space"]["space_readme_sha256"]) == 64
     assert space_readme.is_file()
     space_readme_text = space_readme.read_text(encoding="utf-8")
@@ -353,6 +361,7 @@ def test_hf_space_manifest_verify_accepts_committed_manifest() -> None:
             "labels_match_valid_dataset_rows": True,
             "public_push_requires_review": True,
             "requires_gradio_to_import_for_audit": False,
+            "formal_runtime_bundle_ready": True,
             "uses_shared_verifier": True,
         },
         "failures": [],

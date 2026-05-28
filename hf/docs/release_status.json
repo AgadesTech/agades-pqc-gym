@@ -1,0 +1,580 @@
+{
+  "audit": {
+    "accepted": true,
+    "failed": 0,
+    "passed": 60,
+    "total": 61,
+    "warning": 1,
+    "warning_check_ids": [
+      "prime-hub-publication"
+    ],
+    "warning_records": [
+      {
+        "artifact": "prime_intellect/verifiers_environment",
+        "detail": "Prime package is locally packaged but not published to the Prime Environments Hub without credentials and release review.",
+        "evidence": {
+          "external_execution_requires_review": true,
+          "external_publication_requires_review": true,
+          "local_package_ready": true,
+          "prime_hub_publication_performed": false,
+          "publication_artifact_count": 12,
+          "publication_family_count": 9,
+          "publication_task_count": 79,
+          "requires_credentials": true,
+          "speedrun_artifact_count": 11,
+          "speedrun_bundle_count": 18,
+          "speedrun_family_count": 9,
+          "speedrun_run_count": 59,
+          "speedrun_task_count": 79
+        },
+        "id": "prime-hub-publication"
+      }
+    ]
+  },
+  "ecosystem": {
+    "huggingface_collection": {
+      "contains_private_traces": false,
+      "credentialed_entries": [
+        "benchmark-card",
+        "huggingface-dataset",
+        "huggingface-space"
+      ],
+      "entry_count": 7,
+      "external_publication_requires_review": true,
+      "family_support": {
+        "benchmark_count": 78,
+        "cross_family_review_source_count": 3,
+        "families_with_future_reviewed_adapters": [
+          "CODE_BASED",
+          "HASH_BASED",
+          "IMPLEMENTATION_SECURITY",
+          "LWE",
+          "MLWE",
+          "MULTIVARIATE",
+          "NTRU",
+          "SIS"
+        ],
+        "family_count": 9,
+        "implemented": [
+          "LWE",
+          "MLWE"
+        ],
+        "per_family_future_reviewed_adapter_source_counts": {
+          "CODE_BASED": 3,
+          "HASH_BASED": 1,
+          "IMPLEMENTATION_SECURITY": 8,
+          "ISOGENY_HISTORICAL": 0,
+          "LWE": 2,
+          "MLWE": 2,
+          "MULTIVARIATE": 1,
+          "NTRU": 2,
+          "SIS": 2
+        },
+        "plugin_count": 6,
+        "plugins": [
+          "code_based",
+          "hash_based",
+          "implementation_security",
+          "isogeny_historical",
+          "lattice",
+          "multivariate"
+        ],
+        "public_example_count": 79,
+        "review_required_before_claims": true,
+        "schema_only": [
+          "NTRU",
+          "SIS"
+        ],
+        "support_level_counts": {
+          "implemented": 2,
+          "schema_only": 2,
+          "toy_evaluator": 5
+        },
+        "toy_evaluators": [
+          "CODE_BASED",
+          "HASH_BASED",
+          "IMPLEMENTATION_SECURITY",
+          "ISOGENY_HISTORICAL",
+          "MULTIVARIATE"
+        ],
+        "unique_future_reviewed_adapter_source_count": 15
+      },
+      "public_push_requires_review": true,
+      "review_required_entries": 7,
+      "security_claim": false,
+      "source_catalog_scope": {
+        "non_lattice_toy_evaluator_count": 41,
+        "non_lattice_toy_operator_families": [
+          "CODE_BASED",
+          "HASH_BASED",
+          "IMPLEMENTATION_SECURITY",
+          "ISOGENY_HISTORICAL",
+          "MULTIVARIATE"
+        ],
+        "non_lattice_toy_operator_security_claims": 0,
+        "non_lattice_toy_operator_variant_count": 41,
+        "source_count": 41
+      },
+      "suggested_slug": "agades/pqc-gym",
+      "suggested_title": "Agades PQC Gym"
+    },
+    "huggingface_dataset": {
+      "attack_plan_count": 80,
+      "invalid_attack_plan_count": 1,
+      "invalid_attack_plan_ids": [
+        "invalid_module_hypothesis_on_lwe_v1"
+      ],
+      "prime_task_eligible_count": 79,
+      "public_run_bundles": 18,
+      "task_metadata_count": 79,
+      "valid_attack_plan_count": 79,
+      "verifier_output_count": 80
+    },
+    "huggingface_space": {
+      "dataset_attack_plan_count": 80,
+      "dataset_invalid_attack_plan_count": 1,
+      "dataset_valid_attack_plan_count": 79,
+      "example_count": 79,
+      "excluded_attack_plan_ids": [
+        "invalid_module_hypothesis_on_lwe_v1"
+      ],
+      "family_count": 9,
+      "labels_match_valid_dataset_rows": true
+    },
+    "nvidia": {
+      "all_current_workloads_cpu": true,
+      "cpu_workload_count": 26,
+      "current_gpu_required_workload_count": 0,
+      "current_workload_count": 26,
+      "family_support": {
+        "benchmark_count": 78,
+        "cross_family_review_source_count": 3,
+        "families_with_future_reviewed_adapters": [
+          "CODE_BASED",
+          "HASH_BASED",
+          "IMPLEMENTATION_SECURITY",
+          "LWE",
+          "MLWE",
+          "MULTIVARIATE",
+          "NTRU",
+          "SIS"
+        ],
+        "family_count": 9,
+        "implemented": [
+          "LWE",
+          "MLWE"
+        ],
+        "per_family_future_reviewed_adapter_source_counts": {
+          "CODE_BASED": 3,
+          "HASH_BASED": 1,
+          "IMPLEMENTATION_SECURITY": 8,
+          "ISOGENY_HISTORICAL": 0,
+          "LWE": 2,
+          "MLWE": 2,
+          "MULTIVARIATE": 1,
+          "NTRU": 2,
+          "SIS": 2
+        },
+        "plugin_count": 6,
+        "plugins": [
+          "code_based",
+          "hash_based",
+          "implementation_security",
+          "isogeny_historical",
+          "lattice",
+          "multivariate"
+        ],
+        "public_example_count": 79,
+        "review_required_before_claims": true,
+        "schema_only": [
+          "NTRU",
+          "SIS"
+        ],
+        "support_level_counts": {
+          "implemented": 2,
+          "schema_only": 2,
+          "toy_evaluator": 5
+        },
+        "toy_evaluators": [
+          "CODE_BASED",
+          "HASH_BASED",
+          "IMPLEMENTATION_SECURITY",
+          "ISOGENY_HISTORICAL",
+          "MULTIVARIATE"
+        ],
+        "unique_future_reviewed_adapter_source_count": 15
+      },
+      "gpu_execution_performed": false,
+      "gpu_future_workload_count": 1,
+      "gpu_status": "future_acceleration_surface",
+      "handoff_artifact_count": 16,
+      "handoff_external_submission_requires_review": true,
+      "no_current_workload_requires_gpu": true,
+      "nvidia_submission_performed": false,
+      "public_run_bundle_count": 18,
+      "reserved_future_gpu_required_workload_count": 1,
+      "reserved_future_workload_count": 1,
+      "source_catalog_scope": {
+        "non_lattice_toy_evaluator_count": 41,
+        "non_lattice_toy_operator_families": [
+          "CODE_BASED",
+          "HASH_BASED",
+          "IMPLEMENTATION_SECURITY",
+          "ISOGENY_HISTORICAL",
+          "MULTIVARIATE"
+        ],
+        "non_lattice_toy_operator_security_claims": 0,
+        "non_lattice_toy_operator_variant_count": 41,
+        "source_count": 41
+      },
+      "workload_count": 27
+    },
+    "prime_intellect": {
+      "family_count": 9,
+      "family_support": {
+        "benchmark_count": 78,
+        "cross_family_review_source_count": 3,
+        "families_with_future_reviewed_adapters": [
+          "CODE_BASED",
+          "HASH_BASED",
+          "IMPLEMENTATION_SECURITY",
+          "LWE",
+          "MLWE",
+          "MULTIVARIATE",
+          "NTRU",
+          "SIS"
+        ],
+        "family_count": 9,
+        "implemented": [
+          "LWE",
+          "MLWE"
+        ],
+        "per_family_future_reviewed_adapter_source_counts": {
+          "CODE_BASED": 3,
+          "HASH_BASED": 1,
+          "IMPLEMENTATION_SECURITY": 8,
+          "ISOGENY_HISTORICAL": 0,
+          "LWE": 2,
+          "MLWE": 2,
+          "MULTIVARIATE": 1,
+          "NTRU": 2,
+          "SIS": 2
+        },
+        "plugin_count": 6,
+        "plugins": [
+          "code_based",
+          "hash_based",
+          "implementation_security",
+          "isogeny_historical",
+          "lattice",
+          "multivariate"
+        ],
+        "public_example_count": 79,
+        "review_required_before_claims": true,
+        "schema_only": [
+          "NTRU",
+          "SIS"
+        ],
+        "support_level_counts": {
+          "implemented": 2,
+          "schema_only": 2,
+          "toy_evaluator": 5
+        },
+        "toy_evaluators": [
+          "CODE_BASED",
+          "HASH_BASED",
+          "IMPLEMENTATION_SECURITY",
+          "ISOGENY_HISTORICAL",
+          "MULTIVARIATE"
+        ],
+        "unique_future_reviewed_adapter_source_count": 15
+      },
+      "handoff_artifact_count": 12,
+      "handoff_local_package_ready": true,
+      "prime_hub_publication_performed": false,
+      "requires_credentials": true,
+      "review_required_before_publish": true,
+      "source_catalog_scope": {
+        "non_lattice_toy_evaluator_count": 41,
+        "non_lattice_toy_operator_families": [
+          "CODE_BASED",
+          "HASH_BASED",
+          "IMPLEMENTATION_SECURITY",
+          "ISOGENY_HISTORICAL",
+          "MULTIVARIATE"
+        ],
+        "non_lattice_toy_operator_security_claims": 0,
+        "non_lattice_toy_operator_variant_count": 41,
+        "source_count": 41
+      },
+      "task_count": 79
+    },
+    "release_plans": {
+      "plans": [
+        "docs/HUGGINGFACE_RELEASE_PLAN.md",
+        "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md",
+        "docs/PRIME_INTELLECT_RELEASE_PLAN.md"
+      ],
+      "prime_ecosystem_anchor_plan_coverage": {
+        "docs/HUGGINGFACE_RELEASE_PLAN.md": [
+          "prime-autonanogpt-speedrun",
+          "prime-autonomous-speedrunning-experiments",
+          "prime-quickstart"
+        ],
+        "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md": [
+          "prime-autonanogpt-speedrun",
+          "prime-autonomous-speedrunning-experiments",
+          "prime-quickstart"
+        ],
+        "docs/PRIME_INTELLECT_RELEASE_PLAN.md": [
+          "prime-autonanogpt-speedrun",
+          "prime-autonomous-speedrunning-experiments",
+          "prime-quickstart"
+        ]
+      },
+      "prime_ecosystem_anchors": [
+        "prime-autonanogpt-speedrun",
+        "prime-autonomous-speedrunning-experiments",
+        "prime-quickstart"
+      ]
+    },
+    "source_catalog": {
+      "current_public_surfaces": [
+        "agades-benchmark-source-contracts",
+        "agades-family-plugin-manifest",
+        "agades-family-registry-manifest",
+        "agades-family-support-matrix",
+        "agades-hf-collection",
+        "agades-hf-dataset",
+        "agades-hf-space",
+        "agades-lattice-estimator-baseline-contracts",
+        "agades-nvidia-accelerator",
+        "agades-nvidia-publication-handoff",
+        "agades-prime-environment",
+        "agades-prime-publication-handoff",
+        "agades-public-run-export",
+        "agades-publication-manifest",
+        "prime-verifiers"
+      ],
+      "future_reviewed_adapters": [
+        "ctgrind",
+        "dudect",
+        "facebook-lwe-benchmarking",
+        "facebook-tapas",
+        "hf-post-quantum-crypto-en",
+        "hf-post-quantum-crypto-fr",
+        "hf-pqc-ssl-scans",
+        "hf-sc2026-side-channel",
+        "liboqs",
+        "nist-acvp",
+        "nist-additional-signatures-round3",
+        "nist-bike-round4-status",
+        "nist-classic-mceliece-round4-status",
+        "nist-hqc-selection",
+        "pq-code-package",
+        "pqclean",
+        "pqm4",
+        "prime-rl",
+        "timecop-supercop"
+      ],
+      "non_lattice_toy_evaluator_count": 41,
+      "non_lattice_toy_operator_families": [
+        "CODE_BASED",
+        "HASH_BASED",
+        "IMPLEMENTATION_SECURITY",
+        "ISOGENY_HISTORICAL",
+        "MULTIVARIATE"
+      ],
+      "non_lattice_toy_operator_security_claims": 0,
+      "non_lattice_toy_operator_variant_count": 41,
+      "platforms": [
+        "ebacs",
+        "github",
+        "hugging_face",
+        "nist",
+        "nvidia",
+        "prime_intellect"
+      ],
+      "source_count": 41,
+      "source_map_only": [
+        "nvidia-inception",
+        "prime-autonanogpt-speedrun",
+        "prime-autonomous-speedrunning-experiments",
+        "prime-quickstart"
+      ]
+    }
+  },
+  "external_review": {
+    "blockers": 2,
+    "credential_material_included": false,
+    "credential_review_queue_complete": true,
+    "credential_review_queue_items": 4,
+    "credentialed_surface_count": 4,
+    "ready_for_external_publication": false,
+    "review_required_before_claims": true,
+    "review_required_surface_count": 6,
+    "reviewer_summary_synced": true,
+    "surface_count": 6,
+    "warning_evidence_items": 1,
+    "warnings": 1
+  },
+  "family_support": {
+    "benchmark_count": 78,
+    "cross_family_review_source_count": 3,
+    "families_with_future_reviewed_adapters": [
+      "CODE_BASED",
+      "HASH_BASED",
+      "IMPLEMENTATION_SECURITY",
+      "LWE",
+      "MLWE",
+      "MULTIVARIATE",
+      "NTRU",
+      "SIS"
+    ],
+    "family_count": 9,
+    "implemented": [
+      "LWE",
+      "MLWE"
+    ],
+    "per_family_future_reviewed_adapter_source_counts": {
+      "CODE_BASED": 3,
+      "HASH_BASED": 1,
+      "IMPLEMENTATION_SECURITY": 8,
+      "ISOGENY_HISTORICAL": 0,
+      "LWE": 2,
+      "MLWE": 2,
+      "MULTIVARIATE": 1,
+      "NTRU": 2,
+      "SIS": 2
+    },
+    "plugin_count": 6,
+    "plugins": [
+      "code_based",
+      "hash_based",
+      "implementation_security",
+      "isogeny_historical",
+      "lattice",
+      "multivariate"
+    ],
+    "public_example_count": 79,
+    "review_required_before_claims": true,
+    "schema_only": [
+      "NTRU",
+      "SIS"
+    ],
+    "support_level_counts": {
+      "implemented": 2,
+      "schema_only": 2,
+      "toy_evaluator": 5
+    },
+    "toy_evaluators": [
+      "CODE_BASED",
+      "HASH_BASED",
+      "IMPLEMENTATION_SECURITY",
+      "ISOGENY_HISTORICAL",
+      "MULTIVARIATE"
+    ],
+    "unique_future_reviewed_adapter_source_count": 15
+  },
+  "project": {
+    "cli": "agades-pqc",
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "public_benchmark": {
+    "bundle_count": 18,
+    "families": [
+      "CODE_BASED",
+      "HASH_BASED",
+      "IMPLEMENTATION_SECURITY",
+      "ISOGENY_HISTORICAL",
+      "LWE",
+      "MLWE",
+      "MULTIVARIATE"
+    ],
+    "record_count": 59
+  },
+  "public_private_boundary": {
+    "report_generator_redaction": {
+      "blocking": true,
+      "check_id": "report-generator-redaction",
+      "private_evaluator_output_absent": true,
+      "private_mapping_evaluator_output_absent": true,
+      "private_mapping_score_absent": true,
+      "private_mapping_target_absent": true,
+      "private_mutation_absent": true,
+      "private_score_absent": true,
+      "raw_mapping_redaction_covered": true,
+      "redacted_records": 2,
+      "sensitive_target_absent": true,
+      "status": "passed",
+      "typed_trace_redaction_covered": true
+    }
+  },
+  "publication": {
+    "credentialed_surfaces": [
+      "huggingface-collection",
+      "huggingface-dataset",
+      "huggingface-space",
+      "prime-verifiers-environment"
+    ],
+    "public_run_bundle_artifact_digests": 72,
+    "public_run_bundle_artifacts": 72,
+    "public_run_bundles": 18,
+    "review_required_surfaces": 6,
+    "surface_artifact_digest_exclusions": 3,
+    "surface_artifact_digests": 64,
+    "surfaces": 6
+  },
+  "release_gates": [
+    "uv run pytest tests/test_release_status.py -q",
+    "uv run agades-pqc release-status --out docs/release_status.json",
+    "uv run agades-pqc release-status-verify --status docs/release_status.json",
+    "uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json"
+  ],
+  "runbook": {
+    "artifact_count": 47,
+    "core_symbol_count": 14,
+    "core_symbol_import_count": 14,
+    "family_plugin_count": 6,
+    "family_plugin_manifest_digests_match": true,
+    "family_plugin_module_count": 55,
+    "family_plugin_module_digest_count": 55,
+    "family_plugin_module_import_count": 55,
+    "family_registry_family_count_matches_plugin_manifest": true,
+    "family_registry_plugin_count_matches_plugin_manifest": true,
+    "family_registry_plugin_manifest_module_digest_count": 55,
+    "family_registry_plugin_manifest_synced": true,
+    "family_registry_runtime_adapter_entries_match_plugin_manifest": true,
+    "hf_attack_plan_rows": 80,
+    "hf_invalid_attack_plan_rows": 1,
+    "hf_task_metadata_rows": 79,
+    "hf_valid_attack_plan_rows": 79,
+    "lattice_is_first_implemented_plugin": true,
+    "nvidia_workloads": 27,
+    "planned_family_plugin_count": 5,
+    "prime_tasks": 79,
+    "prime_tasks_match_hf_task_metadata_rows": true,
+    "project_context_sha256": "bc5cdbb52c44a248564c2f75096706aaa740886b47a13dfd468bcf7acd870e9d",
+    "public_records": 59,
+    "public_run_bundles": 18,
+    "public_runbook_audit_checks": 7,
+    "public_runbook_audit_synced": true,
+    "source_brief_sha256": "9d8b5652e4a9d7e554748175a6ea9d78830f2e4ca9bb2f0bfde9a82adcd3ffa3",
+    "source_input_count": 2,
+    "source_input_ids": [
+      "project_context",
+      "source_brief"
+    ]
+  },
+  "safety": {
+    "arbitrary_code_execution": false,
+    "contains_private_traces": false,
+    "external_publication_requires_review": true,
+    "live_targeting": false,
+    "publishes_private_candidates": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.release_status.v1"
+}

@@ -1,0 +1,161 @@
+{
+  "attack_plan_schema": {
+    "canonicalization": "json_sort_keys_minified_v1",
+    "json_schema_sha256": "051c5fea57fed0ec5ade9074b00e0dc119e8d295df342eb6e91ec70392659081",
+    "model": "agades_pqc_gym.core.attack_plan.AttackPlan",
+    "schema_version": "agades.pqc.attack_plan.schema_contract.v1",
+    "validation": "pydantic_v2_extra_forbid_family_cross_checks"
+  },
+  "backend": {
+    "library": "mathlib",
+    "primary": "lean4",
+    "smt_assist": "z3_optional_finite_decidable_obligations_only"
+  },
+  "canonicalization": {
+    "algorithm": "json_sort_keys_minified_v1",
+    "hash": "stable_sha256",
+    "purpose": "bind semantically identical AttackPlan JSON to a stable digest"
+  },
+  "claim_policy": {
+    "estimator_result_required_before_claim": true,
+    "human_review_required_before_claim": true,
+    "proof_obligation_required_before_claim": true,
+    "public_interpretation": "schema_applicability_and_review_gate_only",
+    "security_claim_allowed_without_review": false
+  },
+  "formal_rules": [
+    {
+      "lean_source": {
+        "declaration": "schema_contract_well_formed",
+        "path": "formal/lean/AgadesPQC/AttackPlan.lean",
+        "sha256": "e90999b0b54da67dad2b35ebaf38d9f7eeca154ac0081753740f94e8ba8aa0c2"
+      },
+      "lean_theorem": "AgadesPQC.AttackPlan.schema_contract_well_formed",
+      "rule_id": "attackplan.schema_contract_well_formed",
+      "rule_sha256": "1109c6f7beac91b326f37d97ce5e35550ab81740272894117b674bdcf435a640",
+      "statement": "The public AttackPlan semantics contract requires schema validation, canonicalization, strict fields, supported operators, and claim gating."
+    },
+    {
+      "lean_source": {
+        "declaration": "canonicalization_stable",
+        "path": "formal/lean/AgadesPQC/AttackPlan.lean",
+        "sha256": "e90999b0b54da67dad2b35ebaf38d9f7eeca154ac0081753740f94e8ba8aa0c2"
+      },
+      "lean_theorem": "AgadesPQC.AttackPlan.canonicalization_stable",
+      "rule_id": "attackplan.canonicalization_stable",
+      "rule_sha256": "5a7705ce16e872f6136f16f5ec91835ba36738d9878900cd02e6bcacd720b8ee",
+      "statement": "Canonicalized AttackPlan JSON is bound to a stable digest before proof obligations or evaluator results are attached."
+    },
+    {
+      "lean_source": {
+        "declaration": "operators_nonempty",
+        "path": "formal/lean/AgadesPQC/AttackPlan.lean",
+        "sha256": "e90999b0b54da67dad2b35ebaf38d9f7eeca154ac0081753740f94e8ba8aa0c2"
+      },
+      "lean_theorem": "AgadesPQC.AttackPlan.operators_nonempty",
+      "rule_id": "attackplan.operators_nonempty",
+      "rule_sha256": "3ef9f17bef11e57a7b96a5d1962e1d401aa6ec3859d9dcf02937eb67ba2c93bd",
+      "statement": "An accepted AttackPlan has at least one operator."
+    },
+    {
+      "lean_source": {
+        "declaration": "unsupported_operator_rejected",
+        "path": "formal/lean/AgadesPQC/AttackPlan.lean",
+        "sha256": "e90999b0b54da67dad2b35ebaf38d9f7eeca154ac0081753740f94e8ba8aa0c2"
+      },
+      "lean_theorem": "AgadesPQC.AttackPlan.unsupported_operator_rejected",
+      "rule_id": "attackplan.unsupported_operator_rejected",
+      "rule_sha256": "24eb22188f5e81118a30a040ac075c2a098164bb90f7ef2bb7bccb7e5c139d6d",
+      "statement": "An operator unsupported by the target family makes the AttackPlan invalid instead of becoming an unreviewed family claim."
+    },
+    {
+      "lean_source": {
+        "declaration": "unreviewed_security_claim_forbidden",
+        "path": "formal/lean/AgadesPQC/AttackPlan.lean",
+        "sha256": "e90999b0b54da67dad2b35ebaf38d9f7eeca154ac0081753740f94e8ba8aa0c2"
+      },
+      "lean_theorem": "AgadesPQC.AttackPlan.unreviewed_security_claim_forbidden",
+      "rule_id": "attackplan.unreviewed_security_claim_forbidden",
+      "rule_sha256": "123bf91766441df5836eedf15272ae1de695b1ca2536803dd386a8651175dccf",
+      "statement": "Pending-review AttackPlan semantics cannot authorize a cryptographic security claim."
+    }
+  ],
+  "linked_artifacts": {
+    "family_operator_catalog": {
+      "path": "docs/family_operator_catalog.json",
+      "sha256": "37594fa76194d271d80e7f2d227179feb0dc207ca0db135f451e1a29bae12d32"
+    },
+    "family_plugin_manifest": {
+      "path": "docs/family_plugin_manifest.json",
+      "sha256": "c6fca7e84e9abcb06772f866e47f7b19dc0713e3a8b2dbdbea26dc97a2386745"
+    },
+    "formal_lean_backend": {
+      "path": "docs/formal_lean_backend.json",
+      "sha256": "36793f0ba088ef4e4d692616b119bbff6f3e3653923aea3ebe39ceec6595d526"
+    },
+    "formal_operator_semantics": {
+      "path": "docs/formal_operator_semantics.json",
+      "sha256": "9fa0bc4ee4cd2f5229d9352a2e9e490df323819bbfea5c6cf446a34fab2d231c"
+    }
+  },
+  "project": {
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "release_gates": [
+    "uv run pytest tests/test_formal_attackplan_semantics.py -q",
+    "uv run agades-pqc formal-attackplan-semantics --out docs/formal_attackplan_semantics.json",
+    "uv run agades-pqc formal-attackplan-semantics-verify --semantics docs/formal_attackplan_semantics.json",
+    "uv run agades-pqc formal-operator-semantics-verify --semantics docs/formal_operator_semantics.json",
+    "uv run agades-pqc formal-lean-backend-verify --backend docs/formal_lean_backend.json"
+  ],
+  "schema_version": "agades.pqc.formal.attackplan_semantics.v1",
+  "semantics_sha256": "f37f659d2cc70515c6ba6dc6a3c17c37b8e03e6b5657635a326db742a9c56a18",
+  "summary": {
+    "families": 9,
+    "formal_rules": 5,
+    "linked_artifacts": 4,
+    "operators": 24,
+    "required_fields": 4,
+    "security_claim_allowed_without_review": false,
+    "validation_rules": 7
+  },
+  "validation_rules": [
+    {
+      "rule_id": "attackplan.json_schema_valid",
+      "runtime_enforcement": "AttackPlan.model_validate_json",
+      "statement": "AttackPlan input must validate against the versioned schema."
+    },
+    {
+      "rule_id": "attackplan.extra_fields_forbidden",
+      "runtime_enforcement": "pydantic_config_extra_forbid",
+      "statement": "Unknown fields are rejected at every AttackPlan schema level."
+    },
+    {
+      "rule_id": "attackplan.canonical_digest_stable",
+      "runtime_enforcement": "json_sort_keys_minified_v1",
+      "statement": "Accepted AttackPlan JSON receives a stable canonical SHA-256 digest."
+    },
+    {
+      "rule_id": "attackplan.operator_type_known",
+      "runtime_enforcement": "AttackOperator.operator_type_must_be_known",
+      "statement": "Every operator type must be declared in ALLOWED_OPERATORS."
+    },
+    {
+      "rule_id": "attackplan.operator_params_declared",
+      "runtime_enforcement": "validate_operator_params",
+      "statement": "Every operator parameter must satisfy its declared schema."
+    },
+    {
+      "rule_id": "attackplan.family_operator_supported",
+      "runtime_enforcement": "AttackPlan.validate_cross_field_rules",
+      "statement": "Every operator must be supported by the AttackPlan target family."
+    },
+    {
+      "rule_id": "attackplan.claims_review_gated",
+      "runtime_enforcement": "Claims.require_source_for_pre_evaluation_claims",
+      "statement": "Pre-evaluation claims need an external source and remain gated by proof obligations, estimator binding, and human review."
+    }
+  ]
+}

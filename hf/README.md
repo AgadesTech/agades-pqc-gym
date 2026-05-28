@@ -34,6 +34,8 @@ reviewer annotations, prompts, model weights, or serious-research rollouts.
 - `dataset/attack_plans.jsonl` contains public toy/schema-only AttackPlan rows.
 - `dataset/task_metadata.jsonl` contains task constraints for scoring.
 - `dataset/rl_rollouts.jsonl` contains public example rollout traces.
+- `docs/` and `formal/lean/` contain the public formal runtime bundle required
+  by the Agent Environment reward and formal artifact binding.
 - `space_manifest.json` records the audited Agent Environment contract.
 - `collection_manifest.json` records the related public Hugging Face surfaces.
 

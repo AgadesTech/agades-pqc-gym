@@ -1,0 +1,632 @@
+{
+  "backend": {
+    "library": "mathlib",
+    "primary": "lean4",
+    "smt_assist": "z3_optional_finite_decidable_obligations_only"
+  },
+  "claim_boundary": "formal family coverage proves AttackPlan applicability bindings, not PQC break claims",
+  "coverage_sha256": "693fef05842fa94b7a32c968a8c220ca65f725ed523c36045980701ee3372ceb",
+  "families": [
+    {
+      "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+      "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
+      "entry_sha256": "53f16944ab86afd995c285f9b3fd7ccbbd8e79d5ce4f60e215a0e3e3a2b80802",
+      "estimator_model": {
+        "model_id": "agades.pqc.evaluator_model.boundary.v1",
+        "no_fake_estimate": true,
+        "status": "result_binding_required_before_claim"
+      },
+      "family": "LWE",
+      "family_invariant_ids": [
+        "lattice.dimension_modulus_positive",
+        "lattice.distributions_present"
+      ],
+      "lean_bindings": [
+        {
+          "declaration": "no_security_claim",
+          "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+          "path": "formal/lean/AgadesPQC/Evaluator.lean",
+          "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
+        },
+        {
+          "declaration": "beta_valid_range",
+          "lean_theorem": "AgadesPQC.Lattice.PrimalUSVP.beta_valid_range",
+          "path": "formal/lean/AgadesPQC/Lattice/PrimalUSVP.lean",
+          "sha256": "680e394604173883de8b974719b80b91c341e4c6d829eba2437c5a5e0d059dd5"
+        },
+        {
+          "declaration": "dimension_modulus_positive",
+          "lean_theorem": "AgadesPQC.Lattice.Target.dimension_modulus_positive",
+          "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+          "sha256": "fb935c6996f30bb0e224f5b10c1de28aef63a946357c7252d12e1ad54de91e0c"
+        },
+        {
+          "declaration": "distributions_present",
+          "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
+          "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+          "sha256": "fb935c6996f30bb0e224f5b10c1de28aef63a946357c7252d12e1ad54de91e0c"
+        },
+        {
+          "declaration": "parameters_positive",
+          "lean_theorem": "AgadesPQC.Lattice.Target.parameters_positive",
+          "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+          "sha256": "fb935c6996f30bb0e224f5b10c1de28aef63a946357c7252d12e1ad54de91e0c"
+        }
+      ],
+      "operator_semantics": [
+        {
+          "lean_namespace": "AgadesPQC.Lattice.PrimalUSVP",
+          "operator": "primal_usvp",
+          "semantics_id": "agades.pqc.operator_semantics.lattice.primal_usvp.v1"
+        }
+      ],
+      "plugin": "lattice",
+      "proof_obligation_ids": [
+        "target.lwe.parameters.positive",
+        "target.lwe.distributions.present",
+        "operator.primal_usvp.beta.valid_range",
+        "estimator.boundary.no_security_claim"
+      ],
+      "representative_attack_plan": {
+        "attack_plan_id": "lattice_primal_usvp_toy_v1",
+        "canonical_sha256": "c06ca5ddc67e4a09af1cece6b5a368129068fef091b77f785694324028111d60",
+        "path": "examples/attack_plans/lattice_primal_usvp_toy.json",
+        "sha256": "5cb2938a2b72024d50ab478d871c05446b92ec20c28f1971435499a12bf0a934"
+      },
+      "required_reviewers": [
+        "lattice_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "review_status": "pending_review",
+      "support_level": "implemented"
+    },
+    {
+      "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+      "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
+      "entry_sha256": "6cdf025ae0b9fd9475dc6171848c09e26bd3e58ee32148930116aa59393da0a9",
+      "estimator_model": {
+        "model_id": "agades.pqc.evaluator_model.boundary.v1",
+        "no_fake_estimate": true,
+        "status": "result_binding_required_before_claim"
+      },
+      "family": "MLWE",
+      "family_invariant_ids": [
+        "lattice.dimension_modulus_positive",
+        "lattice.distributions_present",
+        "lattice.mlwe.module_rank_present"
+      ],
+      "lean_bindings": [
+        {
+          "declaration": "no_security_claim",
+          "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+          "path": "formal/lean/AgadesPQC/Evaluator.lean",
+          "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
+        },
+        {
+          "declaration": "dimension_modulus_positive",
+          "lean_theorem": "AgadesPQC.Lattice.Target.dimension_modulus_positive",
+          "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+          "sha256": "fb935c6996f30bb0e224f5b10c1de28aef63a946357c7252d12e1ad54de91e0c"
+        },
+        {
+          "declaration": "distributions_present",
+          "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
+          "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+          "sha256": "fb935c6996f30bb0e224f5b10c1de28aef63a946357c7252d12e1ad54de91e0c"
+        },
+        {
+          "declaration": "module_rank_present",
+          "lean_theorem": "AgadesPQC.Lattice.Target.module_rank_present",
+          "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+          "sha256": "fb935c6996f30bb0e224f5b10c1de28aef63a946357c7252d12e1ad54de91e0c"
+        },
+        {
+          "declaration": "parameters_positive",
+          "lean_theorem": "AgadesPQC.Lattice.Target.parameters_positive",
+          "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+          "sha256": "fb935c6996f30bb0e224f5b10c1de28aef63a946357c7252d12e1ad54de91e0c"
+        }
+      ],
+      "operator_semantics": [
+        {
+          "lean_namespace": "AgadesPQC.Lattice.ModuleReductionHypothesis",
+          "operator": "module_lattice_reduction_hypothesis",
+          "semantics_id": "agades.pqc.operator_semantics.lattice.module_reduction_hypothesis.v1"
+        },
+        {
+          "lean_namespace": "AgadesPQC.Lattice.BKZParameterSweep",
+          "operator": "bkz_parameter_sweep",
+          "semantics_id": "agades.pqc.operator_semantics.lattice.bkz_parameter_sweep.v1"
+        }
+      ],
+      "plugin": "lattice",
+      "proof_obligation_ids": [
+        "target.mlwe.parameters.positive",
+        "target.mlwe.distributions.present",
+        "target.mlwe.module_rank.present",
+        "estimator.boundary.no_security_claim"
+      ],
+      "representative_attack_plan": {
+        "attack_plan_id": "lattice_mlwe_module_hypothesis_toy_v1",
+        "canonical_sha256": "cd75f20024968e2d6bd6f019c623b23663aba3d1fff350d81770755c197e284d",
+        "path": "examples/attack_plans/lattice_mlwe_module_hypothesis_toy.json",
+        "sha256": "14c62b76aef2b52e296e7de9e09e9b88e9d0f178161384c374de5d160325223a"
+      },
+      "required_reviewers": [
+        "lattice_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "review_status": "pending_review",
+      "support_level": "implemented"
+    },
+    {
+      "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+      "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
+      "entry_sha256": "d964c191e8223da2d8a9284300e4257fe80eeba24647146c8be2df1f5c78bce2",
+      "estimator_model": {
+        "model_id": "schema_only_no_estimator",
+        "no_fake_estimate": true,
+        "status": "unsupported"
+      },
+      "family": "NTRU",
+      "family_invariant_ids": [
+        "lattice.ntru.schema_shape"
+      ],
+      "lean_bindings": [
+        {
+          "declaration": "no_security_claim",
+          "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+          "path": "formal/lean/AgadesPQC/Evaluator.lean",
+          "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
+        },
+        {
+          "declaration": "ntru_schema_only_no_estimate",
+          "lean_theorem": "AgadesPQC.Lattice.Target.ntru_schema_only_no_estimate",
+          "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+          "sha256": "fb935c6996f30bb0e224f5b10c1de28aef63a946357c7252d12e1ad54de91e0c"
+        },
+        {
+          "declaration": "ntru_schema_shape",
+          "lean_theorem": "AgadesPQC.Lattice.Target.ntru_schema_shape",
+          "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+          "sha256": "fb935c6996f30bb0e224f5b10c1de28aef63a946357c7252d12e1ad54de91e0c"
+        }
+      ],
+      "operator_semantics": [
+        {
+          "lean_namespace": "AgadesPQC.Lattice.NormalFormTransform",
+          "operator": "normal_form_transform",
+          "semantics_id": "agades.pqc.operator_semantics.lattice.normal_form_transform.v1"
+        }
+      ],
+      "plugin": "lattice",
+      "proof_obligation_ids": [
+        "family.ntru.schema_only.no_estimate",
+        "estimator.boundary.no_security_claim"
+      ],
+      "representative_attack_plan": {
+        "attack_plan_id": "lattice_ntru_schema_placeholder_v1",
+        "canonical_sha256": "0dff5b504e3ec999aba795cabcadf0cce3e76f057851b3b4485ad3767e9401ef",
+        "path": "examples/attack_plans/lattice_ntru_schema_placeholder.json",
+        "sha256": "6afef23bcfc7b3031a476c6bd45e6a7afdcc736c36729cf3c26766a027e5d17a"
+      },
+      "required_reviewers": [
+        "lattice_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "review_status": "pending_review",
+      "support_level": "schema_only"
+    },
+    {
+      "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+      "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
+      "entry_sha256": "c376d604afacc521e98efe4845822690b5f95a1ec974cb192444c702a58bcf5f",
+      "estimator_model": {
+        "model_id": "schema_only_no_estimator",
+        "no_fake_estimate": true,
+        "status": "unsupported"
+      },
+      "family": "SIS",
+      "family_invariant_ids": [
+        "lattice.sis.schema_shape"
+      ],
+      "lean_bindings": [
+        {
+          "declaration": "no_security_claim",
+          "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+          "path": "formal/lean/AgadesPQC/Evaluator.lean",
+          "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
+        },
+        {
+          "declaration": "sis_schema_only_no_estimate",
+          "lean_theorem": "AgadesPQC.Lattice.Target.sis_schema_only_no_estimate",
+          "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+          "sha256": "fb935c6996f30bb0e224f5b10c1de28aef63a946357c7252d12e1ad54de91e0c"
+        },
+        {
+          "declaration": "sis_schema_shape",
+          "lean_theorem": "AgadesPQC.Lattice.Target.sis_schema_shape",
+          "path": "formal/lean/AgadesPQC/Lattice/Target.lean",
+          "sha256": "fb935c6996f30bb0e224f5b10c1de28aef63a946357c7252d12e1ad54de91e0c"
+        }
+      ],
+      "operator_semantics": [
+        {
+          "lean_namespace": "AgadesPQC.Lattice.BKZParameterSweep",
+          "operator": "bkz_parameter_sweep",
+          "semantics_id": "agades.pqc.operator_semantics.lattice.bkz_parameter_sweep.v1"
+        }
+      ],
+      "plugin": "lattice",
+      "proof_obligation_ids": [
+        "family.sis.schema_only.no_estimate",
+        "estimator.boundary.no_security_claim"
+      ],
+      "representative_attack_plan": {
+        "attack_plan_id": "lattice_sis_schema_placeholder_v1",
+        "canonical_sha256": "aa89fc54087336e25a2a5ed9d6c0dc95ed14986d621a54f6a769500970164321",
+        "path": "examples/attack_plans/lattice_sis_schema_placeholder.json",
+        "sha256": "163730aecf9b5cdb1d14ae4aad5fbb62af29b2b4f35229e792d653542f032dd8"
+      },
+      "required_reviewers": [
+        "lattice_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "review_status": "pending_review",
+      "support_level": "schema_only"
+    },
+    {
+      "applicability_validator": "agades_pqc_gym.families.code_based.validators.validate_code_based_plan",
+      "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
+      "entry_sha256": "e17a7ffc970ad696da2719d78b4c36579b6df2c5f23668ec0f737de415147dad",
+      "estimator_model": {
+        "model_id": "schema_only_no_estimator",
+        "no_fake_estimate": true,
+        "status": "unsupported"
+      },
+      "family": "CODE_BASED",
+      "family_invariant_ids": [
+        "code_based.length_dimension_weight_positive"
+      ],
+      "lean_bindings": [
+        {
+          "declaration": "no_estimate",
+          "lean_theorem": "AgadesPQC.CodeBased.SchemaOnly.no_estimate",
+          "path": "formal/lean/AgadesPQC/CodeBased/SchemaOnly.lean",
+          "sha256": "95d12133df951c5f56a93bf4c6dac67aea1e0c13b265add3046ef215d11887af"
+        },
+        {
+          "declaration": "parameters_well_formed",
+          "lean_theorem": "AgadesPQC.CodeBased.Target.parameters_well_formed",
+          "path": "formal/lean/AgadesPQC/CodeBased/Target.lean",
+          "sha256": "99a39887fb4702230be43be4383720f8b15c698986efef4d43fa680dc582dbc4"
+        },
+        {
+          "declaration": "no_security_claim",
+          "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+          "path": "formal/lean/AgadesPQC/Evaluator.lean",
+          "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
+        }
+      ],
+      "operator_semantics": [
+        {
+          "lean_namespace": "AgadesPQC.CodeBased.ISD",
+          "operator": "information_set_decoding",
+          "semantics_id": "agades.pqc.operator_semantics.code_based.isd.v1"
+        }
+      ],
+      "plugin": "code_based",
+      "proof_obligation_ids": [
+        "family.code_based.schema_only.no_estimate",
+        "estimator.boundary.no_security_claim"
+      ],
+      "representative_attack_plan": {
+        "attack_plan_id": "code_based_isd_placeholder_v1",
+        "canonical_sha256": "594699e2b1459c1986530a47972e439e02c5ae335131d5d72b29ad72392e7e05",
+        "path": "examples/attack_plans/code_based_isd_placeholder.json",
+        "sha256": "0d9583ca27cc8d1bf729e2275a572ac7cd61b4e3082c55f66c5e8efbbfcce35d"
+      },
+      "required_reviewers": [
+        "code_based_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "review_status": "pending_review",
+      "support_level": "toy_evaluator"
+    },
+    {
+      "applicability_validator": "agades_pqc_gym.families.multivariate.validators.validate_multivariate_plan",
+      "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
+      "entry_sha256": "ebf6b6964df22dde5b68b9af06d667f337b81a7ee0a1e9cc7039355511c118f1",
+      "estimator_model": {
+        "model_id": "agades.pqc.evaluator_model.boundary.v1",
+        "no_fake_estimate": true,
+        "status": "result_binding_required_before_claim"
+      },
+      "family": "MULTIVARIATE",
+      "family_invariant_ids": [
+        "multivariate.variables_equations_field_present"
+      ],
+      "lean_bindings": [
+        {
+          "declaration": "no_security_claim",
+          "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+          "path": "formal/lean/AgadesPQC/Evaluator.lean",
+          "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
+        },
+        {
+          "declaration": "applicability_shape",
+          "lean_theorem": "AgadesPQC.Multivariate.Target.applicability_shape",
+          "path": "formal/lean/AgadesPQC/Multivariate/Target.lean",
+          "sha256": "5f4836e7c2fdddcc87503ce2acdde5ce06f727e47ff77c10796378ddf43302d8"
+        },
+        {
+          "declaration": "variables_equations_field_present",
+          "lean_theorem": "AgadesPQC.Multivariate.Target.variables_equations_field_present",
+          "path": "formal/lean/AgadesPQC/Multivariate/Target.lean",
+          "sha256": "5f4836e7c2fdddcc87503ce2acdde5ce06f727e47ff77c10796378ddf43302d8"
+        }
+      ],
+      "operator_semantics": [
+        {
+          "lean_namespace": "AgadesPQC.Multivariate.GroebnerBasis",
+          "operator": "groebner_basis",
+          "semantics_id": "agades.pqc.operator_semantics.multivariate.groebner_basis.v1"
+        }
+      ],
+      "plugin": "multivariate",
+      "proof_obligation_ids": [
+        "family.multivariate.applicability_shape",
+        "estimator.boundary.no_security_claim"
+      ],
+      "representative_attack_plan": {
+        "attack_plan_id": "multivariate_mq_toy_v1",
+        "canonical_sha256": "489e13747730ed83bbea70ad28fc335bdb893225d11bb25d675a5ed115a7a1d2",
+        "path": "examples/attack_plans/multivariate_mq_toy.json",
+        "sha256": "ad38b7027ff36d0e7af3445b36b6acf18fbf068a94184234d8ce7a9e4fc8f3a1"
+      },
+      "required_reviewers": [
+        "multivariate_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "review_status": "pending_review",
+      "support_level": "toy_evaluator"
+    },
+    {
+      "applicability_validator": "agades_pqc_gym.families.hash_based.validators.validate_hash_based_plan",
+      "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
+      "entry_sha256": "1c5abc7450fdab9db55cc8aa0ed72276952a3bf03fe74314d6e27c421d23b6d9",
+      "estimator_model": {
+        "model_id": "agades.pqc.evaluator_model.boundary.v1",
+        "no_fake_estimate": true,
+        "status": "result_binding_required_before_claim"
+      },
+      "family": "HASH_BASED",
+      "family_invariant_ids": [
+        "hash_based.hash_function_and_security_parameter_present"
+      ],
+      "lean_bindings": [
+        {
+          "declaration": "no_security_claim",
+          "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+          "path": "formal/lean/AgadesPQC/Evaluator.lean",
+          "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
+        },
+        {
+          "declaration": "bound_check_is_not_attack_claim",
+          "lean_theorem": "AgadesPQC.HashBased.Target.bound_check_is_not_attack_claim",
+          "path": "formal/lean/AgadesPQC/HashBased/Target.lean",
+          "sha256": "7846d27d945cb0bf642c6fe564c91130b1965d9ae5ca5d76bcddaef5651730b6"
+        },
+        {
+          "declaration": "hash_function_and_security_parameter_present",
+          "lean_theorem": "AgadesPQC.HashBased.Target.hash_function_and_security_parameter_present",
+          "path": "formal/lean/AgadesPQC/HashBased/Target.lean",
+          "sha256": "7846d27d945cb0bf642c6fe564c91130b1965d9ae5ca5d76bcddaef5651730b6"
+        }
+      ],
+      "operator_semantics": [
+        {
+          "lean_namespace": "AgadesPQC.HashBased.SecurityBoundCheck",
+          "operator": "security_bound_check",
+          "semantics_id": "agades.pqc.operator_semantics.hash_based.security_bound_check.v1"
+        }
+      ],
+      "plugin": "hash_based",
+      "proof_obligation_ids": [
+        "family.hash_based.bound_check_is_not_attack_claim",
+        "estimator.boundary.no_security_claim"
+      ],
+      "representative_attack_plan": {
+        "attack_plan_id": "hash_based_collision_toy_v1",
+        "canonical_sha256": "f3e97f0fa01ff1c3465d468bed62e93dd5b927c7ff906f27c9ec2dc0eee7471c",
+        "path": "examples/attack_plans/hash_based_collision_toy.json",
+        "sha256": "8b1d9b8c8774392b551e9e0a4ebf0fd3f0836d45042ba045d4865c237bf2a668"
+      },
+      "required_reviewers": [
+        "hash_based_signature_reviewer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "review_status": "pending_review",
+      "support_level": "toy_evaluator"
+    },
+    {
+      "applicability_validator": "agades_pqc_gym.families.isogeny_historical.validators.validate_isogeny_historical_plan",
+      "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
+      "entry_sha256": "25ddc870b2fedb915f199e68dd6584ecc697c07f820db593ad14ac3fc0458c94",
+      "estimator_model": {
+        "model_id": "agades.pqc.evaluator_model.boundary.v1",
+        "no_fake_estimate": true,
+        "status": "result_binding_required_before_claim"
+      },
+      "family": "ISOGENY_HISTORICAL",
+      "family_invariant_ids": [
+        "isogeny_historical.dimension_positive_historical_scope"
+      ],
+      "lean_bindings": [
+        {
+          "declaration": "no_security_claim",
+          "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+          "path": "formal/lean/AgadesPQC/Evaluator.lean",
+          "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
+        },
+        {
+          "declaration": "dimension_positive_historical_scope",
+          "lean_theorem": "AgadesPQC.IsogenyHistorical.Target.dimension_positive_historical_scope",
+          "path": "formal/lean/AgadesPQC/IsogenyHistorical/Target.lean",
+          "sha256": "f7d7c437572d26a361137953885b9bb14468b08f7b9edd7390fc94842e407adf"
+        },
+        {
+          "declaration": "historical_only",
+          "lean_theorem": "AgadesPQC.IsogenyHistorical.Target.historical_only",
+          "path": "formal/lean/AgadesPQC/IsogenyHistorical/Target.lean",
+          "sha256": "f7d7c437572d26a361137953885b9bb14468b08f7b9edd7390fc94842e407adf"
+        }
+      ],
+      "operator_semantics": [
+        {
+          "lean_namespace": "AgadesPQC.IsogenyHistorical.Reconstruction",
+          "operator": "historical_isogeny_reconstruction",
+          "semantics_id": "agades.pqc.operator_semantics.isogeny_historical.reconstruction.v1"
+        }
+      ],
+      "plugin": "isogeny_historical",
+      "proof_obligation_ids": [
+        "family.isogeny_historical.historical_only",
+        "estimator.boundary.no_security_claim"
+      ],
+      "representative_attack_plan": {
+        "attack_plan_id": "isogeny_historical_toy_path_v1",
+        "canonical_sha256": "57896d9d7a9ac2247ccd2a71223af147efafc916ba9c19c46495ad4985eeb5ea",
+        "path": "examples/attack_plans/isogeny_historical_toy.json",
+        "sha256": "91529eb1aee8d6dd7b9c3fa5360349cbb4ed8da9822b52b8b1f7e74bdada60b7"
+      },
+      "required_reviewers": [
+        "isogeny_historical_reviewer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "review_status": "pending_review",
+      "support_level": "toy_evaluator"
+    },
+    {
+      "applicability_validator": "agades_pqc_gym.families.implementation_security.validators.validate_implementation_security_plan",
+      "claim_boundary": "formal obligations are applicability checks, not PQC break claims",
+      "entry_sha256": "abf916e849a30f6f7b5601cc2f50f379a5775253409cc58a5d08491148a71362",
+      "estimator_model": {
+        "model_id": "agades.pqc.evaluator_model.boundary.v1",
+        "no_fake_estimate": true,
+        "status": "result_binding_required_before_claim"
+      },
+      "family": "IMPLEMENTATION_SECURITY",
+      "family_invariant_ids": [
+        "implementation_security.review_scope_declared"
+      ],
+      "lean_bindings": [
+        {
+          "declaration": "no_security_claim",
+          "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+          "path": "formal/lean/AgadesPQC/Evaluator.lean",
+          "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
+        },
+        {
+          "declaration": "no_conformance_claim",
+          "lean_theorem": "AgadesPQC.ImplementationSecurity.Target.no_conformance_claim",
+          "path": "formal/lean/AgadesPQC/ImplementationSecurity/Target.lean",
+          "sha256": "4c529327d3e2c473f917bf3d16dc87a9880a39d52c03857671d69ff6cbb15bd6"
+        },
+        {
+          "declaration": "review_scope_declared",
+          "lean_theorem": "AgadesPQC.ImplementationSecurity.Target.review_scope_declared",
+          "path": "formal/lean/AgadesPQC/ImplementationSecurity/Target.lean",
+          "sha256": "4c529327d3e2c473f917bf3d16dc87a9880a39d52c03857671d69ff6cbb15bd6"
+        }
+      ],
+      "operator_semantics": [
+        {
+          "lean_namespace": "AgadesPQC.ImplementationSecurity.KATConformance",
+          "operator": "kat_conformance",
+          "semantics_id": "agades.pqc.operator_semantics.implementation_security.kat_conformance.v1"
+        }
+      ],
+      "plugin": "implementation_security",
+      "proof_obligation_ids": [
+        "family.implementation_security.no_conformance_claim",
+        "estimator.boundary.no_security_claim"
+      ],
+      "representative_attack_plan": {
+        "attack_plan_id": "implementation_security_kat_toy_v1",
+        "canonical_sha256": "474debf85c732c726feba7e96bddba966d74d582ac16503d4200dc0f00f1cbd0",
+        "path": "examples/attack_plans/implementation_security_kat_toy.json",
+        "sha256": "7bb5390d45c99a9baa4eee619771366b7db72540b315d9d581beee8e515d98c7"
+      },
+      "required_reviewers": [
+        "implementation_security_reviewer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "review_status": "pending_review",
+      "support_level": "toy_evaluator"
+    }
+  ],
+  "linked_artifacts": {
+    "family_plugin_manifest": {
+      "path": "docs/family_plugin_manifest.json",
+      "sha256": "c6fca7e84e9abcb06772f866e47f7b19dc0713e3a8b2dbdbea26dc97a2386745"
+    },
+    "formal_lean_backend": {
+      "path": "docs/formal_lean_backend.json",
+      "sha256": "36793f0ba088ef4e4d692616b119bbff6f3e3653923aea3ebe39ceec6595d526"
+    },
+    "formal_lwe_proof_artifact": {
+      "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+      "sha256": "a16cf84f3f2e1de0f25ad85c9180b33aafcdd481797350173ddb6727a7714e29"
+    },
+    "formal_mlwe_proof_artifact": {
+      "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
+      "sha256": "062c0adeff2a340e1b5e9f5d7bff6e6ec546ec7915b463a3eee10426476bbbe9"
+    },
+    "formal_operator_semantics": {
+      "path": "docs/formal_operator_semantics.json",
+      "sha256": "9fa0bc4ee4cd2f5229d9352a2e9e490df323819bbfea5c6cf446a34fab2d231c"
+    }
+  },
+  "project": {
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "release_gates": [
+    "uv run pytest tests/test_formal_family_coverage.py -q",
+    "uv run agades-pqc formal-family-coverage --out docs/formal_family_coverage.json",
+    "uv run agades-pqc formal-family-coverage-verify --coverage docs/formal_family_coverage.json",
+    "uv run agades-pqc formal-proof-artifact-verify --artifact docs/formal_lattice_primal_usvp_proof_artifact.json",
+    "uv run agades-pqc formal-proof-artifact-verify --artifact docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json"
+  ],
+  "schema_version": "agades.pqc.formal.family_coverage.v1",
+  "summary": {
+    "families": 9,
+    "family_invariants": 12,
+    "implemented_or_toy_families": [
+      "LWE",
+      "MLWE",
+      "CODE_BASED",
+      "MULTIVARIATE",
+      "HASH_BASED",
+      "ISOGENY_HISTORICAL",
+      "IMPLEMENTATION_SECURITY"
+    ],
+    "operator_semantics": 10,
+    "proof_obligations": 22,
+    "schema_only_families": [
+      "NTRU",
+      "SIS"
+    ]
+  }
+}
