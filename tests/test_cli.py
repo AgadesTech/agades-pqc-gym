@@ -157,6 +157,26 @@ def test_evaluate_command_accepts_trace_alias_for_output_path(
     assert trace_path.exists()
 
 
+def test_benchmark_command_accepts_trace_alias_for_output_path(
+    tmp_path: Path,
+) -> None:
+    trace_path = tmp_path / "benchmark_trace_alias.jsonl"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "benchmark",
+            "benchmarks/lattice_toy_lwe",
+            "--trace",
+            str(trace_path),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert trace_path.exists()
+    assert trace_path.read_text(encoding="utf-8").count("\n") == 2
+
+
 def test_evaluate_command_explains_unsupported_results(tmp_path: Path) -> None:
     trace_path = tmp_path / "unsupported.jsonl"
 

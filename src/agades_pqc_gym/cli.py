@@ -577,7 +577,14 @@ def verify(
 @app.command()
 def benchmark(
     benchmark_path: Path,
-    out: Annotated[Path, typer.Option("--out")] = DEFAULT_BENCHMARK_TRACE,
+    out: Annotated[
+        Path,
+        typer.Option(
+            "--out",
+            "--trace",
+            help="Trace JSONL output path.",
+        ),
+    ] = DEFAULT_BENCHMARK_TRACE,
     estimator: Annotated[
         EstimatorBackend,
         typer.Option(

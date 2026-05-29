@@ -53,6 +53,12 @@ Evaluate it and write a trace:
 uv run agades-pqc evaluate examples/attack_plans/lattice_primal_usvp_toy.json --trace runs/demo_trace.jsonl
 ```
 
+Run the smallest bundled lattice benchmark:
+
+```bash
+uv run agades-pqc benchmark benchmarks/lattice_toy_lwe --trace runs/demo_benchmark.jsonl
+```
+
 Generate a report from the trace:
 
 ```bash

@@ -5359,22 +5359,57 @@ def _release_gate_closure(root: Path) -> dict[str, Any]:
 
 
 def _release_gate_artifact_paths(root: Path) -> list[Path]:
-    candidates = [
-        *root.joinpath("docs").glob("*.json"),
-        *root.joinpath("hf").rglob("*.json"),
-        *root.joinpath("nvidia").glob("*.json"),
-        *root.joinpath("prime_intellect").glob("**/*.json"),
-        *root.joinpath("public").glob("*.json"),
-        *root.joinpath("reports").glob("*.json"),
-    ]
+    candidates = _git_tracked_json_paths(root)
+    if candidates is None:
+        candidates = [
+            *root.joinpath("docs").glob("*.json"),
+            *root.joinpath("hf").rglob("*.json"),
+            *root.joinpath("nvidia").glob("*.json"),
+            *root.joinpath("prime_intellect").glob("**/*.json"),
+            *root.joinpath("public").glob("*.json"),
+            *root.joinpath("reports").glob("*.json"),
+        ]
     return sorted(
         (
             path
             for path in candidates
-            if not _contains_generated_or_hidden_part(path.relative_to(root))
+            if path.is_file()
+            and not _contains_generated_or_hidden_part(path.relative_to(root))
         ),
         key=lambda path: path.relative_to(root).as_posix(),
     )
+
+
+def _git_tracked_json_paths(root: Path) -> list[Path] | None:
+    result = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(root),
+            "ls-files",
+            "-z",
+            "--",
+            "docs",
+            "hf",
+            "nvidia",
+            "prime_intellect",
+            "public",
+            "reports",
+        ],
+        check=False,
+        capture_output=True,
+        text=False,
+    )
+    if result.returncode != 0:
+        return None
+    paths: list[Path] = []
+    for raw_path in result.stdout.split(b"\0"):
+        if not raw_path:
+            continue
+        relative_path = Path(raw_path.decode("utf-8"))
+        if relative_path.suffix == ".json":
+            paths.append(root / relative_path)
+    return paths
 
 
 def _contains_generated_or_hidden_part(path: Path) -> bool:

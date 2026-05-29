@@ -83,6 +83,7 @@ Manual core-loop commands:
 uv run agades-pqc examples
 uv run agades-pqc validate examples/attack_plans/lattice_primal_usvp_toy.json
 uv run agades-pqc evaluate examples/attack_plans/lattice_primal_usvp_toy.json --trace runs/demo_trace.jsonl
+uv run agades-pqc benchmark benchmarks/lattice_toy_lwe --trace runs/demo_benchmark.jsonl
 uv run agades-pqc report runs/demo_trace.jsonl --out reports/demo_report.md
 ```
 
