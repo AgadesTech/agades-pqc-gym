@@ -239,7 +239,7 @@
   "linked_artifacts": {
     "external_publication_review_packet": {
       "path": "docs/external_publication_review_packet.json",
-      "sha256": "d11806c94139814f5eb93ef7b33549846a685afbdc5d9dff22bbf1f90b55e420"
+      "sha256": "9c13ea4f59610a4b248acdaf54c4716ab193ff984e64ba0ecfecea15a706bbdb"
     },
     "formal_attackplan_semantics": {
       "path": "docs/formal_attackplan_semantics.json",
@@ -283,7 +283,7 @@
     },
     "publication_manifest": {
       "path": "docs/publication_manifest.json",
-      "sha256": "1e1c34c7fbc6310e2e1a6fa6049b4a0e2dd13b6b6a539a56f8cf5bcd76bd1943"
+      "sha256": "330c28a4587c8c38d25e6e6d2812b4b513f6548497081af3448dde4a46743433"
     },
     "release_audit": {
       "path": "public/release_audit.json",
