@@ -88,6 +88,7 @@ def test_examples_command_lists_safe_guided_examples() -> None:
     assert "schema-only-unsupported" in result.output
     assert "invalid-plan" in result.output
     assert "status=unsupported" in result.output
+    assert "--trace runs/demo.jsonl" in result.output
 
 
 def test_evaluate_export_and_report_commands(tmp_path: Path) -> None:
@@ -120,6 +121,26 @@ def test_evaluate_export_and_report_commands(tmp_path: Path) -> None:
     assert trace_path.exists()
     assert public_path.exists()
     assert "Mock Vs Real Estimator Status" in report_path.read_text()
+
+
+def test_evaluate_command_accepts_trace_alias_for_output_path(
+    tmp_path: Path,
+) -> None:
+    trace_path = tmp_path / "trace_alias.jsonl"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "evaluate",
+            "examples/attack_plans/lattice_primal_usvp_toy.json",
+            "--trace",
+            str(trace_path),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert f"trace={trace_path}" in result.output
+    assert trace_path.exists()
 
 
 def test_evaluate_command_explains_unsupported_results(tmp_path: Path) -> None:
