@@ -177,6 +177,31 @@ def test_benchmark_command_accepts_trace_alias_for_output_path(
     assert trace_path.read_text(encoding="utf-8").count("\n") == 2
 
 
+def test_benchmark_command_explains_unsupported_results(tmp_path: Path) -> None:
+    trace_path = tmp_path / "unsupported_benchmark.jsonl"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "benchmark",
+            "examples/attack_plans/code_based_isd_placeholder.json",
+            "--trace",
+            str(trace_path),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "code_based_isd_placeholder_v1" in result.output
+    assert "status=unsupported" in result.output
+    assert "score=n/a" in result.output
+    assert "score=-1000000000.0" not in result.output
+    assert "accepted=False" in result.output
+    assert "plan_valid=True" in result.output
+    assert "CODE_BASED evaluator is not implemented" in result.output
+    assert "No estimate was produced" in result.output
+    assert trace_path.exists()
+
+
 def test_evaluate_command_explains_unsupported_results(tmp_path: Path) -> None:
     trace_path = tmp_path / "unsupported.jsonl"
 

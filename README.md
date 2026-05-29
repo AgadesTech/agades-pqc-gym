@@ -87,6 +87,9 @@ uv run agades-pqc benchmark benchmarks/lattice_toy_lwe --trace runs/demo_benchma
 uv run agades-pqc report runs/demo_trace.jsonl --out reports/demo_report.md
 ```
 
+`evaluate` and `benchmark` print the same concise status fields:
+`status`, `score`, `accepted`, `plan_valid`, and `trace`.
+
 Schema-only examples validate structurally but return `status=unsupported`
 with `accepted=False` instead of cryptanalytic estimates:
 
