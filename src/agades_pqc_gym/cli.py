@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
 from typing import Annotated, Any
@@ -357,6 +358,12 @@ class EstimatorBackend(StrEnum):
     lattice = "lattice"
 
 
+@dataclass(frozen=True)
+class BenchmarkCliRecord:
+    attack_plan_id: str
+    summary: str
+
+
 def _estimator_choice(
     estimator: EstimatorChoice | EstimatorBackend,
 ) -> EstimatorChoice:
@@ -612,8 +619,8 @@ def benchmark(
         console.print(f"[red]benchmark failed[/red]: {exc}")
         raise typer.Exit(1) from exc
 
-    for attack_plan_id, score in records:
-        console.print(f"{attack_plan_id}: {score}")
+    for record in records:
+        console.print(f"{record.attack_plan_id}: {record.summary}")
 
 
 @app.command("evolve-batch", hidden=True)
@@ -3436,7 +3443,7 @@ def write_benchmark_trace(
     out: Path,
     estimator: EstimatorChoice = "mock",
     estimator_cache: Path | None = None,
-) -> list[tuple[str, float | int | str | bool | None]]:
+) -> list[BenchmarkCliRecord]:
     plans = load_benchmark_plans(benchmark_path)
     if not plans:
         raise ValueError(f"no benchmark inputs found: {benchmark_path}")
@@ -3450,7 +3457,7 @@ def write_benchmark_trace(
             estimator_cache=estimator_cache,
         )
     )
-    records: list[tuple[str, float | int | str | bool | None]] = []
+    records: list[BenchmarkCliRecord] = []
     for index, plan in enumerate(plans):
         result = evaluator.evaluate_plan(plan)
         record = build_trace_record(
@@ -3460,7 +3467,12 @@ def write_benchmark_trace(
             candidate_id=f"{plan.attack_plan_id}-{index}",
         )
         writer.append(record)
-        records.append((plan.attack_plan_id, result.metrics.get("combined_score")))
+        records.append(
+            BenchmarkCliRecord(
+                attack_plan_id=plan.attack_plan_id,
+                summary=format_evaluation_summary(result, out),
+            )
+        )
     return records
 
 

@@ -59,6 +59,11 @@ Run the smallest bundled lattice benchmark:
 uv run agades-pqc benchmark benchmarks/lattice_toy_lwe --trace runs/demo_benchmark.jsonl
 ```
 
+Each benchmark line uses the same status fields as `evaluate`, for example
+`status=ok`, `accepted=True`, `plan_valid=True`, and `trace=...`. Unsupported
+benchmark rows use `status=unsupported score=n/a` and include the refusal
+reason instead of printing an internal sentinel score.
+
 Generate a report from the trace:
 
 ```bash
