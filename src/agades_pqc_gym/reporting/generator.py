@@ -39,7 +39,9 @@ class ReportGenerator:
                 family="[redacted]",
                 attack_type="[redacted]",
                 status=_text(evaluation.get("evaluation_status", "unknown")),
-                valid=_text(evaluation.get("valid", "unknown")),
+                accepted=_text(
+                    data.get("accepted", evaluation.get("valid", "unknown"))
+                ),
                 score=_text(evaluation.get("combined_score", "unknown")),
                 time_bits=_text(evaluation.get("estimated_time_bits", "unknown")),
                 memory_bits=_text(
@@ -65,7 +67,7 @@ class ReportGenerator:
                 or evaluation.get("attack_type", "unknown")
             ),
             status=_text(evaluation.get("evaluation_status", "unknown")),
-            valid=_text(evaluation.get("valid", "unknown")),
+            accepted=_text(data.get("accepted", evaluation.get("valid", "unknown"))),
             score=_text(evaluation.get("combined_score", "unknown")),
             time_bits=_text(evaluation.get("estimated_time_bits", "unknown")),
             memory_bits=_text(evaluation.get("estimated_memory_bits", "unknown")),
@@ -116,7 +118,7 @@ class _ReportRow:
     family: str
     attack_type: str
     status: str
-    valid: str
+    accepted: str
     score: str
     time_bits: str
     memory_bits: str
@@ -154,7 +156,7 @@ def _render_markdown(title: str, rows: list[_ReportRow]) -> str:
         f"- Family Summary: {_counter_text(family_counts)}\n"
         f"- Evaluation Status: {_counter_text(status_counts)}\n\n"
         "## Results\n\n"
-        "| Candidate | Family | Target | Status | Reproduction | Valid | Score | "
+        "| Candidate | Family | Target | Status | Reproduction | Accepted | Score | "
         "Time Bits | Memory Bits | Estimator |\n"
         "| --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | --- |\n"
         f"{table}\n\n"
@@ -175,7 +177,7 @@ def _table_row(row: _ReportRow) -> str:
     return (
         f"| {_cell(row.candidate_id)} | {_cell(row.family)} | {_cell(row.target)} | "
         f"{_cell(row.status)} | {_cell(row.reproduction_status)} | "
-        f"{_cell(row.valid)} | {_cell(row.score)} | {_cell(row.time_bits)} | "
+        f"{_cell(row.accepted)} | {_cell(row.score)} | {_cell(row.time_bits)} | "
         f"{_cell(row.memory_bits)} | {_cell(row.estimator)} |"
     )
 
