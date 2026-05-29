@@ -172,7 +172,7 @@
     "reward_profiles": {
       "format_repair_dense": {
         "accepted_candidates_still_require_strict_acceptance": true,
-        "aggregate_rule": "weighted format-repair signal; exact valid JSON can receive full reward, wrapped JSON can receive partial non-accepted reward",
+        "aggregate_rule": "weighted format-repair signal; exact valid concise JSON can receive full reward, wrapped JSON can receive partial non-accepted reward, and hidden reasoning bloat lowers student_readability",
         "intended_use": "private_prime_rl_training",
         "rubric_weights": {
           "accepted_attack_plan": 0.2,

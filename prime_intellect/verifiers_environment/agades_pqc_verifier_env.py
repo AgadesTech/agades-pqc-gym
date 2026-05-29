@@ -190,6 +190,11 @@ def score_attack_plan_completion_report(
             for term in REWARD_TERMS
         },
     }
+    if reward_profile == FORMAT_REPAIR_DENSE_REWARD_PROFILE:
+        rubric_scores["student_readability"] = min(
+            rubric_scores["student_readability"],
+            _completion_readability_score(completion),
+        )
     return _prime_reward_report(
         aggregate_reward=_weighted_reward(rubric_scores, weights),
         accepted=bool(reward_report["accepted"]),
@@ -741,6 +746,22 @@ def _format_readability_score(text: str) -> float:
     if "```" not in stripped:
         score += 0.2
     return score
+
+
+def _completion_readability_score(completion: list[dict[str, Any]]) -> float:
+    reasoning_char_count = _reasoning_char_count(completion)
+    if reasoning_char_count == 0:
+        return 1.0
+    return max(0.0, 1.0 - (reasoning_char_count / 50_000.0))
+
+
+def _reasoning_char_count(completion: list[dict[str, Any]]) -> int:
+    count = 0
+    for message in completion:
+        reasoning_content = message.get("reasoning_content")
+        if isinstance(reasoning_content, str):
+            count += len(reasoning_content.strip())
+    return count
 
 
 def _blocked_reward_report(

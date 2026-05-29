@@ -248,9 +248,10 @@ def build_prime_environment_manifest(root: Path | None = None) -> dict[str, Any]
                 "format_repair_dense": {
                     "intended_use": "private_prime_rl_training",
                     "aggregate_rule": (
-                        "weighted format-repair signal; exact valid JSON can "
-                        "receive full reward, wrapped JSON can receive partial "
-                        "non-accepted reward"
+                        "weighted format-repair signal; exact valid concise "
+                        "JSON can receive full reward, wrapped JSON can "
+                        "receive partial non-accepted reward, and hidden "
+                        "reasoning bloat lowers student_readability"
                     ),
                     "accepted_candidates_still_require_strict_acceptance": True,
                     "rubric_weights": {

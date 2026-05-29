@@ -320,14 +320,15 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
                     "proof_obligation_coverage": 0.04,
                 },
             },
-            "format_repair_dense": {
-                "intended_use": "private_prime_rl_training",
-                "aggregate_rule": (
-                    "weighted format-repair signal; exact valid JSON can "
-                    "receive full reward, wrapped JSON can receive partial "
-                    "non-accepted reward"
-                ),
-                "accepted_candidates_still_require_strict_acceptance": True,
+                "format_repair_dense": {
+                    "intended_use": "private_prime_rl_training",
+                    "aggregate_rule": (
+                        "weighted format-repair signal; exact valid concise "
+                        "JSON can receive full reward, wrapped JSON can "
+                        "receive partial non-accepted reward, and hidden "
+                        "reasoning bloat lowers student_readability"
+                    ),
+                    "accepted_candidates_still_require_strict_acceptance": True,
                 "rubric_weights": {
                     "accepted_attack_plan": 0.20,
                     "single_json_object": 0.20,
