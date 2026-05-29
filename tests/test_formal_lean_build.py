@@ -151,6 +151,33 @@ def test_formal_lean_build_smoke_report_records_timeout(monkeypatch) -> None:
     assert report["build"]["stderr_tail"] == "still building"
 
 
+def test_formal_lean_build_smoke_report_records_missing_lake(monkeypatch) -> None:
+    def fake_run(
+        command: list[str],
+        *,
+        cwd: Path,
+        capture_output: bool,
+        text: bool,
+        timeout: int,
+        check: bool,
+    ) -> subprocess.CompletedProcess[str]:
+        raise FileNotFoundError(2, "No such file or directory", command[0])
+
+    monkeypatch.setattr(lean_build.subprocess, "run", fake_run)
+
+    report = lean_build.run_formal_lean_build_smoke()
+
+    assert report["accepted"] is False
+    assert report["build"]["return_code"] is None
+    assert report["build"]["timed_out"] is False
+    assert report["build"]["error"] == {
+        "kind": "FileNotFoundError",
+        "message": "No such file or directory: lake",
+    }
+    assert report["build"]["stderr_tail"] == "No such file or directory: lake"
+    assert "did not compile" in report["notes"][0]
+
+
 def test_formal_lean_build_smoke_verify_accepts_written_report(
     monkeypatch,
     tmp_path: Path,
