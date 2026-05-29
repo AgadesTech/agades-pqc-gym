@@ -43,6 +43,14 @@ and asks it to restore unknown `null` claims while preserving the rest of the
 task. This is a private training/eval curriculum only; public quality claims
 still require strict eval.
 
+The `prompt_profile="claims_guard_format_repair"` curriculum combines the two
+observed failure modes before another paid training attempt: it wraps the same
+invalid-claims AttackPlan in prose and a markdown fence, then requires the model
+to extract one JSON object and restore unknown `null` claims. Pair it with
+`reward_profile="format_repair_dense"` for a short private format/claims repair
+eval. Do not treat high reward on this curriculum as a cryptographic claim; it
+only measures AttackPlan formatting and claim-boundary discipline.
+
 Dataset rows can be filtered with `attack_plan_id`, `target_family`, and
 `seed_accepted`. Use `seed_accepted=true` for supported-only strict quality
 evals, and run unsupported tasks as a separate safety eval so unsupported seeds
