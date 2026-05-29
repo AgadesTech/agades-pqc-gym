@@ -590,6 +590,138 @@ def verify(
     console.print_json(data=result)
 
 
+@app.command("formal-check")
+def formal_check() -> None:
+    """Verify the committed Lean-backed formal artifacts."""
+    lean_backend = verify_formal_lean_backend(Path("docs/formal_lean_backend.json"))
+    lean_build = verify_formal_lean_build_smoke(
+        Path("reports/formal_lean_build_smoke.json")
+    )
+    attackplan_semantics = verify_formal_attackplan_semantics(
+        Path("docs/formal_attackplan_semantics.json")
+    )
+    operator_semantics = verify_formal_operator_semantics(
+        Path("docs/formal_operator_semantics.json")
+    )
+    estimator_model = verify_formal_estimator_model(
+        Path("docs/formal_estimator_model.json")
+    )
+    obligation_ledger = verify_formal_obligation_ledger(
+        Path("docs/formal_obligation_ledger.json")
+    )
+    family_coverage = verify_formal_family_coverage(
+        Path("docs/formal_family_coverage.json")
+    )
+    smt_assist = verify_formal_smt_assist_contract(
+        Path("docs/formal_smt_assist_contract.json")
+    )
+    reviewer_governance = verify_reviewer_governance(
+        Path("docs/reviewer_governance.json")
+    )
+    proof_artifact_results = [
+        verify_attack_plan_proof_artifact(
+            Path("docs/formal_lattice_primal_usvp_proof_artifact.json")
+        ),
+        verify_attack_plan_proof_artifact(
+            Path("docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json")
+        ),
+    ]
+    build_report = json.loads(
+        Path("reports/formal_lean_build_smoke.json").read_text(encoding="utf-8")
+    )
+
+    accepted_results = [
+        lean_backend,
+        lean_build,
+        attackplan_semantics,
+        operator_semantics,
+        estimator_model,
+        obligation_ledger,
+        family_coverage,
+        smt_assist,
+        reviewer_governance,
+        *proof_artifact_results,
+    ]
+    accepted = all(result.get("accepted") is True for result in accepted_results)
+    typer.echo(f"formal_check={_formal_status(accepted)}")
+
+    lean_summary = lean_backend["summary"]
+    typer.echo(
+        f"lean_backend={_formal_status(lean_backend)} "
+        f"source_modules={lean_summary['source_modules']} "
+        f"theorem_declarations={lean_summary['theorem_declarations']}"
+    )
+    build_summary = lean_build["summary"]
+    build_scope = build_report.get("scope", {})
+    typer.echo(
+        f"lean_build_smoke={_formal_status(lean_build)} "
+        f"source_modules={build_summary['source_modules']} "
+        f"security_claim_allowed={build_scope.get('security_claim_allowed', False)} "
+        "cryptographic_soundness_review_required="
+        f"{build_scope.get('cryptographic_soundness_review_required', True)}"
+    )
+    typer.echo(
+        "attackplan_semantics="
+        f"{_formal_status(attackplan_semantics)}"
+    )
+    typer.echo(
+        f"operator_semantics={_formal_status(operator_semantics)}"
+    )
+    typer.echo(f"estimator_model={_formal_status(estimator_model)}")
+
+    obligation_summary = obligation_ledger["summary"]
+    typer.echo(
+        f"obligation_ledger={_formal_status(obligation_ledger)} "
+        f"proof_obligations={obligation_summary['proof_obligations']}"
+    )
+    family_summary = family_coverage["summary"]
+    typer.echo(
+        f"family_coverage={_formal_status(family_coverage)} "
+        f"families={family_summary['families']}"
+    )
+    typer.echo(f"smt_assist={_formal_status(smt_assist)}")
+    accepted_proofs = sum(
+        result.get("accepted") is True for result in proof_artifact_results
+    )
+    typer.echo(
+        f"proof_artifacts={accepted_proofs}/{len(proof_artifact_results)} accepted"
+    )
+    typer.echo(f"reviewer_governance={_formal_status(reviewer_governance)}")
+    typer.echo(
+        "next=Run `uv run agades-pqc formal-lean-build-smoke --out "
+        "reports/formal_lean_build_smoke.json` to refresh the compiled Lean "
+        "evidence."
+    )
+
+    if not accepted:
+        for name, result in (
+            ("lean_backend", lean_backend),
+            ("lean_build_smoke", lean_build),
+            ("attackplan_semantics", attackplan_semantics),
+            ("operator_semantics", operator_semantics),
+            ("estimator_model", estimator_model),
+            ("obligation_ledger", obligation_ledger),
+            ("family_coverage", family_coverage),
+            ("smt_assist", smt_assist),
+            ("reviewer_governance", reviewer_governance),
+        ):
+            _print_formal_check_failures(name, result)
+        for index, result in enumerate(proof_artifact_results, start=1):
+            _print_formal_check_failures(f"proof_artifact_{index}", result)
+        raise typer.Exit(1)
+
+
+def _formal_status(result_or_accepted: dict[str, Any] | bool) -> str:
+    if isinstance(result_or_accepted, bool):
+        return "accepted" if result_or_accepted else "rejected"
+    return "accepted" if result_or_accepted.get("accepted") is True else "rejected"
+
+
+def _print_formal_check_failures(name: str, result: dict[str, Any]) -> None:
+    for failure in result.get("failures", []):
+        console.print(f"{name}: {failure}", soft_wrap=True)
+
+
 @app.command()
 def benchmark(
     benchmark_path: Path,

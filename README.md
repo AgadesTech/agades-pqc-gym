@@ -98,16 +98,26 @@ uv run agades-pqc validate examples/attack_plans/code_based_isd_placeholder.json
 uv run agades-pqc evaluate examples/attack_plans/code_based_isd_placeholder.json --trace runs/code_based_placeholder.jsonl
 ```
 
-Optional formal smoke check:
+Optional formal check:
+
+```bash
+uv run agades-pqc formal-check
+```
+
+This checks the committed AttackPlan semantics, operator semantics, estimator
+model, typed obligation ledger, family coverage, proof artifacts, reviewer
+governance, and latest Lean build smoke report.
+
+To refresh the compiled Lean evidence:
 
 ```bash
 uv run agades-pqc formal-lean-build-smoke --out reports/formal_lean_build_smoke.json
 uv run agades-pqc formal-lean-build-smoke-verify --report reports/formal_lean_build_smoke.json
 ```
 
-This runs `lake build` for the Lean 4 + Mathlib source bundle and records a
-bounded local report. Passing means the checked formal contracts compile; it is
-not a cryptographic soundness review and does not create a security claim.
+Refreshing runs `lake build` for the Lean 4 + Mathlib source bundle and records
+a bounded local report. Passing means the checked formal contracts compile; it
+is not a cryptographic soundness review and does not create a security claim.
 
 ## Release Checks
 

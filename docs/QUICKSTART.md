@@ -94,9 +94,19 @@ This prints the smallest safe example set:
 - `schema-only-unsupported`: placeholder path, expected `status=unsupported`.
 - `invalid-plan`: expected validation failure.
 
-## 6. Compile The Formal Contract Bundle
+## 6. Check The Formal Contract Bundle
 
-If Lean/Lake is available, run the local formal smoke check:
+Run the short formal verifier surface:
+
+```bash
+uv run agades-pqc formal-check
+```
+
+This checks the committed AttackPlan semantics, operator semantics, estimator
+model, typed obligation ledger, family coverage, LWE/MLWE proof artifacts,
+reviewer governance, and the latest Lean build smoke report.
+
+If Lean/Lake is available and you want to refresh the compiled evidence, run:
 
 ```bash
 uv run agades-pqc formal-lean-build-smoke --out reports/formal_lean_build_smoke.json
@@ -122,6 +132,7 @@ it does not authorize any public security claim.
 - `verify`
 - `benchmark`
 - `report`
+- `formal-check`
 
 Release, ecosystem, and artifact-generation commands are still available by
 name, but hidden from first-screen help so a new user sees the gym workflow

@@ -58,8 +58,31 @@ def test_help_prioritizes_core_gym_commands() -> None:
     assert "evaluate" in result.output
     assert "benchmark" in result.output
     assert "report" in result.output
+    assert "formal-check" in result.output
     assert "publication-manifest" not in result.output
     assert "lattice-estimator-baseline-review-packet-verify" not in result.output
+    assert "formal-lean-build-smoke" not in result.output
+
+
+def test_formal_check_command_summarizes_verifiable_formal_surface() -> None:
+    result = CliRunner().invoke(app, ["formal-check"])
+
+    assert result.exit_code == 0, result.output
+    assert "formal_check=accepted" in result.output
+    assert "lean_backend=accepted" in result.output
+    assert "lean_build_smoke=accepted" in result.output
+    assert "attackplan_semantics=accepted" in result.output
+    assert "operator_semantics=accepted" in result.output
+    assert "estimator_model=accepted" in result.output
+    assert "obligation_ledger=accepted proof_obligations=22" in result.output
+    assert "family_coverage=accepted families=9" in result.output
+    assert "proof_artifacts=2/2 accepted" in result.output
+    assert "reviewer_governance=accepted" in result.output
+    assert "security_claim_allowed=False" in result.output
+    assert "cryptographic_soundness_review_required=True" in result.output
+    assert "formal-lean-build-smoke --out reports/formal_lean_build_smoke.json" in (
+        result.output
+    )
 
 
 def test_quickstart_command_runs_guided_gym_demo(tmp_path: Path) -> None:
