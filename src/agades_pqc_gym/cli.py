@@ -480,12 +480,31 @@ def validate(plan_path: Path) -> None:
     result = validate_attack_plan(plan)
     if result.valid:
         console.print(f"[green]valid[/green]: {plan.attack_plan_id}")
+        _print_validation_route_hint(plan, plan_path)
         return
 
     console.print(f"[red]invalid[/red]: {plan.attack_plan_id}")
     for error in result.errors:
         console.print(f"- {error}", soft_wrap=True)
     raise typer.Exit(1)
+
+
+def _print_validation_route_hint(plan: AttackPlan, plan_path: Path) -> None:
+    route_result = CascadeEvaluator(
+        estimator=build_lattice_estimator(estimator="mock", estimator_cache=None),
+    ).evaluate_plan(plan)
+    status = route_result.metrics.get("evaluation_status")
+    if status != "unsupported":
+        return
+    console.print(f"evaluation_status=unsupported accepted={route_result.valid}")
+    if route_result.warnings:
+        console.print(f"reason={route_result.warnings[0]}", soft_wrap=True)
+    console.print(
+        "next=Run `uv run agades-pqc evaluate "
+        f"{plan_path} --trace runs/demo.jsonl` to record the unsupported "
+        "result without inventing an estimate.",
+        soft_wrap=True,
+    )
 
 
 @app.command()

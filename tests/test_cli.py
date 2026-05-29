@@ -34,6 +34,20 @@ def test_validate_command_accepts_valid_plan() -> None:
     assert "valid" in result.output.lower()
 
 
+def test_validate_command_warns_when_valid_plan_route_is_unsupported() -> None:
+    result = CliRunner().invoke(
+        app,
+        ["validate", "examples/attack_plans/code_based_isd_placeholder.json"],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "valid: code_based_isd_placeholder_v1" in result.output
+    assert "evaluation_status=unsupported" in result.output
+    assert "accepted=False" in result.output
+    assert "CODE_BASED evaluator is not implemented" in result.output
+    assert "uv run agades-pqc evaluate" in result.output
+
+
 def test_help_prioritizes_core_gym_commands() -> None:
     result = CliRunner().invoke(app, ["--help"])
 
