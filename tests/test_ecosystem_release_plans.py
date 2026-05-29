@@ -101,7 +101,7 @@ def test_huggingface_release_plan_documents_space_hub_workflow() -> None:
     plan = PLAN_PATHS["huggingface"].read_text(encoding="utf-8")
 
     assert (
-        "hf repos create agades/agades-pqc-gym-agent-env --type=space"
+        "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space"
         in plan
     )
     assert (

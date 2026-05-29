@@ -839,7 +839,7 @@ Current result:
 - GitHub Actions CI readiness is now a blocking release-audit gate.
 - Runbook deliverable audit covers 43 required docs/manifests/reports and cross-checks HF/Prime/NVIDIA/public-benchmark counts plus the no-private-trace/no-security-claim boundary.
 - Hugging Face Space smoke loads 78 public examples and evaluates the default LWE plan safely.
-- Hugging Face Space manifest gate verifies 78 exposed public examples across 9 families, matches the app selector/default, and blocks drift in reviewed `hf repos create` / `hf upload --repo-type=space` publication commands.
+- Hugging Face Space manifest gate verifies 78 exposed public examples across 9 families, matches the app selector/default, and blocks drift in reviewed `hf repo create --repo-type=space` / `hf upload --repo-type=space` publication commands.
 - Hugging Face dataset contains 79 AttackPlan rows including one intentionally invalid public negative-control row.
 - Hugging Face dataset now publishes 78 valid public task metadata rows in `task_metadata.jsonl`, and release audit verifies those rows match the embedded `attack_plans.jsonl` task metadata.
 - Hugging Face Collection manifest gate verifies 7 reviewed entries across the GitHub repo, dataset, Space, benchmark card, source map, public benchmark manifest, and flat public run export, with 3 credentialed entries and no private traces or security claims.

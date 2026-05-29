@@ -730,8 +730,8 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
             "SIS",
         ],
         "hub_create_command_template": (
-            "hf repos create agades/agades-pqc-gym-agent-env --type=space "
-            "--space-sdk gradio --private --exist-ok"
+            "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space "
+            "--space_sdk gradio --private --exist-ok"
         ),
         "hub_upload_command_template": (
             "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space "

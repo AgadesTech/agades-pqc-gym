@@ -174,7 +174,7 @@ EXPECTED_PUBLICATION_DRY_RUN_PLAN = [
         "artifact_count": 6,
         "command_templates": [
             (
-                "hf repos create <owner>/pqc-gym-toy --type=dataset --private "
+                "hf repo create <owner>/pqc-gym-toy --repo-type=dataset --private "
                 "--exist-ok"
             ),
             (
@@ -196,8 +196,8 @@ EXPECTED_PUBLICATION_DRY_RUN_PLAN = [
         "artifact_count": 5,
         "command_templates": [
             (
-                "hf repos create agades/agades-pqc-gym-agent-env "
-                "--type=space --space-sdk gradio --private --exist-ok"
+                "hf repo create agades/agades-pqc-gym-agent-env "
+                "--repo-type=space --space_sdk gradio --private --exist-ok"
             ),
             (
                 "hf upload agades/agades-pqc-gym-agent-env hf "
@@ -975,7 +975,7 @@ def test_external_publication_review_packet_rejects_unscoped_dry_run_create(
         if entry["id"] == "huggingface-dataset"
     )
     dataset_plan["command_templates"][0] = (
-        "hf repos create <owner>/pqc-gym-toy --type=dataset --exist-ok"
+        "hf repo create <owner>/pqc-gym-toy --repo-type=dataset --exist-ok"
     )
     out = tmp_path / "external_publication_review_packet.json"
     out.write_text(json.dumps(packet, indent=2, sort_keys=True) + "\n")

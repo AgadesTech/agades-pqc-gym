@@ -146,7 +146,7 @@
     "dataset_source": "hf/dataset/attack_plans.jsonl",
     "fallback_source": "examples/attack_plans",
     "formal_runtime_bundle": {
-      "bundle_sha256": "76be953bff365a898b0ae75ed7c69b5859dff79d95e2301294e809165679a2b6",
+      "bundle_sha256": "834ae0acd847027ff337307e52dc9ed68c21096f80650aedc5ee0c4f66da1cac",
       "ci_workflow_path": "hf/.github/workflows/ci.yml",
       "docs_json_count": 38,
       "docs_path": "hf/docs",
@@ -181,7 +181,7 @@
     "app_file": "hf/app.py",
     "category": "agent-environment",
     "dataset_bundle": "hf/dataset",
-    "hub_create_command_template": "hf repos create agades/agades-pqc-gym-agent-env --type=space --space-sdk gradio --private --exist-ok",
+    "hub_create_command_template": "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space --space_sdk gradio --private --exist-ok",
     "hub_upload_command_template": "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Agent Environment\"",
     "public_push_requires_review": true,
     "requirements_file": "hf/requirements.txt",
