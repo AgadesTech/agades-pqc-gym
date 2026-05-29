@@ -51,6 +51,13 @@ to extract one JSON object and restore unknown `null` claims. Pair it with
 eval. Do not treat high reward on this curriculum as a cryptographic claim; it
 only measures AttackPlan formatting and claim-boundary discipline.
 
+The `prompt_profile="claims_guard_decoy_format_repair"` curriculum adds a
+decoy JSON object before the fenced invalid AttackPlan. It is intended for
+private short evals when `claims_guard_format_repair` is too easy and produces
+zero rollout variance. A correct answer must ignore the decoy, extract the
+fenced AttackPlan, repair unknown claims back to `null`, and return one JSON
+object.
+
 Dataset rows can be filtered with `attack_plan_id`, `target_family`, and
 `seed_accepted`. Use `seed_accepted=true` for supported-only strict quality
 evals, and run unsupported tasks as a separate safety eval so unsupported seeds

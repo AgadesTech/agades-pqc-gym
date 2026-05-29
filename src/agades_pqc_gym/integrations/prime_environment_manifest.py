@@ -198,6 +198,15 @@ def build_prime_environment_manifest(root: Path | None = None) -> dict[str, Any]
                         "and return one JSON object without wrapper text"
                     ),
                 },
+                "claims_guard_decoy_format_repair": {
+                    "intended_use": "private_format_and_claims_repair_curriculum",
+                    "contract": (
+                        "ignore a decoy JSON object, extract the fenced public toy "
+                        "AttackPlan, repair invalid pre-evaluation claim estimates "
+                        "back to unknown nulls, and return one JSON object without "
+                        "wrapper text"
+                    ),
+                },
             },
             "reward_profiles": {
                 "strict": {
@@ -509,6 +518,7 @@ def _verify_scoring_contract(
             "format_repair_extract_seed",
             "claims_guard_repair",
             "claims_guard_format_repair",
+            "claims_guard_decoy_format_repair",
         }
         if set(prompt_profiles) != expected_prompt_profiles:
             failures.append("Prime manifest prompt_profiles drifted.")
