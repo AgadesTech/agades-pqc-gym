@@ -96,6 +96,7 @@ def test_prime_verifiers_dataset_rows_cover_all_public_valid_families() -> None:
         "format_first_copy_seed",
         "format_repair_extract_seed",
         "claims_guard_repair",
+        "claims_guard_format_repair",
     )
     assert first_info["schema_version"] == TASK_METADATA_SCHEMA
     assert first_info["source_path"].startswith("data/")
@@ -194,6 +195,75 @@ def test_prime_verifiers_claims_guard_profile_instructs_claim_repair() -> None:
     assert "Do not add external_claim or source" in prompt
     assert "```" not in prompt
     assert rows[0]["info"]["attack_plan_id"] == "lattice_bdd_toy_v1"
+
+
+def test_prime_verifiers_claims_guard_format_repair_profile_combines_repairs() -> None:
+    module = _load_env_module()
+
+    rows = module.build_dataset_rows(
+        attack_plan_id="lattice_bdd_toy_v1",
+        prompt_profile="claims_guard_format_repair",
+    )
+
+    prompt = rows[0]["prompt"][0]["content"]
+    assert "Repair the broken model output below." in prompt
+    assert "markdown code fence" in prompt
+    assert "pre-evaluation estimates" in prompt
+    assert "estimated_time_bits=null" in prompt
+    assert "estimated_memory_bits=null" in prompt
+    assert "success_probability=null" in prompt
+    assert "Do not add external_claim or source" in prompt
+    assert "Return only the corrected AttackPlan JSON object." in prompt
+    assert "```json" in prompt
+    assert rows[0]["info"]["attack_plan_id"] == "lattice_bdd_toy_v1"
+
+
+def test_prime_verifiers_claims_guard_format_repair_scores_near_misses() -> None:
+    module = _load_env_module()
+    rows = module.build_dataset_rows(
+        attack_plan_id="lattice_bdd_toy_v1",
+        prompt_profile="claims_guard_format_repair",
+    )
+    row = rows[0]
+    repaired_json = Path("examples/attack_plans/lattice_bdd_toy.json").read_text()
+    invalid_claims_json = _with_unreviewed_claim_estimates(repaired_json)
+    wrapped_repaired_json = "\n".join(
+        [
+            "Here is the candidate:",
+            "```json",
+            repaired_json,
+            "```",
+        ]
+    )
+
+    repaired_report = module.score_attack_plan_completion_report(
+        _completion(repaired_json),
+        info=row["info"],
+        reward_profile="format_repair_dense",
+    )
+    invalid_claims_report = module.score_attack_plan_completion_report(
+        _completion(invalid_claims_json),
+        info=row["info"],
+        reward_profile="format_repair_dense",
+    )
+    wrapped_report = module.score_attack_plan_completion_report(
+        _completion(wrapped_repaired_json),
+        info=row["info"],
+        reward_profile="format_repair_dense",
+    )
+
+    assert repaired_report["accepted"] is True
+    assert repaired_report["aggregate_reward"] == 1.0
+    assert invalid_claims_report["accepted"] is False
+    assert 0.0 < invalid_claims_report["aggregate_reward"] < 1.0
+    assert invalid_claims_report["rubric_scores"]["single_json_object"] == 1.0
+    assert wrapped_report["accepted"] is False
+    assert wrapped_report["single_json_object"] is False
+    assert (
+        invalid_claims_report["aggregate_reward"]
+        < wrapped_report["aggregate_reward"]
+        < repaired_report["aggregate_reward"]
+    )
 
 
 def test_prime_verifiers_dataset_filters_seed_acceptance() -> None:
@@ -472,3 +542,14 @@ def test_prime_verifiers_load_environment_reports_missing_optional_deps() -> Non
 
 def _completion(content: str) -> list[dict[str, str]]:
     return [{"role": "assistant", "content": content}]
+
+
+def _with_unreviewed_claim_estimates(raw_json: str) -> str:
+    payload = json.loads(raw_json)
+    claims = payload.setdefault("claims", {})
+    claims["estimated_time_bits"] = 64.0
+    claims["estimated_memory_bits"] = 32.0
+    claims["success_probability"] = 0.5
+    claims.pop("external_claim", None)
+    claims.pop("source", None)
+    return json.dumps(payload, indent=2, sort_keys=True)

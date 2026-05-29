@@ -265,6 +265,14 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
                     "claim evidence"
                 ),
             },
+            "claims_guard_format_repair": {
+                "intended_use": "private_format_and_claims_repair_curriculum",
+                "contract": (
+                    "extract a fenced public toy AttackPlan, repair invalid "
+                    "pre-evaluation claim estimates back to unknown nulls, "
+                    "and return one JSON object without wrapper text"
+                ),
+            },
         },
         "reward_profiles": {
             "strict": {

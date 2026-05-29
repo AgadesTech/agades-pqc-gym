@@ -71,11 +71,13 @@ DEFAULT_PROMPT_PROFILE = "attackplan_json"
 FORMAT_FIRST_PROMPT_PROFILE = "format_first_copy_seed"
 FORMAT_REPAIR_PROMPT_PROFILE = "format_repair_extract_seed"
 CLAIMS_GUARD_REPAIR_PROMPT_PROFILE = "claims_guard_repair"
+CLAIMS_GUARD_FORMAT_REPAIR_PROMPT_PROFILE = "claims_guard_format_repair"
 PROMPT_PROFILES = (
     DEFAULT_PROMPT_PROFILE,
     FORMAT_FIRST_PROMPT_PROFILE,
     FORMAT_REPAIR_PROMPT_PROFILE,
     CLAIMS_GUARD_REPAIR_PROMPT_PROFILE,
+    CLAIMS_GUARD_FORMAT_REPAIR_PROMPT_PROFILE,
 )
 
 
@@ -371,6 +373,31 @@ def _question_for_seed_attack_plan(raw_json: str, *, prompt_profile: str) -> str
                 _claims_guard_invalid_output(raw_json),
             ]
         )
+    if prompt_profile == CLAIMS_GUARD_FORMAT_REPAIR_PROMPT_PROFILE:
+        return "\n".join(
+            [
+                "Repair the broken model output below.",
+                "It contains one public toy AttackPlan JSON object wrapped in "
+                "extra prose and a markdown code fence.",
+                "The embedded AttackPlan is invalid because claims contains "
+                "pre-evaluation estimates without reviewed external_claim "
+                "evidence.",
+                "Return only the corrected AttackPlan JSON object.",
+                "Repair claims by setting estimated_time_bits=null, "
+                "estimated_memory_bits=null, and success_probability=null.",
+                "Do not add external_claim or source.",
+                "Preserve target, operators, constraints, metadata, and "
+                "attack_plan_id exactly.",
+                "Do not include markdown, prose, analysis, comments, code "
+                "fences, or wrapper text.",
+                "The first non-whitespace character must be { and the final "
+                "non-whitespace character must be }.",
+                "Toy/demo verifier output only; do not claim real-world PQC breaks.",
+                "",
+                "Broken model output:",
+                _claims_guard_wrapped_invalid_output(raw_json),
+            ]
+        )
     raise ValueError(f"unsupported Prime prompt profile: {prompt_profile}")
 
 
@@ -614,6 +641,18 @@ def _claims_guard_invalid_output(raw_json: str) -> str:
     claims.pop("external_claim", None)
     claims.pop("source", None)
     return json.dumps(payload, indent=2)
+
+
+def _claims_guard_wrapped_invalid_output(raw_json: str) -> str:
+    return "\n".join(
+        [
+            "Here is the AttackPlan candidate:",
+            "```json",
+            _claims_guard_invalid_output(raw_json),
+            "```",
+            "This is only a toy/demo verifier example, not a security claim.",
+        ]
+    )
 
 
 def _no_security_overclaim_score(text: str) -> float:
