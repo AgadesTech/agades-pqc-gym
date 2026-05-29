@@ -161,6 +161,45 @@ def test_validate_command_formats_schema_errors_without_pydantic_url() -> None:
     assert "errors.pydantic.dev" not in result.output
 
 
+def test_validate_command_reports_missing_plan_without_python_oserror(
+    tmp_path: Path,
+) -> None:
+    missing = tmp_path / "missing_attack_plan.json"
+
+    result = CliRunner().invoke(app, ["validate", str(missing)])
+
+    assert result.exit_code == 1
+    assert f"invalid: {missing}" in result.output
+    assert "file not found" in result.output
+    assert "uv run agades-pqc examples" in result.output
+    assert "No such file or directory" not in result.output
+
+
+def test_evaluate_command_reports_missing_plan_without_sentinel_score(
+    tmp_path: Path,
+) -> None:
+    missing = tmp_path / "missing_attack_plan.json"
+    trace_path = tmp_path / "missing_trace.jsonl"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "evaluate",
+            str(missing),
+            "--out",
+            str(trace_path),
+        ],
+    )
+
+    assert result.exit_code == 1
+    assert f"invalid: {missing}" in result.output
+    assert "file not found" in result.output
+    assert "uv run agades-pqc examples" in result.output
+    assert "score=-1000000000.0" not in result.output
+    assert "No such file or directory" not in result.output
+    assert not trace_path.exists()
+
+
 def test_verify_command_outputs_public_verifier_json() -> None:
     result = CliRunner().invoke(
         app,

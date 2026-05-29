@@ -445,9 +445,26 @@ def examples_command() -> None:
     )
 
 
+def _require_attack_plan_file(plan_path: Path) -> None:
+    if plan_path.is_file():
+        return
+    typer.echo(f"invalid: {plan_path}")
+    if plan_path.exists():
+        typer.echo(
+            "- expected an AttackPlan JSON file, got a directory or special file"
+        )
+    else:
+        typer.echo("- file not found")
+    typer.echo(
+        "next=Run `uv run agades-pqc examples` to pick a guided AttackPlan path."
+    )
+    raise typer.Exit(1)
+
+
 @app.command()
 def validate(plan_path: Path) -> None:
     """Validate an AttackPlan JSON file."""
+    _require_attack_plan_file(plan_path)
     try:
         plan = AttackPlan.model_validate_json(plan_path.read_text())
     except OSError as exc:
@@ -491,6 +508,7 @@ def evaluate(
     ] = None,
 ) -> None:
     """Evaluate one AttackPlan and append a trace record."""
+    _require_attack_plan_file(plan_path)
     result = evaluate_attack_plan(
         plan_path=plan_path,
         out=out,
@@ -521,6 +539,7 @@ def verify(
     ] = None,
 ) -> None:
     """Emit public verifier JSON for Prime/HF-style environments."""
+    _require_attack_plan_file(plan_path)
     result = verify_attack_plan_path(
         plan_path,
         estimator=_estimator_choice(estimator),
