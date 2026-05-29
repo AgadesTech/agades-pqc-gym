@@ -79,21 +79,34 @@ def run_formal_lean_build_smoke(
             "ci_lean_build_gate": backend_summary.get("ci_lean_build_gate", False),
             "security_claim_allowed": False,
         },
-        "notes": [
-            (
-                "This report proves that the checked Lean source bundle compiled "
-                "for the configured backend; it is not a cryptographic soundness "
-                "review and it does not authorize a public security claim."
-            ),
-            (
-                "No process environment is captured in this report. The CLI uses "
-                "the fixed `lake build` argv; the report records command argv, "
-                "cwd, return code, output hashes, and short output tails."
-            ),
-        ],
+        "notes": _build_notes(accepted=accepted),
     }
     report["report_sha256"] = _report_sha256(report)
     return report
+
+
+def _build_notes(*, accepted: bool) -> list[str]:
+    if accepted:
+        build_status_note = (
+            "This report proves that the checked Lean source bundle compiled "
+            "for the configured backend; it is not a cryptographic soundness "
+            "review and it does not authorize a public security claim."
+        )
+    else:
+        build_status_note = (
+            "This report proves that the checked Lean source bundle did not compile "
+            "for the configured backend in the current environment; it is not a "
+            "cryptographic soundness review and it does not authorize a public "
+            "security claim."
+        )
+    return [
+        build_status_note,
+        (
+            "No process environment is captured in this report. The CLI uses "
+            "the fixed `lake build` argv; the report records command argv, "
+            "cwd, return code, output hashes, and short output tails."
+        ),
+    ]
 
 
 def write_formal_lean_build_smoke(
@@ -176,8 +189,21 @@ def _run_build(
         stderr = _coerce_output(exc.stderr)
         return_code = None
         timed_out = True
+        error: dict[str, str] | None = None
+    except OSError as exc:
+        stdout = ""
+        command_name = command[0] if command else "<unknown>"
+        stderr = f"{exc.strerror or exc.__class__.__name__}: {command_name}"
+        return_code = None
+        timed_out = False
+        error = {
+            "kind": exc.__class__.__name__,
+            "message": stderr,
+        }
+    else:
+        error = None
 
-    return {
+    build = {
         "command": command,
         "cwd": (
             cwd.relative_to(root).as_posix()
@@ -192,6 +218,9 @@ def _run_build(
         "timed_out": timed_out,
         "environment_exported": False,
     }
+    if error is not None:
+        build["error"] = error
+    return build
 
 
 def _formal_backend_manifest_binding(root: Path) -> dict[str, Any]:
