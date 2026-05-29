@@ -50,7 +50,7 @@ uv run agades-pqc validate examples/attack_plans/lattice_primal_usvp_toy.json
 Evaluate it and write a trace:
 
 ```bash
-uv run agades-pqc evaluate examples/attack_plans/lattice_primal_usvp_toy.json --out runs/demo_trace.jsonl
+uv run agades-pqc evaluate examples/attack_plans/lattice_primal_usvp_toy.json --trace runs/demo_trace.jsonl
 ```
 
 Generate a report from the trace:
@@ -62,7 +62,7 @@ uv run agades-pqc report runs/demo_trace.jsonl --out reports/demo_report.md
 ## 4. Inspect Unsupported Behavior
 
 ```bash
-uv run agades-pqc evaluate examples/attack_plans/code_based_isd_placeholder.json --out runs/code_based_placeholder.jsonl
+uv run agades-pqc evaluate examples/attack_plans/code_based_isd_placeholder.json --trace runs/code_based_placeholder.jsonl
 ```
 
 This should exit successfully as a CLI command but report `status=unsupported`

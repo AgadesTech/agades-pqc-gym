@@ -440,7 +440,7 @@ def examples_command() -> None:
             f"({example['purpose']})"
         )
     typer.echo(
-        "tip=Run `uv run agades-pqc evaluate <path> --out runs/demo.jsonl` "
+        "tip=Run `uv run agades-pqc evaluate <path> --trace runs/demo.jsonl` "
         "for status=ok or status=unsupported examples."
     )
 
@@ -491,7 +491,14 @@ def validate(plan_path: Path) -> None:
 @app.command()
 def evaluate(
     plan_path: Path,
-    out: Annotated[Path, typer.Option("--out")] = DEFAULT_EVAL_TRACE,
+    out: Annotated[
+        Path,
+        typer.Option(
+            "--out",
+            "--trace",
+            help="Trace JSONL output path.",
+        ),
+    ] = DEFAULT_EVAL_TRACE,
     estimator: Annotated[
         EstimatorBackend,
         typer.Option(
