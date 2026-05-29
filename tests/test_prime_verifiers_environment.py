@@ -241,7 +241,9 @@ def test_prime_verifiers_environment_grades_format_repair_wrapped_json() -> None
 def test_prime_verifiers_environment_decoy_output_is_not_accepted() -> None:
     module = _load_environment_module()
     task_info = _task_info_for(module, "lattice_primal_usvp_toy_v1")
-    decoy = '{"not_an_attack_plan": true, "claims": {"estimated_time_bits": null}}'
+    decoy = Path(
+        "prime_intellect/verifiers_environment/data/code_based_prange_toy.json"
+    ).read_text(encoding="utf-8")
 
     report = module.score_attack_plan_completion_report(
         _assistant_completion(decoy),
@@ -251,9 +253,10 @@ def test_prime_verifiers_environment_decoy_output_is_not_accepted() -> None:
 
     assert report["accepted"] is False
     assert report["single_json_object"] is True
-    assert report["aggregate_reward"] == 0.20
     assert report["rubric_scores"]["single_json_object"] == 1.0
     assert report["rubric_scores"]["accepted_attack_plan"] == 0.0
+    assert report["rubric_scores"]["task_match"] == 0.0
+    assert 0.0 < report["aggregate_reward"] < 1.0
 
 
 def test_prime_verifiers_environment_rejects_pre_evaluation_claim_estimates() -> None:

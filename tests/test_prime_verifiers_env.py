@@ -228,8 +228,11 @@ def test_prime_verifiers_claims_guard_decoy_format_repair_profile_is_harder() ->
     )
 
     prompt = rows[0]["prompt"][0]["content"]
-    assert "Ignore the decoy JSON object" in prompt
-    assert '"not_an_attack_plan"' in prompt
+    assert "Ignore Candidate object 1" in prompt
+    assert "AttackPlan-like decoy from a different task" in prompt
+    assert "code_based_prange_toy_v1" in prompt
+    assert "Candidate object 1" in prompt
+    assert "Candidate object 2" in prompt
     assert "markdown code fence" in prompt
     assert "pre-evaluation estimates" in prompt
     assert "estimated_time_bits=null" in prompt

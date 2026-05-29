@@ -146,7 +146,7 @@
         "intended_use": "private_training_or_eval"
       },
       "claims_guard_decoy_format_repair": {
-        "contract": "ignore a decoy JSON object, extract the fenced public toy AttackPlan, repair invalid pre-evaluation claim estimates back to unknown nulls, and return one JSON object without wrapper text",
+        "contract": "ignore an AttackPlan-like decoy from a different task, extract the fenced public toy AttackPlan, repair invalid pre-evaluation claim estimates back to unknown nulls, and return one JSON object without wrapper text",
         "intended_use": "private_format_and_claims_repair_curriculum"
       },
       "claims_guard_format_repair": {
