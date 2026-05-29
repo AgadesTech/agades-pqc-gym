@@ -238,6 +238,35 @@ def test_prime_verifiers_environment_grades_format_repair_wrapped_json() -> None
     ]
 
 
+def test_prime_verifiers_environment_penalizes_hidden_reasoning_bloat() -> None:
+    module = _load_environment_module()
+    raw_plan = LATTICE_PLAN.read_text(encoding="utf-8")
+    task_info = _task_info_for(module, "lattice_primal_usvp_toy_v1")
+
+    concise_report = module.score_attack_plan_completion_report(
+        [{"role": "assistant", "content": raw_plan}],
+        info=task_info,
+        reward_profile="format_repair_dense",
+    )
+    verbose_report = module.score_attack_plan_completion_report(
+        [
+            {
+                "role": "assistant",
+                "content": raw_plan,
+                "reasoning_content": "x" * 10_000,
+            }
+        ],
+        info=task_info,
+        reward_profile="format_repair_dense",
+    )
+
+    assert concise_report["accepted"] is True
+    assert verbose_report["accepted"] is True
+    assert concise_report["rubric_scores"]["student_readability"] == 1.0
+    assert 0.0 < verbose_report["rubric_scores"]["student_readability"] < 1.0
+    assert verbose_report["aggregate_reward"] < concise_report["aggregate_reward"]
+
+
 def test_prime_verifiers_environment_decoy_output_is_not_accepted() -> None:
     module = _load_environment_module()
     task_info = _task_info_for(module, "lattice_primal_usvp_toy_v1")

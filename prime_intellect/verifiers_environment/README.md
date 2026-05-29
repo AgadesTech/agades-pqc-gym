@@ -32,9 +32,11 @@ For private format-curriculum experiments, `prompt_profile="format_repair_extrac
 wraps the seed plan in prose and a markdown fence and asks the model to return
 only the repaired JSON object. Pair it with
 `reward_profile="format_repair_dense"` for a graded format signal: exact
-single-object JSON can still receive full verifier reward, while wrapped or
-prefixed JSON receives partial private-training reward without being accepted as
-a valid final answer.
+single-object JSON can still receive full verifier reward when it is concise,
+while wrapped or prefixed JSON receives partial private-training reward without
+being accepted as a valid final answer. This dense profile also lowers the
+`student_readability` term for hidden reasoning bloat, so valid but needlessly
+long reasoning traces do not collapse every rollout to an identical reward.
 
 The `prompt_profile="claims_guard_repair"` curriculum targets a concrete model
 failure mode: adding pre-evaluation estimates inside `claims` without reviewed
