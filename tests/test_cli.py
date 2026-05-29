@@ -238,6 +238,7 @@ def test_validate_command_formats_schema_errors_without_pydantic_url() -> None:
     assert "module_lattice_reduction_hypothesis requires an MLWE target" in (
         result.output
     )
+    assert "next=Run `uv run agades-pqc examples`" in result.output
     assert "errors.pydantic.dev" not in result.output
 
 

@@ -482,6 +482,12 @@ def validate(plan_path: Path) -> None:
         console.print(f"[red]invalid[/red]: {plan_path}")
         for error in stable_validation_error_messages(exc):
             console.print(f"- {error}", soft_wrap=True)
+        console.print(
+            "next=Run `uv run agades-pqc examples` to pick a guided "
+            "AttackPlan, or compare the invalid file against the nearest "
+            "same-family toy example.",
+            soft_wrap=True,
+        )
         raise typer.Exit(1) from exc
 
     result = validate_attack_plan(plan)
