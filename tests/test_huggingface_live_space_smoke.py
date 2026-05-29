@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
@@ -100,6 +101,24 @@ def test_huggingface_live_space_smoke_verify_rejects_legacy_route(
     assert "Hugging Face live Space smoke report used legacy /run route." in result[
         "failures"
     ]
+
+
+def test_huggingface_live_space_smoke_reports_are_gitignored() -> None:
+    private_report_paths = (
+        "reports/hf_space_smoke.local.json",
+        "reports/hf_live_space_smoke.json",
+        "reports/hf_live_space_smoke.local.json",
+        "reports/hf_live_space_smoke.20260529T114617Z.json",
+    )
+
+    for private_report_path in private_report_paths:
+        result = subprocess.run(
+            ["git", "check-ignore", "--quiet", private_report_path],
+            check=False,
+            cwd=Path.cwd(),
+        )
+
+        assert result.returncode == 0, private_report_path
 
 
 class FakeGradioRunner:
