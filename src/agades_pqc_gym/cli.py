@@ -129,6 +129,9 @@ from agades_pqc_gym.integrations.huggingface_dataset import (
     write_huggingface_dataset_bundle,
 )
 from agades_pqc_gym.integrations.huggingface_live_space_smoke import (
+    DEFAULT_SPACE_REPO_ID as DEFAULT_HF_LIVE_SPACE_REPO_ID,
+)
+from agades_pqc_gym.integrations.huggingface_live_space_smoke import (
     DEFAULT_SPACE_URL as DEFAULT_HF_LIVE_SPACE_URL,
 )
 from agades_pqc_gym.integrations.huggingface_live_space_smoke import (
@@ -1510,6 +1513,13 @@ def hf_live_space_smoke(
             help="Live Hugging Face Space URL to exercise.",
         ),
     ] = DEFAULT_HF_LIVE_SPACE_URL,
+    space_repo_id: Annotated[
+        str,
+        typer.Option(
+            "--space-repo-id",
+            help="Hugging Face Space repo id used to verify private visibility.",
+        ),
+    ] = DEFAULT_HF_LIVE_SPACE_REPO_ID,
     token_env: Annotated[
         str,
         typer.Option(
@@ -1536,6 +1546,7 @@ def hf_live_space_smoke(
     report = write_huggingface_live_space_smoke_report(
         out,
         space_url=space_url,
+        space_repo_id=space_repo_id,
         token_env=token_env,
         use_token_cache=use_token_cache,
         timeout=timeout,
