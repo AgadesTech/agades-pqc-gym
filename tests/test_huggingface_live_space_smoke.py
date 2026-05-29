@@ -20,6 +20,7 @@ def test_huggingface_live_space_smoke_uses_gradio_call_api(
 
     report = build_huggingface_live_space_smoke_report(
         space_url="https://example-space.hf.space",
+        space_repo_id="agades/example-space",
         use_token_cache=False,
         request_runner=runner,
     )
@@ -37,12 +38,21 @@ def test_huggingface_live_space_smoke_uses_gradio_call_api(
     }
     assert report["config"]["api_prefix"] == "/gradio_api"
     assert report["config"]["required_api_names_present"] is True
+    assert report["hub"] == {
+        "ok": True,
+        "repo_id": "agades/example-space",
+        "private": True,
+        "sdk": "gradio",
+        "sha": "fake-space-sha",
+    }
     assert report["evaluation"]["evaluation_status"] == "ok"
     assert report["score"]["reward"] == 1.0
     assert report["unsupported_score"]["reward"] == 0.0
     assert "/run/" not in " ".join(call["url"] for call in runner.calls)
     assert all(
-        "/gradio_api/call/" in call["url"] or call["url"].endswith("/config")
+        "/gradio_api/call/" in call["url"]
+        or call["url"].endswith("/config")
+        or call["url"].startswith("https://huggingface.co/api/spaces/")
         for call in runner.calls
     )
     assert "hf_secret_for_test" not in json.dumps(report)
@@ -56,6 +66,7 @@ def test_huggingface_live_space_smoke_verify_accepts_report(
     report_path = tmp_path / "hf_live_space_smoke.json"
     report = build_huggingface_live_space_smoke_report(
         space_url="https://example-space.hf.space",
+        space_repo_id="agades/example-space",
         use_token_cache=False,
         request_runner=FakeGradioRunner(),
     )
@@ -72,6 +83,7 @@ def test_huggingface_live_space_smoke_verify_accepts_report(
             "api_prefix": "/gradio_api",
             "protocol": "sse_v3",
             "failure_count": 0,
+            "space_private": True,
             "token_available": True,
             "evaluation_status": "ok",
             "score_reward": 1.0,
@@ -89,6 +101,7 @@ def test_huggingface_live_space_smoke_verify_rejects_legacy_route(
     report_path = tmp_path / "hf_live_space_smoke.json"
     report = build_huggingface_live_space_smoke_report(
         space_url="https://example-space.hf.space",
+        space_repo_id="agades/example-space",
         use_token_cache=False,
         request_runner=FakeGradioRunner(),
     )
@@ -101,6 +114,26 @@ def test_huggingface_live_space_smoke_verify_rejects_legacy_route(
     assert "Hugging Face live Space smoke report used legacy /run route." in result[
         "failures"
     ]
+
+
+def test_huggingface_live_space_smoke_verify_rejects_public_space(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv("HF_TOKEN", "hf_secret_for_test")
+    report_path = tmp_path / "hf_live_space_smoke.json"
+    report = build_huggingface_live_space_smoke_report(
+        space_url="https://example-space.hf.space",
+        space_repo_id="agades/example-space",
+        use_token_cache=False,
+        request_runner=FakeGradioRunner(space_private=False),
+    )
+    report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+
+    result = verify_huggingface_live_space_smoke_report(report_path)
+
+    assert result["accepted"] is False
+    assert "Hugging Face live Space repo is not private." in result["failures"]
 
 
 def test_huggingface_live_space_smoke_reports_are_gitignored() -> None:
@@ -122,9 +155,10 @@ def test_huggingface_live_space_smoke_reports_are_gitignored() -> None:
 
 
 class FakeGradioRunner:
-    def __init__(self) -> None:
+    def __init__(self, *, space_private: bool = True) -> None:
         self.calls: list[dict[str, Any]] = []
         self._events: dict[str, list[Any]] = {}
+        self._space_private = space_private
 
     def __call__(
         self,
@@ -143,6 +177,15 @@ class FakeGradioRunner:
                 "timeout": timeout,
             }
         )
+        if url == "https://huggingface.co/api/spaces/agades/example-space":
+            return json.dumps(
+                {
+                    "id": "agades/example-space",
+                    "private": self._space_private,
+                    "sdk": "gradio",
+                    "sha": "fake-space-sha",
+                }
+            )
         if url.endswith("/config"):
             return json.dumps(
                 {

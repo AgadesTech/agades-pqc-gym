@@ -6,6 +6,7 @@ from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
+from urllib.parse import quote
 from urllib.request import Request, urlopen
 
 HF_LIVE_SPACE_SMOKE_SCHEMA = "agades.pqc.hf_live_space_smoke.v1"
@@ -13,6 +14,7 @@ HF_LIVE_SPACE_SMOKE_VERIFICATION_SCHEMA = (
     "agades.pqc.hf_live_space_smoke_verification.v1"
 )
 DEFAULT_SPACE_URL = "https://agades-agades-pqc-gym-agent-env.hf.space"
+DEFAULT_SPACE_REPO_ID = "agades/agades-pqc-gym-agent-env"
 DEFAULT_REPORT = Path("reports/hf_live_space_smoke.json")
 DEFAULT_TOKEN_ENV = "HF_TOKEN"
 ROOT = Path(__file__).resolve().parents[3]
@@ -31,6 +33,7 @@ RequestRunner = Callable[
 def build_huggingface_live_space_smoke_report(
     *,
     space_url: str = DEFAULT_SPACE_URL,
+    space_repo_id: str = DEFAULT_SPACE_REPO_ID,
     token_env: str = DEFAULT_TOKEN_ENV,
     use_token_cache: bool = True,
     timeout: float = 60.0,
@@ -59,6 +62,7 @@ def build_huggingface_live_space_smoke_report(
         "call_route_template": None,
         "legacy_run_route_used": False,
     }
+    hub_report: dict[str, Any] = _empty_hub_report(space_repo_id)
     evaluation_report: dict[str, Any] = _empty_endpoint_report()
     observation_report: dict[str, Any] = _empty_endpoint_report()
     score_report: dict[str, Any] = _empty_endpoint_report()
@@ -71,6 +75,13 @@ def build_huggingface_live_space_smoke_report(
             timeout=timeout,
             request_runner=runner,
         )
+        hub_report = _fetch_space_hub_report(
+            space_repo_id=space_repo_id,
+            headers=headers,
+            timeout=timeout,
+            request_runner=runner,
+        )
+        _validate_hub_report(hub_report, failures)
         config = client.fetch_config()
         api_names = _api_names(config)
         api_prefix = _api_prefix(config)
@@ -129,6 +140,7 @@ def build_huggingface_live_space_smoke_report(
             "token_source": token_resolution["source"],
         },
         "config": config_report,
+        "hub": hub_report,
         "routes": route_report,
         "evaluation": evaluation_report,
         "observation": observation_report,
@@ -148,6 +160,7 @@ def write_huggingface_live_space_smoke_report(
     out: Path = DEFAULT_REPORT,
     *,
     space_url: str = DEFAULT_SPACE_URL,
+    space_repo_id: str = DEFAULT_SPACE_REPO_ID,
     token_env: str = DEFAULT_TOKEN_ENV,
     use_token_cache: bool = True,
     timeout: float = 60.0,
@@ -155,6 +168,7 @@ def write_huggingface_live_space_smoke_report(
 ) -> dict[str, Any]:
     report = build_huggingface_live_space_smoke_report(
         space_url=space_url,
+        space_repo_id=space_repo_id,
         token_env=token_env,
         use_token_cache=use_token_cache,
         timeout=timeout,
@@ -187,6 +201,7 @@ def verify_huggingface_live_space_smoke_report(
             "api_prefix": _dict_or_empty(report.get("config")).get("api_prefix"),
             "protocol": _dict_or_empty(report.get("config")).get("protocol"),
             "failure_count": len(failures),
+            "space_private": _dict_or_empty(report.get("hub")).get("private"),
             "token_available": _dict_or_empty(report.get("auth")).get(
                 "token_available"
             ),
@@ -357,6 +372,50 @@ def _validate_config(config: dict[str, Any], failures: list[str]) -> None:
         failures.append("Hugging Face live Space is missing required named APIs.")
 
 
+def _fetch_space_hub_report(
+    *,
+    space_repo_id: str,
+    headers: Mapping[str, str],
+    timeout: float,
+    request_runner: RequestRunner,
+) -> dict[str, Any]:
+    encoded_repo_id = quote(space_repo_id, safe="/")
+    payload = request_runner(
+        "GET",
+        f"https://huggingface.co/api/spaces/{encoded_repo_id}",
+        headers,
+        None,
+        timeout,
+    )
+    info = _json_object(payload, "Hugging Face Space API JSON")
+    return {
+        "ok": True,
+        "repo_id": info.get("id"),
+        "private": info.get("private"),
+        "sdk": info.get("sdk"),
+        "sha": info.get("sha"),
+    }
+
+
+def _empty_hub_report(space_repo_id: str) -> dict[str, Any]:
+    return {
+        "ok": False,
+        "repo_id": space_repo_id,
+        "private": None,
+        "sdk": None,
+        "sha": None,
+    }
+
+
+def _validate_hub_report(report: dict[str, Any], failures: list[str]) -> None:
+    if report.get("ok") is not True:
+        failures.append("Hugging Face live Space Hub metadata was not fetched.")
+    if report.get("private") is not True:
+        failures.append("Hugging Face live Space repo is not private.")
+    if report.get("sdk") != "gradio":
+        failures.append("Hugging Face live Space SDK is not Gradio.")
+
+
 def _validate_endpoint_reports(
     *,
     evaluation_report: dict[str, Any],
@@ -432,6 +491,8 @@ def _verify_report(report: dict[str, Any], failures: list[str]) -> None:
         failures.append("Hugging Face live Space smoke report used legacy /run route.")
     config = _dict_or_empty(report.get("config"))
     _validate_config(config, failures)
+    hub = _dict_or_empty(report.get("hub"))
+    _validate_hub_report(hub, failures)
     _validate_endpoint_reports(
         evaluation_report=_dict_or_empty(report.get("evaluation")),
         observation_report=_dict_or_empty(report.get("observation")),
