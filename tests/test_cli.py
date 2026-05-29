@@ -281,6 +281,30 @@ def test_evaluate_command_reports_missing_plan_without_sentinel_score(
     assert not trace_path.exists()
 
 
+def test_benchmark_command_reports_missing_input_with_guidance(
+    tmp_path: Path,
+) -> None:
+    missing = tmp_path / "missing_benchmark"
+    trace_path = tmp_path / "missing_benchmark_trace.jsonl"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "benchmark",
+            str(missing),
+            "--trace",
+            str(trace_path),
+        ],
+    )
+
+    assert result.exit_code == 1
+    assert f"benchmark failed: {missing}" in result.output
+    assert "file or directory not found" in result.output
+    assert "uv run agades-pqc examples" in result.output
+    assert "No such file or directory" not in result.output
+    assert not trace_path.exists()
+
+
 def test_verify_command_outputs_public_verifier_json() -> None:
     result = CliRunner().invoke(
         app,

@@ -625,7 +625,7 @@ def benchmark(
             estimator_cache=estimator_cache,
         )
     except ValueError as exc:
-        console.print(f"[red]benchmark failed[/red]: {exc}")
+        console.print(f"[red]benchmark failed[/red]: {exc}", soft_wrap=True)
         raise typer.Exit(1) from exc
 
     for record in records:
@@ -3463,7 +3463,7 @@ def write_benchmark_trace(
 ) -> list[BenchmarkCliRecord]:
     plans = load_benchmark_plans(benchmark_path)
     if not plans:
-        raise ValueError(f"no benchmark inputs found: {benchmark_path}")
+        raise ValueError(_benchmark_input_guidance(benchmark_path))
 
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("", encoding="utf-8")
@@ -3584,6 +3584,24 @@ def load_benchmark_plans(path: Path) -> list[AttackPlan]:
     for candidate in sorted(path.glob("*.json")):
         plans.append(_load_attack_plan_or_seed(candidate))
     return plans
+
+
+def _benchmark_input_guidance(path: Path) -> str:
+    if not path.exists():
+        reason = "file or directory not found"
+    elif path.is_dir():
+        reason = "no .json AttackPlan or target config files found"
+    else:
+        reason = (
+            "expected an AttackPlan JSON file, a target config JSON file, "
+            "or a directory of .json benchmark inputs"
+        )
+    return (
+        f"{path}\n"
+        f"- {reason}\n"
+        "next=Run `uv run agades-pqc examples` to pick a guided AttackPlan, "
+        "or pass a benchmark directory containing .json inputs."
+    )
 
 
 def load_heldout_targets(path: Path) -> list[TargetSpec]:
