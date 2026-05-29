@@ -289,13 +289,13 @@
     }
   },
   "input_sha256": {
-    "docs/huggingface_publication_handoff.json": "9c06e12949cacced9a14020800cc94e528e10e5e63448e472ed1e44bdfba0326",
-    "docs/nvidia_publication_handoff.json": "9ef8b9cdf4dedad7582f3fd8a785ac9e8d74b453511eef3846915bd8365a8f02",
+    "docs/huggingface_publication_handoff.json": "1333a0273b611348bc7ac190948319c116a534cf80ac57d530c98f6252e8609b",
+    "docs/nvidia_publication_handoff.json": "d9c0a2f79170492ea67b052703e0240d351a5891c1e5d40c0ec69959aaa9432d",
     "docs/prime_publication_handoff.json": "8e7a5ed0d5974065729944e7911b61937dec641637abff7346526e57d23ac54d",
-    "docs/publication_manifest.json": "37bda9e53852447b4a0e4ff663230ebd136d74b919df37982eecb124cd062458",
+    "docs/publication_manifest.json": "1e1c34c7fbc6310e2e1a6fa6049b4a0e2dd13b6b6a539a56f8cf5bcd76bd1943",
     "docs/release_status.json": "630beeb873cfd9d965dd16bfd6dcb9cc2c0abe82178948aa73e8aa0df1fd8172",
     "hf/collection_manifest.json": "b3ddafd0f3c1b78f443851a2069f5cedddd3e0d8c97f499e6c1f7ee1000eacbe",
-    "hf/space_manifest.json": "cd4e3e4e47dbd571bff27a031dfb5bd6b5e0291eac8cf9babd54222bcbd6c1de",
+    "hf/space_manifest.json": "7ebe3351f6bee78d7e20d1b061354a96673cf298e557800e1a25d12d807984a5",
     "nvidia/accelerator_manifest.json": "4220fb49bd07624af90e5be1dfe2fbd8a72a7c4a968782d46e3ccc12f15b04cc",
     "prime_intellect/verifiers_environment/prime_manifest.json": "aa0c109e2c8181d533a3895e325d978e46d384a074dc26333696d24557d22a4e",
     "public/publication_preflight.json": "51b43540af1806409f6cf702b68d50440a8c54211ba696558c58b87739927d7b"
@@ -402,7 +402,7 @@
     {
       "artifact_count": 6,
       "command_templates": [
-        "hf repos create <owner>/pqc-gym-toy --type=dataset --private --exist-ok",
+        "hf repo create <owner>/pqc-gym-toy --repo-type=dataset --private --exist-ok",
         "hf upload <owner>/pqc-gym-toy hf/dataset . --repo-type=dataset --commit-message \"Sync Agades PQC Gym Dataset\""
       ],
       "contains_credentials": false,
@@ -418,7 +418,7 @@
     {
       "artifact_count": 5,
       "command_templates": [
-        "hf repos create agades/agades-pqc-gym-agent-env --type=space --space-sdk gradio --private --exist-ok",
+        "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space --space_sdk gradio --private --exist-ok",
         "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Agent Environment\""
       ],
       "contains_credentials": false,

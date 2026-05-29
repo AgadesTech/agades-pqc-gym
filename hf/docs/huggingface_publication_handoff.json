@@ -79,11 +79,11 @@
       "docs/HUGGINGFACE_RELEASE_PLAN.md"
     ],
     "artifact_sha256": {
-      "docs/HUGGINGFACE_RELEASE_PLAN.md": "95926b4b0924f551dc8b1a250692d1cc399657a093d60965713639c217a6104c",
+      "docs/HUGGINGFACE_RELEASE_PLAN.md": "adbdf3bd304a1a1859c9f65ce424c964bff60457cd0edcd5fb1d06453d9f49e3",
       "docs/public_benchmark_manifest.json": "c45741efde84f27edfd6feab0e3217f68c88a5be4d56a038b2973ea2296722f7",
       "docs/source_catalog.json": "9648bc812ae0465cf9bf28e410d3fcbdc63ec6d17060c35b4e05e98ea55dc058",
-      "hf/README.md": "99fd52e2a4dd79d514f27a940a0d67c052f1b0fd3b80542098589a94217e41b5",
-      "hf/app.py": "991630be214ffefb0656f904de48863c101a1a08557fba4b2a39e8378632fa0c",
+      "hf/README.md": "294b96a0450bf866034e5908feaf44a9e4d69d758c2b3910a36a04920ced9896",
+      "hf/app.py": "9cc1f33e3e7e2a2c7074bf4fb1c30ab2b006395c83118e2513e3016806292801",
       "hf/benchmark_card.md": "e29827f9fe4e8bd4c45bab2a7238b6029a589aac9eda1701e43086c2e0fdbdef",
       "hf/collection_manifest.json": "b3ddafd0f3c1b78f443851a2069f5cedddd3e0d8c97f499e6c1f7ee1000eacbe",
       "hf/dataset/MANIFEST.sha256": "23f362bad82b19ed2749592214fa0b61751f7a3c975babe413f04c9992b4bcdc",
@@ -94,8 +94,8 @@
       "hf/dataset/verifier_outputs.jsonl": "6eb3197c422b72dd386fcb32968aca5095a9342a2cea52fce871555b65705f74",
       "hf/dataset_card.md": "e8e354eccacc48786080acf98b788eaea6670802617489bc55d3b7826cefb92d",
       "hf/requirements.txt": "a1161753e498c0569be2677a964d752b861f4923318bcadec273a446b8baf313",
-      "hf/space_README.md": "2a4771284bc466ad5711d44fcb5376ec5272d8052c4fdbdb5011ab7c9822a37e",
-      "hf/space_manifest.json": "e7e91170712e5a12ca0cb921728ca74ad789f1f02bd9c18cb6e8037c9acbbf34",
+      "hf/space_README.md": "d92415466aa201830b32042baf4628367bd7e3880884d80f74b29ae985e1b89e",
+      "hf/space_manifest.json": "7f67fb3ebb7db042050aced78617111db665de630d168df151f5d107e1a40814",
       "public/run_export/manifest.json": "333ad57c7b04eec2e3a20c6e190fc74bdf01c4a84d9d8e57f01c5118e832dadb"
     }
   },
@@ -117,9 +117,9 @@
   },
   "publication_commands": {
     "collection_manual_review_required": true,
-    "dataset_private_create": "hf repos create <owner>/pqc-gym-toy --type=dataset --private --exist-ok",
+    "dataset_private_create": "hf repo create <owner>/pqc-gym-toy --repo-type=dataset --private --exist-ok",
     "dataset_upload": "hf upload <owner>/pqc-gym-toy hf/dataset . --repo-type=dataset --commit-message \"Sync Agades PQC Gym dataset\"",
-    "space_private_create": "hf repos create agades/agades-pqc-gym-agent-env --type=space --space-sdk gradio --private --exist-ok",
+    "space_private_create": "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space --space_sdk gradio --private --exist-ok",
     "space_upload": "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Agent Environment\""
   },
   "readiness": {

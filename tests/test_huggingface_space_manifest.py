@@ -60,8 +60,8 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "requirements_file": "hf/requirements.txt",
         "dataset_bundle": "hf/dataset",
         "hub_create_command_template": (
-            "hf repos create agades/agades-pqc-gym-agent-env --type=space "
-            "--space-sdk gradio --private --exist-ok"
+            "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space "
+            "--space_sdk gradio --private --exist-ok"
         ),
         "hub_upload_command_template": (
             'hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space '
@@ -310,7 +310,10 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
 def test_huggingface_space_readme_matches_hub_workflow_contract() -> None:
     readme = Path("hf/space_README.md").read_text(encoding="utf-8")
 
-    assert "hf repos create agades/agades-pqc-gym-agent-env --type=space" in readme
+    assert (
+        "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space"
+        in readme
+    )
     assert (
         "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space"
         in readme

@@ -74,7 +74,7 @@ Use a private Space first during release review:
 
 ```bash
 hf auth login
-hf repos create agades/agades-pqc-gym-agent-env --type=space --space-sdk gradio --private --exist-ok
+hf repo create agades/agades-pqc-gym-agent-env --repo-type=space --space_sdk gradio --private --exist-ok
 hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message "Sync Agades PQC Gym Agent Environment"
 ```
 

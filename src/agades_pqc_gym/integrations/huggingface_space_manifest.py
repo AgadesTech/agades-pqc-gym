@@ -91,8 +91,8 @@ def build_huggingface_space_manifest(root: Path | None = None) -> dict[str, Any]
             "requirements_file": "hf/requirements.txt",
             "dataset_bundle": "hf/dataset",
             "hub_create_command_template": (
-                f"hf repos create {DEFAULT_PRIVATE_SPACE_ID} --type=space "
-                "--space-sdk gradio --private --exist-ok"
+                f"hf repo create {DEFAULT_PRIVATE_SPACE_ID} --repo-type=space "
+                "--space_sdk gradio --private --exist-ok"
             ),
             "hub_upload_command_template": (
                 f"hf upload {DEFAULT_PRIVATE_SPACE_ID} hf "

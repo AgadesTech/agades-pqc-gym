@@ -58,15 +58,15 @@ LOCAL_ARTIFACT_PATHS = [
 ]
 PUBLICATION_COMMANDS = {
     "dataset_private_create": (
-        "hf repos create <owner>/pqc-gym-toy --type=dataset --private --exist-ok"
+        "hf repo create <owner>/pqc-gym-toy --repo-type=dataset --private --exist-ok"
     ),
     "dataset_upload": (
         "hf upload <owner>/pqc-gym-toy hf/dataset . --repo-type=dataset "
         '--commit-message "Sync Agades PQC Gym dataset"'
     ),
     "space_private_create": (
-        f"hf repos create {DEFAULT_PRIVATE_SPACE_ID} --type=space "
-        "--space-sdk gradio "
+        f"hf repo create {DEFAULT_PRIVATE_SPACE_ID} --repo-type=space "
+        "--space_sdk gradio "
         "--private --exist-ok"
     ),
     "space_upload": (
