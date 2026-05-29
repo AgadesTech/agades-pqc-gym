@@ -406,7 +406,8 @@ def _question_for_seed_attack_plan(raw_json: str, *, prompt_profile: str) -> str
         return "\n".join(
             [
                 "Repair the broken model output below.",
-                "Ignore the decoy JSON object; it is not an AttackPlan.",
+                "Ignore Candidate object 1; it is an AttackPlan-like decoy "
+                "from a different task.",
                 "The correct public toy AttackPlan appears later inside a "
                 "markdown code fence.",
                 "The embedded AttackPlan is invalid because claims contains "
@@ -686,14 +687,7 @@ def _claims_guard_wrapped_invalid_output(raw_json: str) -> str:
 
 
 def _claims_guard_decoy_wrapped_invalid_output(raw_json: str) -> str:
-    decoy = {
-        "not_an_attack_plan": True,
-        "claims": {
-            "estimated_time_bits": 64.0,
-            "estimated_memory_bits": 32.0,
-            "success_probability": 0.5,
-        },
-    }
+    decoy = _task_mismatch_decoy_attack_plan(raw_json)
     return "\n".join(
         [
             "Candidate object 1:",
@@ -703,9 +697,23 @@ def _claims_guard_decoy_wrapped_invalid_output(raw_json: str) -> str:
             "```json",
             _claims_guard_invalid_output(raw_json),
             "```",
-            "Only candidate object 2 is the toy/demo AttackPlan to repair.",
+            "Only Candidate object 2 is the toy/demo AttackPlan to repair.",
         ]
     )
+
+
+def _task_mismatch_decoy_attack_plan(raw_json: str) -> dict[str, Any]:
+    current = json.loads(raw_json)
+    current_attack_plan_id = current.get("attack_plan_id")
+    preferred_decoy = DATA_DIR / "code_based_prange_toy.json"
+    decoy_paths = [preferred_decoy, *TASK_PLAN_PATHS]
+    for path in decoy_paths:
+        if not path.is_file():
+            continue
+        decoy = json.loads(path.read_text(encoding="utf-8"))
+        if decoy.get("attack_plan_id") != current_attack_plan_id:
+            return decoy
+    raise RuntimeError("Prime decoy prompt profile could not find a decoy plan")
 
 
 def _no_security_overclaim_score(text: str) -> float:

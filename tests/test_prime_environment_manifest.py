@@ -276,10 +276,10 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
             "claims_guard_decoy_format_repair": {
                 "intended_use": "private_format_and_claims_repair_curriculum",
                 "contract": (
-                    "ignore a decoy JSON object, extract the fenced public toy "
-                    "AttackPlan, repair invalid pre-evaluation claim estimates "
-                    "back to unknown nulls, and return one JSON object without "
-                    "wrapper text"
+                    "ignore an AttackPlan-like decoy from a different task, "
+                    "extract the fenced public toy AttackPlan, repair invalid "
+                    "pre-evaluation claim estimates back to unknown nulls, "
+                    "and return one JSON object without wrapper text"
                 ),
             },
         },
