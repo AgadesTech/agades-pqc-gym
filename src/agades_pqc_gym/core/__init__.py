@@ -25,7 +25,6 @@ from agades_pqc_gym.core.target import (
     TargetSpec,
 )
 from agades_pqc_gym.core.trace_record import TraceRecord
-from agades_pqc_gym.reporting.generator import ReportGenerator
 from agades_pqc_gym.traces.redaction import redact_trace_record
 
 __all__ = [
@@ -52,3 +51,11 @@ __all__ = [
     "default_family_registry",
     "redact_trace_record",
 ]
+
+
+def __getattr__(name: str) -> object:
+    if name == "ReportGenerator":
+        from agades_pqc_gym.reporting.generator import ReportGenerator
+
+        return ReportGenerator
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
