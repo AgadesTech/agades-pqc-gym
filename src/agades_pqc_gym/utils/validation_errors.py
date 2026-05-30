@@ -12,7 +12,7 @@ def stable_validation_error_messages(exc: ValidationError) -> list[str]:
         if not isinstance(error, dict):
             continue
         location = _location_label(error.get("loc"))
-        message = str(error.get("msg") or "validation error")
+        message = str(error.get("msg") or "validation error").strip()
         error_type = str(error.get("type") or "validation_error")
         messages.append(f"{location}: {message} [{error_type}]")
     return messages or [exc.__class__.__name__]

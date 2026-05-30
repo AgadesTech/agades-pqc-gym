@@ -70,6 +70,19 @@ This should exit successfully as a CLI command but report `status=unsupported`,
 deliberate: the tool can record unsupported routes without pretending they are
 cryptanalytic results.
 
+Invalid AttackPlan JSON is different: the gym rejects it and does not claim that
+a trace was written.
+
+```bash
+uv run agades-pqc evaluate examples/attack_plans/invalid_plan_should_fail.json --out runs/invalid_trace.jsonl
+```
+
+Expected shape:
+
+```text
+status=invalid ... trace=not_written reason=...
+```
+
 ## CLI Surface
 
 `uv run agades-pqc --help` shows the core workflow commands first:
