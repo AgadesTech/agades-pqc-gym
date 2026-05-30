@@ -11,6 +11,7 @@ HF_SPACE_REMOTE_SMOKE_VERIFICATION_SCHEMA = (
 DEFAULT_REMOTE_SPACE_ID = "agades/agades-pqc-gym-agent-env"
 DEFAULT_REMOTE_REPORT = Path("reports/hf_space_remote_smoke.json")
 DEFAULT_LABEL = "LWE / lattice_primal_usvp_toy_v1"
+DEFAULT_UNSUPPORTED_LABEL = "NTRU / lattice_ntru_schema_placeholder_v1"
 
 
 class SpaceInfoApi(Protocol):
@@ -144,11 +145,13 @@ def verify_huggingface_space_remote_smoke_report(
     _verify_rejected_path(
         _dict_or_empty(payload.get("invalid_json_path")),
         "invalid_json_path",
+        "invalid",
         failures,
     )
     _verify_rejected_path(
         _dict_or_empty(payload.get("unsupported_path")),
         "unsupported_path",
+        "unsupported",
         failures,
     )
     safety = _dict_or_empty(payload.get("safety"))
@@ -206,10 +209,15 @@ def _exercise_agent_environment(
     )
 
     invalid_json_path = _evaluate_and_score(client, label, "{not json", failures)
+    unsupported_label, unsupported_plan = _load_unsupported_example(
+        client,
+        fallback_label=label,
+        fallback_plan=plan.value,
+    )
     unsupported_path = _evaluate_and_score(
         client,
-        label,
-        _unsupported_family_candidate(plan.value),
+        unsupported_label,
+        unsupported_plan,
         failures,
     )
     _validate_paths(accepted_path, invalid_json_path, unsupported_path, failures)
@@ -289,17 +297,32 @@ def _validate_paths(
         failures.append("Remote observation schema is invalid.")
     if accepted_path["has_prompt"] is not True:
         failures.append("Remote observation must include an agent prompt.")
-    _validate_rejected_remote_path(invalid_json_path, "invalid JSON", failures)
-    _validate_rejected_remote_path(unsupported_path, "unsupported", failures)
+    _validate_rejected_remote_path(
+        invalid_json_path,
+        "invalid JSON",
+        "invalid",
+        failures,
+    )
+    _validate_rejected_remote_path(
+        unsupported_path,
+        "unsupported",
+        "unsupported",
+        failures,
+    )
 
 
 def _validate_rejected_remote_path(
     path: dict[str, Any],
     label: str,
+    expected_status: str,
     failures: list[str],
 ) -> None:
     if path["evaluated_accepted"] is not False:
         failures.append(f"Remote {label} evaluation must be rejected.")
+    if path["evaluation_status"] != expected_status:
+        failures.append(
+            f"Remote {label} evaluation_status must be {expected_status}."
+        )
     if path["accepted"] is not False or path["reward"] != 0.0:
         failures.append(f"Remote {label} reward must be 0.0.")
     if path["public_release_ok"] is not True:
@@ -322,10 +345,13 @@ def _verify_accepted_path(path: dict[str, Any], failures: list[str]) -> None:
 def _verify_rejected_path(
     path: dict[str, Any],
     path_name: str,
+    expected_status: str,
     failures: list[str],
 ) -> None:
     if path.get("evaluated_accepted") is not False:
         failures.append(f"{path_name} evaluation must be rejected.")
+    if path.get("evaluation_status") != expected_status:
+        failures.append(f"{path_name} evaluation_status must be {expected_status}.")
     if path.get("accepted") is not False:
         failures.append(f"{path_name} reward report must be rejected.")
     if path.get("reward") != 0.0:
@@ -364,6 +390,22 @@ def _domain_ready(runtime: object) -> bool | None:
         isinstance(domain, dict) and domain.get("stage") == "READY"
         for domain in domains
     )
+
+
+def _load_unsupported_example(
+    client: SpaceClient,
+    *,
+    fallback_label: str,
+    fallback_plan: str,
+) -> tuple[str, str]:
+    unsupported = _safe_predict(
+        client,
+        DEFAULT_UNSUPPORTED_LABEL,
+        api_name="/load_example_plan",
+    )
+    if isinstance(unsupported.value, str) and unsupported.value.strip().startswith("{"):
+        return DEFAULT_UNSUPPORTED_LABEL, unsupported.value
+    return fallback_label, _unsupported_family_candidate(fallback_plan)
 
 
 def _unsupported_family_candidate(raw_plan: str) -> str:
