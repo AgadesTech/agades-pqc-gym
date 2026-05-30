@@ -63,8 +63,25 @@
         "jobs": [
           "test"
         ],
+        "lean_gate_inputs": {
+          "auto-config": false,
+          "build": true,
+          "lake-package-directory": "formal/lean",
+          "lint": false,
+          "test": false,
+          "use-mathlib-cache": true
+        },
+        "lean_gate_required_inputs": {
+          "auto-config": false,
+          "build": true,
+          "lake-package-directory": "formal/lean",
+          "lint": false,
+          "test": false,
+          "use-mathlib-cache": true
+        },
         "required_actions": [
           "actions/checkout@",
+          "leanprover/lean-action@",
           "astral-sh/setup-uv@"
         ],
         "required_commands": [
@@ -74,6 +91,8 @@
           "check-whitespace",
           "generate-private-run-policy",
           "verify-private-run-policy",
+          "generate-private-dataset-curation",
+          "verify-private-dataset-curation",
           "verify-runbook-input-manifest",
           "generate-deepevolve-manifest",
           "verify-deepevolve-manifest",
@@ -89,12 +108,16 @@
           "verify-ecosystem-source-graph",
           "generate-family-operator-catalog",
           "verify-family-operator-catalog",
+          "generate-formal-lean-backend",
+          "verify-formal-lean-backend",
           "generate-hf-dataset",
           "verify-hf-dataset",
           "generate-hf-space-manifest",
           "verify-hf-space-manifest",
           "generate-hf-space-smoke",
           "verify-hf-space-smoke",
+          "generate-hf-space-launch-smoke",
+          "verify-hf-space-launch-smoke",
           "generate-hf-collection-manifest",
           "verify-hf-collection-manifest",
           "generate-hf-publication-handoff",
@@ -117,6 +140,10 @@
           "verify-prime-manifest",
           "generate-prime-environment-smoke",
           "verify-prime-environment-smoke",
+          "generate-prime-eval-config",
+          "verify-prime-eval-config",
+          "generate-pedagogical-rl-method",
+          "verify-pedagogical-rl-method",
           "generate-prime-schemas",
           "verify-prime-schemas",
           "generate-prime-publication-handoff",
@@ -156,6 +183,22 @@
       "status": "passed"
     },
     {
+      "artifact": "reports/hf_space_launch_smoke.json",
+      "blocking": true,
+      "detail": "Hugging Face Space launch smoke builds the Gradio Blocks UI and verifies the public Agent Environment API endpoints.",
+      "evidence": {
+        "agent_environment_api_names_present": true,
+        "component_count": 22,
+        "demo_class": "Blocks",
+        "gradio_available": true,
+        "required_api_names_present": true,
+        "title": "Agades PQC Gym"
+      },
+      "failures": [],
+      "id": "hf-space-launch-smoke",
+      "status": "passed"
+    },
+    {
       "artifact": "hf/space_manifest.json",
       "blocking": true,
       "detail": "Hugging Face Space manifest is checked in, synchronized with the Space example selector, and documents the no-code/no-claim verifier contract.",
@@ -179,8 +222,8 @@
           "NTRU",
           "SIS"
         ],
-        "hub_create_command_template": "hf repos create <owner>/pqc-gym --type=space --space-sdk gradio --private --exist-ok",
-        "hub_upload_command_template": "hf upload <owner>/pqc-gym hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Space\"",
+        "hub_create_command_template": "hf repos create agades/agades-pqc-gym-agent-env --type=space --space-sdk gradio --private --exist-ok",
+        "hub_upload_command_template": "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Agent Environment\"",
         "labels_match_valid_dataset_rows": true
       },
       "failures": [],
@@ -224,7 +267,7 @@
       "blocking": true,
       "detail": "Hugging Face publication handoff is checked in, synchronized with the local dataset, Space, and Collection artifacts, and keeps Hub publication behind credentials and release review.",
       "evidence": {
-        "artifact_count": 17,
+        "artifact_count": 18,
         "attack_plan_count": 80,
         "collection_entry_count": 7,
         "external_publication_requires_review": true,
@@ -282,7 +325,7 @@
           "hf/dataset/public_runs/multivariate_toy_uov_v0/MANIFEST.sha256",
           "public/run_export/MANIFEST.sha256"
         ],
-        "verified_entries": 188
+        "verified_entries": 189
       },
       "failures": [],
       "id": "checksum-manifests",
@@ -1014,7 +1057,7 @@
         "review_required_before_claims": true,
         "review_required_surfaces": 6,
         "surface_artifact_digest_exclusions": 3,
-        "surface_artifact_digests": 63,
+        "surface_artifact_digests": 64,
         "surfaces": 6
       },
       "failures": [],
@@ -1106,11 +1149,11 @@
       "blocking": true,
       "detail": "Checked-in release gates that depend on release-audit must first declare ecosystem-smoke-verify, including nested Hugging Face dataset metadata.",
       "evidence": {
-        "checked_release_gate_artifacts": 29,
-        "ecosystem_smoke_gate_artifacts": 24,
+        "checked_release_gate_artifacts": 40,
+        "ecosystem_smoke_gate_artifacts": 27,
         "late_ecosystem_smoke_gate": [],
         "missing_ecosystem_smoke_gate": [],
-        "release_audit_gate_artifacts": 22
+        "release_audit_gate_artifacts": 25
       },
       "failures": [],
       "id": "release-gate-closure",
@@ -1352,9 +1395,10 @@
         "checked_config_synced": true,
         "config_path": "examples/openevolve/config.yaml",
         "example_config_synced": true,
+        "private_qwen_enabled": true,
         "python_candidates_executed": false,
         "security_claim": false,
-        "template_keys": 29
+        "template_keys": 30
       },
       "failures": [],
       "id": "openevolve-config-template",
@@ -1410,6 +1454,7 @@
         "arbitrary_code_execution": false,
         "card_count": 8,
         "modifies_estimator_scores": false,
+        "private_qwen_bound": true,
         "proposal_count": 13,
         "research_claim": false,
         "review_required_before_implementation": true
@@ -1528,6 +1573,7 @@
       "blocking": true,
       "detail": "Prime environment manifest is checked in, synchronized with packaged tasks, and documents the JSON-only scoring contract.",
       "evidence": {
+        "eval_config_path": "prime_intellect/evals/agades_pqc_eval.template.toml",
         "families": [
           "CODE_BASED",
           "HASH_BASED",
@@ -1547,6 +1593,52 @@
       },
       "failures": [],
       "id": "prime-environment-manifest",
+      "status": "passed"
+    },
+    {
+      "artifact": "docs/prime_eval_config_manifest.json",
+      "blocking": true,
+      "detail": "Prime eval config template is checked in, synchronized with the Verifiers environment, and blocks credentialed eval runs until Prime namespace, billing, and model review.",
+      "evidence": {
+        "family_count": 9,
+        "num_examples": 32,
+        "rollouts_per_example": 2,
+        "task_count": 79
+      },
+      "failures": [],
+      "id": "prime-eval-config",
+      "status": "passed"
+    },
+    {
+      "artifact": "docs/pedagogical_rl_method.json",
+      "blocking": true,
+      "detail": "Pedagogical RL is captured as a verifiable private method contract with teacher/student roles, spike-aware reward, surprisal-gated assimilation, and publication boundaries.",
+      "evidence": {
+        "linked_artifacts": 10,
+        "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
+        "privacy_preserving": true,
+        "reward_terms": 8,
+        "stages": 4,
+        "teacher_student_pattern": "privileged_self_teacher_student"
+      },
+      "failures": [],
+      "id": "pedagogical-rl-method",
+      "status": "passed"
+    },
+    {
+      "artifact": "docs/private_dataset_curation.json",
+      "blocking": true,
+      "detail": "Private RL dataset curation is represented by a public manifest only: sources require license review, provenance, deduplication, redaction, contamination audit, and no private rows or prompts may be published.",
+      "evidence": {
+        "license_review_required": true,
+        "linked_artifacts": 3,
+        "pipeline_stages": 7,
+        "public_rows_allowed": false,
+        "required_controls": 5,
+        "sources": 3
+      },
+      "failures": [],
+      "id": "private-dataset-curation",
       "status": "passed"
     },
     {
@@ -1582,7 +1674,7 @@
       "blocking": true,
       "detail": "Prime publication handoff is checked in, synchronized with the local environment package, and keeps external Prime Hub publication behind credentials and release review.",
       "evidence": {
-        "artifact_count": 10,
+        "artifact_count": 12,
         "external_publication_requires_review": true,
         "family_count": 9,
         "local_package_ready": true,
@@ -1667,8 +1759,10 @@
       "detail": "Private evolution traces and candidate strategies are confined to private roots and require redaction/preflight before public export.",
       "evidence": {
         "allowed_private_commands": 16,
-        "allowed_private_roots": 4,
+        "allowed_private_roots": 6,
         "forbidden_public_roots": 5,
+        "private_dataset_sources": 3,
+        "private_rl_reward_terms": 6,
         "required_publication_controls": 5,
         "scheduler_allowed_triggers": 2,
         "scheduler_approval_gates": 4,
@@ -1698,7 +1792,7 @@
         "external_publication_requires_review": true,
         "local_package_ready": true,
         "prime_hub_publication_performed": false,
-        "publication_artifact_count": 10,
+        "publication_artifact_count": 12,
         "publication_family_count": 9,
         "publication_task_count": 79,
         "requires_credentials": true,
@@ -1728,8 +1822,8 @@
   "schema_version": "agades.pqc.release_audit.v1",
   "summary": {
     "failed": 0,
-    "passed": 57,
-    "total": 58,
+    "passed": 61,
+    "total": 62,
     "warning": 1
   }
 }

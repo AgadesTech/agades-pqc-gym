@@ -91,9 +91,9 @@ def _json_safe(value: Any) -> Any:
     if _has_mapping_interface(value):
         keys = value.keys()
         return {str(key): _json_safe(value[key]) for key in keys}
-    if isinstance(value, list | tuple):
+    if isinstance(value, (list, tuple)):
         return [_json_safe(item) for item in value]
-    if isinstance(value, str | int | float | bool) or value is None:
+    if isinstance(value, (str, int, float, bool)) or value is None:
         return value
     try:
         return float(value)
@@ -141,7 +141,7 @@ def _int_field(payload: dict[str, Any], field: str) -> int:
 
 def _float_field(payload: dict[str, Any], field: str) -> float:
     value = payload.get(field)
-    if not isinstance(value, int | float):
+    if not isinstance(value, (int, float)):
         raise ValueError(f"{field} must be numeric")
     return float(value)
 

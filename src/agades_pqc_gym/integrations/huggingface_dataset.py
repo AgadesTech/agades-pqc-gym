@@ -14,6 +14,10 @@ from agades_pqc_gym.integrations.task_metadata import (
     summarize_task_metadata_rows,
     task_metadata_for_plan,
 )
+from agades_pqc_gym.rl.environment import (
+    DEFAULT_ROLLOUT_PLANS,
+    build_public_rollout_examples,
+)
 from agades_pqc_gym.verifier import verify_attack_plan_json
 
 HF_DATASET_SCHEMA = "agades.pqc.hf_dataset.v1"
@@ -22,6 +26,7 @@ HF_DATASET_NAME = "agades/pqc-gym-toy"
 ATTACK_PLANS_FILENAME = "attack_plans.jsonl"
 TASK_METADATA_FILENAME = "task_metadata.jsonl"
 VERIFIER_OUTPUTS_FILENAME = "verifier_outputs.jsonl"
+RL_ROLLOUTS_FILENAME = "rl_rollouts.jsonl"
 DATASET_INFO_FILENAME = "dataset_info.json"
 README_FILENAME = "README.md"
 MANIFEST_FILENAME = "MANIFEST.sha256"
@@ -69,8 +74,13 @@ def write_huggingface_dataset_bundle(
     attack_plans_path = out_dir / ATTACK_PLANS_FILENAME
     task_metadata_path = out_dir / TASK_METADATA_FILENAME
     verifier_outputs_path = out_dir / VERIFIER_OUTPUTS_FILENAME
+    rl_rollouts_path = out_dir / RL_ROLLOUTS_FILENAME
     manifest_path = out_dir / MANIFEST_FILENAME
     task_metadata_rows = _task_metadata_rows(attack_plan_rows)
+    rl_rollout_rows = build_public_rollout_examples(
+        DEFAULT_ROLLOUT_PLANS,
+        root=project_root,
+    )
 
     readme_path.write_text(dataset_card.read_text(encoding="utf-8"), encoding="utf-8")
     dataset_info_path.write_text(
@@ -78,6 +88,7 @@ def write_huggingface_dataset_bundle(
             _dataset_info(
                 attack_plan_rows=attack_plan_rows,
                 verifier_output_count=len(verifier_rows),
+                rl_rollout_count=len(rl_rollout_rows),
                 public_run_bundle_names=[path.name for path in public_run_dirs],
             ),
             indent=2,
@@ -89,6 +100,7 @@ def write_huggingface_dataset_bundle(
     attack_plans_path.write_text(_jsonl(attack_plan_rows), encoding="utf-8")
     task_metadata_path.write_text(_jsonl(task_metadata_rows), encoding="utf-8")
     verifier_outputs_path.write_text(_jsonl(verifier_rows), encoding="utf-8")
+    rl_rollouts_path.write_text(_jsonl(rl_rollout_rows), encoding="utf-8")
     for public_run_dir in public_run_dirs:
         _copy_public_run_bundle(public_run_dir, public_runs_out / public_run_dir.name)
     manifest_path.write_text(_manifest(out_dir), encoding="utf-8")
@@ -100,6 +112,7 @@ def write_huggingface_dataset_bundle(
         "attack_plans": attack_plans_path,
         "task_metadata": task_metadata_path,
         "verifier_outputs": verifier_outputs_path,
+        "rl_rollouts": rl_rollouts_path,
         "manifest": manifest_path,
     }
 
@@ -186,6 +199,7 @@ def _dataset_info(
     attack_plan_rows: list[dict[str, Any]],
     verifier_output_count: int,
     public_run_bundle_names: list[str],
+    rl_rollout_count: int,
 ) -> dict[str, Any]:
     task_metadata_rows = _task_metadata_rows(attack_plan_rows)
     task_metadata_count = sum(
@@ -226,6 +240,7 @@ def _dataset_info(
         "task_metadata_summary": summarize_task_metadata_rows(task_metadata_rows),
         "invalid_attack_plan_ids": invalid_attack_plan_ids,
         "verifier_output_count": verifier_output_count,
+        "rl_rollout_count": rl_rollout_count,
         "public_run_bundles": public_run_bundle_names,
         "files": [
             README_FILENAME,
@@ -233,6 +248,7 @@ def _dataset_info(
             ATTACK_PLANS_FILENAME,
             TASK_METADATA_FILENAME,
             VERIFIER_OUTPUTS_FILENAME,
+            RL_ROLLOUTS_FILENAME,
             *public_run_files,
             MANIFEST_FILENAME,
         ],
@@ -331,6 +347,11 @@ def verify_huggingface_dataset_bundle(
         "Hugging Face dataset verifier_outputs.jsonl",
         failures,
     )
+    rl_rollout_rows = _read_jsonl_file(
+        resolved_dataset_dir / RL_ROLLOUTS_FILENAME,
+        "Hugging Face dataset rl_rollouts.jsonl",
+        failures,
+    )
     manifest = _read_text_file(resolved_dataset_dir / MANIFEST_FILENAME, failures)
 
     _verify_file_sync(
@@ -363,6 +384,12 @@ def verify_huggingface_dataset_bundle(
         expected["verifier_rows"],
         failures,
     )
+    _verify_jsonl_sync(
+        RL_ROLLOUTS_FILENAME,
+        rl_rollout_rows,
+        expected["rl_rollout_rows"],
+        failures,
+    )
     _verify_public_run_mirror(
         project_root,
         resolved_dataset_dir,
@@ -380,6 +407,7 @@ def verify_huggingface_dataset_bundle(
         attack_plan_rows,
         task_metadata_rows,
         verifier_rows,
+        rl_rollout_rows,
         failures,
     )
     _verify_release_gates(info, failures)
@@ -390,6 +418,7 @@ def verify_huggingface_dataset_bundle(
         attack_plan_rows,
         task_metadata_rows,
         verifier_rows,
+        rl_rollout_rows,
         manifest,
         failures,
     )
@@ -402,16 +431,22 @@ def _expected_dataset_bundle(root: Path) -> dict[str, Any]:
     )
     public_run_bundles = [path.name for path in _public_run_dirs(root)]
     task_metadata_rows = _task_metadata_rows(attack_plan_rows)
+    rl_rollout_rows = build_public_rollout_examples(
+        DEFAULT_ROLLOUT_PLANS,
+        root=root,
+    )
     return {
         "readme": (root / "hf" / "dataset_card.md").read_text(encoding="utf-8"),
         "info": _dataset_info(
             attack_plan_rows=attack_plan_rows,
             verifier_output_count=len(verifier_rows),
+            rl_rollout_count=len(rl_rollout_rows),
             public_run_bundle_names=public_run_bundles,
         ),
         "attack_plan_rows": attack_plan_rows,
         "task_metadata_rows": task_metadata_rows,
         "verifier_rows": verifier_rows,
+        "rl_rollout_rows": rl_rollout_rows,
         "public_run_bundles": public_run_bundles,
     }
 
@@ -569,6 +604,7 @@ def _verify_dataset_rows(
     attack_plan_rows: list[dict[str, Any]],
     task_metadata_rows: list[dict[str, Any]],
     verifier_rows: list[dict[str, Any]],
+    rl_rollout_rows: list[dict[str, Any]],
     failures: list[str],
 ) -> None:
     expected_task_metadata_rows = [
@@ -614,6 +650,12 @@ def _verify_dataset_rows(
         for row in verifier_rows
     ):
         failures.append("At least one verifier row advertises a security claim.")
+    if len(rl_rollout_rows) != info.get("rl_rollout_count"):
+        failures.append("RL rollout JSONL row count differs from metadata.")
+    if any(row.get("public_release_ok") is not True for row in rl_rollout_rows):
+        failures.append("At least one RL rollout is not public-release safe.")
+    if any(row.get("private_fields_present") is not False for row in rl_rollout_rows):
+        failures.append("At least one RL rollout may contain private fields.")
 
 
 def _verify_task_metadata_seed_digests(
@@ -680,6 +722,7 @@ def _verification_result(
     attack_plan_rows: list[dict[str, Any]],
     task_metadata_rows: list[dict[str, Any]],
     verifier_rows: list[dict[str, Any]],
+    rl_rollout_rows: list[dict[str, Any]],
     manifest: str | None,
     failures: list[str],
 ) -> dict[str, Any]:
@@ -726,6 +769,7 @@ def _verification_result(
             ),
             "valid_attack_plan_count": info.get("valid_attack_plan_count"),
             "verifier_rows": len(verifier_rows),
+            "rl_rollout_rows": len(rl_rollout_rows),
         },
         "failures": failures,
     }

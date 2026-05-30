@@ -84,6 +84,22 @@ def supported_operators_for_family(family: TargetFamily) -> set[str]:
     return set(PLACEHOLDER_OPERATORS.get(family, frozenset()))
 
 
+def operator_required_param_schema(operator_type: str) -> dict[str, str]:
+    if operator_type not in ALLOWED_OPERATORS:
+        raise KeyError(f"unsupported operator type: {operator_type}")
+    return {
+        name: expected_type_name(expected_type)
+        for name, expected_type in sorted(_REQUIRED_PARAM_TYPES[operator_type].items())
+    }
+
+
+def all_operator_required_param_schemas() -> dict[str, dict[str, str]]:
+    return {
+        operator_type: operator_required_param_schema(operator_type)
+        for operator_type in sorted(ALLOWED_OPERATORS)
+    }
+
+
 def validate_operator_params(operator_type: str, params: dict[str, Any]) -> list[str]:
     if operator_type not in ALLOWED_OPERATORS:
         return [f"unsupported operator type: {operator_type}"]

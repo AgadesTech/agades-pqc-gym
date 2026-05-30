@@ -7,6 +7,7 @@ from typer.testing import CliRunner
 
 from agades_pqc_gym.cli import app
 from agades_pqc_gym.integrations.huggingface_space_manifest import (
+    _requirements_allow_injected_gradio,
     build_huggingface_space_manifest,
     verify_huggingface_space_manifest,
     write_huggingface_space_manifest,
@@ -30,20 +31,38 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "app_path": "hf/app.py",
     }
     assert manifest["space"] == {
-        "suggested_space_id": "agades/pqc-gym",
+        "suggested_space_id": "agades/agades-pqc-gym-agent-env",
         "sdk": "gradio",
+        "category": "agent-environment",
         "app_file": "hf/app.py",
         "requirements_file": "hf/requirements.txt",
         "dataset_bundle": "hf/dataset",
         "hub_create_command_template": (
-            "hf repos create <owner>/pqc-gym --type=space "
+            "hf repos create agades/agades-pqc-gym-agent-env --type=space "
             "--space-sdk gradio --private --exist-ok"
         ),
         "hub_upload_command_template": (
-            'hf upload <owner>/pqc-gym hf . --repo-type=space '
-            '--commit-message "Sync Agades PQC Gym Space"'
+            'hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space '
+            '--commit-message "Sync Agades PQC Gym Agent Environment"'
         ),
         "public_push_requires_review": True,
+    }
+    assert manifest["runtime"]["hf_spaces_injected_gradio"] == (
+        "gradio[oauth,mcp]==6.14.0"
+    )
+    assert manifest["runtime"]["requirements_compatible_with_injected_gradio"] is True
+    assert manifest["agent_environment_contract"] == {
+        "environment_class": "agades_pqc_gym.rl.environment.AgadesPQCGymEnvironment",
+        "observation_schema": "agades.pqc.rl.observation.v1",
+        "reward_report_schema": "agades.pqc.rl.reward_report.v1",
+        "rollout_trace_schema": "agades.pqc.rl.rollout_trace.v1",
+        "task_dataset": "hf/dataset/task_metadata.jsonl",
+        "rollout_examples": "hf/dataset/rl_rollouts.jsonl",
+        "scoring_function": "agades_pqc_gym.rl.environment.score_attack_plan_candidate",
+        "task_interface": "single_turn_attackplan_json",
+        "public_track_only": True,
+        "private_trace_publication_allowed": False,
+        "claims_pqc_breaks": False,
     }
     assert manifest["example_manifest"]["default_label"] == (
         "LWE / lattice_primal_usvp_toy_v1"
@@ -239,6 +258,10 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "uv run agades-pqc hf-space-manifest-verify --manifest hf/space_manifest.json",
         "uv run agades-pqc hf-space-smoke --out reports/hf_space_smoke.json",
         "uv run agades-pqc hf-space-smoke-verify --report reports/hf_space_smoke.json",
+        "uv run agades-pqc hf-space-launch-smoke --out "
+        "reports/hf_space_launch_smoke.json",
+        "uv run agades-pqc hf-space-launch-smoke-verify --report "
+        "reports/hf_space_launch_smoke.json",
         "uv run agades-pqc ecosystem-smoke-verify --report "
         "reports/ecosystem_smoke.json",
         "uv run agades-pqc release-audit --out public/release_audit.json",
@@ -247,11 +270,33 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
 
 def test_huggingface_space_readme_matches_hub_workflow_contract() -> None:
     readme = Path("hf/space_README.md").read_text(encoding="utf-8")
+    space_card = Path("hf/README.md").read_text(encoding="utf-8")
 
-    assert "hf repos create <owner>/pqc-gym --type=space" in readme
-    assert "hf upload <owner>/pqc-gym hf . --repo-type=space" in readme
+    assert "hf repos create agades/agades-pqc-gym-agent-env --type=space" in readme
+    assert (
+        "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space"
+        in readme
+    )
     assert "HF_TOKEN" in readme
+    assert "Agent Environment" in readme
+    assert "rl_rollouts.jsonl" in readme
     assert "Use a private Space first" in readme
+    assert "sdk: gradio" in space_card
+    assert "app_file: app.py" in space_card
+    assert "agent-environment" in space_card
+    assert "not security claims" in space_card
+
+
+def test_huggingface_space_requirements_allow_hf_injected_gradio(
+    tmp_path: Path,
+) -> None:
+    compatible = tmp_path / "compatible.txt"
+    incompatible = tmp_path / "incompatible.txt"
+    compatible.write_text("gradio>=4,<7\n", encoding="utf-8")
+    incompatible.write_text("gradio>=4,<6\n", encoding="utf-8")
+
+    assert _requirements_allow_injected_gradio(compatible) is True
+    assert _requirements_allow_injected_gradio(incompatible) is False
 
 
 def test_committed_huggingface_space_manifest_is_in_sync(tmp_path: Path) -> None:
@@ -277,6 +322,7 @@ def test_hf_space_manifest_verify_accepts_committed_manifest() -> None:
             "default_label": "LWE / lattice_primal_usvp_toy_v1",
             "example_count": 79,
             "failure_count": 0,
+            "is_agent_environment": True,
             "labels_match_valid_dataset_rows": True,
             "public_push_requires_review": True,
             "requires_gradio_to_import_for_audit": False,

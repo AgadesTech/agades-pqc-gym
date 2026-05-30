@@ -8,10 +8,26 @@ import pytest
 from typer.testing import CliRunner
 
 from agades_pqc_gym.cli import app
+from agades_pqc_gym.core.attack_plan import AttackPlan
+from agades_pqc_gym.core.evaluator_result import EvaluatorResult
 from agades_pqc_gym.formal.artifacts import (
+    MVP_VERTICAL_ESTIMATOR_RESULT_PATHS,
     build_attack_plan_proof_artifact,
     verify_attack_plan_proof_artifact,
+    write_attack_plan_evaluator_result,
     write_attack_plan_proof_artifact,
+)
+from agades_pqc_gym.utils.hashing import stable_sha256
+
+LWE_PROOF_ARTIFACT_PATH = Path("docs/formal_lattice_primal_usvp_proof_artifact.json")
+MLWE_PROOF_ARTIFACT_PATH = Path(
+    "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json"
+)
+LWE_EVALUATOR_RESULT_PATH = Path(
+    "docs/formal_lattice_primal_usvp_evaluator_result.json"
+)
+MLWE_EVALUATOR_RESULT_PATH = Path(
+    "docs/formal_lattice_mlwe_module_hypothesis_evaluator_result.json"
 )
 
 
@@ -28,6 +44,34 @@ def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() ->
     }
     assert artifact["attack_plan"]["id"] == "lattice_primal_usvp_toy_v1"
     assert len(artifact["attack_plan"]["sha256"]) == 64
+    assert artifact["attack_plan"]["schema_contract"] == {
+        "schema_version": "agades.pqc.attack_plan.schema_contract.v1",
+        "model": "agades_pqc_gym.core.attack_plan.AttackPlan",
+        "json_schema_sha256": stable_sha256(AttackPlan.model_json_schema()),
+        "canonicalization": "json_sort_keys_minified_v1",
+        "validation": "pydantic_v2_extra_forbid_family_cross_checks",
+    }
+    assert len(artifact["attack_plan"]["schema_contract"]["json_schema_sha256"]) == 64
+    assert artifact["formal_backend"]["root"] == "formal/lean"
+    assert artifact["formal_backend"]["toolchain"] == "formal/lean/lean-toolchain"
+    assert artifact["formal_backend"]["lakefile"] == "formal/lean/lakefile.lean"
+    assert artifact["formal_backend"]["lake_manifest"] == (
+        "formal/lean/lake-manifest.json"
+    )
+    assert artifact["formal_backend"]["entry_module"] == "formal/lean/AgadesPQC.lean"
+    assert artifact["formal_backend"]["build_command"] == "lake build"
+    assert artifact["formal_backend"]["execution_status"] == (
+        "ci_build_gate_required"
+    )
+    backend_manifest = artifact["formal_backend"]["backend_manifest"]
+    assert backend_manifest["path"] == "docs/formal_lean_backend.json"
+    assert backend_manifest["schema_version"] == "agades.pqc.formal.lean_backend.v1"
+    assert len(backend_manifest["sha256"]) == 64
+    assert len(backend_manifest["manifest_sha256"]) == 64
+    assert backend_manifest["source_modules"] == 14
+    assert backend_manifest["theorem_declarations"] >= 20
+    assert backend_manifest["ci_lean_build_gate"] is True
+    assert backend_manifest["placeholder_failures"] == 0
     assert artifact["family"] == "LWE"
     assert artifact["operator_semantics"][0] == {
         "operator": "primal_usvp",
@@ -35,12 +79,80 @@ def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() ->
         "lean_namespace": "AgadesPQC.Lattice.PrimalUSVP",
     }
     assert {
+        rule["kind"] for rule in artifact["proof_obligation_type_rules"]
+    } == {
+        "target_invariant",
+        "operator_precondition",
+        "schema_only_boundary",
+        "family_applicability_boundary",
+        "estimator_claim_boundary",
+    }
+    for rule in artifact["proof_obligation_type_rules"]:
+        source = rule["lean_source"]
+        source_path = Path(source["path"])
+        assert rule["schema_version"] == (
+            "agades.pqc.formal.proof_obligation_type_rule.v1"
+        )
+        assert rule["backend"] == "lean4"
+        assert rule["lean_theorem"].startswith("AgadesPQC.ProofObligation.")
+        assert source_path.is_file()
+        assert hashlib.sha256(source_path.read_bytes()).hexdigest() == (
+            source["sha256"]
+        )
+        assert f"theorem {source['declaration']}" in source_path.read_text(
+            encoding="utf-8"
+        )
+    assert {
         obligation["obligation_id"] for obligation in artifact["proof_obligations"]
     } == {
         "target.lwe.parameters.positive",
         "target.lwe.distributions.present",
         "operator.primal_usvp.beta.valid_range",
         "estimator.boundary.no_security_claim",
+    }
+    obligation_types = {
+        obligation["obligation_id"]: obligation["obligation_type"]
+        for obligation in artifact["proof_obligations"]
+    }
+    type_rules_by_kind = {
+        rule["kind"]: rule for rule in artifact["proof_obligation_type_rules"]
+    }
+    assert {
+        obligation["obligation_id"]: obligation["type_rule"]
+        for obligation in artifact["proof_obligations"]
+    } == {
+        obligation["obligation_id"]: type_rules_by_kind[
+            obligation["obligation_type"]["kind"]
+        ]
+        for obligation in artifact["proof_obligations"]
+    }
+    assert obligation_types["target.lwe.parameters.positive"] == {
+        "schema_version": "agades.pqc.formal.proof_obligation_type.v1",
+        "kind": "target_invariant",
+        "subject": {
+            "family": "LWE",
+            "scope": "target",
+            "target_family": "LWE",
+        },
+        "claim_policy": {
+            "public_interpretation": "applicability_check_only",
+            "review_required_before_claim": True,
+            "security_claim_allowed": False,
+        },
+    }
+    assert obligation_types["operator.primal_usvp.beta.valid_range"] == {
+        "schema_version": "agades.pqc.formal.proof_obligation_type.v1",
+        "kind": "operator_precondition",
+        "subject": {
+            "family": "LWE",
+            "operator": "primal_usvp",
+            "scope": "operator",
+        },
+        "claim_policy": {
+            "public_interpretation": "applicability_check_only",
+            "review_required_before_claim": True,
+            "security_claim_allowed": False,
+        },
     }
     assert artifact["attack_plan"]["canonical_sha256"]
     assert artifact["estimator_result_binding"] == {
@@ -66,6 +178,17 @@ def test_lattice_attack_plan_proof_artifact_binds_plan_obligations_and_lean() ->
         "formal_methods_reviewer",
         "release_boundary_reviewer",
     ]
+    assert artifact["review"]["evidence"] == {
+        "schema_version": "agades.pqc.formal.review_evidence.v1",
+        "status": "not_attached",
+        "required_for_statuses": ["reviewed", "rejected"],
+        "covered_reviewer_roles": [],
+        "claim_allowed": False,
+        "notes": (
+            "No reviewer attestation is attached; this artifact must remain "
+            "pending_review."
+        ),
+    }
     assert artifact["artifact_sha256"] == artifact["artifact_sha256"]
 
 
@@ -78,6 +201,8 @@ def test_lattice_proof_artifact_binds_existing_lean_sources() -> None:
         invariant["lean_source"] for invariant in artifact["family_invariants"]
     ] + [
         obligation["lean_source"] for obligation in artifact["proof_obligations"]
+    ] + [
+        rule["lean_source"] for rule in artifact["proof_obligation_type_rules"]
     ]
 
     for source in lean_sources:
@@ -101,11 +226,58 @@ def test_schema_only_code_based_proof_artifact_refuses_fake_estimator_obligation
         obligation["obligation_id"] == "family.code_based.schema_only.no_estimate"
         for obligation in artifact["proof_obligations"]
     )
+    assert artifact["review"]["required_reviewers"] == [
+        "code_based_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer",
+    ]
+
+
+def test_mlwe_proof_artifact_uses_mlwe_specific_obligations() -> None:
+    artifact = build_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_mlwe_module_hypothesis_toy.json")
+    )
+
+    invariant_ids = {
+        invariant["invariant_id"] for invariant in artifact["family_invariants"]
+    }
+    obligation_ids = {
+        obligation["obligation_id"] for obligation in artifact["proof_obligations"]
+    }
+
+    assert artifact["family"] == "MLWE"
+    assert "lattice.mlwe.module_rank_present" in invariant_ids
+    assert "target.mlwe.parameters.positive" in obligation_ids
+    assert "target.mlwe.distributions.present" in obligation_ids
+    assert "target.mlwe.module_rank.present" in obligation_ids
+    assert "target.lwe.parameters.positive" not in obligation_ids
+    assert all(
+        obligation["obligation_type"]["subject"]["family"] == "MLWE"
+        for obligation in artifact["proof_obligations"]
+    )
+    assert {
+        obligation["obligation_type"]["kind"]
+        for obligation in artifact["proof_obligations"]
+    } == {"target_invariant", "estimator_claim_boundary"}
 
 
 @pytest.mark.parametrize(
     ("plan_path", "family", "invariant_id", "obligation_id", "lean_path"),
     [
+        (
+            "examples/attack_plans/lattice_ntru_schema_placeholder.json",
+            "NTRU",
+            "lattice.ntru.schema_shape",
+            "family.ntru.schema_only.no_estimate",
+            "formal/lean/AgadesPQC/Lattice/Target.lean",
+        ),
+        (
+            "examples/attack_plans/lattice_sis_schema_placeholder.json",
+            "SIS",
+            "lattice.sis.schema_shape",
+            "family.sis.schema_only.no_estimate",
+            "formal/lean/AgadesPQC/Lattice/Target.lean",
+        ),
         (
             "examples/attack_plans/code_based_isd_placeholder.json",
             "CODE_BASED",
@@ -175,6 +347,17 @@ def test_family_specific_proof_artifacts_do_not_use_generic_fallback(
         not item["semantics_id"].startswith("agades.pqc.operator_semantics.generic.")
         for item in artifact["operator_semantics"]
     )
+    assert all(
+        obligation["obligation_type"]["subject"]["family"] == family
+        for obligation in artifact["proof_obligations"]
+    )
+    assert all(
+        obligation["obligation_type"]["claim_policy"][
+            "security_claim_allowed"
+        ]
+        is False
+        for obligation in artifact["proof_obligations"]
+    )
 
 
 def test_write_and_verify_attack_plan_proof_artifact(tmp_path: Path) -> None:
@@ -204,16 +387,155 @@ def test_write_and_verify_attack_plan_proof_artifact(tmp_path: Path) -> None:
     }
 
 
+def test_build_attack_plan_proof_artifact_rejects_reviewed_without_evidence() -> None:
+    with pytest.raises(
+        ValueError,
+        match="review evidence is required for non-pending proof artifacts",
+    ):
+        build_attack_plan_proof_artifact(
+            Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+            review_status="reviewed",
+        )
+
+
+def test_attached_estimator_result_binding_includes_evaluator_schema_contract(
+    tmp_path: Path,
+) -> None:
+    result_path = _write_estimator_result(tmp_path)
+
+    artifact = build_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        estimator_result_path=result_path,
+    )
+
+    assert artifact["estimator_result_binding"]["status"] == "attached_unreviewed"
+    assert artifact["estimator_result_binding"]["schema_contract"] == {
+        "schema_version": "agades.pqc.evaluator_result.schema_contract.v1",
+        "model": "agades_pqc_gym.core.evaluator_result.EvaluatorResult",
+        "json_schema_sha256": stable_sha256(EvaluatorResult.model_json_schema()),
+        "canonicalization": "json_sort_keys_minified_v1",
+        "validation": "pydantic_v2_extra_forbid_status_payload_checks",
+    }
+    assert artifact["estimator_result_binding"]["parsed_result"] == {
+        "schema_version": "agades.pqc.evaluator_result.v1",
+        "evaluator_name": "mock-lattice-estimator",
+        "evaluator_version": "0.1.0",
+        "evaluator_commit": None,
+        "evaluation_status": "ok",
+        "attack_type": "primal_usvp",
+        "claim_allowed": False,
+    }
+    assert artifact["estimator_result_binding"]["attack_plan_compatibility"] == {
+        "attack_plan_id": "lattice_primal_usvp_toy_v1",
+        "target_family": "LWE",
+        "operator_types": ["primal_usvp"],
+        "evaluator_attack_type": "primal_usvp",
+        "compatible": True,
+        "compatibility_rule": "exact_operator_or_colon_variant_v1",
+    }
+
+
+def test_write_attack_plan_evaluator_result_exports_claim_disabled_binding(
+    tmp_path: Path,
+) -> None:
+    result_path = tmp_path / "evaluator_result.json"
+
+    payload = write_attack_plan_evaluator_result(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        result_path,
+    )
+
+    assert json.loads(result_path.read_text(encoding="utf-8")) == payload
+    assert payload["schema_version"] == "agades.pqc.evaluator_result.v1"
+    assert payload["evaluation_status"] == "ok"
+    assert payload["attack_type"] == "primal_usvp"
+    assert payload["time_bits"] is not None
+    assert payload["memory_bits"] is not None
+    assert payload["raw_output"]["claim_allowed"] is False
+    assert payload["raw_output"]["source"] == (
+        "agades_pqc_gym.evaluators.cascade.CascadeEvaluator"
+    )
+    assert "not cryptanalytic evidence" in " ".join(payload["warnings"])
+
+
+def test_mvp_vertical_evaluator_result_paths_are_declared() -> None:
+    assert MVP_VERTICAL_ESTIMATOR_RESULT_PATHS == {
+        "LWE": "docs/formal_lattice_primal_usvp_evaluator_result.json",
+        "MLWE": "docs/formal_lattice_mlwe_module_hypothesis_evaluator_result.json",
+    }
+
+
 def test_committed_lattice_proof_artifact_is_in_sync(tmp_path: Path) -> None:
     generated = tmp_path / "proof_artifact.json"
-    committed = Path("docs/formal_lattice_primal_usvp_proof_artifact.json")
 
     write_attack_plan_proof_artifact(
         Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
         generated,
+        estimator_result_path=LWE_EVALUATOR_RESULT_PATH,
     )
 
-    assert committed.read_bytes() == generated.read_bytes()
+    assert LWE_PROOF_ARTIFACT_PATH.read_bytes() == generated.read_bytes()
+
+
+def test_committed_lattice_evaluator_result_is_in_sync(tmp_path: Path) -> None:
+    generated = tmp_path / "evaluator_result.json"
+
+    write_attack_plan_evaluator_result(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        generated,
+    )
+
+    assert LWE_EVALUATOR_RESULT_PATH.read_bytes() == generated.read_bytes()
+
+
+def test_committed_mlwe_proof_artifact_is_in_sync_and_verifiable(
+    tmp_path: Path,
+) -> None:
+    generated = tmp_path / "proof_artifact.json"
+
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_mlwe_module_hypothesis_toy.json"),
+        generated,
+        estimator_result_path=MLWE_EVALUATOR_RESULT_PATH,
+    )
+    result = verify_attack_plan_proof_artifact(MLWE_PROOF_ARTIFACT_PATH)
+
+    assert MLWE_PROOF_ARTIFACT_PATH.read_bytes() == generated.read_bytes()
+    assert artifact["family"] == "MLWE"
+    assert {
+        obligation["obligation_id"] for obligation in artifact["proof_obligations"]
+    } == {
+        "target.mlwe.parameters.positive",
+        "target.mlwe.distributions.present",
+        "target.mlwe.module_rank.present",
+        "estimator.boundary.no_security_claim",
+    }
+    assert result == {
+        "schema_version": "agades.pqc.formal.proof_artifact_verification.v1",
+        "artifact_path": MLWE_PROOF_ARTIFACT_PATH.as_posix(),
+        "accepted": True,
+        "summary": {
+            "operator_semantics": 2,
+            "family_invariants": 3,
+            "proof_obligations": 4,
+            "lean_theorems": 4,
+            "estimator_result_attached": True,
+            "required_reviewers": 3,
+            "failure_count": 0,
+        },
+        "failures": [],
+    }
+
+
+def test_committed_mlwe_evaluator_result_is_in_sync(tmp_path: Path) -> None:
+    generated = tmp_path / "evaluator_result.json"
+
+    write_attack_plan_evaluator_result(
+        Path("examples/attack_plans/lattice_mlwe_module_hypothesis_toy.json"),
+        generated,
+    )
+
+    assert MLWE_EVALUATOR_RESULT_PATH.read_bytes() == generated.read_bytes()
 
 
 def test_verify_attack_plan_proof_artifact_rejects_tampering(
@@ -232,6 +554,294 @@ def test_verify_attack_plan_proof_artifact_rejects_tampering(
     assert result["accepted"] is False
     assert "Proof artifact hash does not match its payload." in result["failures"]
     assert "Proof obligations do not match the AttackPlan." in result["failures"]
+
+
+def test_verify_attack_plan_proof_artifact_rejects_stale_formal_backend_binding(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+    )
+    artifact["formal_backend"]["backend_manifest"]["sha256"] = "0" * 64
+    artifact["artifact_sha256"] = artifact["artifact_sha256"]
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert "Proof artifact formal_backend is not in sync." in result["failures"]
+
+
+def test_verify_attack_plan_proof_artifact_rejects_stale_attack_plan_schema_contract(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+    )
+    artifact["attack_plan"]["schema_contract"]["json_schema_sha256"] = "0" * 64
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "AttackPlan schema binding does not match current core schema."
+        in result["failures"]
+    )
+
+
+def test_verify_rejects_reviewed_status_without_reviewer_evidence(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+    )
+    artifact["review"]["status"] = "reviewed"
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Non-pending proof artifact review statuses require attached review "
+        "evidence covering all required reviewers."
+    ) in result["failures"]
+
+
+def test_verify_rejects_reviewed_runtime_artifact_without_estimator_binding(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+    )
+    artifact["review"]["status"] = "reviewed"
+    artifact["review"]["evidence"] = {
+        "schema_version": "agades.pqc.formal.review_evidence.v1",
+        "status": "attached",
+        "covered_reviewer_roles": artifact["review"]["required_reviewers"],
+        "claim_allowed": False,
+        "notes": "unit test reviewer evidence",
+    }
+    artifact["artifact_sha256"] = stable_sha256(
+        {
+            key: value
+            for key, value in artifact.items()
+            if key != "artifact_sha256"
+        }
+    )
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Reviewed runtime-estimator proof artifacts require an attached "
+        "estimator result binding."
+    ) in result["failures"]
+
+
+def test_verify_rejects_review_evidence_that_allows_security_claims(
+    tmp_path: Path,
+) -> None:
+    result_path = _write_estimator_result(tmp_path)
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+        estimator_result_path=result_path,
+    )
+    _attach_review_evidence(artifact, claim_allowed=True)
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Attached proof artifact review evidence must not allow security claims."
+    ) in result["failures"]
+
+
+def test_verify_rejects_review_evidence_bound_to_stale_artifact_payload(
+    tmp_path: Path,
+) -> None:
+    result_path = _write_estimator_result(tmp_path)
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+        estimator_result_path=result_path,
+    )
+    _attach_review_evidence(artifact)
+    artifact["review"]["evidence"]["artifact_binding"][
+        "attack_plan_canonical_sha256"
+    ] = "0" * 64
+    artifact["review"]["evidence"]["evidence_sha256"] = _review_evidence_sha256(
+        artifact["review"]["evidence"]
+    )
+    artifact["artifact_sha256"] = _artifact_payload_sha256(artifact)
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Attached proof artifact review evidence binding does not match the "
+        "artifact."
+    ) in result["failures"]
+
+
+def test_verify_rejects_stale_estimator_result_schema_contract(
+    tmp_path: Path,
+) -> None:
+    result_path = _write_estimator_result(tmp_path)
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+        estimator_result_path=result_path,
+    )
+    artifact["estimator_result_binding"]["schema_contract"][
+        "json_schema_sha256"
+    ] = "0" * 64
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Estimator result schema binding does not match current core schema."
+        in result["failures"]
+    )
+
+
+def test_verify_attack_plan_proof_artifact_rejects_invalid_attached_estimator_result(
+    tmp_path: Path,
+) -> None:
+    result_path = _write_estimator_result(tmp_path)
+    out = tmp_path / "proof_artifact.json"
+    write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+        estimator_result_path=result_path,
+    )
+    result_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "agades.pqc.evaluator_result.v1",
+                "evaluator_name": "mock-lattice-estimator",
+                "evaluator_version": "0.1.0",
+                "evaluator_commit": None,
+                "evaluation_status": "unsupported",
+                "attack_type": "primal_usvp",
+                "time_bits": 75.0,
+                "memory_bits": 25.0,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert any(
+        failure.startswith("Bound estimator result is invalid:")
+        for failure in result["failures"]
+    )
+
+
+def test_build_attack_plan_proof_artifact_rejects_incompatible_estimator_result(
+    tmp_path: Path,
+) -> None:
+    result_path = _write_estimator_result(
+        tmp_path,
+        {"attack_type": "module_lattice_reduction_hypothesis"},
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="estimator result attack_type is incompatible",
+    ):
+        build_attack_plan_proof_artifact(
+            Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+            estimator_result_path=result_path,
+        )
+
+
+def test_verify_rejects_stale_estimator_attack_plan_compatibility(
+    tmp_path: Path,
+) -> None:
+    result_path = _write_estimator_result(tmp_path)
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+        estimator_result_path=result_path,
+    )
+    artifact["estimator_result_binding"]["attack_plan_compatibility"][
+        "evaluator_attack_type"
+    ] = "module_lattice_reduction_hypothesis"
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Estimator result AttackPlan compatibility does not match bound files."
+        in result["failures"]
+    )
+
+
+def test_verify_attack_plan_proof_artifact_rejects_claim_enabled_obligation_type(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+    )
+    artifact["proof_obligations"][0]["obligation_type"]["claim_policy"][
+        "security_claim_allowed"
+    ] = True
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Proof obligation type must forbid security claims: "
+        "target.lwe.parameters.positive."
+    ) in result["failures"]
+
+
+def test_verify_attack_plan_proof_artifact_rejects_stale_type_rule(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "proof_artifact.json"
+    artifact = write_attack_plan_proof_artifact(
+        Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
+        out,
+    )
+    artifact["proof_obligations"][0]["type_rule"]["kind"] = "operator_precondition"
+    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+
+    result = verify_attack_plan_proof_artifact(out)
+
+    assert result["accepted"] is False
+    assert (
+        "Proof obligation type rule kind mismatch: target.lwe.parameters.positive."
+        in result["failures"]
+    )
 
 
 def test_formal_proof_artifact_cli_round_trip(tmp_path: Path) -> None:
@@ -255,3 +865,120 @@ def test_formal_proof_artifact_cli_round_trip(tmp_path: Path) -> None:
     assert f"formal_proof_artifact={out}" in write_result.output
     assert verify_result.exit_code == 0
     assert '"accepted": true' in verify_result.output
+
+
+def test_formal_evaluator_result_cli_round_trip(tmp_path: Path) -> None:
+    out = tmp_path / "evaluator_result.json"
+
+    write_result = CliRunner().invoke(
+        app,
+        [
+            "formal-evaluator-result",
+            "examples/attack_plans/lattice_primal_usvp_toy.json",
+            "--out",
+            str(out),
+        ],
+    )
+
+    assert write_result.exit_code == 0
+    assert f"formal_evaluator_result={out}" in write_result.output
+    payload = json.loads(out.read_text(encoding="utf-8"))
+    EvaluatorResult.model_validate(payload)
+    assert payload["raw_output"]["claim_allowed"] is False
+
+
+def _write_estimator_result(
+    tmp_path: Path,
+    overrides: dict[str, object] | None = None,
+) -> Path:
+    result_path = tmp_path / "estimator_result.json"
+    payload = _valid_estimator_result_payload()
+    if overrides:
+        payload.update(overrides)
+    result_path.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return result_path
+
+
+def _valid_estimator_result_payload() -> dict[str, object]:
+    return {
+        "schema_version": "agades.pqc.evaluator_result.v1",
+        "evaluator_name": "mock-lattice-estimator",
+        "evaluator_version": "0.1.0",
+        "evaluator_commit": None,
+        "evaluation_status": "ok",
+        "attack_type": "primal_usvp",
+        "time_bits": 75.0,
+        "memory_bits": 25.0,
+        "success_probability": None,
+        "raw_output": {"source": "unit-test"},
+        "warnings": ["Mock estimator output is not cryptanalytic evidence."],
+    }
+
+
+def _attach_review_evidence(
+    artifact: dict[str, object],
+    *,
+    claim_allowed: bool = False,
+) -> None:
+    review = artifact["review"]
+    assert isinstance(review, dict)
+    review["status"] = "reviewed"
+    evidence = {
+        "schema_version": "agades.pqc.formal.review_evidence.v1",
+        "status": "attached",
+        "covered_reviewer_roles": review["required_reviewers"],
+        "claim_allowed": claim_allowed,
+        "artifact_binding": _review_artifact_binding(artifact),
+        "notes": "unit test reviewer evidence",
+    }
+    evidence["evidence_sha256"] = _review_evidence_sha256(evidence)
+    review["evidence"] = evidence
+    artifact["artifact_sha256"] = _artifact_payload_sha256(artifact)
+
+
+def _review_artifact_binding(artifact: dict[str, object]) -> dict[str, object]:
+    attack_plan = artifact["attack_plan"]
+    estimator_binding = artifact["estimator_result_binding"]
+    proof_obligations = artifact["proof_obligations"]
+    review = artifact["review"]
+    assert isinstance(attack_plan, dict)
+    assert isinstance(estimator_binding, dict)
+    assert isinstance(proof_obligations, list)
+    assert isinstance(review, dict)
+    return {
+        "attack_plan_id": attack_plan["id"],
+        "attack_plan_canonical_sha256": attack_plan["canonical_sha256"],
+        "family": artifact["family"],
+        "estimator_result_binding_status": estimator_binding["status"],
+        "review_status": review["status"],
+        "required_reviewers": review["required_reviewers"],
+        "proof_obligation_sha256": [
+            obligation["obligation_sha256"]
+            for obligation in proof_obligations
+            if isinstance(obligation, dict)
+        ],
+        "claim_boundary": review["claim_boundary"],
+    }
+
+
+def _review_evidence_sha256(evidence: dict[str, object]) -> str:
+    return stable_sha256(
+        {
+            key: value
+            for key, value in evidence.items()
+            if key != "evidence_sha256"
+        }
+    )
+
+
+def _artifact_payload_sha256(artifact: dict[str, object]) -> str:
+    return stable_sha256(
+        {
+            key: value
+            for key, value in artifact.items()
+            if key != "artifact_sha256"
+        }
+    )

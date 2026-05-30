@@ -5,15 +5,21 @@ import json
 from pathlib import Path
 from typing import Any
 
+from pydantic import ValidationError
+
 from agades_pqc_gym.core.attack_plan import AttackPlan
+from agades_pqc_gym.core.target import TargetFamily
 from agades_pqc_gym.formal.artifacts import (
     build_attack_plan_proof_artifact_from_json,
 )
+from agades_pqc_gym.formal.family_coverage import REPRESENTATIVE_ATTACK_PLANS
 from agades_pqc_gym.integrations.task_metadata import (
     attack_plan_matches_task_metadata,
     normalize_task_metadata,
     task_metadata_for_plan,
 )
+from agades_pqc_gym.rl.pedagogy import build_pedagogical_reward_report
+from agades_pqc_gym.utils.validation_errors import stable_validation_error_messages
 from agades_pqc_gym.verifier import verify_attack_plan_json
 
 RL_REWARD_REPORT_SCHEMA = "agades.pqc.rl.reward_report.v1"
@@ -30,8 +36,7 @@ REWARD_TERMS = (
     "proof_obligation_coverage",
 )
 DEFAULT_ROLLOUT_PLANS = [
-    Path("examples/attack_plans/lattice_primal_usvp_toy.json"),
-    Path("examples/attack_plans/code_based_prange_toy.json"),
+    REPRESENTATIVE_ATTACK_PLANS[family] for family in TargetFamily
 ]
 
 
@@ -48,8 +53,19 @@ class AgadesPQCGymEnvironment:
     def from_attack_plan_paths(
         cls,
         paths: list[Path],
+        *,
+        root: Path | None = None,
     ) -> AgadesPQCGymEnvironment:
-        return cls([_task_from_path(path) for path in paths])
+        project_root = root.resolve() if root is not None else None
+        return cls(
+            [
+                _task_from_path(
+                    _resolve_attack_plan_path(path, project_root),
+                    source_path=_source_path_label(path, project_root),
+                )
+                for path in paths
+            ]
+        )
 
     def reset(self, index: int = 0) -> dict[str, Any]:
         if index < 0 or index >= len(self._tasks):
@@ -94,12 +110,15 @@ def score_attack_plan_candidate(
     *,
     task_info: dict[str, Any] | str | None = None,
     require_task_match: bool = False,
+    pedagogical_signals: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     parsed_task = normalize_task_metadata(task_info)
     plan: AttackPlan | None = None
     validation_errors: list[str] = []
     try:
         plan = AttackPlan.model_validate_json(candidate_json)
+    except ValidationError as exc:
+        validation_errors.extend(stable_validation_error_messages(exc))
     except ValueError as exc:
         validation_errors.append(str(exc))
 
@@ -129,9 +148,8 @@ def score_attack_plan_candidate(
             and formal_summary["claim_boundary_ok"] is True
         ),
         "task_match": _bool_score(task_match),
-        "proof_obligation_coverage": _bool_score(
-            formal_summary["proof_obligations"] > 0
-            and formal_summary["family_invariants"] > 0
+        "proof_obligation_coverage": _proof_obligation_coverage_score(
+            formal_summary
         ),
     }
     blocking_reasons = _blocking_reasons(
@@ -140,7 +158,14 @@ def score_attack_plan_candidate(
         require_task_match=require_task_match,
         task_info=parsed_task,
     )
-    reward = 0.0 if blocking_reasons else _mean_reward(terms)
+    base_reward = 0.0 if blocking_reasons else _mean_reward(terms)
+    pedagogical_reward = build_pedagogical_reward_report(
+        base_reward,
+        pedagogical_signals,
+    )
+    if pedagogical_reward["signal_error"]:
+        blocking_reasons.append("pedagogical_signals")
+    reward = 0.0 if blocking_reasons else pedagogical_reward["final_reward"]
     return {
         "schema_version": RL_REWARD_REPORT_SCHEMA,
         "reward": reward,
@@ -148,6 +173,7 @@ def score_attack_plan_candidate(
         "blocked": bool(blocking_reasons),
         "blocking_reasons": blocking_reasons,
         "terms": terms,
+        "pedagogical_reward": pedagogical_reward,
         "formal_summary": formal_summary,
         "verifier_summary": {
             "schema_valid": verifier_result["schema_valid"],
@@ -165,16 +191,32 @@ def score_attack_plan_candidate(
     }
 
 
+def build_public_rollout_examples(
+    paths: list[Path],
+    *,
+    root: Path | None = None,
+) -> list[dict[str, Any]]:
+    project_root = root.resolve() if root is not None else None
+    rows: list[dict[str, Any]] = []
+    for path in paths:
+        resolved_path = _resolve_attack_plan_path(path, project_root)
+        env = AgadesPQCGymEnvironment.from_attack_plan_paths(
+            [path],
+            root=project_root,
+        )
+        env.reset()
+        step = env.step(resolved_path.read_text(encoding="utf-8"))
+        rows.append(step["info"]["trace"])
+    return rows
+
+
 def write_public_rollout_examples(
     paths: list[Path],
     out: Path,
+    *,
+    root: Path | None = None,
 ) -> list[dict[str, Any]]:
-    rows: list[dict[str, Any]] = []
-    for path in paths:
-        env = AgadesPQCGymEnvironment.from_attack_plan_paths([path])
-        env.reset()
-        step = env.step(path.read_text(encoding="utf-8"))
-        rows.append(step["info"]["trace"])
+    rows = build_public_rollout_examples(paths, root=root)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(
         "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows),
@@ -183,12 +225,27 @@ def write_public_rollout_examples(
     return rows
 
 
-def _task_from_path(path: Path) -> dict[str, Any]:
+def _resolve_attack_plan_path(path: Path, root: Path | None) -> Path:
+    if root is not None and not path.is_absolute():
+        return root / path
+    return path
+
+
+def _source_path_label(path: Path, root: Path | None) -> str:
+    if root is None or not path.is_absolute():
+        return path.as_posix()
+    try:
+        return path.relative_to(root).as_posix()
+    except ValueError:
+        return path.as_posix()
+
+
+def _task_from_path(path: Path, *, source_path: str | None = None) -> dict[str, Any]:
     raw_json = path.read_text(encoding="utf-8")
     plan = AttackPlan.model_validate_json(raw_json)
     return task_metadata_for_plan(
         plan,
-        source_path=path.as_posix(),
+        source_path=source_path or path.as_posix(),
         seed_attack_plan_json=raw_json,
     )
 
@@ -221,6 +278,9 @@ def _formal_summary(candidate_json: str, plan: AttackPlan | None) -> dict[str, A
             "accepted": False,
             "family_invariants": 0,
             "proof_obligations": 0,
+            "typed_proof_obligations": 0,
+            "proof_obligation_type_rules": 0,
+            "type_rule_kinds": [],
             "lean_theorems": 0,
             "required_reviewers": 0,
             "claim_boundary_ok": False,
@@ -231,10 +291,27 @@ def _formal_summary(candidate_json: str, plan: AttackPlan | None) -> dict[str, A
     )
     proof_obligations = artifact["proof_obligations"]
     family_invariants = artifact["family_invariants"]
+    type_rules = artifact.get("proof_obligation_type_rules", [])
+    type_rule_keys: set[str] = set()
+    type_rule_kinds: set[str] = set()
+    for rule in type_rules:
+        type_rule_key = _type_rule_key(rule)
+        if type_rule_key is None:
+            continue
+        type_rule_keys.add(type_rule_key)
+        type_rule_kinds.add(rule["kind"])
+    typed_proof_obligations = [
+        obligation
+        for obligation in proof_obligations
+        if _obligation_has_matching_type_rule(obligation, type_rule_keys)
+    ]
     return {
         "accepted": True,
         "family_invariants": len(family_invariants),
         "proof_obligations": len(proof_obligations),
+        "typed_proof_obligations": len(typed_proof_obligations),
+        "proof_obligation_type_rules": len(type_rules),
+        "type_rule_kinds": sorted(type_rule_kinds),
         "lean_theorems": len(
             {
                 obligation["lean_theorem"]
@@ -273,6 +350,60 @@ def _no_security_overclaim(
     )
 
 
+def _proof_obligation_coverage_score(formal_summary: dict[str, Any]) -> float:
+    proof_obligations = formal_summary["proof_obligations"]
+    required_type_kinds = {
+        "target_invariant",
+        "operator_precondition",
+        "schema_only_boundary",
+        "family_applicability_boundary",
+        "estimator_claim_boundary",
+    }
+    return _bool_score(
+        proof_obligations > 0
+        and formal_summary["family_invariants"] > 0
+        and formal_summary["typed_proof_obligations"] == proof_obligations
+        and required_type_kinds.issubset(set(formal_summary["type_rule_kinds"]))
+    )
+
+
+def _obligation_has_matching_type_rule(
+    obligation: dict[str, Any],
+    type_rule_keys: set[str],
+) -> bool:
+    obligation_type = obligation.get("obligation_type")
+    type_rule = obligation.get("type_rule")
+    if not isinstance(obligation_type, dict) or not isinstance(type_rule, dict):
+        return False
+    kind = obligation_type.get("kind")
+    type_rule_key = _type_rule_key(type_rule)
+    return isinstance(kind, str) and type_rule.get("kind") == kind and (
+        type_rule_key in type_rule_keys
+    )
+
+
+def _type_rule_key(rule: object) -> str | None:
+    if not isinstance(rule, dict):
+        return None
+    lean_source = rule.get("lean_source")
+    lean_theorem = rule.get("lean_theorem")
+    if (
+        rule.get("schema_version")
+        != "agades.pqc.formal.proof_obligation_type_rule.v1"
+        or rule.get("backend") != "lean4"
+        or not isinstance(rule.get("kind"), str)
+        or not isinstance(lean_theorem, str)
+        or not lean_theorem.startswith("AgadesPQC.ProofObligation.")
+        or not isinstance(lean_source, dict)
+        or lean_source.get("path") != "formal/lean/AgadesPQC/ProofObligation.lean"
+        or not isinstance(lean_source.get("declaration"), str)
+        or not isinstance(lean_source.get("sha256"), str)
+        or not isinstance(rule.get("type_rule_sha256"), str)
+    ):
+        return None
+    return json.dumps(rule, sort_keys=True, separators=(",", ":"))
+
+
 def _student_readable(candidate_json: str, plan: AttackPlan) -> bool:
     stripped = candidate_json.strip()
     if not (stripped.startswith("{") and stripped.endswith("}")):
@@ -309,6 +440,8 @@ def _blocking_reasons(
         reasons.append("cryptographic_applicability")
     if terms["no_security_overclaim"] != 1.0:
         reasons.append("no_security_overclaim")
+    if terms["proof_obligation_coverage"] != 1.0:
+        reasons.append("proof_obligation_coverage")
     if require_task_match and task_info is None:
         reasons.append("task_info")
     if terms["task_match"] != 1.0:
@@ -326,6 +459,7 @@ def _rollout_trace(
         "schema_version": ROLLOUT_TRACE_SCHEMA,
         "task": task,
         "candidate": candidate,
+        "formal_artifact_binding": _formal_artifact_binding(candidate_json),
         "reward_report": reward_report,
         "public_release_ok": True,
         "private_fields_present": False,
@@ -350,6 +484,66 @@ def _candidate_summary(candidate_json: str) -> dict[str, Any]:
         "attack_plan_id": plan.attack_plan_id,
         "target_family": plan.target.family.value,
         "sha256": sha256,
+    }
+
+
+def _formal_artifact_binding(candidate_json: str) -> dict[str, Any]:
+    schema = "agades.pqc.rl.formal_artifact_binding.v1"
+    try:
+        artifact = build_attack_plan_proof_artifact_from_json(
+            candidate_json,
+            source_label="<rl-candidate>",
+        )
+    except (json.JSONDecodeError, ValidationError, ValueError):
+        return {
+            "schema_version": schema,
+            "status": "unavailable",
+            "attack_plan_id": None,
+            "family": None,
+            "artifact_sha256": None,
+            "family_invariant_ids": [],
+            "proof_obligation_ids": [],
+            "proof_obligation_sha256": [],
+            "proof_obligation_type_rule_sha256": [],
+            "review_status": None,
+            "required_reviewers": [],
+            "claim_allowed": False,
+            "claim_boundary": (
+                "formal artifact unavailable for invalid candidate; no claim "
+                "is allowed"
+            ),
+            "error_code": "formal_artifact_unavailable",
+        }
+
+    proof_obligations = artifact["proof_obligations"]
+    type_rules = artifact["proof_obligation_type_rules"]
+    review = artifact["review"]
+    return {
+        "schema_version": schema,
+        "status": "attached",
+        "attack_plan_id": artifact["attack_plan"]["id"],
+        "attack_plan_canonical_sha256": artifact["attack_plan"][
+            "canonical_sha256"
+        ],
+        "family": artifact["family"],
+        "artifact_sha256": artifact["artifact_sha256"],
+        "family_invariant_ids": [
+            invariant["invariant_id"]
+            for invariant in artifact["family_invariants"]
+        ],
+        "proof_obligation_ids": [
+            obligation["obligation_id"] for obligation in proof_obligations
+        ],
+        "proof_obligation_sha256": [
+            obligation["obligation_sha256"] for obligation in proof_obligations
+        ],
+        "proof_obligation_type_rule_sha256": [
+            rule["type_rule_sha256"] for rule in type_rules
+        ],
+        "review_status": review["status"],
+        "required_reviewers": review["required_reviewers"],
+        "claim_allowed": False,
+        "claim_boundary": review["claim_boundary"],
     }
 
 

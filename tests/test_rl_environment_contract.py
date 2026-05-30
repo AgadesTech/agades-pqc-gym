@@ -30,13 +30,18 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
             "sdk": "gradio",
             "category": "agent-environment",
             "task_dataset": "hf/dataset/task_metadata.jsonl",
-            "rollout_examples": "hf/dataset/verifier_outputs.jsonl",
+            "rollout_examples": "hf/dataset/rl_rollouts.jsonl",
             "public_visibility_allowed": True,
             "private_trace_publication_allowed": False,
         },
         "prime_verifiers_environment": {
             "environment": "agades-pqc-verifier-env",
             "eval_command": "prime eval run agades-pqc-verifier-env",
+            "eval_config": "docs/prime_eval_config_manifest.json",
+            "credentialed_eval_command_template": (
+                "prime eval run ${AGADES_PRIME_ENV_REF} -m "
+                "${AGADES_EVAL_MODEL} -p prime -n 32 -r 2 -t 2048 -s -A"
+            ),
             "training_stack": "prime-rl",
             "environment_hub_handoff": True,
             "hosted_training_handoff": True,
@@ -55,9 +60,18 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
         "requires_public_redaction": True,
     }
     assert contract["private_track"]["method"] == "pedagogical_rl"
+    assert contract["private_track"]["method_manifest_path"] == (
+        "docs/pedagogical_rl_method.json"
+    )
     assert contract["private_track"]["teacher_student_pattern"] == (
         "privileged_self_teacher_student"
     )
+    assert contract["private_track"]["stage_sequence"] == [
+        "privileged_self_teacher_grpo",
+        "spike_aware_trajectory_filter",
+        "surprisal_gated_student_assimilation",
+        "optional_private_grpo_refinement",
+    ]
     assert contract["private_track"]["qwen_training"]["target_model"] == (
         "Qwen3.6-27B-private"
     )
@@ -73,9 +87,15 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
         "facebook/TAPAS",
         "pq-code-package",
     ]
+    assert contract["private_track"]["datasets"]["curation_manifest_path"] == (
+        "docs/private_dataset_curation.json"
+    )
     assert contract["reward_model"] == {
         "type": "pedagogical_multi_term_reward",
         "range": [0.0, 1.0],
+        "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
+        "learnability_score": "spike_aware_logsumexp_surprise_gap",
+        "assimilation_objective": "surprisal_gated_imitation",
         "terms": [
             "formal_validity",
             "cryptographic_applicability",
@@ -89,13 +109,53 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
         "requires_no_security_claim": True,
         "requires_reviewer_quality_signal": True,
     }
-    assert contract["linked_artifacts"]["formal_proof_artifact"]["path"] == (
+    assert contract["linked_artifacts"]["formal_lwe_proof_artifact"]["path"] == (
         "docs/formal_lattice_primal_usvp_proof_artifact.json"
+    )
+    assert contract["linked_artifacts"]["formal_mlwe_proof_artifact"]["path"] == (
+        "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json"
     )
     assert contract["linked_artifacts"]["hf_rl_rollout_examples"]["path"] == (
         "hf/dataset/rl_rollouts.jsonl"
     )
-    assert len(contract["linked_artifacts"]["formal_proof_artifact"]["sha256"]) == 64
+    assert contract["linked_artifacts"]["prime_eval_config_manifest"]["path"] == (
+        "docs/prime_eval_config_manifest.json"
+    )
+    assert contract["linked_artifacts"]["prime_eval_template"]["path"] == (
+        "prime_intellect/evals/agades_pqc_eval.template.toml"
+    )
+    assert contract["linked_artifacts"]["pedagogical_rl_method"]["path"] == (
+        "docs/pedagogical_rl_method.json"
+    )
+    assert contract["linked_artifacts"]["private_dataset_curation"]["path"] == (
+        "docs/private_dataset_curation.json"
+    )
+    assert contract["linked_artifacts"]["reviewer_governance"]["path"] == (
+        "docs/reviewer_governance.json"
+    )
+    assert contract["linked_artifacts"]["formal_family_coverage"]["path"] == (
+        "docs/formal_family_coverage.json"
+    )
+    assert contract["linked_artifacts"]["formal_obligation_ledger"]["path"] == (
+        "docs/formal_obligation_ledger.json"
+    )
+    assert contract["linked_artifacts"]["formal_estimator_model"]["path"] == (
+        "docs/formal_estimator_model.json"
+    )
+    assert contract["linked_artifacts"]["formal_operator_semantics"]["path"] == (
+        "docs/formal_operator_semantics.json"
+    )
+    assert contract["linked_artifacts"]["formal_lean_backend"]["path"] == (
+        "docs/formal_lean_backend.json"
+    )
+    assert (
+        len(contract["linked_artifacts"]["formal_lwe_proof_artifact"]["sha256"])
+        == 64
+    )
+    assert (
+        len(contract["linked_artifacts"]["formal_mlwe_proof_artifact"]["sha256"])
+        == 64
+    )
 
 
 def test_committed_rl_environment_contract_is_in_sync(tmp_path: Path) -> None:
@@ -118,7 +178,7 @@ def test_rl_environment_contract_verify_accepts_committed_contract() -> None:
             "surfaces": 2,
             "reward_terms": 8,
             "private_dataset_sources": 3,
-            "linked_artifacts": 6,
+            "linked_artifacts": 19,
             "failure_count": 0,
         },
         "failures": [],

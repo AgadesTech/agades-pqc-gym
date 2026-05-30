@@ -1,0 +1,100 @@
+{
+  "accepted": true,
+  "accepted_path": {
+    "accepted": true,
+    "blocking_reasons": [],
+    "claims_pqc_break": false,
+    "evaluated_accepted": true,
+    "evaluation_ran": true,
+    "evaluation_status": "ok",
+    "evaluation_summary_has_no_claim": true,
+    "has_prompt": true,
+    "observation_ran": true,
+    "observation_schema": "agades.pqc.rl.observation.v1",
+    "private_fields_present": false,
+    "public_release_ok": true,
+    "reward": 1.0,
+    "reward_summary_has_no_claim": true,
+    "score_ran": true,
+    "trace_schema": "agades.pqc.rl.rollout_trace.v1"
+  },
+  "api": {
+    "agent_environment_api_names_present": true,
+    "evaluate_attack_plan_json": true,
+    "load_environment_observation": true,
+    "load_example_plan": true,
+    "score_attack_plan_for_task": true
+  },
+  "auth": {
+    "token_present": true,
+    "token_value_recorded": false
+  },
+  "failures": [],
+  "invalid_json_path": {
+    "accepted": false,
+    "blocking_reasons": [
+      "schema_valid",
+      "formal_validity",
+      "cryptographic_applicability",
+      "no_security_overclaim",
+      "proof_obligation_coverage",
+      "reviewer_quality",
+      "task_match"
+    ],
+    "claims_pqc_break": false,
+    "evaluated_accepted": false,
+    "evaluation_ran": true,
+    "evaluation_status": "invalid",
+    "evaluation_summary_has_no_claim": true,
+    "has_prompt": true,
+    "observation_ran": true,
+    "observation_schema": "agades.pqc.rl.observation.v1",
+    "private_fields_present": false,
+    "public_release_ok": true,
+    "reward": 0.0,
+    "reward_summary_has_no_claim": true,
+    "score_ran": true,
+    "trace_schema": "agades.pqc.rl.rollout_trace.v1"
+  },
+  "safety": {
+    "private_fields_present": false,
+    "records_full_payloads": false,
+    "records_raw_attack_plan": false,
+    "records_token_value": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.hf_space_remote_smoke.v1",
+  "space": {
+    "domain_ready": true,
+    "id": "agades/agades-pqc-gym-agent-env",
+    "private": true,
+    "runtime_stage": "RUNNING",
+    "sha": "e014c01c281ed83c72c57b5c2d8853d880f08b7b"
+  },
+  "unsupported_path": {
+    "accepted": false,
+    "blocking_reasons": [
+      "schema_valid",
+      "formal_validity",
+      "cryptographic_applicability",
+      "no_security_overclaim",
+      "proof_obligation_coverage",
+      "reviewer_quality",
+      "task_match"
+    ],
+    "claims_pqc_break": false,
+    "evaluated_accepted": false,
+    "evaluation_ran": true,
+    "evaluation_status": "invalid",
+    "evaluation_summary_has_no_claim": true,
+    "has_prompt": true,
+    "observation_ran": true,
+    "observation_schema": "agades.pqc.rl.observation.v1",
+    "private_fields_present": false,
+    "public_release_ok": true,
+    "reward": 0.0,
+    "reward_summary_has_no_claim": true,
+    "score_ran": true,
+    "trace_schema": "agades.pqc.rl.rollout_trace.v1"
+  }
+}

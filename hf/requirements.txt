@@ -1,5 +1,5 @@
 agades-pqc-gym @ git+https://github.com/AgadesTech/agades-pqc-gym.git@main
-gradio>=4,<6
+gradio>=4,<7
 pydantic>=2.7,<3
 pyyaml>=6.0.1,<7
 rich>=13.7,<15

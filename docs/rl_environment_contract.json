@@ -1,6 +1,7 @@
 {
   "claim_boundary": {
     "agent_task": "produce, critique, repair, or validate AttackPlan JSON and proof obligations",
+    "formal_obligation_ledger_path": "docs/formal_obligation_ledger.json",
     "formal_obligations_required_before_claim": true,
     "human_review_required_before_claim": true,
     "not_a_task": "claiming practical PQC breaks without formal/domain review"
@@ -22,33 +23,86 @@
     }
   },
   "linked_artifacts": {
-    "formal_proof_artifact": {
+    "formal_estimator_model": {
+      "path": "docs/formal_estimator_model.json",
+      "sha256": "71fd50f7bc4651d2b4ff80cf5f7a8f46c8ce513e8ad9e875ae6b391d207408c2"
+    },
+    "formal_family_coverage": {
+      "path": "docs/formal_family_coverage.json",
+      "sha256": "244aece8209436e7113279d8d63b9266b8f2e7502852e0adfb2ecced15e11333"
+    },
+    "formal_lean_backend": {
+      "path": "docs/formal_lean_backend.json",
+      "sha256": "e06c1d1107a57abb6203f8343e7135f2e9931a2ff7affbd2738b1bc6025ea8aa"
+    },
+    "formal_lwe_proof_artifact": {
       "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "d0b47901a925d52182e2d6c24db121491a4f195bb91cd1a1912335fc586f5f2f"
+      "sha256": "fc87c4ccd8afcc308bd847020dfdc44a2ddd42398febeb21f30451e61d9ae004"
+    },
+    "formal_mlwe_proof_artifact": {
+      "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
+      "sha256": "8ae91212c526a1e77b86f6d28dd1a90631d6186a30e589135a269cb7c642a0dd"
+    },
+    "formal_obligation_ledger": {
+      "path": "docs/formal_obligation_ledger.json",
+      "sha256": "4599de5b004e29f8122237b7f726e3a725e1fd1685039b23717e6ed0da4e4185"
+    },
+    "formal_operator_semantics": {
+      "path": "docs/formal_operator_semantics.json",
+      "sha256": "9fa0bc4ee4cd2f5229d9352a2e9e490df323819bbfea5c6cf446a34fab2d231c"
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",
-      "sha256": "ca31008dbc6f1bf94a79580b7ff0698d3cb81fb84b1927454005fc6ea04a3c65"
+      "sha256": "f86ba527102140e3023c9d58931d4a1c4595982ff67fee32be09a126697b2749"
     },
     "hf_space_manifest": {
       "path": "hf/space_manifest.json",
-      "sha256": "df95cf04d618998377a3a6bf712dc8dad7cd500fb56c29d0898926250e1de58f"
+      "sha256": "8ed1e1f01485e6438628766fb5c710dcfb4bcde60f1717d8f624147e9297f20c"
+    },
+    "pedagogical_rl_method": {
+      "path": "docs/pedagogical_rl_method.json",
+      "sha256": "2bc9d13876553faf994706896ff2b8a4c518a0b286da4521d8e4169b35ebf34f"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
-      "sha256": "b4a421a2179773908e18b8a52a91fb17cd35dc826fa9a7a4ecdb8afffb15ebbf"
+      "sha256": "12c27d7254504526062db94d9cf128d9fdee8b59a0712a4efb456e3957f56bd4"
+    },
+    "prime_eval_config_manifest": {
+      "path": "docs/prime_eval_config_manifest.json",
+      "sha256": "ecaa5ee01641f6b59e9255626dedb7914c0d8eb6ede3a29cfc750676a62e0013"
+    },
+    "prime_eval_template": {
+      "path": "prime_intellect/evals/agades_pqc_eval.template.toml",
+      "sha256": "8a653d4d2258e3e51561676c479edd30ef756b4f66c09ef24f3be1b461e4e152"
+    },
+    "prime_rl_training_template": {
+      "path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
+      "sha256": "b3dadf71ff5a729b7eb27fcf80107e7db1687f9fa196d0521193332bbba1d4c2"
     },
     "prime_schema_manifest": {
       "path": "prime_intellect/schemas/schema_manifest.json",
       "sha256": "f448d41c640e6dc02a462af1bf695a93045676a191cee53403a121cab833fbeb"
     },
+    "private_dataset_curation": {
+      "path": "docs/private_dataset_curation.json",
+      "sha256": "68b6deaa764fa827b36d4b73b5d40eaf51aca89ccb8d7fbe01a4e7f15f44509f"
+    },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
       "sha256": "a0992031eb7a4268e4813b4d5f02a9ca4dda078972c935ef829c8e981259d86a"
+    },
+    "private_training_manifest": {
+      "path": "docs/private_training_config_manifest.json",
+      "sha256": "4f6f8bcb4e6645999852b24c08a42d20df0bb34adc4af20471abb02ec6858c95"
+    },
+    "reviewer_governance": {
+      "path": "docs/reviewer_governance.json",
+      "sha256": "f60236557ccae6b0f1425dfa9680e972b2d379ad5c7192a90f0f64bb9e0506b5"
     }
   },
   "private_track": {
     "datasets": {
+      "curation_manifest_path": "docs/private_dataset_curation.json",
       "private_roots": [
         "private/datasets",
         "private/traces",
@@ -69,6 +123,7 @@
       ]
     },
     "method": "pedagogical_rl",
+    "method_manifest_path": "docs/pedagogical_rl_method.json",
     "publish_finetuned_model_publicly": false,
     "publish_prompts_publicly": false,
     "publish_reviewer_annotations_publicly": false,
@@ -83,6 +138,12 @@
       "training_path": "lora_or_qlora_on_trainable_weights_then_private_gguf_otq_quantization"
     },
     "spike_aware_pedagogy_reward": true,
+    "stage_sequence": [
+      "privileged_self_teacher_grpo",
+      "spike_aware_trajectory_filter",
+      "surprisal_gated_student_assimilation",
+      "optional_private_grpo_refinement"
+    ],
     "surprisal_gated_imitation": true,
     "teacher_student_pattern": "privileged_self_teacher_student"
   },
@@ -107,9 +168,16 @@
     "uv run agades-pqc rl-environment-contract --out docs/rl_environment_contract.json",
     "uv run agades-pqc rl-environment-contract-verify --contract docs/rl_environment_contract.json",
     "uv run agades-pqc private-run-policy-verify --policy docs/private_run_policy.json",
-    "uv run agades-pqc formal-proof-artifact-verify --artifact docs/formal_lattice_primal_usvp_proof_artifact.json"
+    "uv run agades-pqc private-dataset-curation-verify --curation docs/private_dataset_curation.json",
+    "uv run agades-pqc formal-proof-artifact-verify --artifact docs/formal_lattice_primal_usvp_proof_artifact.json",
+    "uv run agades-pqc formal-proof-artifact-verify --artifact docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
+    "uv run agades-pqc formal-obligation-ledger-verify --ledger docs/formal_obligation_ledger.json",
+    "uv run agades-pqc reviewer-governance-verify --governance docs/reviewer_governance.json"
   ],
   "reward_model": {
+    "assimilation_objective": "surprisal_gated_imitation",
+    "learnability_score": "spike_aware_logsumexp_surprise_gap",
+    "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
     "range": [
       0.0,
       1.0
@@ -134,15 +202,17 @@
       "category": "agent-environment",
       "private_trace_publication_allowed": false,
       "public_visibility_allowed": true,
-      "rollout_examples": "hf/dataset/verifier_outputs.jsonl",
+      "rollout_examples": "hf/dataset/rl_rollouts.jsonl",
       "sdk": "gradio",
       "space_id_template": "agades/agades-pqc-gym-agent-env",
       "task_dataset": "hf/dataset/task_metadata.jsonl"
     },
     "prime_verifiers_environment": {
+      "credentialed_eval_command_template": "prime eval run ${AGADES_PRIME_ENV_REF} -m ${AGADES_EVAL_MODEL} -p prime -n 32 -r 2 -t 2048 -s -A",
       "environment": "agades-pqc-verifier-env",
       "environment_hub_handoff": true,
       "eval_command": "prime eval run agades-pqc-verifier-env",
+      "eval_config": "docs/prime_eval_config_manifest.json",
       "hosted_training_handoff": true,
       "private_trace_publication_allowed": false,
       "training_stack": "prime-rl"

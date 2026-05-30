@@ -10,6 +10,12 @@ from agades_pqc_gym.core.attack_plan import AttackPlan
 from agades_pqc_gym.integrations.family_support import (
     summarize_family_support_matrix,
 )
+from agades_pqc_gym.integrations.prime_eval_config import (
+    DEFAULT_CONFIG_PATH as PRIME_EVAL_CONFIG_PATH,
+)
+from agades_pqc_gym.integrations.prime_eval_config import (
+    DEFAULT_MANIFEST_PATH as PRIME_EVAL_MANIFEST_PATH,
+)
 from agades_pqc_gym.integrations.public_private_boundary import (
     build_public_private_boundary,
     redaction_summary_fields,
@@ -49,6 +55,12 @@ _REQUIRED_RELEASE_GATES = (
     "reports/prime_environment_smoke.json",
     "uv run agades-pqc prime-environment-smoke-verify --report "
     "reports/prime_environment_smoke.json",
+    "uv run agades-pqc prime-eval-config --config "
+    "prime_intellect/evals/agades_pqc_eval.template.toml --manifest "
+    "docs/prime_eval_config_manifest.json",
+    "uv run agades-pqc prime-eval-config-verify --config "
+    "prime_intellect/evals/agades_pqc_eval.template.toml --manifest "
+    "docs/prime_eval_config_manifest.json",
     "uv run agades-pqc prime-schemas --out prime_intellect/schemas",
     "uv build prime_intellect/verifiers_environment",
     "uv run agades-pqc ecosystem-smoke-verify --report "
@@ -85,6 +97,13 @@ def build_prime_environment_manifest(root: Path | None = None) -> dict[str, Any]
         },
         "prime": {
             "environment_dir": ENVIRONMENT_DIR.as_posix(),
+            "eval_config_path": PRIME_EVAL_CONFIG_PATH.as_posix(),
+            "eval_manifest_path": PRIME_EVAL_MANIFEST_PATH.as_posix(),
+            "eval_config_verify_command": (
+                "uv run agades-pqc prime-eval-config-verify --config "
+                f"{PRIME_EVAL_CONFIG_PATH.as_posix()} --manifest "
+                f"{PRIME_EVAL_MANIFEST_PATH.as_posix()}"
+            ),
             "local_editable_install_command": (
                 f"cd {ENVIRONMENT_DIR.as_posix()} && uv pip install -e ."
             ),
@@ -290,6 +309,9 @@ def _verify_prime_commands(
     expected_prime = expected.get("prime", {})
     for field in (
         "environment_dir",
+        "eval_config_path",
+        "eval_manifest_path",
+        "eval_config_verify_command",
         "local_editable_install_command",
         "local_eval_command",
         "hub_private_push_command",

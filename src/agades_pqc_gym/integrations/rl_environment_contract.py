@@ -5,6 +5,16 @@ import json
 from pathlib import Path
 from typing import Any
 
+from agades_pqc_gym.core.target import TargetFamily
+from agades_pqc_gym.formal.artifacts import MVP_VERTICAL_PROOF_ARTIFACT_PATHS
+from agades_pqc_gym.integrations.pedagogical_rl_method import (
+    ASSIMILATION_OBJECTIVE,
+    LEARNABILITY_SCORE,
+    PEDAGOGY_REWARD,
+    STAGE_SEQUENCE,
+    TEACHER_STUDENT_PATTERN,
+)
+
 RL_ENVIRONMENT_CONTRACT_SCHEMA = "agades.pqc.rl_environment_contract.v1"
 RL_ENVIRONMENT_CONTRACT_VERIFICATION_SCHEMA = (
     "agades.pqc.rl_environment_contract_verification.v1"
@@ -32,12 +42,32 @@ PRIVATE_DATASET_CONTROLS = [
     "redaction",
     "contamination_audit",
 ]
+PRIVATE_DATASET_CURATION_MANIFEST_PATH = "docs/private_dataset_curation.json"
 LINKED_ARTIFACT_PATHS = {
     "hf_space_manifest": "hf/space_manifest.json",
+    "hf_rl_rollout_examples": "hf/dataset/rl_rollouts.jsonl",
     "prime_environment_manifest": "prime_intellect/verifiers_environment/"
     "prime_manifest.json",
+    "prime_eval_config_manifest": "docs/prime_eval_config_manifest.json",
+    "prime_eval_template": "prime_intellect/evals/agades_pqc_eval.template.toml",
     "private_run_policy": "docs/private_run_policy.json",
-    "formal_proof_artifact": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+    "private_dataset_curation": PRIVATE_DATASET_CURATION_MANIFEST_PATH,
+    "private_training_manifest": "docs/private_training_config_manifest.json",
+    "prime_rl_training_template": "prime_intellect/training/"
+    "private_qwen_prime_rl.template.toml",
+    "pedagogical_rl_method": "docs/pedagogical_rl_method.json",
+    "formal_obligation_ledger": "docs/formal_obligation_ledger.json",
+    "formal_estimator_model": "docs/formal_estimator_model.json",
+    "formal_family_coverage": "docs/formal_family_coverage.json",
+    "formal_operator_semantics": "docs/formal_operator_semantics.json",
+    "formal_lean_backend": "docs/formal_lean_backend.json",
+    "formal_lwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
+        TargetFamily.LWE.value
+    ],
+    "formal_mlwe_proof_artifact": MVP_VERTICAL_PROOF_ARTIFACT_PATHS[
+        TargetFamily.MLWE.value
+    ],
+    "reviewer_governance": "docs/reviewer_governance.json",
     "prime_schema_manifest": "prime_intellect/schemas/schema_manifest.json",
 }
 
@@ -57,13 +87,18 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
                 "sdk": "gradio",
                 "category": "agent-environment",
                 "task_dataset": "hf/dataset/task_metadata.jsonl",
-                "rollout_examples": "hf/dataset/verifier_outputs.jsonl",
+                "rollout_examples": "hf/dataset/rl_rollouts.jsonl",
                 "public_visibility_allowed": True,
                 "private_trace_publication_allowed": False,
             },
             "prime_verifiers_environment": {
                 "environment": "agades-pqc-verifier-env",
                 "eval_command": "prime eval run agades-pqc-verifier-env",
+                "eval_config": "docs/prime_eval_config_manifest.json",
+                "credentialed_eval_command_template": (
+                    "prime eval run ${AGADES_PRIME_ENV_REF} -m "
+                    "${AGADES_EVAL_MODEL} -p prime -n 32 -r 2 -t 2048 -s -A"
+                ),
                 "training_stack": "prime-rl",
                 "environment_hub_handoff": True,
                 "hosted_training_handoff": True,
@@ -83,7 +118,9 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
         },
         "private_track": {
             "method": "pedagogical_rl",
-            "teacher_student_pattern": "privileged_self_teacher_student",
+            "method_manifest_path": "docs/pedagogical_rl_method.json",
+            "teacher_student_pattern": TEACHER_STUDENT_PATTERN,
+            "stage_sequence": list(STAGE_SEQUENCE),
             "spike_aware_pedagogy_reward": True,
             "surprisal_gated_imitation": True,
             "publish_training_traces_publicly": False,
@@ -92,6 +129,7 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
             "publish_finetuned_model_publicly": False,
             "datasets": {
                 "sources": list(PRIVATE_DATASET_SOURCES),
+                "curation_manifest_path": PRIVATE_DATASET_CURATION_MANIFEST_PATH,
                 "required_controls": list(PRIVATE_DATASET_CONTROLS),
                 "private_roots": [
                     "private/datasets",
@@ -116,6 +154,9 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
         "reward_model": {
             "type": "pedagogical_multi_term_reward",
             "range": [0.0, 1.0],
+            "pedagogy_reward": PEDAGOGY_REWARD,
+            "learnability_score": LEARNABILITY_SCORE,
+            "assimilation_objective": ASSIMILATION_OBJECTIVE,
             "terms": list(REWARD_TERMS),
             "requires_no_security_claim": True,
             "requires_reviewer_quality_signal": True,
@@ -128,6 +169,7 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
             "not_a_task": "claiming practical PQC breaks without formal/domain review",
             "human_review_required_before_claim": True,
             "formal_obligations_required_before_claim": True,
+            "formal_obligation_ledger_path": "docs/formal_obligation_ledger.json",
         },
         "evolution_loops": {
             "public_toy_eval": {
@@ -154,8 +196,16 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
             "docs/rl_environment_contract.json",
             "uv run agades-pqc private-run-policy-verify --policy "
             "docs/private_run_policy.json",
+            "uv run agades-pqc private-dataset-curation-verify --curation "
+            f"{PRIVATE_DATASET_CURATION_MANIFEST_PATH}",
             "uv run agades-pqc formal-proof-artifact-verify --artifact "
-            "docs/formal_lattice_primal_usvp_proof_artifact.json",
+            f"{MVP_VERTICAL_PROOF_ARTIFACT_PATHS[TargetFamily.LWE.value]}",
+            "uv run agades-pqc formal-proof-artifact-verify --artifact "
+            f"{MVP_VERTICAL_PROOF_ARTIFACT_PATHS[TargetFamily.MLWE.value]}",
+            "uv run agades-pqc formal-obligation-ledger-verify --ledger "
+            "docs/formal_obligation_ledger.json",
+            "uv run agades-pqc reviewer-governance-verify --governance "
+            "docs/reviewer_governance.json",
         ],
     }
 
@@ -269,6 +319,13 @@ def _verify_surfaces(contract: dict[str, Any], failures: list[str]) -> None:
         )
     if prime.get("eval_command") != "prime eval run agades-pqc-verifier-env":
         failures.append("Prime eval command is incorrect.")
+    if prime.get("eval_config") != "docs/prime_eval_config_manifest.json":
+        failures.append("Prime eval config manifest is incorrect.")
+    if prime.get("credentialed_eval_command_template") != (
+        "prime eval run ${AGADES_PRIME_ENV_REF} -m ${AGADES_EVAL_MODEL} "
+        "-p prime -n 32 -r 2 -t 2048 -s -A"
+    ):
+        failures.append("Prime credentialed eval command template is incorrect.")
     if prime.get("training_stack") != "prime-rl":
         failures.append("Prime training stack must be prime-rl.")
     if prime.get("private_trace_publication_allowed") is not False:
@@ -295,10 +352,12 @@ def _verify_private_track(contract: dict[str, Any], failures: list[str]) -> None
         return
     if private_track.get("method") != "pedagogical_rl":
         failures.append("Private RL method must be pedagogical_rl.")
-    if private_track.get("teacher_student_pattern") != (
-        "privileged_self_teacher_student"
-    ):
+    if private_track.get("method_manifest_path") != "docs/pedagogical_rl_method.json":
+        failures.append("Private RL must bind the Pedagogical RL method.")
+    if private_track.get("teacher_student_pattern") != TEACHER_STUDENT_PATTERN:
         failures.append("Private RL must use privileged self-teacher/student.")
+    if private_track.get("stage_sequence") != STAGE_SEQUENCE:
+        failures.append("Private RL stage sequence is incorrect.")
     for key in (
         "publish_training_traces_publicly",
         "publish_reviewer_annotations_publicly",
@@ -313,6 +372,10 @@ def _verify_private_track(contract: dict[str, Any], failures: list[str]) -> None
     datasets = private_track.get("datasets", {})
     if datasets.get("sources") != PRIVATE_DATASET_SOURCES:
         failures.append("Private RL dataset sources are incorrect.")
+    if datasets.get("curation_manifest_path") != (
+        PRIVATE_DATASET_CURATION_MANIFEST_PATH
+    ):
+        failures.append("Private RL datasets must bind curation manifest.")
     if datasets.get("required_controls") != PRIVATE_DATASET_CONTROLS:
         failures.append("Private RL dataset controls are incorrect.")
     if datasets.get("publication_allowed") is not False:
@@ -335,6 +398,12 @@ def _verify_reward_model(contract: dict[str, Any], failures: list[str]) -> None:
         return
     if reward_model.get("terms") != REWARD_TERMS:
         failures.append("RL reward terms are incorrect.")
+    if reward_model.get("pedagogy_reward") != PEDAGOGY_REWARD:
+        failures.append("RL pedagogy reward is incorrect.")
+    if reward_model.get("learnability_score") != LEARNABILITY_SCORE:
+        failures.append("RL learnability score is incorrect.")
+    if reward_model.get("assimilation_objective") != ASSIMILATION_OBJECTIVE:
+        failures.append("RL assimilation objective is incorrect.")
     if reward_model.get("requires_no_security_claim") is not True:
         failures.append("RL reward must enforce no-overclaim behavior.")
     if reward_model.get("requires_reviewer_quality_signal") is not True:
@@ -350,6 +419,10 @@ def _verify_claim_boundary(contract: dict[str, Any], failures: list[str]) -> Non
         failures.append("RL claims must require human review.")
     if claim_boundary.get("formal_obligations_required_before_claim") is not True:
         failures.append("RL claims must require formal obligations.")
+    if claim_boundary.get("formal_obligation_ledger_path") != (
+        "docs/formal_obligation_ledger.json"
+    ):
+        failures.append("RL contract must bind the formal obligation ledger.")
     if "PQC breaks" not in claim_boundary.get("not_a_task", ""):
         failures.append("RL contract must forbid unreviewed PQC break claims.")
 

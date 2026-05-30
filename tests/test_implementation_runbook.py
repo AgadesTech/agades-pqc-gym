@@ -5,6 +5,10 @@ from pathlib import Path
 REQUIRED_CHECKED_RELEASE_COMMANDS = (
     "uv run agades-pqc hf-space-smoke --out reports/hf_space_smoke.json",
     "uv run agades-pqc hf-space-smoke-verify --report reports/hf_space_smoke.json",
+    "uv run agades-pqc hf-space-remote-smoke --space-id "
+    "agades/agades-pqc-gym-agent-env --out reports/hf_space_remote_smoke.json",
+    "uv run agades-pqc hf-space-remote-smoke-verify "
+    "--report reports/hf_space_remote_smoke.json",
     "uv run agades-pqc nvidia-manifest-safety "
     "--out reports/nvidia_manifest_safety.json",
     "uv run agades-pqc nvidia-manifest-safety-verify "
@@ -19,6 +23,7 @@ REQUIRED_CHECKED_RELEASE_COMMANDS = (
 )
 REQUIRED_CHECKED_REPORTS = (
     "reports/hf_space_smoke.json",
+    "reports/hf_space_remote_smoke.json",
     "reports/nvidia_manifest_safety.json",
     "reports/prime_environment_smoke.json",
     "reports/ecosystem_smoke.json",

@@ -91,7 +91,7 @@ EXPECTED_PRIME_HUB_WARNING_EVIDENCE = {
     "external_publication_requires_review": True,
     "local_package_ready": True,
     "prime_hub_publication_performed": False,
-    "publication_artifact_count": 10,
+    "publication_artifact_count": 12,
     "publication_family_count": 9,
     "publication_task_count": 79,
     "requires_credentials": True,
@@ -155,7 +155,7 @@ EXPECTED_CREDENTIAL_REVIEW_QUEUE = [
         "smoke_gate": "hf-dataset-safety",
     },
     {
-        "artifact_count": 4,
+        "artifact_count": 5,
         "credential_material_included": False,
         "first_publication_target": "private_or_draft_review_surface",
         "id": "huggingface-space",
@@ -186,7 +186,7 @@ EXPECTED_PLATFORM_REVIEW_MATRIX = {
         "surface_ids": ["github-repository"],
     },
     "hugging_face": {
-        "artifact_count": 17,
+        "artifact_count": 18,
         "credentialed_surface_count": 3,
         "publication_statuses": [
             "local_artifact_ready",
@@ -325,10 +325,10 @@ def test_publication_preflight_blocks_external_publication_without_review() -> N
     assert preflight["audit"] == {
         "accepted": True,
         "failed": 0,
-        "passed": 57,
+        "passed": 61,
         "warning": 1,
         "warning_check_ids": ["prime-hub-publication"],
-        "total": 58,
+        "total": 62,
     }
     assert preflight["external_review"] == EXPECTED_EXTERNAL_REVIEW
     assert preflight["blockers"] == [

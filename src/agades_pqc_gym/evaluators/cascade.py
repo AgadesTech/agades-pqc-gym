@@ -12,6 +12,7 @@ from agades_pqc_gym.core.registry import FamilyRegistry
 from agades_pqc_gym.evaluators.base import EstimatorAdapter, EstimatorResult
 from agades_pqc_gym.evaluators.fitness import compute_fitness
 from agades_pqc_gym.evaluators.router import FamilyEvaluatorRouter
+from agades_pqc_gym.utils.validation_errors import stable_validation_error_messages
 from agades_pqc_gym.validators.assumptions import assumption_penalty
 from agades_pqc_gym.validators.static import ValidationResult, validate_attack_plan
 
@@ -42,8 +43,23 @@ class CascadeEvaluator:
     def evaluate_path(self, path: Path) -> CascadeResult:
         try:
             plan = AttackPlan.model_validate_json(path.read_text())
-        except (OSError, ValidationError) as exc:
+        except OSError as exc:
             validation = ValidationResult(valid=False, errors=[str(exc)])
+            fitness = compute_fitness(validation, None)
+            return CascadeResult(
+                valid=False,
+                plan=None,
+                validation=validation,
+                estimator_result=None,
+                reproduction_result=None,
+                metrics=fitness.as_metrics(),
+                warnings=[],
+            )
+        except ValidationError as exc:
+            validation = ValidationResult(
+                valid=False,
+                errors=stable_validation_error_messages(exc),
+            )
             fitness = compute_fitness(validation, None)
             return CascadeResult(
                 valid=False,

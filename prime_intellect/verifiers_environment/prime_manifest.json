@@ -63,6 +63,9 @@
   },
   "prime": {
     "environment_dir": "prime_intellect/verifiers_environment",
+    "eval_config_path": "prime_intellect/evals/agades_pqc_eval.template.toml",
+    "eval_config_verify_command": "uv run agades-pqc prime-eval-config-verify --config prime_intellect/evals/agades_pqc_eval.template.toml --manifest docs/prime_eval_config_manifest.json",
+    "eval_manifest_path": "docs/prime_eval_config_manifest.json",
     "hub_install_command_template": "prime env install <owner>/agades-pqc-verifier-env",
     "hub_private_push_command": "prime env push --path prime_intellect/verifiers_environment --visibility PRIVATE",
     "local_editable_install_command": "cd prime_intellect/verifiers_environment && uv pip install -e .",
@@ -107,6 +110,8 @@
     "uv run agades-pqc prime-manifest-verify --manifest prime_intellect/verifiers_environment/prime_manifest.json",
     "uv run agades-pqc prime-environment-smoke --out reports/prime_environment_smoke.json",
     "uv run agades-pqc prime-environment-smoke-verify --report reports/prime_environment_smoke.json",
+    "uv run agades-pqc prime-eval-config --config prime_intellect/evals/agades_pqc_eval.template.toml --manifest docs/prime_eval_config_manifest.json",
+    "uv run agades-pqc prime-eval-config-verify --config prime_intellect/evals/agades_pqc_eval.template.toml --manifest docs/prime_eval_config_manifest.json",
     "uv run agades-pqc prime-schemas --out prime_intellect/schemas",
     "uv build prime_intellect/verifiers_environment",
     "uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json",

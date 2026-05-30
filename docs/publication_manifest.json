@@ -482,7 +482,7 @@
         "public/release_audit.json"
       ],
       "artifact_sha256": {
-        "README.md": "1dd4242bc17a9c6fe76a66094f6d6951ce4bfb32af597532fde7603174ce5b94",
+        "README.md": "03c55fdee3c984b2706de16fd07fcd4fc2a2f453ee46c27a59fe992d614ee095",
         "docs/ARCHITECTURE.md": "46fbdcb6dba081593b277adeff09ef8b97831e1b6efe0dd0b5b2602c98796e1f",
         "docs/FAMILY_ADAPTERS.md": "808df8b36e7495c4cf97487b59261179204e856c2ed7be42b91c1d21388f247c",
         "docs/MOAT_AND_OPEN_SOURCE_STRATEGY.md": "80df04f80c1c89f3af2ee3281ecefe4f8e15a8633d8cecdae6e7a6f3faec5ec7",
@@ -491,13 +491,13 @@
         "docs/family_plugin_manifest.json": "c6fca7e84e9abcb06772f866e47f7b19dc0713e3a8b2dbdbea26dc97a2386745",
         "docs/family_registry_manifest.json": "d84193b0e5f2ad3fd82497d1bf59188f847fb43fcebffe9ae8f951fc2bd73b58",
         "docs/family_support_matrix.json": "60a981d8f32be7ce17613855c3b9655ffb22de6ffd24d09dbcc37c549653fd29",
-        "docs/huggingface_publication_handoff.json": "602696482c11ae0ec0c02bf95a32802212e60b75066fa500ee2c61f3417208b3",
+        "docs/huggingface_publication_handoff.json": "2227a229051d2cb9e40a01c0104164e6ca58d4bcac4e4d5796056aeba88b12ad",
         "docs/lattice_estimator_baseline_contracts.json": "09100e2ba4733daffee5c82e58153ed8585210589b2112467ff29e86ba2bf2a5",
         "docs/lattice_estimator_manifest.json": "0b52a47bd0217a194d1004ce3433ea5c9e0404f85e0a05415e8c37bbe240c2cb",
-        "docs/nvidia_publication_handoff.json": "53f8ccb28f5674340067d8fa8b8b0481dbfb7cdb23e6d219889a2598dcca8af5",
-        "docs/prime_publication_handoff.json": "d15bbdd01a1e009c8cc6aa0c9cf5ff6bcd30d1b9c6d5283f32f5067a2e8a90f7",
-        "docs/prime_speedrun_handoff.json": "2f12f22d143098183a04f8d9ab880ccaaf66561740daf5edc960efcbfd3f2bb1",
-        "docs/private_run_policy.json": "0b948501aaccae1831c0500b0d295aecccc6e1a26abcdd39a0cce8afc00b9e88",
+        "docs/nvidia_publication_handoff.json": "e338233961a36c805c34d7c08d2b033a355ac64f2bdcedce63ede6c0ec9342c8",
+        "docs/prime_publication_handoff.json": "d216626cebb9967298b13167417f326aefab0a1b3fd34aaae233c0f3d6864046",
+        "docs/prime_speedrun_handoff.json": "90cd430c7d8f2647b647f9cc28dbb15882bd51e60d1233059374f07ca8f29201",
+        "docs/private_run_policy.json": "a0992031eb7a4268e4813b4d5f02a9ca4dda078972c935ef829c8e981259d86a",
         "docs/public_benchmark_manifest.json": "c45741efde84f27edfd6feab0e3217f68c88a5be4d56a038b2973ea2296722f7",
         "docs/runbook_input_manifest.json": "c5b8adbb47849f7684ede4a52113902f2f60f205b74893b9170a60093904d6fe",
         "docs/source_catalog.json": "9648bc812ae0465cf9bf28e410d3fcbdc63ec6d17060c35b4e05e98ea55dc058",
@@ -538,12 +538,12 @@
         "hf/dataset/MANIFEST.sha256"
       ],
       "artifact_sha256": {
-        "hf/dataset/MANIFEST.sha256": "a41655fef1ec9cd99b3645e5bc2815c9bc2c5723000241f06521624355e08b97",
+        "hf/dataset/MANIFEST.sha256": "a9279fdb1fe9226bf5c3421e2354db47b1877add6aba7489f3b58df14e17694c",
         "hf/dataset/README.md": "e8e354eccacc48786080acf98b788eaea6670802617489bc55d3b7826cefb92d",
         "hf/dataset/attack_plans.jsonl": "2d6a3c4b8a11a1a891c238abc58a865833febbd72bcb8e0fe01af05b224bfa35",
-        "hf/dataset/dataset_info.json": "05790472c7bd6422a7a037c255a724fe7d439c937f467a6c9664130e36a9f9fe",
+        "hf/dataset/dataset_info.json": "1866d14ab9c5810abcfa4d93add5cd1757c84e987eda05c7cf7f3ad0b4d25a6c",
         "hf/dataset/task_metadata.jsonl": "c2e31a25a20585b2b0186d114a9101a15e3130f69255bdace0926890d96ab43b",
-        "hf/dataset/verifier_outputs.jsonl": "cce09b0ed5a6fb04cb008738d2dfeac4c7f3a84f9c5d7d613f7f3d76d7eff58d"
+        "hf/dataset/verifier_outputs.jsonl": "6eb3197c422b72dd386fcb32968aca5095a9342a2cea52fce871555b65705f74"
       },
       "id": "huggingface-dataset",
       "platform": "hugging_face",
@@ -561,16 +561,18 @@
     },
     {
       "artifact_paths": [
+        "hf/README.md",
         "hf/app.py",
         "hf/requirements.txt",
         "hf/space_README.md",
         "hf/space_manifest.json"
       ],
       "artifact_sha256": {
-        "hf/app.py": "7fa838f6bfc3db5fbc2f77f53a07ad18a51cebfdb73062ee1b744108b2af9210",
-        "hf/requirements.txt": "ff3c22bb08d4114228f12c0a07e14d10d85e7928167acc5054396ecbc110fdbf",
-        "hf/space_README.md": "b2c701f387abe8d8494e443c09d071960496bb06ba92943e70914e76075bb501",
-        "hf/space_manifest.json": "df95cf04d618998377a3a6bf712dc8dad7cd500fb56c29d0898926250e1de58f"
+        "hf/README.md": "d31c83f63c5ffd4826fb58217738a4e27e1a486b3670d1d2557574db3604ccf9",
+        "hf/app.py": "fb5b893725bd8aa60427050a72a213eb578e823e760638f5aac100e799c6e516",
+        "hf/requirements.txt": "a1161753e498c0569be2677a964d752b861f4923318bcadec273a446b8baf313",
+        "hf/space_README.md": "1e0adf23066cf7ae3ee79d7be51c712f89a172cccbf5b3052002bd0beab7211e",
+        "hf/space_manifest.json": "8ed1e1f01485e6438628766fb5c710dcfb4bcde60f1717d8f624147e9297f20c"
       },
       "id": "huggingface-space",
       "platform": "hugging_face",
@@ -597,13 +599,13 @@
         "docs/huggingface_publication_handoff.json"
       ],
       "artifact_sha256": {
-        "docs/huggingface_publication_handoff.json": "602696482c11ae0ec0c02bf95a32802212e60b75066fa500ee2c61f3417208b3",
+        "docs/huggingface_publication_handoff.json": "2227a229051d2cb9e40a01c0104164e6ca58d4bcac4e4d5796056aeba88b12ad",
         "docs/public_benchmark_manifest.json": "c45741efde84f27edfd6feab0e3217f68c88a5be4d56a038b2973ea2296722f7",
         "docs/source_catalog.json": "9648bc812ae0465cf9bf28e410d3fcbdc63ec6d17060c35b4e05e98ea55dc058",
         "hf/benchmark_card.md": "e29827f9fe4e8bd4c45bab2a7238b6029a589aac9eda1701e43086c2e0fdbdef",
-        "hf/collection_manifest.json": "bab20d169872cc032df04b3313d9cc17decf7bf032b20c644aa22ef37c1dadeb",
+        "hf/collection_manifest.json": "b3ddafd0f3c1b78f443851a2069f5cedddd3e0d8c97f499e6c1f7ee1000eacbe",
         "hf/dataset_card.md": "e8e354eccacc48786080acf98b788eaea6670802617489bc55d3b7826cefb92d",
-        "hf/space_manifest.json": "df95cf04d618998377a3a6bf712dc8dad7cd500fb56c29d0898926250e1de58f"
+        "hf/space_manifest.json": "8ed1e1f01485e6438628766fb5c710dcfb4bcde60f1717d8f624147e9297f20c"
       },
       "id": "huggingface-collection",
       "platform": "hugging_face",
@@ -634,16 +636,16 @@
         "docs/prime_speedrun_handoff.json"
       ],
       "artifact_sha256": {
-        "docs/prime_speedrun_handoff.json": "2f12f22d143098183a04f8d9ab880ccaaf66561740daf5edc960efcbfd3f2bb1",
-        "prime_intellect/environment_card.md": "d81e6b2148ebac63041aae1ac58e241ba84c5a433fabd78d19f333614d47e99b",
+        "docs/prime_speedrun_handoff.json": "90cd430c7d8f2647b647f9cc28dbb15882bd51e60d1233059374f07ca8f29201",
+        "prime_intellect/environment_card.md": "e7476a86add4e7464636565db91e83dcfab57488ed2d48a18157e0ce52163011",
         "prime_intellect/schemas/attack_plan.schema.json": "4d8a4e49974d6c0df0d466f5ee3b488e54893af4ef23e61e00af4a0cbb7ea592",
         "prime_intellect/schemas/schema_manifest.json": "f448d41c640e6dc02a462af1bf695a93045676a191cee53403a121cab833fbeb",
         "prime_intellect/schemas/task_metadata.schema.json": "95ee9534b21fce15122c5d65aafcaa181210a0e898c284b5b8b46a0cdcbd3e07",
         "prime_intellect/schemas/verifier_result.schema.json": "dca189a653db3cfc7b70ad099ba8a627f7940402ffc3846b10ec33989cb468a4",
         "prime_intellect/verifier_spec.md": "90ef567a4f2421b5468a88669413bb0004134c7ac9fc3869037a02e7860f7131",
-        "prime_intellect/verifiers_environment/README.md": "7f8bf07a93968f5bbd986c89cd770d3253d6bff2a26cae9906094a1076c3043e",
-        "prime_intellect/verifiers_environment/agades_pqc_verifier_env.py": "939b099630167472ab4553e63c4134cd67ed38fa7ebc9636332c395b26b7e6c0",
-        "prime_intellect/verifiers_environment/prime_manifest.json": "b4a421a2179773908e18b8a52a91fb17cd35dc826fa9a7a4ecdb8afffb15ebbf",
+        "prime_intellect/verifiers_environment/README.md": "39ec4ff9d9d609ab1e2533d08a623b8ccfd7a6dca086f000bc5e9a6de15ea662",
+        "prime_intellect/verifiers_environment/agades_pqc_verifier_env.py": "7ad25dc54dc84ad3e4de283f6bc6b880bfec08cb96bb159c8011a9c1026e1f52",
+        "prime_intellect/verifiers_environment/prime_manifest.json": "12c27d7254504526062db94d9cf128d9fdee8b59a0712a4efb456e3957f56bd4",
         "prime_intellect/verifiers_environment/pyproject.toml": "f3a01ff6dde5b20ace513244eefa6f00831fbd5636f362f5f0e615bd4cc6a6a5"
       },
       "id": "prime-verifiers-environment",
@@ -669,7 +671,7 @@
       ],
       "artifact_sha256": {
         "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md": "2c7ac9e3d7d2144f01524501c46162a0649fcdd035cc4973be682d8c87224e99",
-        "docs/nvidia_publication_handoff.json": "53f8ccb28f5674340067d8fa8b8b0481dbfb7cdb23e6d219889a2598dcca8af5",
+        "docs/nvidia_publication_handoff.json": "e338233961a36c805c34d7c08d2b033a355ac64f2bdcedce63ede6c0ec9342c8",
         "nvidia/README.md": "18568265697f8a33eef8fab9d0d1b1312d32c9d1f365eae588fbc35a1c194f62",
         "nvidia/accelerator_manifest.json": "4220fb49bd07624af90e5be1dfe2fbd8a72a7c4a968782d46e3ccc12f15b04cc"
       },
