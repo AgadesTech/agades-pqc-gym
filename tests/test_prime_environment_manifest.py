@@ -243,7 +243,9 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
                 "intended_use": "private_training_or_eval",
                 "contract": (
                     "submit one AttackPlan JSON object for the seed task; "
-                    "do not invent pre-evaluation claims"
+                    "return an already valid seed unchanged; do not invent "
+                    "pre-evaluation claims; do not include markdown, "
+                    "prose, analysis, comments, code fences, or wrapper text"
                 ),
             },
             "format_first_copy_seed": {
