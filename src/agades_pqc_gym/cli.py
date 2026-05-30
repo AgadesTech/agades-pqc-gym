@@ -389,6 +389,7 @@ def quickstart(
         Path,
         typer.Option(
             "--out-dir",
+            "--out",
             help="Directory for quickstart traces and reports.",
         ),
     ] = DEFAULT_QUICKSTART_DIR,

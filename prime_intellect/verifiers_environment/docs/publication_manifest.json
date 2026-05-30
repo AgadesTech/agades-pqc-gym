@@ -482,7 +482,7 @@
         "public/release_audit.json"
       ],
       "artifact_sha256": {
-        "README.md": "4d37463da739ac533919f7b7cacb56a498400ef23e808f8300f100e68794ba86",
+        "README.md": "b0ad0119df7a1e5dd3ebb4a6f61fab2ba03526e4bc072ab017bb1a3632235e75",
         "docs/ARCHITECTURE.md": "46fbdcb6dba081593b277adeff09ef8b97831e1b6efe0dd0b5b2602c98796e1f",
         "docs/FAMILY_ADAPTERS.md": "808df8b36e7495c4cf97487b59261179204e856c2ed7be42b91c1d21388f247c",
         "docs/MOAT_AND_OPEN_SOURCE_STRATEGY.md": "80df04f80c1c89f3af2ee3281ecefe4f8e15a8633d8cecdae6e7a6f3faec5ec7",

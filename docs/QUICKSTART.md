@@ -23,6 +23,13 @@ The command writes these local files under `runs/quickstart/`:
 - `code_based_prange_trace.jsonl`: one toy code-based evaluator trace.
 - `unsupported_placeholder_trace.jsonl`: a schema-only unsupported example.
 
+Use `--out-dir` or the shorter `--out` alias to write the same artifacts
+somewhere else:
+
+```bash
+uv run agades-pqc quickstart --out runs/my_quickstart
+```
+
 The important line in the terminal is the evaluation status:
 
 ```text
