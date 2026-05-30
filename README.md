@@ -98,6 +98,9 @@ uv run agades-pqc report runs/demo_trace.jsonl --out reports/demo_report.md
 print the same concise status fields:
 `status`, `score`, `accepted`, `plan_valid`, and `trace`.
 
+`examples` prints a runnable command and expected outcome for each guided
+AttackPlan, including the invalid and schema-only unsupported examples.
+
 Schema-only examples validate structurally but return `status=unsupported`
 with `accepted=False` instead of cryptanalytic estimates:
 

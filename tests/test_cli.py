@@ -152,8 +152,22 @@ def test_examples_command_lists_safe_guided_examples() -> None:
     assert "schema-only-unsupported" in result.output
     assert "invalid-plan" in result.output
     assert "status=unsupported" in result.output
-    assert "--trace runs/demo.jsonl" in result.output
-    assert "Use the path column" in result.output
+    assert (
+        "command=uv run agades-pqc run "
+        "examples/attack_plans/lattice_primal_usvp_toy.json "
+        "--trace runs/lattice_ok.jsonl"
+    ) in result.output
+    assert (
+        "command=uv run agades-pqc run "
+        "examples/attack_plans/code_based_isd_placeholder.json "
+        "--trace runs/schema_only_unsupported.jsonl"
+    ) in result.output
+    assert (
+        "command=uv run agades-pqc validate "
+        "examples/attack_plans/invalid_plan_should_fail.json"
+    ) in result.output
+    assert "accepted=False and score=n/a" in result.output
+    assert "do not produce cryptanalytic estimates" in result.output
 
 
 def test_evaluate_export_and_report_commands(tmp_path: Path) -> None:
