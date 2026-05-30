@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
 from typing import Annotated, Any
@@ -51,6 +52,10 @@ from agades_pqc_gym.formal.artifacts import (
     write_attack_plan_evaluator_result,
     write_attack_plan_proof_artifact,
 )
+from agades_pqc_gym.formal.attack_plan_semantics import (
+    verify_formal_attackplan_semantics,
+    write_formal_attackplan_semantics,
+)
 from agades_pqc_gym.formal.estimator_model import (
     verify_formal_estimator_model,
     write_formal_estimator_model,
@@ -63,6 +68,10 @@ from agades_pqc_gym.formal.lean_backend import (
     verify_formal_lean_backend,
     write_formal_lean_backend,
 )
+from agades_pqc_gym.formal.lean_build import (
+    verify_formal_lean_build_smoke,
+    write_formal_lean_build_smoke,
+)
 from agades_pqc_gym.formal.obligation_ledger import (
     verify_formal_obligation_ledger,
     write_formal_obligation_ledger,
@@ -70,6 +79,10 @@ from agades_pqc_gym.formal.obligation_ledger import (
 from agades_pqc_gym.formal.operator_semantics import (
     verify_formal_operator_semantics,
     write_formal_operator_semantics,
+)
+from agades_pqc_gym.formal.smt_assist import (
+    verify_formal_smt_assist_contract,
+    write_formal_smt_assist_contract,
 )
 from agades_pqc_gym.integrations.benchmark_source_contracts import (
     verify_benchmark_source_contracts,
@@ -115,6 +128,16 @@ from agades_pqc_gym.integrations.huggingface_dataset import (
     verify_huggingface_dataset_bundle,
     write_huggingface_dataset_bundle,
 )
+from agades_pqc_gym.integrations.huggingface_live_space_smoke import (
+    DEFAULT_SPACE_REPO_ID as DEFAULT_HF_LIVE_SPACE_REPO_ID,
+)
+from agades_pqc_gym.integrations.huggingface_live_space_smoke import (
+    DEFAULT_SPACE_URL as DEFAULT_HF_LIVE_SPACE_URL,
+)
+from agades_pqc_gym.integrations.huggingface_live_space_smoke import (
+    verify_huggingface_live_space_smoke_report,
+    write_huggingface_live_space_smoke_report,
+)
 from agades_pqc_gym.integrations.huggingface_publication_handoff import (
     verify_huggingface_publication_handoff,
     write_huggingface_publication_handoff,
@@ -129,9 +152,7 @@ from agades_pqc_gym.integrations.huggingface_space_remote_smoke import (
     write_huggingface_space_remote_smoke_report,
 )
 from agades_pqc_gym.integrations.huggingface_space_smoke import (
-    verify_huggingface_space_launch_smoke_report,
     verify_huggingface_space_smoke_report,
-    write_huggingface_space_launch_smoke_report,
     write_huggingface_space_smoke_report,
 )
 from agades_pqc_gym.integrations.lattice_estimator_baseline_contracts import (
@@ -202,6 +223,17 @@ from agades_pqc_gym.integrations.private_dataset_curation import (
     verify_private_dataset_curation,
     write_private_dataset_curation,
 )
+from agades_pqc_gym.integrations.private_dataset_evidence import (
+    verify_private_dataset_evidence_bundle,
+)
+from agades_pqc_gym.integrations.private_pedagogical_trace_batch import (
+    DEFAULT_TRACE_BATCH_PATH,
+    verify_private_pedagogical_trace_batch,
+    write_private_pedagogical_trace_batch,
+)
+from agades_pqc_gym.integrations.private_qwen_artifacts import (
+    verify_private_qwen_artifact_plan,
+)
 from agades_pqc_gym.integrations.private_run_policy import (
     verify_private_run_policy,
     write_private_run_policy,
@@ -209,6 +241,10 @@ from agades_pqc_gym.integrations.private_run_policy import (
 from agades_pqc_gym.integrations.private_training_config import (
     verify_private_training_config,
     write_private_training_config,
+)
+from agades_pqc_gym.integrations.private_training_readiness import (
+    verify_private_training_readiness,
+    write_private_training_readiness,
 )
 from agades_pqc_gym.integrations.public_benchmark_manifest import (
     verify_public_benchmark_manifest,
@@ -278,10 +314,10 @@ app = typer.Typer(
     no_args_is_help=True,
     rich_markup_mode=None,
     help=(
-        "Run Agades PQC Gym experiments. Start with `quickstart`, then use "
-        "`validate`, `evaluate`, `benchmark`, and `report` for the core loop. "
-        "Advanced release and ecosystem commands remain available by name but "
-        "are hidden from this first-screen help."
+        "Run Agades PQC Gym experiments. Start with `quickstart`, inspect "
+        "`examples`, then use `validate`, `evaluate`, `benchmark`, and `report` "
+        "for the core loop. Advanced release and ecosystem commands remain "
+        "available by name but are hidden from this first-screen help."
     ),
 )
 console = Console()
@@ -297,11 +333,43 @@ QUICKSTART_UNSUPPORTED_PLAN = Path(
     "examples/attack_plans/code_based_isd_placeholder.json"
 )
 QUICKSTART_LATTICE_BENCHMARK = Path("benchmarks/lattice_toy_lwe")
+GUIDED_EXAMPLES = (
+    {
+        "id": "lattice-ok",
+        "path": "examples/attack_plans/lattice_primal_usvp_toy.json",
+        "expected": "status=ok",
+        "purpose": "toy LWE primal uSVP evaluator path",
+    },
+    {
+        "id": "code-based-toy",
+        "path": "examples/attack_plans/code_based_prange_toy.json",
+        "expected": "status=ok",
+        "purpose": "bounded public Prange-style toy path",
+    },
+    {
+        "id": "schema-only-unsupported",
+        "path": "examples/attack_plans/code_based_isd_placeholder.json",
+        "expected": "status=unsupported",
+        "purpose": "schema-only placeholder; no estimate is produced",
+    },
+    {
+        "id": "invalid-plan",
+        "path": "examples/attack_plans/invalid_plan_should_fail.json",
+        "expected": "validate exits non-zero",
+        "purpose": "family/operator mismatch error example",
+    },
+)
 
 
 class EstimatorBackend(StrEnum):
     mock = "mock"
     lattice = "lattice"
+
+
+@dataclass(frozen=True)
+class BenchmarkCliRecord:
+    attack_plan_id: str
+    summary: str
 
 
 def _estimator_choice(
@@ -377,36 +445,100 @@ def quickstart(
     typer.echo("next=Read docs/QUICKSTART.md for the guided walkthrough.")
 
 
+@app.command("examples")
+def examples_command() -> None:
+    """Show safe example AttackPlans and the expected CLI outcome."""
+    typer.echo("Safe guided examples:")
+    for example in GUIDED_EXAMPLES:
+        typer.echo(
+            f"{example['id']}: {example['path']} -> {example['expected']} "
+            f"({example['purpose']})"
+        )
+    typer.echo(
+        "tip=Run `uv run agades-pqc evaluate <path> --trace runs/demo.jsonl` "
+        "for status=ok or status=unsupported examples."
+    )
+
+
+def _require_attack_plan_file(plan_path: Path) -> None:
+    if plan_path.is_file():
+        return
+    typer.echo(f"invalid: {plan_path}")
+    if plan_path.exists():
+        typer.echo(
+            "- expected an AttackPlan JSON file, got a directory or special file"
+        )
+    else:
+        typer.echo("- file not found")
+    typer.echo(
+        "next=Run `uv run agades-pqc examples` to pick a guided AttackPlan path."
+    )
+    raise typer.Exit(1)
+
+
 @app.command()
 def validate(plan_path: Path) -> None:
     """Validate an AttackPlan JSON file."""
+    _require_attack_plan_file(plan_path)
     try:
         plan = AttackPlan.model_validate_json(plan_path.read_text())
     except OSError as exc:
-        typer.echo(f"invalid AttackPlan: {plan_path}")
-        typer.echo(f"- {exc}")
+        console.print(f"[red]invalid[/red]: {plan_path}")
+        console.print(f"- {exc}", soft_wrap=True)
         raise typer.Exit(1) from exc
     except ValidationError as exc:
-        typer.echo(f"invalid AttackPlan: {plan_path}")
+        console.print(f"[red]invalid[/red]: {plan_path}")
         for error in stable_validation_error_messages(exc):
-            typer.echo(f"- {error}")
+            console.print(f"- {error}", soft_wrap=True)
+        console.print(
+            "next=Run `uv run agades-pqc examples` to pick a guided "
+            "AttackPlan, or compare the invalid file against the nearest "
+            "same-family toy example.",
+            soft_wrap=True,
+        )
         raise typer.Exit(1) from exc
 
     result = validate_attack_plan(plan)
     if result.valid:
         console.print(f"[green]valid[/green]: {plan.attack_plan_id}")
+        _print_validation_route_hint(plan, plan_path)
         return
 
     console.print(f"[red]invalid[/red]: {plan.attack_plan_id}")
     for error in result.errors:
-        console.print(f"- {error}")
+        console.print(f"- {error}", soft_wrap=True)
     raise typer.Exit(1)
+
+
+def _print_validation_route_hint(plan: AttackPlan, plan_path: Path) -> None:
+    route_result = CascadeEvaluator(
+        estimator=build_lattice_estimator(estimator="mock", estimator_cache=None),
+    ).evaluate_plan(plan)
+    status = route_result.metrics.get("evaluation_status")
+    if status != "unsupported":
+        return
+    console.print(f"evaluation_status=unsupported accepted={route_result.valid}")
+    if route_result.warnings:
+        console.print(f"reason={route_result.warnings[0]}", soft_wrap=True)
+    console.print(
+        "next=Run `uv run agades-pqc evaluate "
+        f"{plan_path} --trace runs/demo.jsonl` to record the unsupported "
+        "result without inventing an estimate.",
+        soft_wrap=True,
+    )
 
 
 @app.command()
 def evaluate(
     plan_path: Path,
-    out: Annotated[Path, typer.Option("--out")] = DEFAULT_EVAL_TRACE,
+    out: Annotated[
+        Path,
+        typer.Option(
+            "--out",
+            "--trace",
+            help="Trace JSONL output path.",
+        ),
+    ] = DEFAULT_EVAL_TRACE,
     estimator: Annotated[
         EstimatorBackend,
         typer.Option(
@@ -423,6 +555,7 @@ def evaluate(
     ] = None,
 ) -> None:
     """Evaluate one AttackPlan and append a trace record."""
+    _require_attack_plan_file(plan_path)
     result = evaluate_attack_plan(
         plan_path=plan_path,
         out=out,
@@ -453,6 +586,7 @@ def verify(
     ] = None,
 ) -> None:
     """Emit public verifier JSON for Prime/HF-style environments."""
+    _require_attack_plan_file(plan_path)
     result = verify_attack_plan_path(
         plan_path,
         estimator=_estimator_choice(estimator),
@@ -461,10 +595,149 @@ def verify(
     console.print_json(data=result)
 
 
+@app.command("formal-check")
+def formal_check() -> None:
+    """Verify the committed Lean-backed formal artifacts."""
+    lean_backend = verify_formal_lean_backend(Path("docs/formal_lean_backend.json"))
+    lean_build = verify_formal_lean_build_smoke(
+        Path("reports/formal_lean_build_smoke.json")
+    )
+    attackplan_semantics = verify_formal_attackplan_semantics(
+        Path("docs/formal_attackplan_semantics.json")
+    )
+    operator_semantics = verify_formal_operator_semantics(
+        Path("docs/formal_operator_semantics.json")
+    )
+    estimator_model = verify_formal_estimator_model(
+        Path("docs/formal_estimator_model.json")
+    )
+    obligation_ledger = verify_formal_obligation_ledger(
+        Path("docs/formal_obligation_ledger.json")
+    )
+    family_coverage = verify_formal_family_coverage(
+        Path("docs/formal_family_coverage.json")
+    )
+    smt_assist = verify_formal_smt_assist_contract(
+        Path("docs/formal_smt_assist_contract.json")
+    )
+    reviewer_governance = verify_reviewer_governance(
+        Path("docs/reviewer_governance.json")
+    )
+    proof_artifact_results = [
+        verify_attack_plan_proof_artifact(
+            Path("docs/formal_lattice_primal_usvp_proof_artifact.json")
+        ),
+        verify_attack_plan_proof_artifact(
+            Path("docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json")
+        ),
+    ]
+    build_report = json.loads(
+        Path("reports/formal_lean_build_smoke.json").read_text(encoding="utf-8")
+    )
+
+    accepted_results = [
+        lean_backend,
+        lean_build,
+        attackplan_semantics,
+        operator_semantics,
+        estimator_model,
+        obligation_ledger,
+        family_coverage,
+        smt_assist,
+        reviewer_governance,
+        *proof_artifact_results,
+    ]
+    accepted = all(result.get("accepted") is True for result in accepted_results)
+    typer.echo(f"formal_check={_formal_status(accepted)}")
+
+    lean_summary = lean_backend["summary"]
+    typer.echo(
+        f"lean_backend={_formal_status(lean_backend)} "
+        f"source_modules={lean_summary['source_modules']} "
+        f"theorem_declarations={lean_summary['theorem_declarations']}"
+    )
+    build_summary = lean_build["summary"]
+    build_scope = build_report.get("scope", {})
+    typer.echo(
+        f"lean_build_smoke={_formal_status(lean_build)} "
+        f"source_modules={build_summary['source_modules']} "
+        f"security_claim_allowed={build_scope.get('security_claim_allowed', False)} "
+        "cryptographic_soundness_review_required="
+        f"{build_scope.get('cryptographic_soundness_review_required', True)}"
+    )
+    typer.echo(
+        "attackplan_semantics="
+        f"{_formal_status(attackplan_semantics)}"
+    )
+    typer.echo(
+        f"operator_semantics={_formal_status(operator_semantics)}"
+    )
+    typer.echo(f"estimator_model={_formal_status(estimator_model)}")
+
+    obligation_summary = obligation_ledger["summary"]
+    typer.echo(
+        f"obligation_ledger={_formal_status(obligation_ledger)} "
+        f"proof_obligations={obligation_summary['proof_obligations']}"
+    )
+    family_summary = family_coverage["summary"]
+    typer.echo(
+        f"family_coverage={_formal_status(family_coverage)} "
+        f"families={family_summary['families']}"
+    )
+    typer.echo(f"smt_assist={_formal_status(smt_assist)}")
+    accepted_proofs = sum(
+        result.get("accepted") is True for result in proof_artifact_results
+    )
+    typer.echo(
+        f"proof_artifacts={accepted_proofs}/{len(proof_artifact_results)} accepted"
+    )
+    typer.echo(f"reviewer_governance={_formal_status(reviewer_governance)}")
+    typer.echo(
+        "next=Run `uv run agades-pqc formal-lean-build-smoke --out "
+        "reports/formal_lean_build_smoke.json` to refresh the compiled Lean "
+        "evidence."
+    )
+
+    if not accepted:
+        for name, result in (
+            ("lean_backend", lean_backend),
+            ("lean_build_smoke", lean_build),
+            ("attackplan_semantics", attackplan_semantics),
+            ("operator_semantics", operator_semantics),
+            ("estimator_model", estimator_model),
+            ("obligation_ledger", obligation_ledger),
+            ("family_coverage", family_coverage),
+            ("smt_assist", smt_assist),
+            ("reviewer_governance", reviewer_governance),
+        ):
+            _print_formal_check_failures(name, result)
+        for index, result in enumerate(proof_artifact_results, start=1):
+            _print_formal_check_failures(f"proof_artifact_{index}", result)
+        raise typer.Exit(1)
+
+
+def _formal_status(result_or_accepted: dict[str, Any] | bool) -> str:
+    if isinstance(result_or_accepted, bool):
+        return "accepted" if result_or_accepted else "rejected"
+    return "accepted" if result_or_accepted.get("accepted") is True else "rejected"
+
+
+def _print_formal_check_failures(name: str, result: dict[str, Any]) -> None:
+    for failure in result.get("failures", []):
+        console.print(f"{name}: {failure}", soft_wrap=True)
+
+
 @app.command()
 def benchmark(
     benchmark_path: Path,
-    out: Annotated[Path, typer.Option("--out")] = DEFAULT_BENCHMARK_TRACE,
+    out: Annotated[
+        Path,
+        typer.Option(
+            "--out",
+            "--trace",
+            help="Trace JSONL output path.",
+        ),
+    ] = DEFAULT_BENCHMARK_TRACE,
     estimator: Annotated[
         EstimatorBackend,
         typer.Option(
@@ -489,11 +762,11 @@ def benchmark(
             estimator_cache=estimator_cache,
         )
     except ValueError as exc:
-        console.print(f"[red]benchmark failed[/red]: {exc}")
+        console.print(f"[red]benchmark failed[/red]: {exc}", soft_wrap=True)
         raise typer.Exit(1) from exc
 
-    for attack_plan_id, score in records:
-        console.print(f"{attack_plan_id}: {score}")
+    for record in records:
+        console.print(f"{record.attack_plan_id}: {record.summary}")
 
 
 @app.command("evolve-batch", hidden=True)
@@ -1361,32 +1634,6 @@ def hf_space_smoke_verify(
         raise typer.Exit(1)
 
 
-@app.command("hf-space-launch-smoke", hidden=True)
-def hf_space_launch_smoke(
-    out: Annotated[Path, typer.Option("--out")] = Path(
-        "reports/hf_space_launch_smoke.json"
-    ),
-) -> None:
-    """Write a deterministic Hugging Face Space Gradio launch smoke report."""
-    report = write_huggingface_space_launch_smoke_report(out)
-    typer.echo(f"hf_space_launch_smoke={out}")
-    if not report["accepted"]:
-        raise typer.Exit(1)
-
-
-@app.command("hf-space-launch-smoke-verify", hidden=True)
-def hf_space_launch_smoke_verify(
-    report: Annotated[Path, typer.Option("--report")] = Path(
-        "reports/hf_space_launch_smoke.json"
-    ),
-) -> None:
-    """Verify the checked Hugging Face Space Gradio launch smoke report."""
-    result = verify_huggingface_space_launch_smoke_report(report)
-    console.print_json(data=result)
-    if not result["accepted"]:
-        raise typer.Exit(1)
-
-
 @app.command("hf-space-remote-smoke", hidden=True)
 def hf_space_remote_smoke(
     out: Annotated[Path, typer.Option("--out")] = Path(
@@ -1400,7 +1647,7 @@ def hf_space_remote_smoke(
         ),
     ] = DEFAULT_REMOTE_SPACE_ID,
 ) -> None:
-    """Write a remote smoke report for the deployed private HF Agent Environment."""
+    """Write a gradio_client remote smoke report for the private HF Space."""
     report = write_huggingface_space_remote_smoke_report(out, space_id=space_id)
     typer.echo(f"hf_space_remote_smoke={out}")
     if not report["accepted"]:
@@ -1413,8 +1660,80 @@ def hf_space_remote_smoke_verify(
         "reports/hf_space_remote_smoke.json"
     ),
 ) -> None:
-    """Verify a checked remote HF Agent Environment smoke report."""
+    """Verify a gradio_client remote HF Agent Environment smoke report."""
     result = verify_huggingface_space_remote_smoke_report(report)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("hf-live-space-smoke", hidden=True)
+def hf_live_space_smoke(
+    out: Annotated[
+        Path,
+        typer.Option(
+            "--out",
+            help="Local private-review report path. This file is Git-ignored.",
+        ),
+    ] = Path("reports/hf_live_space_smoke.json"),
+    space_url: Annotated[
+        str,
+        typer.Option(
+            "--space-url",
+            help="Live Hugging Face Space URL to exercise.",
+        ),
+    ] = DEFAULT_HF_LIVE_SPACE_URL,
+    space_repo_id: Annotated[
+        str,
+        typer.Option(
+            "--space-repo-id",
+            help="Hugging Face Space repo id used to verify private visibility.",
+        ),
+    ] = DEFAULT_HF_LIVE_SPACE_REPO_ID,
+    token_env: Annotated[
+        str,
+        typer.Option(
+            "--token-env",
+            help="Environment variable containing a Hugging Face token.",
+        ),
+    ] = "HF_TOKEN",
+    use_token_cache: Annotated[
+        bool,
+        typer.Option(
+            "--use-token-cache/--no-use-token-cache",
+            help=(
+                "Use the standard local Hugging Face token cache if token-env "
+                "is unset."
+            ),
+        ),
+    ] = True,
+    timeout: Annotated[
+        float,
+        typer.Option("--timeout", help="HTTP timeout in seconds."),
+    ] = 60.0,
+) -> None:
+    """Exercise the deployed private HF Space through /gradio_api/call."""
+    report = write_huggingface_live_space_smoke_report(
+        out,
+        space_url=space_url,
+        space_repo_id=space_repo_id,
+        token_env=token_env,
+        use_token_cache=use_token_cache,
+        timeout=timeout,
+    )
+    typer.echo(f"hf_live_space_smoke={out}")
+    if not report["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("hf-live-space-smoke-verify", hidden=True)
+def hf_live_space_smoke_verify(
+    report: Annotated[Path, typer.Option("--report")] = Path(
+        "reports/hf_live_space_smoke.json"
+    ),
+) -> None:
+    """Verify a local private-review Hugging Face live Space smoke report."""
+    result = verify_huggingface_live_space_smoke_report(report)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)
@@ -1804,6 +2123,27 @@ def private_dataset_curation_verify(
         raise typer.Exit(1)
 
 
+@app.command("private-dataset-evidence-verify", hidden=True)
+def private_dataset_evidence_verify(
+    curation: Annotated[
+        Path,
+        typer.Option("--curation"),
+    ] = Path("docs/private_dataset_curation.json"),
+    evidence_root: Annotated[
+        Path,
+        typer.Option("--evidence-root"),
+    ] = Path("."),
+) -> None:
+    """Verify local private dataset curation evidence without printing values."""
+    result = verify_private_dataset_evidence_bundle(
+        curation,
+        evidence_root=evidence_root,
+    )
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
 @app.command("private-training-config", hidden=True)
 def private_training_config(
     config: Annotated[
@@ -1834,6 +2174,46 @@ def private_training_config_verify(
 ) -> None:
     """Verify the private Prime RL/Qwen training config template and manifest."""
     result = verify_private_training_config(config, manifest)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("private-training-readiness", hidden=True)
+def private_training_readiness(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("docs/private_training_readiness.json"),
+) -> None:
+    """Write the sanitized private Qwen/Prime RL launch readiness gate."""
+    write_private_training_readiness(out)
+    typer.echo(f"private_training_readiness={out}")
+
+
+@app.command("private-training-readiness-verify", hidden=True)
+def private_training_readiness_verify(
+    readiness: Annotated[
+        Path,
+        typer.Option("--readiness"),
+    ] = Path("docs/private_training_readiness.json"),
+) -> None:
+    """Verify the private Qwen/Prime RL launch readiness gate."""
+    result = verify_private_training_readiness(readiness)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("private-qwen-artifacts-verify", hidden=True)
+def private_qwen_artifacts_verify(
+    plan: Annotated[
+        Path,
+        typer.Option("--plan"),
+    ] = Path("private/reports/qwen/artifact_plan.json"),
+) -> None:
+    """Verify a local private Qwen artifact plan without printing artifact paths."""
+    result = verify_private_qwen_artifact_plan(plan)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)
@@ -1994,6 +2374,32 @@ def formal_operator_semantics_verify(
         raise typer.Exit(1)
 
 
+@app.command("formal-attackplan-semantics", hidden=True)
+def formal_attackplan_semantics(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("docs/formal_attackplan_semantics.json"),
+) -> None:
+    """Write the stable formal AttackPlan schema and claim-gate semantics."""
+    write_formal_attackplan_semantics(out)
+    typer.echo(f"formal_attackplan_semantics={out}")
+
+
+@app.command("formal-attackplan-semantics-verify", hidden=True)
+def formal_attackplan_semantics_verify(
+    semantics: Annotated[
+        Path,
+        typer.Option("--semantics"),
+    ] = Path("docs/formal_attackplan_semantics.json"),
+) -> None:
+    """Verify AttackPlan schema, canonicalization, and claim-gate semantics."""
+    result = verify_formal_attackplan_semantics(semantics)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
 @app.command("formal-lean-backend", hidden=True)
 def formal_lean_backend(
     out: Annotated[
@@ -2015,6 +2421,65 @@ def formal_lean_backend_verify(
 ) -> None:
     """Verify Lean sources, theorem declarations, placeholders, and CI gate."""
     result = verify_formal_lean_backend(backend)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("formal-smt-assist", hidden=True)
+def formal_smt_assist(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("docs/formal_smt_assist_contract.json"),
+) -> None:
+    """Write the optional Z3 assist contract for finite decidable obligations."""
+    write_formal_smt_assist_contract(out)
+    typer.echo(f"formal_smt_assist_contract={out}")
+
+
+@app.command("formal-smt-assist-verify", hidden=True)
+def formal_smt_assist_verify(
+    contract: Annotated[
+        Path,
+        typer.Option("--contract"),
+    ] = Path("docs/formal_smt_assist_contract.json"),
+) -> None:
+    """Verify that optional Z3 assistance stays secondary to Lean and review."""
+    result = verify_formal_smt_assist_contract(contract)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("formal-lean-build-smoke", hidden=True)
+def formal_lean_build_smoke(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = Path("reports/formal_lean_build_smoke.json"),
+    timeout_seconds: Annotated[
+        int,
+        typer.Option(
+            "--timeout-seconds",
+            help="Maximum seconds to wait for `lake build`.",
+        ),
+    ] = 600,
+) -> None:
+    """Run `lake build` for the Lean backend and write a bounded smoke report."""
+    write_formal_lean_build_smoke(out, timeout_seconds=timeout_seconds)
+    typer.echo(f"formal_lean_build_smoke={out}")
+
+
+@app.command("formal-lean-build-smoke-verify", hidden=True)
+def formal_lean_build_smoke_verify(
+    report: Annotated[
+        Path,
+        typer.Option("--report"),
+    ] = Path("reports/formal_lean_build_smoke.json"),
+) -> None:
+    """Verify a Lean build smoke report without re-running `lake build`."""
+    result = verify_formal_lean_build_smoke(report)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)
@@ -2093,6 +2558,70 @@ def pedagogical_rl_method_verify(
 ) -> None:
     """Verify the private Pedagogical RL method contract."""
     result = verify_pedagogical_rl_method(method)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("private-pedagogical-traces", hidden=True)
+def private_pedagogical_traces(
+    out: Annotated[
+        Path,
+        typer.Option("--out"),
+    ] = DEFAULT_TRACE_BATCH_PATH,
+    plan: Annotated[
+        list[Path] | None,
+        typer.Option("--plan"),
+    ] = None,
+    dataset_curation: Annotated[
+        Path,
+        typer.Option("--dataset-curation"),
+    ] = Path("docs/private_dataset_curation.json"),
+    policy: Annotated[
+        Path,
+        typer.Option("--policy"),
+    ] = Path("docs/private_run_policy.json"),
+) -> None:
+    """Write digest-only private Pedagogical RL trace records."""
+    paths = plan if plan else DEFAULT_ROLLOUT_PLANS
+    try:
+        manifest = write_private_pedagogical_trace_batch(
+            paths,
+            out,
+            dataset_curation_manifest_path=dataset_curation,
+            policy_path=policy,
+        )
+    except (OSError, ValueError) as exc:
+        console.print(f"[red]private pedagogical traces failed[/red]: {exc}")
+        raise typer.Exit(1) from exc
+    typer.echo(
+        f"private_pedagogical_traces={out} "
+        f"manifest={manifest['manifest_path']} "
+        f"count={manifest['summary']['trace_count']}"
+    )
+
+
+@app.command("private-pedagogical-traces-verify", hidden=True)
+def private_pedagogical_traces_verify(
+    trace_path: Annotated[
+        Path,
+        typer.Option("--trace-path"),
+    ] = DEFAULT_TRACE_BATCH_PATH,
+    manifest_path: Annotated[
+        Path | None,
+        typer.Option("--manifest-path"),
+    ] = None,
+    policy: Annotated[
+        Path,
+        typer.Option("--policy"),
+    ] = Path("docs/private_run_policy.json"),
+) -> None:
+    """Verify digest-only private Pedagogical RL trace records."""
+    result = verify_private_pedagogical_trace_batch(
+        trace_path,
+        manifest_path=manifest_path,
+        policy_path=policy,
+    )
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)
@@ -3077,22 +3606,24 @@ def format_evaluation_summary(result: CascadeResult, out: Path) -> str:
     if status is None:
         status = "invalid" if not result.validation.valid else "unknown"
     score = result.metrics.get("combined_score")
+    displayed_score: object = score
     if status == "unsupported":
-        summary = (
-            f"status=unsupported score=n/a accepted=False "
-            f"unsupported_route=True trace={out}"
-        )
-    elif result.plan is None:
-        summary = (
-            f"status={status} score={score} "
-            f"valid={result.valid} trace=not_written"
-        )
-    else:
-        summary = f"status={status} score={score} valid={result.valid} trace={out}"
+        displayed_score = "n/a"
+    trace_display = "not_written" if result.plan is None else str(out)
+    summary = (
+        f"status={status} score={displayed_score} accepted={result.valid} "
+        f"plan_valid={result.validation.valid} trace={trace_display}"
+    )
     if status != "ok" and result.warnings:
         summary += f" reason={result.warnings[0]}"
     elif status != "ok" and result.validation.errors:
         summary += f" reason={result.validation.errors[0]}"
+    if status == "unsupported":
+        summary += (
+            " next=No estimate was produced; this is not a security claim; "
+            "use an implemented toy route or add a reviewed adapter before "
+            "expecting estimates."
+        )
     return summary
 
 
@@ -3101,10 +3632,10 @@ def write_benchmark_trace(
     out: Path,
     estimator: EstimatorChoice = "mock",
     estimator_cache: Path | None = None,
-) -> list[tuple[str, float | int | str | bool | None]]:
+) -> list[BenchmarkCliRecord]:
     plans = load_benchmark_plans(benchmark_path)
     if not plans:
-        raise ValueError(f"no benchmark inputs found: {benchmark_path}")
+        raise ValueError(_benchmark_input_guidance(benchmark_path))
 
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("", encoding="utf-8")
@@ -3115,7 +3646,7 @@ def write_benchmark_trace(
             estimator_cache=estimator_cache,
         )
     )
-    records: list[tuple[str, float | int | str | bool | None]] = []
+    records: list[BenchmarkCliRecord] = []
     for index, plan in enumerate(plans):
         result = evaluator.evaluate_plan(plan)
         record = build_trace_record(
@@ -3125,7 +3656,12 @@ def write_benchmark_trace(
             candidate_id=f"{plan.attack_plan_id}-{index}",
         )
         writer.append(record)
-        records.append((plan.attack_plan_id, result.metrics.get("combined_score")))
+        records.append(
+            BenchmarkCliRecord(
+                attack_plan_id=plan.attack_plan_id,
+                summary=format_evaluation_summary(result, out),
+            )
+        )
     return records
 
 
@@ -3220,6 +3756,24 @@ def load_benchmark_plans(path: Path) -> list[AttackPlan]:
     for candidate in sorted(path.glob("*.json")):
         plans.append(_load_attack_plan_or_seed(candidate))
     return plans
+
+
+def _benchmark_input_guidance(path: Path) -> str:
+    if not path.exists():
+        reason = "file or directory not found"
+    elif path.is_dir():
+        reason = "no .json AttackPlan or target config files found"
+    else:
+        reason = (
+            "expected an AttackPlan JSON file, a target config JSON file, "
+            "or a directory of .json benchmark inputs"
+        )
+    return (
+        f"{path}\n"
+        f"- {reason}\n"
+        "next=Run `uv run agades-pqc examples` to pick a guided AttackPlan, "
+        "or pass a benchmark directory containing .json inputs."
+    )
 
 
 def load_heldout_targets(path: Path) -> list[TargetSpec]:

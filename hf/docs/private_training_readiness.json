@@ -1,0 +1,261 @@
+{
+  "classification": {
+    "contains_private_dataset_rows": false,
+    "contains_private_model_paths": false,
+    "contains_private_trace_rows": false,
+    "contains_secret_values": false,
+    "public_artifact_only": true,
+    "records_secret_presence": false
+  },
+  "credential_policy": {
+    "env_template_path": ".env.example",
+    "reads_env_files": false,
+    "reads_process_environment": false,
+    "required_env_names": [
+      "PRIME_API_KEY",
+      "PRIME_ORG",
+      "HF_TOKEN",
+      "WANDB_API_KEY",
+      "AGADES_QWEN_BASE_MODEL",
+      "AGADES_QWEN_ARTIFACT_PLAN",
+      "AGADES_QWEN_GGUF_OTQ_5BIT_PATH",
+      "AGADES_QWEN_LORA_ADAPTER_PATH"
+    ],
+    "required_gitignore_patterns": [
+      ".env",
+      ".env.*",
+      "private/"
+    ],
+    "secret_presence_recorded": false,
+    "secret_values_recorded": false
+  },
+  "launch_status": {
+    "ready": false,
+    "reason": "blocked_until_private_model_dataset_reviews_and_private_infrastructure_are_verified",
+    "state": "blocked"
+  },
+  "linked_artifacts": {
+    "deepevolve_manifest": {
+      "path": "docs/deepevolve_research_hooks_manifest.json",
+      "sha256": "81761a5776a2e4bc3e1a700c517a6725d40193a04458083326981b2fc1b408cb"
+    },
+    "env_template": {
+      "path": ".env.example",
+      "sha256": "f471a935fb2cc3d493248a28cde15d3ba5f9e603feb40b02520378c08e73ebc9"
+    },
+    "gitignore": {
+      "path": ".gitignore",
+      "sha256": "8f350beab28d3cd0eea30f83ca1b6a2ae8147930f3a958332085a5e9c0d5ec80"
+    },
+    "openevolve_config": {
+      "path": "examples/openevolve/config.yaml",
+      "sha256": "c62de4f9be84a88043ac6bb4bb66d9b5cc6495f3f9bf52792183bc5e8cbca676"
+    },
+    "openevolve_smoke": {
+      "path": "reports/openevolve_smoke.json",
+      "sha256": "86dcc0d460bcc20243d4e302c5881a492adb433ea414e760344d78709ac4355f"
+    },
+    "pedagogical_rl_method": {
+      "path": "docs/pedagogical_rl_method.json",
+      "sha256": "b2215023d48dcd9d913d78ba76971f7c98334d1e44658e1aff201159e324f9a6"
+    },
+    "prime_environment_manifest": {
+      "path": "prime_intellect/verifiers_environment/prime_manifest.json",
+      "sha256": "4efc1f4962608261aeda41a32b7daddcfe24e58eb38f503d4e6767c8830ab92a"
+    },
+    "prime_eval_config_manifest": {
+      "path": "docs/prime_eval_config_manifest.json",
+      "sha256": "99a1660c918e83122fb864ce4bc1bdb4b9e5a43f94ea2713d319a2b6e765c619"
+    },
+    "prime_training_template": {
+      "path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
+      "sha256": "6044580bb49bc2e0762f74b2f70984f13ec1320fab48a6a0b1f8337eb828f1f3"
+    },
+    "private_dataset_curation": {
+      "path": "docs/private_dataset_curation.json",
+      "sha256": "67b62b02e4f45acd8c717e0feef593a80e2f012363952a12fabf57ccd641df8a"
+    },
+    "private_qwen_artifact_verifier": {
+      "path": "src/agades_pqc_gym/integrations/private_qwen_artifacts.py",
+      "sha256": "7594f1d0ecfe2aa22e86a02b19503c26362c710113480dba35e3de7c8f02919d"
+    },
+    "private_run_policy": {
+      "path": "docs/private_run_policy.json",
+      "sha256": "08c0adb2e5b3cb0407d6c16e93f0eac8f636cb8b0dc8a53570b1cc18583f24f6"
+    },
+    "private_training_manifest": {
+      "path": "docs/private_training_config_manifest.json",
+      "sha256": "a17af53cbac532fcb54d7f8cd8ef58286022b61f332e0f8bccf61d94fbbef326"
+    },
+    "reviewer_governance": {
+      "path": "docs/reviewer_governance.json",
+      "sha256": "054eab41b0b7dee2ad53997e51a4a60bfbae37866b7c1dac023cdad999154db1"
+    },
+    "rl_environment_contract": {
+      "path": "docs/rl_environment_contract.json",
+      "sha256": "1c85511336a52643691f5f1f39e334d4e466a70cd9b06e7de4812af8dbc8564e"
+    }
+  },
+  "project": {
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "publication_boundary": {
+    "allowed_public_content": [
+      "sanitized status",
+      "environment variable names",
+      "relative public artifact paths",
+      "private relative artifact plan template paths",
+      "blocked readiness gates",
+      "review requirements"
+    ],
+    "public_artifact": "docs/private_training_readiness.json",
+    "publish_curated_dataset_publicly": false,
+    "publish_finetuned_qwen_publicly": false,
+    "publish_reviewer_annotations_publicly": false,
+    "publish_secret_presence_publicly": false,
+    "publish_training_traces_publicly": false
+  },
+  "readiness_gates": [
+    {
+      "blocks_launch": true,
+      "evidence_required": "AGADES_QWEN_BASE_MODEL must reference a private, reviewed, trainable Qwen3.6-27B source.",
+      "id": "private_qwen_base_model_review",
+      "status": "blocked"
+    },
+    {
+      "blocks_launch": true,
+      "evidence_required": "GGUF OTQ 5-bit is a private target artifact; training must use reviewed trainable weights or adapters before private quantization.",
+      "id": "private_qwen_trainable_weights_available",
+      "status": "blocked"
+    },
+    {
+      "blocks_launch": true,
+      "evidence_required": "Each source in docs/private_dataset_curation.json must have a completed license review before ingestion.",
+      "id": "dataset_license_review_complete",
+      "status": "blocked"
+    },
+    {
+      "blocks_launch": true,
+      "evidence_required": "Private per-row provenance and hash manifests must exist before training.",
+      "id": "dataset_provenance_manifest_complete",
+      "status": "blocked"
+    },
+    {
+      "blocks_launch": true,
+      "evidence_required": "Private exact, normalized, and near-duplicate reports must prove cross-source deduplication before training.",
+      "id": "dataset_deduplication_report_complete",
+      "status": "blocked"
+    },
+    {
+      "blocks_launch": true,
+      "evidence_required": "Private redaction report must prove credentials, personal data, and unlicensed spans were removed.",
+      "id": "dataset_redaction_report_complete",
+      "status": "blocked"
+    },
+    {
+      "blocks_launch": true,
+      "evidence_required": "Private contamination report must reject public overlap and prompt or reviewer-annotation leakage.",
+      "id": "dataset_contamination_audit_complete",
+      "status": "blocked"
+    },
+    {
+      "blocks_launch": true,
+      "evidence_required": "Pedagogical RL traces require reviewer-quality and no-overclaim signals before Qwen fine-tuning.",
+      "id": "pedagogical_trace_quality_review_complete",
+      "status": "blocked"
+    },
+    {
+      "blocks_launch": true,
+      "evidence_required": "Prime org, environment, private storage, and visibility must be reviewed out of band.",
+      "id": "prime_private_training_environment_reviewed",
+      "status": "blocked"
+    },
+    {
+      "blocks_launch": true,
+      "evidence_required": "Formal obligations and family invariants must be checked against the private trace task mix.",
+      "id": "formal_obligation_coverage_reviewed",
+      "status": "blocked"
+    },
+    {
+      "blocks_launch": true,
+      "evidence_required": "Domain reviewers must be assigned before private claims or training promotion.",
+      "id": "cryptography_domain_reviewers_assigned",
+      "status": "blocked"
+    }
+  ],
+  "release_gates": [
+    "uv run pytest tests/test_private_training_readiness.py -q",
+    "uv run agades-pqc private-training-readiness --out docs/private_training_readiness.json",
+    "uv run agades-pqc private-training-readiness-verify --readiness docs/private_training_readiness.json",
+    "uv run agades-pqc private-training-config-verify --config prime_intellect/training/private_qwen_prime_rl.template.toml --manifest docs/private_training_config_manifest.json",
+    "uv run agades-pqc private-dataset-curation-verify --curation docs/private_dataset_curation.json"
+  ],
+  "required_inputs": {
+    "datasets": {
+      "curation_manifest_path": "docs/private_dataset_curation.json",
+      "public_reviewer_annotations_allowed": false,
+      "public_rows_allowed": false,
+      "public_traces_allowed": false,
+      "required_controls": [
+        "license_review",
+        "provenance_tracking",
+        "deduplication",
+        "redaction",
+        "contamination_audit"
+      ],
+      "sources": [
+        "facebookresearch/LWE-benchmarking",
+        "facebook/TAPAS",
+        "pq-code-package"
+      ],
+      "status": "blocked_until_license_provenance_redaction_and_contamination_review"
+    },
+    "hugging_face": {
+      "organization_env": "HF_ORG",
+      "public_private_asset_upload_allowed": false,
+      "required_private_assets": [
+        "private training traces",
+        "private curated datasets",
+        "private Qwen weights or adapters"
+      ],
+      "space_visibility_env": "HF_SPACE_VISIBILITY",
+      "token_env": "HF_TOKEN"
+    },
+    "pedagogical_rl": {
+      "method": "pedagogical_rl",
+      "method_manifest_path": "docs/pedagogical_rl_method.json",
+      "raw_private_signals_publication_allowed": false,
+      "requires_no_security_overclaim": true,
+      "requires_reviewer_quality_signal": true
+    },
+    "prime_intellect": {
+      "api_key_env": "PRIME_API_KEY",
+      "environment_slug_env": "PRIME_ENVIRONMENT_SLUG",
+      "organization_env": "PRIME_ORG",
+      "required_visibility": "PRIVATE",
+      "status": "required_unverified",
+      "training_config_template": "prime_intellect/training/private_qwen_prime_rl.template.toml",
+      "training_manifest": "docs/private_training_config_manifest.json",
+      "visibility_env": "PRIME_VISIBILITY"
+    },
+    "qwen": {
+      "artifact_plan_env": "AGADES_QWEN_ARTIFACT_PLAN",
+      "artifact_plan_schema": "agades.pqc.private_qwen_artifact_plan.v1",
+      "artifact_plan_template": "private/reports/qwen/artifact_plan.json",
+      "artifact_verification_command": "uv run agades-pqc private-qwen-artifacts-verify --plan private/reports/qwen/artifact_plan.json",
+      "artifact_verification_schema": "agades.pqc.private_qwen_artifact_verification.v1",
+      "base_model_env": "AGADES_QWEN_BASE_MODEL",
+      "direct_gguf_training_allowed": false,
+      "gguf_otq_5bit_env": "AGADES_QWEN_GGUF_OTQ_5BIT_PATH",
+      "lora_adapter_env": "AGADES_QWEN_LORA_ADAPTER_PATH",
+      "preferred_user_artifact": "private GGUF OTQ 5-bit",
+      "public_release_allowed": false,
+      "status": "required_unverified",
+      "target_model": "Qwen3.6-27B-private",
+      "training_path": "LoRA_or_QLoRA_on_trainable_weights_then_private_GGUF_OTQ_quantization"
+    }
+  },
+  "schema_version": "agades.pqc.private_training_readiness.v1"
+}

@@ -93,7 +93,7 @@ def test_huggingface_publication_handoff_records_review_boundaries(
     }
     assert handoff["publication_commands"] == {
         "dataset_private_create": (
-            "hf repos create <owner>/pqc-gym-toy --type=dataset "
+            "hf repo create <owner>/pqc-gym-toy --repo-type=dataset "
             "--private --exist-ok"
         ),
         "dataset_upload": (
@@ -101,8 +101,8 @@ def test_huggingface_publication_handoff_records_review_boundaries(
             '--commit-message "Sync Agades PQC Gym dataset"'
         ),
         "space_private_create": (
-            "hf repos create agades/agades-pqc-gym-agent-env --type=space "
-            "--space-sdk gradio "
+            "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space "
+            "--space_sdk gradio "
             "--private --exist-ok"
         ),
         "space_upload": (

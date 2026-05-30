@@ -50,6 +50,8 @@ def test_prime_verifiers_pyproject_declares_installable_environment() -> None:
         "README.md",
         "prime_manifest.json",
         "data/*.json",
+        "docs/*.json",
+        "formal/lean/**/*",
     ]
     assert data["tool"]["verifiers"]["eval"]["num_examples"] == 2
     assert data["tool"]["verifiers"]["eval"]["rollouts_per_example"] == 1
@@ -89,6 +91,14 @@ def test_prime_verifiers_dataset_rows_cover_all_public_valid_families() -> None:
     assert rows[0]["prompt"][0]["role"] == "user"
     assert "Submit exactly one AttackPlan JSON object" in first_prompt
     assert "Do not submit Python" in first_prompt
+    assert module.PROMPT_PROFILES == (
+        "attackplan_json",
+        "format_first_copy_seed",
+        "format_repair_extract_seed",
+        "claims_guard_repair",
+        "claims_guard_format_repair",
+        "claims_guard_decoy_format_repair",
+    )
     assert first_info["schema_version"] == TASK_METADATA_SCHEMA
     assert first_info["source_path"].startswith("data/")
     assert first_info["target_name"]
@@ -129,12 +139,213 @@ def test_prime_verifiers_dataset_rows_cover_all_public_valid_families() -> None:
         assert row["info"]["seed_attack_plan_sha256"] == expected_digest
 
 
+def test_prime_verifiers_default_prompt_is_strict_json_boundary() -> None:
+    module = _load_env_module()
+
+    rows = module.build_dataset_rows(
+        attack_plan_id="lattice_bkw_toy_v1",
+        prompt_profile="attackplan_json",
+    )
+
+    prompt = rows[0]["prompt"][0]["content"]
+    assert (
+        "If the Seed AttackPlan already satisfies the task, return it unchanged"
+        in prompt
+    )
+    assert (
+        "Do not include markdown, prose, analysis, comments, code fences, "
+        "or wrapper text"
+        in prompt
+    )
+    assert "first non-whitespace character must be {" in prompt
+    assert "final non-whitespace character must be }" in prompt
+    assert "Seed AttackPlan:" in prompt
+
+
 def test_prime_verifiers_dataset_respects_num_examples_limit() -> None:
     module = _load_env_module()
 
     rows = module.build_dataset_rows(num_examples=3)
 
     assert len(rows) == 3
+
+
+def test_prime_verifiers_format_first_profile_instructs_seed_copy() -> None:
+    module = _load_env_module()
+
+    rows = module.build_dataset_rows(
+        attack_plan_id="lattice_primal_usvp_toy_v1",
+        prompt_profile="format_first_copy_seed",
+    )
+
+    prompt = rows[0]["prompt"][0]["content"]
+    assert "Return the Seed AttackPlan below unchanged" in prompt
+    assert "Preserve every field" in prompt
+    assert "Do not add markdown" in prompt
+    assert "first non-whitespace character must be {" in prompt
+    assert rows[0]["info"]["attack_plan_id"] == "lattice_primal_usvp_toy_v1"
+
+
+def test_prime_verifiers_format_repair_profile_instructs_json_extraction() -> None:
+    module = _load_env_module()
+
+    rows = module.build_dataset_rows(
+        attack_plan_id="lattice_primal_usvp_toy_v1",
+        prompt_profile="format_repair_extract_seed",
+    )
+
+    prompt = rows[0]["prompt"][0]["content"]
+    assert "Repair the broken model output below." in prompt
+    assert "markdown code fence" in prompt
+    assert "Return only the corrected AttackPlan JSON object." in prompt
+    assert "```json" in prompt
+    assert rows[0]["info"]["attack_plan_id"] == "lattice_primal_usvp_toy_v1"
+
+
+def test_prime_verifiers_claims_guard_profile_instructs_claim_repair() -> None:
+    module = _load_env_module()
+
+    rows = module.build_dataset_rows(
+        attack_plan_id="lattice_bdd_toy_v1",
+        prompt_profile="claims_guard_repair",
+    )
+
+    prompt = rows[0]["prompt"][0]["content"]
+    assert "Repair the invalid AttackPlan JSON object below." in prompt
+    assert "pre-evaluation estimates" in prompt
+    assert "estimated_time_bits=null" in prompt
+    assert "estimated_memory_bits=null" in prompt
+    assert "success_probability=null" in prompt
+    assert "Do not add external_claim or source" in prompt
+    assert "```" not in prompt
+    assert rows[0]["info"]["attack_plan_id"] == "lattice_bdd_toy_v1"
+
+
+def test_prime_verifiers_claims_guard_format_repair_profile_combines_repairs() -> None:
+    module = _load_env_module()
+
+    rows = module.build_dataset_rows(
+        attack_plan_id="lattice_bdd_toy_v1",
+        prompt_profile="claims_guard_format_repair",
+    )
+
+    prompt = rows[0]["prompt"][0]["content"]
+    assert "Repair the broken model output below." in prompt
+    assert "markdown code fence" in prompt
+    assert "pre-evaluation estimates" in prompt
+    assert "estimated_time_bits=null" in prompt
+    assert "estimated_memory_bits=null" in prompt
+    assert "success_probability=null" in prompt
+    assert "Do not add external_claim or source" in prompt
+    assert "Return only the corrected AttackPlan JSON object." in prompt
+    assert "```json" in prompt
+    assert rows[0]["info"]["attack_plan_id"] == "lattice_bdd_toy_v1"
+
+
+def test_prime_verifiers_claims_guard_decoy_format_repair_profile_is_harder() -> None:
+    module = _load_env_module()
+
+    rows = module.build_dataset_rows(
+        attack_plan_id="lattice_bdd_toy_v1",
+        prompt_profile="claims_guard_decoy_format_repair",
+    )
+
+    prompt = rows[0]["prompt"][0]["content"]
+    assert "Ignore Candidate object 1" in prompt
+    assert "AttackPlan-like decoy from a different task" in prompt
+    assert "code_based_prange_toy_v1" in prompt
+    assert "Candidate object 1" in prompt
+    assert "Candidate object 2" in prompt
+    assert "markdown code fence" in prompt
+    assert "pre-evaluation estimates" in prompt
+    assert "estimated_time_bits=null" in prompt
+    assert "estimated_memory_bits=null" in prompt
+    assert "success_probability=null" in prompt
+    assert "Return only the corrected AttackPlan JSON object." in prompt
+    assert "```json" in prompt
+    assert rows[0]["info"]["attack_plan_id"] == "lattice_bdd_toy_v1"
+
+
+def test_prime_verifiers_claims_guard_format_repair_scores_near_misses() -> None:
+    module = _load_env_module()
+    rows = module.build_dataset_rows(
+        attack_plan_id="lattice_bdd_toy_v1",
+        prompt_profile="claims_guard_format_repair",
+    )
+    row = rows[0]
+    repaired_json = Path("examples/attack_plans/lattice_bdd_toy.json").read_text()
+    invalid_claims_json = _with_unreviewed_claim_estimates(repaired_json)
+    wrapped_repaired_json = "\n".join(
+        [
+            "Here is the candidate:",
+            "```json",
+            repaired_json,
+            "```",
+        ]
+    )
+
+    repaired_report = module.score_attack_plan_completion_report(
+        _completion(repaired_json),
+        info=row["info"],
+        reward_profile="format_repair_dense",
+    )
+    invalid_claims_report = module.score_attack_plan_completion_report(
+        _completion(invalid_claims_json),
+        info=row["info"],
+        reward_profile="format_repair_dense",
+    )
+    wrapped_report = module.score_attack_plan_completion_report(
+        _completion(wrapped_repaired_json),
+        info=row["info"],
+        reward_profile="format_repair_dense",
+    )
+
+    assert repaired_report["accepted"] is True
+    assert repaired_report["aggregate_reward"] == 1.0
+    assert invalid_claims_report["accepted"] is False
+    assert 0.0 < invalid_claims_report["aggregate_reward"] < 1.0
+    assert invalid_claims_report["rubric_scores"]["single_json_object"] == 1.0
+    assert wrapped_report["accepted"] is False
+    assert wrapped_report["single_json_object"] is False
+    assert (
+        invalid_claims_report["aggregate_reward"]
+        < wrapped_report["aggregate_reward"]
+        < repaired_report["aggregate_reward"]
+    )
+
+
+def test_prime_verifiers_dataset_filters_seed_acceptance() -> None:
+    module = _load_env_module()
+
+    accepted_lwe_rows = module.build_dataset_rows(
+        target_family="LWE",
+        seed_accepted=True,
+    )
+    unsupported_lwe_rows = module.build_dataset_rows(
+        target_family="LWE",
+        seed_accepted=False,
+    )
+
+    assert accepted_lwe_rows
+    assert unsupported_lwe_rows
+    assert all(row["info"]["target_family"] == "LWE" for row in accepted_lwe_rows)
+    assert all(row["info"]["seed_accepted"] is True for row in accepted_lwe_rows)
+    assert all(row["info"]["seed_accepted"] is False for row in unsupported_lwe_rows)
+    assert {
+        row["info"]["attack_plan_id"]
+        for row in unsupported_lwe_rows
+    } >= {"lattice_lwe_modulus_switching_primary_v1"}
+
+
+def test_prime_verifiers_rejects_unknown_prompt_profile() -> None:
+    module = _load_env_module()
+
+    try:
+        module.build_dataset_rows(prompt_profile="unknown")
+    except ValueError as exc:
+        assert "unsupported Prime prompt profile" in str(exc)
+    else:
+        raise AssertionError("unknown Prime prompt profile should be rejected")
 
 
 def test_prime_verifiers_reward_scores_public_verifier_results() -> None:
@@ -379,3 +590,14 @@ def test_prime_verifiers_load_environment_reports_missing_optional_deps() -> Non
 
 def _completion(content: str) -> list[dict[str, str]]:
     return [{"role": "assistant", "content": content}]
+
+
+def _with_unreviewed_claim_estimates(raw_json: str) -> str:
+    payload = json.loads(raw_json)
+    claims = payload.setdefault("claims", {})
+    claims["estimated_time_bits"] = 64.0
+    claims["estimated_memory_bits"] = 32.0
+    claims["success_probability"] = 0.5
+    claims.pop("external_claim", None)
+    claims.pop("source", None)
+    return json.dumps(payload, indent=2, sort_keys=True)

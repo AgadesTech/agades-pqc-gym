@@ -26,6 +26,10 @@ uv run agades-pqc family-registry-manifest-verify --manifest docs/family_registr
 uv run agades-pqc family-support --out docs/family_support_matrix.json
 uv run agades-pqc family-operator-catalog --out docs/family_operator_catalog.json
 uv run agades-pqc family-operator-catalog-verify --catalog docs/family_operator_catalog.json
+uv run agades-pqc formal-lean-backend --out docs/formal_lean_backend.json
+uv run agades-pqc formal-lean-backend-verify --backend docs/formal_lean_backend.json
+uv run agades-pqc formal-lean-build-smoke --out reports/formal_lean_build_smoke.json
+uv run agades-pqc formal-lean-build-smoke-verify --report reports/formal_lean_build_smoke.json
 uv run agades-pqc lattice-estimator-manifest --out docs/lattice_estimator_manifest.json
 uv run agades-pqc lattice-estimator-manifest-verify --manifest docs/lattice_estimator_manifest.json
 uv run agades-pqc lattice-estimator-runtime-preflight --out private/reports/lattice_estimator_runtime_preflight.json --policy docs/private_run_policy.json

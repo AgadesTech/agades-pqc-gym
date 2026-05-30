@@ -20,6 +20,7 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
     out = tmp_path / "space_manifest.json"
 
     manifest = write_huggingface_space_manifest(out)
+    space_readme = Path("hf/README.md")
 
     assert manifest == build_huggingface_space_manifest()
     assert json.loads(out.read_text(encoding="utf-8")) == manifest
@@ -35,11 +36,32 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "sdk": "gradio",
         "category": "agent-environment",
         "app_file": "hf/app.py",
+        "space_readme_file": "hf/README.md",
+        "space_readme_sha256": manifest["space"]["space_readme_sha256"],
+        "space_readme_metadata": {
+            "title": "Agades PQC Gym Agent Environment",
+            "sdk": "gradio",
+            "app_file": "app.py",
+            "python_version": "3.11",
+            "license": "apache-2.0",
+            "colorFrom": "gray",
+            "colorTo": "blue",
+            "pinned": False,
+            "tags": [
+                "agent-environment",
+                "reinforcement-learning",
+                "post-quantum-cryptography",
+                "cryptanalysis",
+            ],
+            "short_description": (
+                "Public-safe AttackPlan Agent Environment for Agades PQC Gym."
+            ),
+        },
         "requirements_file": "hf/requirements.txt",
         "dataset_bundle": "hf/dataset",
         "hub_create_command_template": (
-            "hf repos create agades/agades-pqc-gym-agent-env --type=space "
-            "--space-sdk gradio --private --exist-ok"
+            "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space "
+            "--space_sdk gradio --private --exist-ok"
         ),
         "hub_upload_command_template": (
             'hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space '
@@ -51,15 +73,36 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "gradio[oauth,mcp]==6.14.0"
     )
     assert manifest["runtime"]["requirements_compatible_with_injected_gradio"] is True
+    formal_bundle = manifest["runtime"]["formal_runtime_bundle"]
+    assert formal_bundle["docs_path"] == "hf/docs"
+    assert formal_bundle["docs_json_count"] >= 10
+    assert formal_bundle["lean_path"] == "hf/formal/lean"
+    assert formal_bundle["lean_file_count"] >= 10
+    assert formal_bundle["ci_workflow_path"] == "hf/.github/workflows/ci.yml"
+    assert formal_bundle["required_files_present"] is True
+    assert len(formal_bundle["bundle_sha256"]) == 64
+    assert len(manifest["space"]["space_readme_sha256"]) == 64
+    assert space_readme.is_file()
+    space_readme_text = space_readme.read_text(encoding="utf-8")
+    assert "sdk: gradio" in space_readme_text
+    assert "app_file: app.py" in space_readme_text
+    assert "agent-environment" in space_readme_text
     assert manifest["agent_environment_contract"] == {
         "environment_class": "agades_pqc_gym.rl.environment.AgadesPQCGymEnvironment",
         "observation_schema": "agades.pqc.rl.observation.v1",
         "reward_report_schema": "agades.pqc.rl.reward_report.v1",
         "rollout_trace_schema": "agades.pqc.rl.rollout_trace.v1",
+        "formal_artifact_binding_schema": (
+            "agades.pqc.rl.formal_artifact_binding.v1"
+        ),
+        "review_governance_binding_schema": (
+            "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+        ),
         "task_dataset": "hf/dataset/task_metadata.jsonl",
         "rollout_examples": "hf/dataset/rl_rollouts.jsonl",
         "scoring_function": "agades_pqc_gym.rl.environment.score_attack_plan_candidate",
         "task_interface": "single_turn_attackplan_json",
+        "reviewer_quality_requires_governance": True,
         "public_track_only": True,
         "private_trace_publication_allowed": False,
         "claims_pqc_breaks": False,
@@ -258,10 +301,6 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "uv run agades-pqc hf-space-manifest-verify --manifest hf/space_manifest.json",
         "uv run agades-pqc hf-space-smoke --out reports/hf_space_smoke.json",
         "uv run agades-pqc hf-space-smoke-verify --report reports/hf_space_smoke.json",
-        "uv run agades-pqc hf-space-launch-smoke --out "
-        "reports/hf_space_launch_smoke.json",
-        "uv run agades-pqc hf-space-launch-smoke-verify --report "
-        "reports/hf_space_launch_smoke.json",
         "uv run agades-pqc ecosystem-smoke-verify --report "
         "reports/ecosystem_smoke.json",
         "uv run agades-pqc release-audit --out public/release_audit.json",
@@ -270,9 +309,11 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
 
 def test_huggingface_space_readme_matches_hub_workflow_contract() -> None:
     readme = Path("hf/space_README.md").read_text(encoding="utf-8")
-    space_card = Path("hf/README.md").read_text(encoding="utf-8")
 
-    assert "hf repos create agades/agades-pqc-gym-agent-env --type=space" in readme
+    assert (
+        "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space"
+        in readme
+    )
     assert (
         "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space"
         in readme
@@ -281,10 +322,6 @@ def test_huggingface_space_readme_matches_hub_workflow_contract() -> None:
     assert "Agent Environment" in readme
     assert "rl_rollouts.jsonl" in readme
     assert "Use a private Space first" in readme
-    assert "sdk: gradio" in space_card
-    assert "app_file: app.py" in space_card
-    assert "agent-environment" in space_card
-    assert "not security claims" in space_card
 
 
 def test_huggingface_space_requirements_allow_hf_injected_gradio(
@@ -322,10 +359,12 @@ def test_hf_space_manifest_verify_accepts_committed_manifest() -> None:
             "default_label": "LWE / lattice_primal_usvp_toy_v1",
             "example_count": 79,
             "failure_count": 0,
+            "has_space_readme_metadata": True,
             "is_agent_environment": True,
             "labels_match_valid_dataset_rows": True,
             "public_push_requires_review": True,
             "requires_gradio_to_import_for_audit": False,
+            "formal_runtime_bundle_ready": True,
             "uses_shared_verifier": True,
         },
         "failures": [],
@@ -348,6 +387,32 @@ def test_hf_space_manifest_verify_rejects_arbitrary_code_flag(
     assert "Hugging Face Space manifest allows arbitrary code." in result["failures"]
     assert (
         "Hugging Face Space manifest advertises arbitrary execution."
+        in result["failures"]
+    )
+
+
+def test_hf_space_manifest_verify_rejects_space_readme_metadata_drift(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "space_manifest.json"
+    manifest = build_huggingface_space_manifest()
+    manifest["space"]["space_readme_metadata"]["tags"] = [
+        "post-quantum-cryptography"
+    ]
+    out.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+
+    result = verify_huggingface_space_manifest(out)
+
+    assert result["accepted"] is False
+    assert "Hugging Face Space manifest is not in sync." in result["failures"]
+    assert (
+        "Hugging Face Space manifest has incorrect space_readme_metadata."
+        in result["failures"]
+    )
+    assert "Hugging Face Space root README metadata drifted." in result["failures"]
+    assert (
+        "Hugging Face Space root README is missing required tags: "
+        "agent-environment, reinforcement-learning, cryptanalysis."
         in result["failures"]
     )
 

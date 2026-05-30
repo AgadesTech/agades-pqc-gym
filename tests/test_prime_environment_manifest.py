@@ -217,15 +217,134 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
         "invalid_reward": 0.0,
         "requires_single_json_object": True,
         "accepts_executable_code": False,
+        "formal_artifact_binding_schema": (
+            "agades.pqc.rl.formal_artifact_binding.v1"
+        ),
+        "review_governance_binding_schema": (
+            "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+        ),
+        "reviewer_quality_requires_governance": True,
         "acceptance_rule": (
             "schema_valid == true and accepted == true from "
             "agades_pqc_gym.verifier.verify_attack_plan_json"
+        ),
+        "formal_binding_rule": (
+            "accepted Prime rewards must attach an "
+            "agades.pqc.rl.formal_artifact_binding.v1 proof binding with "
+            "review_governance_ok == true"
         ),
         "task_match_rule": (
             "accepted candidates must match the current task info for "
             "target_family, target_name, support_level, and ordered "
             "operator_types; attack_plan_id may change"
         ),
+        "prompt_profiles": {
+            "attackplan_json": {
+                "intended_use": "private_training_or_eval",
+                "contract": (
+                    "submit one AttackPlan JSON object for the seed task; "
+                    "return an already valid seed unchanged; do not invent "
+                    "pre-evaluation claims; do not include markdown, "
+                    "prose, analysis, comments, code fences, or wrapper text"
+                ),
+            },
+            "format_first_copy_seed": {
+                "intended_use": "format_smoke_and_supported_strict_eval",
+                "contract": "copy the seed AttackPlan unchanged as one JSON object",
+            },
+            "format_repair_extract_seed": {
+                "intended_use": "private_format_curriculum",
+                "contract": (
+                    "extract the public seed AttackPlan from wrapped prose "
+                    "and markdown"
+                ),
+            },
+            "claims_guard_repair": {
+                "intended_use": "private_claims_repair_curriculum",
+                "contract": (
+                    "repair invalid pre-evaluation claim estimates by "
+                    "restoring unknown null claims without adding external "
+                    "claim evidence"
+                ),
+            },
+            "claims_guard_format_repair": {
+                "intended_use": "private_format_and_claims_repair_curriculum",
+                "contract": (
+                    "extract a fenced public toy AttackPlan, repair invalid "
+                    "pre-evaluation claim estimates back to unknown nulls, "
+                    "and return one JSON object without wrapper text"
+                ),
+            },
+            "claims_guard_decoy_format_repair": {
+                "intended_use": "private_format_and_claims_repair_curriculum",
+                "contract": (
+                    "ignore an AttackPlan-like decoy from a different task, "
+                    "extract the fenced public toy AttackPlan, repair invalid "
+                    "pre-evaluation claim estimates back to unknown nulls, "
+                    "and return one JSON object without wrapper text"
+                ),
+            },
+        },
+        "reward_profiles": {
+            "strict": {
+                "intended_use": "public_eval",
+                "aggregate_rule": "accepted_attack_plan only",
+                "rubric_weights": {
+                    "accepted_attack_plan": 1.0,
+                    "single_json_object": 0.0,
+                    "formal_validity": 0.0,
+                    "cryptographic_applicability": 0.0,
+                    "no_security_overclaim": 0.0,
+                    "student_readability": 0.0,
+                    "reproducibility": 0.0,
+                    "reviewer_quality": 0.0,
+                    "task_match": 0.0,
+                    "proof_obligation_coverage": 0.0,
+                },
+            },
+            "pedagogical_dense": {
+                "intended_use": "private_prime_rl_training",
+                "aggregate_rule": (
+                    "weighted training signal over JSON-format compliance "
+                    "and existing verifier sub-scores"
+                ),
+                "accepted_candidates_still_require_strict_acceptance": True,
+                "rubric_weights": {
+                    "accepted_attack_plan": 0.30,
+                    "single_json_object": 0.10,
+                    "formal_validity": 0.15,
+                    "cryptographic_applicability": 0.10,
+                    "no_security_overclaim": 0.10,
+                    "student_readability": 0.07,
+                    "reproducibility": 0.05,
+                    "reviewer_quality": 0.05,
+                    "task_match": 0.04,
+                    "proof_obligation_coverage": 0.04,
+                },
+            },
+                "format_repair_dense": {
+                    "intended_use": "private_prime_rl_training",
+                    "aggregate_rule": (
+                        "weighted format-repair signal; exact valid concise "
+                        "JSON can receive full reward, wrapped JSON can "
+                        "receive partial non-accepted reward, and hidden "
+                        "reasoning bloat lowers student_readability"
+                    ),
+                    "accepted_candidates_still_require_strict_acceptance": True,
+                "rubric_weights": {
+                    "accepted_attack_plan": 0.20,
+                    "single_json_object": 0.20,
+                    "formal_validity": 0.20,
+                    "cryptographic_applicability": 0.05,
+                    "no_security_overclaim": 0.15,
+                    "student_readability": 0.08,
+                    "reproducibility": 0.03,
+                    "reviewer_quality": 0.03,
+                    "task_match": 0.04,
+                    "proof_obligation_coverage": 0.02,
+                },
+            },
+        },
         "task_info_fields": [
             "schema_version",
             "source_path",
@@ -345,6 +464,13 @@ def test_prime_manifest_verify_accepts_committed_manifest() -> None:
             "report_redaction_records": 2,
             "review_required_before_claims": True,
             "requires_single_json_object": True,
+            "formal_artifact_binding_schema": (
+                "agades.pqc.rl.formal_artifact_binding.v1"
+            ),
+            "review_governance_binding_schema": (
+                "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+            ),
+            "reviewer_quality_requires_governance": True,
             "task_count": 79,
             "typed_trace_redaction_covered": True,
         },

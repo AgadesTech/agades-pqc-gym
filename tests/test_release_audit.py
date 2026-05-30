@@ -44,19 +44,19 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert audit["schema_version"] == "agades.pqc.release_audit.v1"
     assert audit["accepted"] is True
     assert audit["summary"] == {
-        "passed": 61,
+        "passed": 60,
         "failed": 0,
         "warning": 1,
-        "total": 62,
+        "total": 61,
     }
 
     checks = {check["id"]: check for check in audit["checks"]}
     assert checks["release-gate-closure"]["status"] == "passed"
     assert checks["release-gate-closure"]["blocking"] is True
     assert checks["release-gate-closure"]["evidence"] == {
-        "checked_release_gate_artifacts": 40,
-        "release_audit_gate_artifacts": 25,
-        "ecosystem_smoke_gate_artifacts": 27,
+        "checked_release_gate_artifacts": 107,
+        "release_audit_gate_artifacts": 55,
+        "ecosystem_smoke_gate_artifacts": 59,
         "missing_ecosystem_smoke_gate": [],
         "late_ecosystem_smoke_gate": [],
     }
@@ -685,7 +685,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert checks["pedagogical-rl-method"]["evidence"] == {
         "stages": 4,
         "reward_terms": 8,
-        "linked_artifacts": 10,
+            "linked_artifacts": 11,
         "teacher_student_pattern": "privileged_self_teacher_student",
         "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
         "privacy_preserving": True,
@@ -709,16 +709,6 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "summary_contains_not_security_claim": True,
         "uses_shared_verifier": True,
     }
-    assert checks["hf-space-launch-smoke"]["status"] == "passed"
-    assert checks["hf-space-launch-smoke"]["blocking"] is True
-    assert checks["hf-space-launch-smoke"]["evidence"] == {
-        "agent_environment_api_names_present": True,
-        "component_count": 22,
-        "demo_class": "Blocks",
-        "gradio_available": True,
-        "required_api_names_present": True,
-        "title": "Agades PQC Gym",
-    }
     assert checks["hf-space-manifest"]["status"] == "passed"
     assert checks["hf-space-manifest"]["blocking"] is True
     assert checks["hf-space-manifest"]["evidence"] == {
@@ -740,8 +730,8 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
             "SIS",
         ],
         "hub_create_command_template": (
-            "hf repos create agades/agades-pqc-gym-agent-env --type=space "
-            "--space-sdk gradio --private --exist-ok"
+            "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space "
+            "--space_sdk gradio --private --exist-ok"
         ),
         "hub_upload_command_template": (
             "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space "
@@ -877,18 +867,18 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "verify-family-support",
         "generate-ecosystem-source-graph",
         "verify-ecosystem-source-graph",
-        "generate-family-operator-catalog",
-        "verify-family-operator-catalog",
-        "generate-formal-lean-backend",
-        "verify-formal-lean-backend",
-        "generate-hf-dataset",
-        "verify-hf-dataset",
+            "generate-family-operator-catalog",
+            "verify-family-operator-catalog",
+            "generate-formal-lean-backend",
+            "verify-formal-lean-backend",
+            "smoke-build-formal-lean",
+            "verify-formal-lean-build-smoke",
+            "generate-hf-dataset",
+            "verify-hf-dataset",
         "generate-hf-space-manifest",
         "verify-hf-space-manifest",
         "generate-hf-space-smoke",
         "verify-hf-space-smoke",
-        "generate-hf-space-launch-smoke",
-        "verify-hf-space-launch-smoke",
         "generate-hf-collection-manifest",
         "verify-hf-collection-manifest",
         "generate-hf-publication-handoff",
@@ -962,12 +952,22 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "uv run agades-pqc formal-lean-backend-verify --backend "
         "docs/formal_lean_backend.json" in workflow
     )
-    artifact_diff_line = next(
-        line for line in workflow.splitlines() if "git diff --exit-code --" in line
+    assert (
+        "uv run agades-pqc formal-lean-build-smoke --out "
+        "reports/formal_lean_build_smoke.json" in workflow
     )
-    assert "docs/external_publication_review_packet.json" in artifact_diff_line
-    assert "docs/formal_lean_backend.json" in artifact_diff_line
-    assert "reports/openevolve_smoke.json" in artifact_diff_line
+    assert (
+        "uv run agades-pqc formal-lean-build-smoke-verify --report "
+        "reports/formal_lean_build_smoke.json" in workflow
+    )
+    artifact_gate_start = workflow.index(
+        "- name: Check public release artifacts are committed"
+    )
+    artifact_gate_end = workflow.index("- name: Build package", artifact_gate_start)
+    artifact_gate = workflow[artifact_gate_start:artifact_gate_end]
+    assert "docs/external_publication_review_packet.json" in artifact_gate
+    assert "docs/formal_lean_backend.json" in artifact_gate
+    assert "reports/openevolve_smoke.json" in artifact_gate
     assert checks["openevolve-config-template"]["status"] == "passed"
     assert checks["openevolve-config-template"]["blocking"] is True
     assert checks["openevolve-config-template"]["evidence"] == {
@@ -1461,11 +1461,12 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert checks["private-run-policy"]["status"] == "passed"
     assert checks["private-run-policy"]["blocking"] is True
     assert checks["private-run-policy"]["evidence"] == {
-        "allowed_private_commands": 16,
+        "allowed_private_commands": 18,
         "allowed_private_roots": 6,
         "forbidden_public_roots": 5,
         "private_dataset_sources": 3,
         "private_rl_reward_terms": 6,
+        "qwen_artifact_gates": 8,
         "required_publication_controls": 5,
         "scheduler_allowed_triggers": 2,
         "scheduler_approval_gates": 4,

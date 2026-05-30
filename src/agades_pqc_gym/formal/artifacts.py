@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-from importlib import resources
 from pathlib import Path
 from typing import Any
 
@@ -15,9 +14,21 @@ from agades_pqc_gym.formal.review import (
 )
 from agades_pqc_gym.utils.hashing import stable_sha256
 
-PROOF_ARTIFACT_SCHEMA = "agades.pqc.formal.proof_artifact.v1"
+PROOF_ARTIFACT_SCHEMA = "agades.pqc.formal.proof_artifact.v2"
 PROOF_ARTIFACT_VERIFICATION_SCHEMA = (
     "agades.pqc.formal.proof_artifact_verification.v1"
+)
+ATTACK_PLAN_SEMANTICS_BINDING_SCHEMA = (
+    "agades.pqc.formal.proof_artifact.attackplan_semantics_binding.v1"
+)
+OPERATOR_SEMANTICS_BINDING_SCHEMA = (
+    "agades.pqc.formal.proof_artifact.operator_semantics_binding.v1"
+)
+FORMAL_ESTIMATOR_MODEL_BINDING_SCHEMA = (
+    "agades.pqc.formal.proof_artifact.formal_estimator_model_binding.v1"
+)
+REVIEWER_GOVERNANCE_BINDING_SCHEMA = (
+    "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
 )
 ATTACK_PLAN_SCHEMA_CONTRACT_SCHEMA = "agades.pqc.attack_plan.schema_contract.v1"
 ATTACK_PLAN_SCHEMA_MODEL = "agades_pqc_gym.core.attack_plan.AttackPlan"
@@ -26,6 +37,9 @@ ATTACK_PLAN_VALIDATION = "pydantic_v2_extra_forbid_family_cross_checks"
 REVIEW_EVIDENCE_SCHEMA = "agades.pqc.formal.review_evidence.v1"
 EVALUATOR_RESULT_SCHEMA_CONTRACT_SCHEMA = (
     "agades.pqc.evaluator_result.schema_contract.v1"
+)
+EVALUATOR_RESULT_VERIFICATION_SCHEMA = (
+    "agades.pqc.formal.evaluator_result_verification.v1"
 )
 EVALUATOR_RESULT_SCHEMA_MODEL = "agades_pqc_gym.core.evaluator_result.EvaluatorResult"
 EVALUATOR_RESULT_VALIDATION = "pydantic_v2_extra_forbid_status_payload_checks"
@@ -52,7 +66,6 @@ BACKEND = {
     "smt_assist": "z3_optional_finite_decidable_obligations_only",
 }
 ROOT = Path(__file__).resolve().parents[3]
-PACKAGED_FORMAL_RESOURCE_ROOT = Path("resources")
 LEAN_BACKEND_ROOT = Path("formal/lean")
 FORMAL_LEAN_BACKEND_PATH = Path("docs/formal_lean_backend.json")
 MVP_VERTICAL_PROOF_ARTIFACT_PATHS = {
@@ -360,6 +373,14 @@ def build_attack_plan_proof_artifact_from_json(
         "schema_version": PROOF_ARTIFACT_SCHEMA,
         "backend": BACKEND,
         "formal_backend": _formal_backend_binding(project_root),
+        "attack_plan_semantics": _attack_plan_semantics_binding(project_root),
+        "operator_semantics_contract": _operator_semantics_contract_binding(
+            project_root
+        ),
+        "formal_estimator_model_contract": (
+            _formal_estimator_model_contract_binding(project_root)
+        ),
+        "review_governance": _reviewer_governance_binding(project_root),
         "attack_plan": {
             "id": plan.attack_plan_id,
             "path": source_label,
@@ -371,15 +392,17 @@ def build_attack_plan_proof_artifact_from_json(
         "operator_semantics": [
             _operator_semantics(operator.type) for operator in plan.operators
         ],
-        "family_invariants": _family_invariants(plan),
+        "family_invariants": _family_invariants(plan, root=project_root),
         "estimator_model": _estimator_model(plan),
-        "proof_obligation_type_rules": proof_obligation_type_rules(),
+        "proof_obligation_type_rules": proof_obligation_type_rules(
+            root=project_root,
+        ),
         "estimator_result_binding": _estimator_result_binding(
             plan,
             estimator_result_path,
             root=project_root,
         ),
-        "proof_obligations": _proof_obligations(plan),
+        "proof_obligations": _proof_obligations(plan, root=project_root),
         "review": {
             "status": review_status,
             "required_reviewers": required_reviewers,
@@ -418,10 +441,31 @@ def write_attack_plan_proof_artifact(
 def write_attack_plan_evaluator_result(
     plan_path: Path,
     out: Path,
+    *,
+    root: Path | None = None,
+) -> dict[str, Any]:
+    payload = build_attack_plan_evaluator_result(plan_path, root=root)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return payload
+
+
+def build_attack_plan_evaluator_result(
+    plan_path: Path,
+    *,
+    root: Path | None = None,
 ) -> dict[str, Any]:
     from agades_pqc_gym.evaluators.cascade import CascadeEvaluator
 
-    raw = plan_path.read_text(encoding="utf-8")
+    project_root = root.resolve() if root is not None else None
+    resolved_plan_path = plan_path
+    if project_root is not None and not resolved_plan_path.is_absolute():
+        resolved_plan_path = project_root / resolved_plan_path
+
+    raw = resolved_plan_path.read_text(encoding="utf-8")
     plan = AttackPlan.model_validate_json(raw)
     result = CascadeEvaluator().evaluate_plan(plan)
     if result.estimator_result is None:
@@ -454,13 +498,92 @@ def write_attack_plan_evaluator_result(
     payload["warnings"] = warnings
 
     validated = EvaluatorResult.model_validate(payload)
-    payload = validated.model_dump(mode="json")
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(
-        json.dumps(payload, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
+    return validated.model_dump(mode="json")
+
+
+def verify_attack_plan_evaluator_result(
+    result_path: Path,
+    plan_path: Path,
+    *,
+    root: Path | None = None,
+) -> dict[str, Any]:
+    project_root = root.resolve() if root is not None else ROOT
+    resolved_result_path = result_path
+    if not resolved_result_path.is_absolute():
+        resolved_result_path = project_root / resolved_result_path
+
+    failures: list[str] = []
+    payload = _read_evaluator_result_json_object(resolved_result_path, failures)
+    expected: dict[str, Any] = {}
+    try:
+        expected = build_attack_plan_evaluator_result(plan_path, root=project_root)
+    except (FileNotFoundError, ValueError) as exc:
+        failures.append(f"Expected evaluator result could not be rebuilt: {exc}")
+
+    if payload:
+        try:
+            result = EvaluatorResult.model_validate(payload)
+        except ValueError as exc:
+            failures.append(f"Evaluator result does not match schema: {exc}")
+        else:
+            _verify_evaluator_result_public_boundary(result, failures)
+        if expected and payload != expected:
+            failures.append("Evaluator result is not in sync with the AttackPlan.")
+
+    return {
+        "schema_version": EVALUATOR_RESULT_VERIFICATION_SCHEMA,
+        "result_path": result_path.as_posix(),
+        "plan_path": plan_path.as_posix(),
+        "accepted": not failures,
+        "summary": {
+            "attack_plan_id": _evaluator_result_raw_output(payload).get(
+                "attack_plan_id"
+            ),
+            "attack_type": payload.get("attack_type"),
+            "failure_count": len(failures),
+        },
+        "failures": failures,
+    }
+
+
+def _read_evaluator_result_json_object(
+    path: Path,
+    failures: list[str],
+) -> dict[str, Any]:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        failures.append(f"Evaluator result is missing: {path.as_posix()}.")
+        return {}
+    except json.JSONDecodeError as exc:
+        failures.append(f"Evaluator result is invalid JSON at line {exc.lineno}.")
+        return {}
+    if not isinstance(payload, dict):
+        failures.append("Evaluator result must be a JSON object.")
+        return {}
     return payload
+
+
+def _verify_evaluator_result_public_boundary(
+    result: EvaluatorResult,
+    failures: list[str],
+) -> None:
+    raw_output = result.raw_output
+    if raw_output.get("source") != "agades_pqc_gym.evaluators.cascade.CascadeEvaluator":
+        failures.append("Evaluator result source binding is missing.")
+    if raw_output.get("claim_allowed") is not False:
+        failures.append("Evaluator result must not allow security claims.")
+    if raw_output.get("public_interpretation") != (
+        "reproducibility_and_reviewer_binding_only"
+    ):
+        failures.append("Evaluator result public interpretation boundary is missing.")
+
+
+def _evaluator_result_raw_output(payload: dict[str, Any]) -> dict[str, Any]:
+    raw_output = payload.get("raw_output")
+    if isinstance(raw_output, dict):
+        return raw_output
+    return {}
 
 
 def verify_attack_plan_proof_artifact(
@@ -474,6 +597,22 @@ def verify_attack_plan_proof_artifact(
     if artifact:
         _verify_artifact_shape(artifact, failures)
         _verify_formal_backend(artifact, project_root, failures)
+        _verify_attack_plan_semantics_binding(artifact, project_root, failures)
+        _verify_operator_semantics_contract_binding(
+            artifact,
+            project_root,
+            failures,
+        )
+        _verify_formal_estimator_model_contract_binding(
+            artifact,
+            project_root,
+            failures,
+        )
+        _verify_reviewer_governance_binding(
+            artifact,
+            project_root,
+            failures,
+        )
         _verify_artifact_hash(artifact, failures)
         _verify_plan_binding(artifact, project_root, failures)
         _verify_obligation_hashes(artifact, project_root, failures)
@@ -495,6 +634,24 @@ def verify_attack_plan_proof_artifact(
             artifact.get("estimator_result_binding", {}).get("status")
             == "attached_unreviewed"
         ),
+        "attackplan_semantics_attached": (
+            artifact.get("attack_plan_semantics", {}).get(
+                "verification_accepted"
+            )
+            is True
+        ),
+        "operator_semantics_contract_attached": (
+            artifact.get("operator_semantics_contract", {}).get(
+                "verification_accepted"
+            )
+            is True
+        ),
+        "formal_estimator_model_attached": (
+            artifact.get("formal_estimator_model_contract", {}).get(
+                "verification_accepted"
+            )
+            is True
+        ),
         "required_reviewers": len(
             artifact.get("review", {}).get("required_reviewers", [])
         ),
@@ -515,19 +672,26 @@ def _operator_semantics(operator_type: str) -> dict[str, str]:
     return operator_semantics_entry(operator_type)
 
 
-def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
+def _family_invariants(
+    plan: AttackPlan,
+    *,
+    root: Path | None = None,
+) -> list[dict[str, Any]]:
     family = plan.target.family
     if family is TargetFamily.LWE:
-        return _lwe_lattice_invariants()
+        return _lwe_lattice_invariants(root=root)
     if family is TargetFamily.MLWE:
         return [
-            *_lwe_lattice_invariants(),
+            *_lwe_lattice_invariants(root=root),
             {
                 "invariant_id": "lattice.mlwe.module_rank_present",
                 "statement": "MLWE module rank k is present and positive",
                 "lean_theorem": "AgadesPQC.Lattice.Target.module_rank_present",
             }
-            | _lean_source("AgadesPQC.Lattice.Target.module_rank_present"),
+            | _lean_source(
+                "AgadesPQC.Lattice.Target.module_rank_present",
+                root=root,
+            ),
         ]
     if family is TargetFamily.NTRU:
         return [
@@ -539,7 +703,10 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
                 ),
                 "lean_theorem": "AgadesPQC.Lattice.Target.ntru_schema_shape",
             }
-            | _lean_source("AgadesPQC.Lattice.Target.ntru_schema_shape")
+            | _lean_source(
+                "AgadesPQC.Lattice.Target.ntru_schema_shape",
+                root=root,
+            )
         ]
     if family is TargetFamily.SIS:
         return [
@@ -551,7 +718,10 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
                 ),
                 "lean_theorem": "AgadesPQC.Lattice.Target.sis_schema_shape",
             }
-            | _lean_source("AgadesPQC.Lattice.Target.sis_schema_shape")
+            | _lean_source(
+                "AgadesPQC.Lattice.Target.sis_schema_shape",
+                root=root,
+            )
         ]
     if family is TargetFamily.CODE_BASED:
         return [
@@ -560,7 +730,10 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
                 "statement": "n > 0, k > 0, w > 0, and k <= n",
                 "lean_theorem": "AgadesPQC.CodeBased.Target.parameters_well_formed",
             }
-            | _lean_source("AgadesPQC.CodeBased.Target.parameters_well_formed")
+            | _lean_source(
+                "AgadesPQC.CodeBased.Target.parameters_well_formed",
+                root=root,
+            )
         ]
     if family is TargetFamily.MULTIVARIATE:
         return [
@@ -574,7 +747,8 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
             }
             | _lean_source(
                 "AgadesPQC.Multivariate.Target."
-                "variables_equations_field_present"
+                "variables_equations_field_present",
+                root=root,
             )
         ]
     if family is TargetFamily.HASH_BASED:
@@ -591,7 +765,8 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
             }
             | _lean_source(
                 "AgadesPQC.HashBased.Target."
-                "hash_function_and_security_parameter_present"
+                "hash_function_and_security_parameter_present",
+                root=root,
             )
         ]
     if family is TargetFamily.ISOGENY_HISTORICAL:
@@ -608,7 +783,8 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
             }
             | _lean_source(
                 "AgadesPQC.IsogenyHistorical.Target."
-                "dimension_positive_historical_scope"
+                "dimension_positive_historical_scope",
+                root=root,
             )
         ]
     if family is TargetFamily.IMPLEMENTATION_SECURITY:
@@ -624,7 +800,8 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
                 ),
             }
             | _lean_source(
-                "AgadesPQC.ImplementationSecurity.Target.review_scope_declared"
+                "AgadesPQC.ImplementationSecurity.Target.review_scope_declared",
+                root=root,
             )
         ]
     return [
@@ -633,24 +810,33 @@ def _family_invariants(plan: AttackPlan) -> list[dict[str, Any]]:
             "statement": "TargetSpec family-specific validator accepted the shape",
             "lean_theorem": "AgadesPQC.Generic.Target.family_shape_validated",
         }
-        | _lean_source("AgadesPQC.Generic.Target.family_shape_validated")
+        | _lean_source(
+            "AgadesPQC.Generic.Target.family_shape_validated",
+            root=root,
+        )
     ]
 
 
-def _lwe_lattice_invariants() -> list[dict[str, Any]]:
+def _lwe_lattice_invariants(*, root: Path | None = None) -> list[dict[str, Any]]:
     return [
         {
             "invariant_id": "lattice.dimension_modulus_positive",
             "statement": "n > 0 and q > 1",
             "lean_theorem": "AgadesPQC.Lattice.Target.dimension_modulus_positive",
         }
-        | _lean_source("AgadesPQC.Lattice.Target.dimension_modulus_positive"),
+        | _lean_source(
+            "AgadesPQC.Lattice.Target.dimension_modulus_positive",
+            root=root,
+        ),
         {
             "invariant_id": "lattice.distributions_present",
             "statement": "secret and error distributions are present for LWE/MLWE",
             "lean_theorem": "AgadesPQC.Lattice.Target.distributions_present",
         }
-        | _lean_source("AgadesPQC.Lattice.Target.distributions_present"),
+        | _lean_source(
+            "AgadesPQC.Lattice.Target.distributions_present",
+            root=root,
+        ),
     ]
 
 
@@ -719,7 +905,11 @@ def _estimator_result_binding(
     }
 
 
-def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
+def _proof_obligations(
+    plan: AttackPlan,
+    *,
+    root: Path | None = None,
+) -> list[dict[str, Any]]:
     family = plan.target.family
     obligations: list[dict[str, Any]] = []
     if family is TargetFamily.LWE:
@@ -733,12 +923,14 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                     ),
                     "AgadesPQC.Lattice.Target.parameters_positive",
                     family=family,
+                    root=root,
                 ),
                 _obligation(
                     "target.lwe.distributions.present",
                     "Secret and error distributions are specified for LWE/MLWE.",
                     "AgadesPQC.Lattice.Target.distributions_present",
                     family=family,
+                    root=root,
                 ),
             ]
         )
@@ -753,18 +945,21 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                     ),
                     "AgadesPQC.Lattice.Target.parameters_positive",
                     family=family,
+                    root=root,
                 ),
                 _obligation(
                     "target.mlwe.distributions.present",
                     "Secret and error distributions are specified for MLWE.",
                     "AgadesPQC.Lattice.Target.distributions_present",
                     family=family,
+                    root=root,
                 ),
                 _obligation(
                     "target.mlwe.module_rank.present",
                     "MLWE module rank k is positive.",
                     "AgadesPQC.Lattice.Target.module_rank_present",
                     family=family,
+                    root=root,
                 ),
             ]
         )
@@ -779,6 +974,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 "AgadesPQC.Lattice.PrimalUSVP.beta_valid_range",
                 family=family,
                 operator_type="primal_usvp",
+                root=root,
             )
         )
     if (
@@ -791,6 +987,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 "Schema-only NTRU plans must not emit cryptanalytic estimates.",
                 "AgadesPQC.Lattice.Target.ntru_schema_only_no_estimate",
                 family=family,
+                root=root,
             )
         )
     if (
@@ -803,6 +1000,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 "Schema-only SIS plans must not emit cryptanalytic estimates.",
                 "AgadesPQC.Lattice.Target.sis_schema_only_no_estimate",
                 family=family,
+                root=root,
             )
         )
     if (
@@ -815,6 +1013,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 "Schema-only code-based plans must not emit cryptanalytic estimates.",
                 "AgadesPQC.CodeBased.SchemaOnly.no_estimate",
                 family=family,
+                root=root,
             )
         )
     if family is TargetFamily.MULTIVARIATE:
@@ -827,6 +1026,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 ),
                 "AgadesPQC.Multivariate.Target.applicability_shape",
                 family=family,
+                root=root,
             )
         )
     if family is TargetFamily.HASH_BASED:
@@ -839,6 +1039,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 ),
                 "AgadesPQC.HashBased.Target.bound_check_is_not_attack_claim",
                 family=family,
+                root=root,
             )
         )
     if family is TargetFamily.ISOGENY_HISTORICAL:
@@ -851,6 +1052,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 ),
                 "AgadesPQC.IsogenyHistorical.Target.historical_only",
                 family=family,
+                root=root,
             )
         )
     if family is TargetFamily.IMPLEMENTATION_SECURITY:
@@ -863,6 +1065,7 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
                 ),
                 "AgadesPQC.ImplementationSecurity.Target.no_conformance_claim",
                 family=family,
+                root=root,
             )
         )
     obligations.append(
@@ -874,19 +1077,27 @@ def _proof_obligations(plan: AttackPlan) -> list[dict[str, Any]]:
             ),
             "AgadesPQC.Evaluator.no_security_claim",
             family=family,
+            root=root,
         )
     )
     return obligations
 
 
-def proof_obligation_type_rules() -> list[dict[str, Any]]:
+def proof_obligation_type_rules(
+    *,
+    root: Path | None = None,
+) -> list[dict[str, Any]]:
     return [
-        _proof_obligation_type_rule(kind)
+        _proof_obligation_type_rule(kind, root=root)
         for kind in PROOF_OBLIGATION_TYPE_RULES
     ]
 
 
-def _proof_obligation_type_rule(kind: str) -> dict[str, Any]:
+def _proof_obligation_type_rule(
+    kind: str,
+    *,
+    root: Path | None = None,
+) -> dict[str, Any]:
     rule = PROOF_OBLIGATION_TYPE_RULES[kind]
     payload = {
         "schema_version": PROOF_OBLIGATION_TYPE_RULE_SCHEMA,
@@ -894,7 +1105,7 @@ def _proof_obligation_type_rule(kind: str) -> dict[str, Any]:
         "statement": rule["statement"],
         "backend": "lean4",
         "lean_theorem": rule["lean_theorem"],
-        **_lean_source(rule["lean_theorem"]),
+        **_lean_source(rule["lean_theorem"], root=root),
     }
     return {
         **payload,
@@ -909,6 +1120,7 @@ def _obligation(
     *,
     family: TargetFamily,
     operator_type: str | None = None,
+    root: Path | None = None,
 ) -> dict[str, Any]:
     obligation_type = _obligation_type(
         obligation_id,
@@ -920,9 +1132,12 @@ def _obligation(
         "statement": statement,
         "backend": "lean4",
         "obligation_type": obligation_type,
-        "type_rule": _proof_obligation_type_rule(obligation_type["kind"]),
+        "type_rule": _proof_obligation_type_rule(
+            obligation_type["kind"],
+            root=root,
+        ),
         "lean_theorem": lean_theorem,
-        **_lean_source(lean_theorem),
+        **_lean_source(lean_theorem, root=root),
         "status": "pending_review",
     }
     return {
@@ -1011,34 +1226,21 @@ def _artifact_sha256(artifact: dict[str, Any]) -> str:
     return stable_sha256(payload)
 
 
-def _lean_source(lean_theorem: str) -> dict[str, Any]:
+def _lean_source(
+    lean_theorem: str,
+    *,
+    root: Path | None = None,
+) -> dict[str, Any]:
     path = LEAN_THEOREM_SOURCES[lean_theorem]
     declaration = lean_theorem.rsplit(".", 1)[1]
-    raw_source = _formal_resource_bytes(Path(path))
+    source_path = (root or ROOT) / path
     return {
         "lean_source": {
             "path": path,
-            "sha256": hashlib.sha256(raw_source).hexdigest(),
+            "sha256": hashlib.sha256(source_path.read_bytes()).hexdigest(),
             "declaration": declaration,
         }
     }
-
-
-def _formal_resource_bytes(relative_path: Path) -> bytes:
-    checkout_path = ROOT / relative_path
-    try:
-        return checkout_path.read_bytes()
-    except FileNotFoundError:
-        return _packaged_formal_resource_bytes(relative_path)
-
-
-def _packaged_formal_resource_bytes(relative_path: Path) -> bytes:
-    resource = resources.files("agades_pqc_gym.formal") / (
-        PACKAGED_FORMAL_RESOURCE_ROOT.as_posix()
-    )
-    for part in relative_path.parts:
-        resource = resource / part
-    return resource.read_bytes()
 
 
 def _read_json_object(path: Path, failures: list[str]) -> dict[str, Any]:
@@ -1076,6 +1278,10 @@ def _verify_artifact_shape(
         "proof_obligations",
         "review",
         "formal_backend",
+        "attack_plan_semantics",
+        "operator_semantics_contract",
+        "formal_estimator_model_contract",
+        "review_governance",
         "artifact_sha256",
     ):
         if key not in artifact:
@@ -1345,8 +1551,9 @@ def _verify_type_rule(
     if source.get("path") != expected_path:
         failures.append(f"Proof obligation type rule source path mismatch: {label}.")
         return
+    source_path = project_root / expected_path
     try:
-        raw = _formal_resource_bytes(Path(expected_path))
+        raw = source_path.read_bytes()
     except FileNotFoundError:
         failures.append(f"Proof obligation type rule source is missing: {label}.")
         return
@@ -1442,17 +1649,13 @@ def _formal_backend_binding(
         raw = manifest_path.read_bytes()
         manifest = json.loads(raw.decode("utf-8"))
     except FileNotFoundError:
-        try:
-            raw = _packaged_formal_resource_bytes(FORMAL_LEAN_BACKEND_PATH)
-            manifest = json.loads(raw.decode("utf-8"))
-        except FileNotFoundError:
-            if failures is not None:
-                failures.append(
-                    "Formal Lean backend manifest is missing: "
-                    f"{FORMAL_LEAN_BACKEND_PATH.as_posix()}."
-                )
-            manifest = {}
-            raw = b""
+        if failures is not None:
+            failures.append(
+                "Formal Lean backend manifest is missing: "
+                f"{FORMAL_LEAN_BACKEND_PATH.as_posix()}."
+            )
+        manifest = {}
+        raw = b""
     except json.JSONDecodeError as exc:
         if failures is not None:
             failures.append(
@@ -1493,6 +1696,481 @@ def _formal_backend_binding(
     }
 
 
+def _attack_plan_semantics_binding(
+    root: Path,
+    *,
+    failures: list[str] | None = None,
+) -> dict[str, Any]:
+    from agades_pqc_gym.formal.attack_plan_semantics import (
+        DEFAULT_ATTACKPLAN_SEMANTICS_PATH,
+        FORMAL_ATTACKPLAN_SEMANTICS_SCHEMA,
+        verify_formal_attackplan_semantics,
+    )
+
+    path = root / DEFAULT_ATTACKPLAN_SEMANTICS_PATH
+    try:
+        raw = path.read_bytes()
+        payload = json.loads(raw.decode("utf-8"))
+    except FileNotFoundError:
+        if failures is not None:
+            failures.append(
+                "Formal AttackPlan semantics artifact is missing: "
+                f"{DEFAULT_ATTACKPLAN_SEMANTICS_PATH.as_posix()}."
+            )
+        raw = b""
+        payload = {}
+    except json.JSONDecodeError as exc:
+        if failures is not None:
+            failures.append(
+                "Formal AttackPlan semantics artifact is invalid JSON at line "
+                f"{exc.lineno}."
+            )
+        raw = b""
+        payload = {}
+    if not isinstance(payload, dict):
+        if failures is not None:
+            failures.append("Formal AttackPlan semantics artifact must be an object.")
+        payload = {}
+
+    verification = (
+        verify_formal_attackplan_semantics(
+            DEFAULT_ATTACKPLAN_SEMANTICS_PATH,
+            root=root,
+        )
+        if raw
+        else {"accepted": False}
+    )
+    claim_policy = payload.get("claim_policy", {})
+    return {
+        "schema_version": ATTACK_PLAN_SEMANTICS_BINDING_SCHEMA,
+        "path": DEFAULT_ATTACKPLAN_SEMANTICS_PATH.as_posix(),
+        "semantics_schema_version": (
+            payload.get("schema_version") or FORMAL_ATTACKPLAN_SEMANTICS_SCHEMA
+        ),
+        "sha256": hashlib.sha256(raw).hexdigest() if raw else None,
+        "semantics_sha256": payload.get("semantics_sha256"),
+        "validation_rules": len(_list_or_empty(payload.get("validation_rules"))),
+        "formal_rules": len(_list_or_empty(payload.get("formal_rules"))),
+        "claim_policy_forbids_unreviewed_security_claims": (
+            isinstance(claim_policy, dict)
+            and claim_policy.get("security_claim_allowed_without_review") is False
+        ),
+        "verification_accepted": verification.get("accepted") is True,
+    }
+
+
+def _verify_attack_plan_semantics_binding(
+    artifact: dict[str, Any],
+    project_root: Path,
+    failures: list[str],
+) -> None:
+    binding = artifact.get("attack_plan_semantics")
+    if not isinstance(binding, dict):
+        failures.append(
+            "Proof artifact AttackPlan semantics binding must be a JSON object."
+        )
+        return
+    semantics_failures: list[str] = []
+    expected = _attack_plan_semantics_binding(
+        project_root,
+        failures=semantics_failures,
+    )
+    failures.extend(semantics_failures)
+    if binding != expected:
+        failures.append("Proof artifact AttackPlan semantics binding is not in sync.")
+    if binding.get("claim_policy_forbids_unreviewed_security_claims") is not True:
+        failures.append(
+            "Proof artifact AttackPlan semantics binding must forbid "
+            "unreviewed security claims."
+        )
+    if binding.get("verification_accepted") is not True:
+        failures.append(
+            "Proof artifact AttackPlan semantics binding must verify cleanly."
+        )
+
+
+def _operator_semantics_contract_binding(
+    root: Path,
+    *,
+    failures: list[str] | None = None,
+) -> dict[str, Any]:
+    from agades_pqc_gym.formal.operator_semantics import (
+        DEFAULT_OPERATOR_SEMANTICS_PATH,
+        FORMAL_OPERATOR_SEMANTICS_SCHEMA,
+        verify_formal_operator_semantics,
+    )
+
+    path = root / DEFAULT_OPERATOR_SEMANTICS_PATH
+    try:
+        raw = path.read_bytes()
+        payload = json.loads(raw.decode("utf-8"))
+    except FileNotFoundError:
+        if failures is not None:
+            failures.append(
+                "Formal operator semantics artifact is missing: "
+                f"{DEFAULT_OPERATOR_SEMANTICS_PATH.as_posix()}."
+            )
+        raw = b""
+        payload = {}
+    except json.JSONDecodeError as exc:
+        if failures is not None:
+            failures.append(
+                "Formal operator semantics artifact is invalid JSON at line "
+                f"{exc.lineno}."
+            )
+        raw = b""
+        payload = {}
+    if not isinstance(payload, dict):
+        if failures is not None:
+            failures.append("Formal operator semantics artifact must be an object.")
+        payload = {}
+
+    verification = (
+        verify_formal_operator_semantics(
+            DEFAULT_OPERATOR_SEMANTICS_PATH,
+            root=root,
+        )
+        if raw
+        else {"accepted": False}
+    )
+    operators = _list_or_empty(payload.get("operators"))
+    claim_policies = [
+        _dict_or_empty(operator.get("claim_policy"))
+        for operator in operators
+        if isinstance(operator, dict)
+    ]
+    return {
+        "schema_version": OPERATOR_SEMANTICS_BINDING_SCHEMA,
+        "path": DEFAULT_OPERATOR_SEMANTICS_PATH.as_posix(),
+        "semantics_schema_version": (
+            payload.get("schema_version") or FORMAL_OPERATOR_SEMANTICS_SCHEMA
+        ),
+        "sha256": hashlib.sha256(raw).hexdigest() if raw else None,
+        "semantics_sha256": payload.get("semantics_sha256"),
+        "operators": len(operators),
+        "required_param_fields": sum(
+            len(_dict_or_empty(operator.get("required_params")))
+            for operator in operators
+            if isinstance(operator, dict)
+        ),
+        "claim_policy_forbids_unreviewed_security_claims": bool(
+            claim_policies
+        )
+        and all(
+            policy.get("security_claim_allowed_without_review") is False
+            for policy in claim_policies
+        ),
+        "verification_accepted": verification.get("accepted") is True,
+    }
+
+
+def _verify_operator_semantics_contract_binding(
+    artifact: dict[str, Any],
+    project_root: Path,
+    failures: list[str],
+) -> None:
+    binding = artifact.get("operator_semantics_contract")
+    if not isinstance(binding, dict):
+        failures.append(
+            "Proof artifact operator semantics contract binding must be a "
+            "JSON object."
+        )
+        return
+    semantics_failures: list[str] = []
+    expected = _operator_semantics_contract_binding(
+        project_root,
+        failures=semantics_failures,
+    )
+    failures.extend(semantics_failures)
+    if binding != expected:
+        failures.append(
+            "Proof artifact operator semantics contract binding is not in sync."
+        )
+    if binding.get("claim_policy_forbids_unreviewed_security_claims") is not True:
+        failures.append(
+            "Proof artifact operator semantics contract binding must forbid "
+            "unreviewed security claims."
+        )
+    if binding.get("verification_accepted") is not True:
+        failures.append(
+            "Proof artifact operator semantics contract binding must verify cleanly."
+        )
+
+
+def _formal_estimator_model_contract_binding(
+    root: Path,
+    *,
+    failures: list[str] | None = None,
+) -> dict[str, Any]:
+    from agades_pqc_gym.formal.estimator_model import (
+        DEFAULT_ESTIMATOR_MODEL_PATH,
+        FORMAL_ESTIMATOR_MODEL_SCHEMA,
+        build_formal_estimator_model,
+        formal_estimator_model_contract_payload,
+        formal_estimator_model_contract_sha256,
+    )
+
+    path = root / DEFAULT_ESTIMATOR_MODEL_PATH
+    try:
+        raw = path.read_bytes()
+        payload = json.loads(raw.decode("utf-8"))
+    except FileNotFoundError:
+        if failures is not None:
+            failures.append(
+                "Formal estimator model artifact is missing: "
+                f"{DEFAULT_ESTIMATOR_MODEL_PATH.as_posix()}."
+            )
+        payload = {}
+    except json.JSONDecodeError as exc:
+        if failures is not None:
+            failures.append(
+                "Formal estimator model artifact is invalid JSON at line "
+                f"{exc.lineno}."
+            )
+        payload = {}
+    if not isinstance(payload, dict):
+        if failures is not None:
+            failures.append("Formal estimator model artifact must be an object.")
+        payload = {}
+
+    expected = build_formal_estimator_model(root=root)
+    summary = _dict_or_empty(payload.get("summary"))
+    proof_binding = _dict_or_empty(payload.get("proof_artifact_binding"))
+    family_entries = [
+        entry
+        for entry in _list_or_empty(payload.get("families"))
+        if isinstance(entry, dict)
+    ]
+    contract_matches = (
+        bool(payload)
+        and formal_estimator_model_contract_payload(payload)
+        == formal_estimator_model_contract_payload(expected)
+    )
+    proof_artifact_binding_required = (
+        proof_binding.get("estimator_result_binding_required_before_claim") is True
+        and proof_binding.get("security_claim_status_without_review")
+        == "disallowed"
+    )
+    claim_policy_forbids_claims = bool(family_entries) and all(
+        _dict_or_empty(entry.get("claim_policy")).get(
+            "security_claim_allowed_without_review"
+        )
+        is False
+        and _dict_or_empty(entry.get("estimator_model")).get(
+            "security_claim_allowed_without_review"
+        )
+        is False
+        for entry in family_entries
+    )
+    return {
+        "schema_version": FORMAL_ESTIMATOR_MODEL_BINDING_SCHEMA,
+        "path": DEFAULT_ESTIMATOR_MODEL_PATH.as_posix(),
+        "model_schema_version": (
+            payload.get("schema_version") or FORMAL_ESTIMATOR_MODEL_SCHEMA
+        ),
+        "contract_sha256": (
+            formal_estimator_model_contract_sha256(payload) if payload else None
+        ),
+        "families": summary.get("families"),
+        "runtime_operator_count": summary.get("runtime_operator_count"),
+        "result_binding_required_before_claim": summary.get(
+            "result_binding_required_before_claim"
+        ),
+        "schema_only_no_estimator": summary.get("schema_only_no_estimator"),
+        "proof_artifact_binding_required_before_claim": (
+            proof_artifact_binding_required
+        ),
+        "claim_policy_forbids_unreviewed_security_claims": (
+            claim_policy_forbids_claims
+        ),
+        "linked_artifact_hashes_excluded_from_contract": True,
+        "verification_accepted": (
+            contract_matches
+            and proof_artifact_binding_required
+            and claim_policy_forbids_claims
+        ),
+    }
+
+
+def _verify_formal_estimator_model_contract_binding(
+    artifact: dict[str, Any],
+    project_root: Path,
+    failures: list[str],
+) -> None:
+    binding = artifact.get("formal_estimator_model_contract")
+    if not isinstance(binding, dict):
+        failures.append(
+            "Proof artifact formal estimator model binding must be a JSON object."
+        )
+        return
+    estimator_model_failures: list[str] = []
+    expected = _formal_estimator_model_contract_binding(
+        project_root,
+        failures=estimator_model_failures,
+    )
+    failures.extend(estimator_model_failures)
+    if binding != expected:
+        failures.append("Proof artifact formal estimator model binding is not in sync.")
+    if binding.get("proof_artifact_binding_required_before_claim") is not True:
+        failures.append(
+            "Proof artifact formal estimator model binding must require estimator "
+            "results before claims."
+        )
+    if binding.get("claim_policy_forbids_unreviewed_security_claims") is not True:
+        failures.append(
+            "Proof artifact formal estimator model binding must forbid unreviewed "
+            "security claims."
+        )
+    if binding.get("linked_artifact_hashes_excluded_from_contract") is not True:
+        failures.append(
+            "Proof artifact formal estimator model binding must avoid recursive "
+            "linked artifact hashes."
+        )
+    if binding.get("verification_accepted") is not True:
+        failures.append(
+            "Proof artifact formal estimator model binding must verify cleanly."
+        )
+
+
+def _reviewer_governance_binding(
+    root: Path,
+    *,
+    failures: list[str] | None = None,
+) -> dict[str, Any]:
+    from agades_pqc_gym.integrations.reviewer_governance import (
+        DEFAULT_GOVERNANCE_PATH,
+        REVIEWER_GOVERNANCE_SCHEMA,
+    )
+
+    path = root / DEFAULT_GOVERNANCE_PATH
+    try:
+        raw = path.read_bytes()
+        payload = json.loads(raw.decode("utf-8"))
+    except FileNotFoundError:
+        if failures is not None:
+            failures.append(
+                "Reviewer governance artifact is missing: "
+                f"{DEFAULT_GOVERNANCE_PATH.as_posix()}."
+            )
+        payload = {}
+    except json.JSONDecodeError as exc:
+        if failures is not None:
+            failures.append(
+                "Reviewer governance artifact is invalid JSON at line "
+                f"{exc.lineno}."
+            )
+        payload = {}
+    if not isinstance(payload, dict):
+        if failures is not None:
+            failures.append("Reviewer governance artifact must be an object.")
+        payload = {}
+
+    role_groups = _dict_or_empty(payload.get("role_groups"))
+    family_reviewers = _list_or_empty(payload.get("family_reviewers"))
+    approval_gates = _dict_or_empty(payload.get("approval_gates"))
+    review_format = _dict_or_empty(payload.get("review_artifact_format"))
+    formal_binding = _dict_or_empty(payload.get("formal_artifact_binding"))
+    required_reviewers_by_family = _dict_or_empty(
+        formal_binding.get("required_reviewers_by_family")
+    )
+    gate_policies_forbid_claims = bool(approval_gates) and all(
+        _dict_or_empty(gate).get("security_claim_allowed_without_review") is False
+        for gate in approval_gates.values()
+    )
+    review_format_ok = (
+        review_format.get("schema_version") == "agades.pqc.review_artifact.v1"
+    )
+    return {
+        "schema_version": REVIEWER_GOVERNANCE_BINDING_SCHEMA,
+        "path": DEFAULT_GOVERNANCE_PATH.as_posix(),
+        "governance_schema_version": (
+            payload.get("schema_version") or REVIEWER_GOVERNANCE_SCHEMA
+        ),
+        "governance_contract_sha256": (
+            _reviewer_governance_contract_sha256(payload) if payload else None
+        ),
+        "role_groups": len(role_groups),
+        "family_reviewers": len(family_reviewers),
+        "approval_gates": len(approval_gates),
+        "review_artifact_format_schema": review_format.get("schema_version"),
+        "required_reviewers_by_family": required_reviewers_by_family,
+        "claim_policy_forbids_unreviewed_security_claims": (
+            gate_policies_forbid_claims
+        ),
+        "linked_artifact_hashes_excluded_from_contract": True,
+        "verification_accepted": (
+            payload.get("schema_version") == REVIEWER_GOVERNANCE_SCHEMA
+            and gate_policies_forbid_claims
+            and review_format_ok
+            and bool(required_reviewers_by_family)
+        ),
+    }
+
+
+def _reviewer_governance_contract_sha256(payload: dict[str, Any]) -> str:
+    return stable_sha256(_reviewer_governance_contract_payload(payload))
+
+
+def _reviewer_governance_contract_payload(
+    payload: dict[str, Any],
+) -> dict[str, Any]:
+    return {
+        key: value
+        for key, value in payload.items()
+        if key != "linked_artifacts"
+    }
+
+
+def _verify_reviewer_governance_binding(
+    artifact: dict[str, Any],
+    project_root: Path,
+    failures: list[str],
+) -> None:
+    binding = artifact.get("review_governance")
+    if not isinstance(binding, dict):
+        failures.append(
+            "Proof artifact reviewer governance binding must be a JSON object."
+        )
+        return
+    governance_failures: list[str] = []
+    expected = _reviewer_governance_binding(
+        project_root,
+        failures=governance_failures,
+    )
+    failures.extend(governance_failures)
+    if binding != expected:
+        failures.append("Proof artifact reviewer governance binding is not in sync.")
+    if binding.get("claim_policy_forbids_unreviewed_security_claims") is not True:
+        failures.append(
+            "Proof artifact reviewer governance binding must forbid unreviewed "
+            "security claims."
+        )
+    if binding.get("linked_artifact_hashes_excluded_from_contract") is not True:
+        failures.append(
+            "Proof artifact reviewer governance binding must avoid recursive "
+            "linked artifact hashes."
+        )
+    if binding.get("verification_accepted") is not True:
+        failures.append(
+            "Proof artifact reviewer governance binding must verify cleanly."
+        )
+    required_by_family = _dict_or_empty(binding.get("required_reviewers_by_family"))
+    family_reviewers = required_by_family.get(artifact.get("family"))
+    review = _dict_or_empty(artifact.get("review"))
+    if review.get("required_reviewers") != family_reviewers:
+        failures.append(
+            "Proof artifact reviewers do not match reviewer governance."
+        )
+
+
+def _list_or_empty(value: object) -> list[Any]:
+    return value if isinstance(value, list) else []
+
+
+def _dict_or_empty(value: object) -> dict[str, Any]:
+    return dict(value) if isinstance(value, dict) else {}
+
+
 def _verify_lean_bindings(
     artifact: dict[str, Any],
     project_root: Path,
@@ -1518,8 +2196,9 @@ def _verify_lean_bindings(
         if source.get("path") != expected_path:
             failures.append(f"Lean theorem {lean_theorem} has wrong source path.")
             continue
+        source_path = project_root / expected_path
         try:
-            raw = _formal_resource_bytes(Path(expected_path))
+            raw = source_path.read_bytes()
         except FileNotFoundError:
             failures.append(f"Lean source is missing: {expected_path}.")
             continue
@@ -1692,6 +2371,18 @@ def _review_artifact_binding(artifact: dict[str, Any]) -> dict[str, Any]:
     estimator_binding = artifact.get("estimator_result_binding", {})
     if not isinstance(estimator_binding, dict):
         estimator_binding = {}
+    attack_plan_semantics = artifact.get("attack_plan_semantics", {})
+    if not isinstance(attack_plan_semantics, dict):
+        attack_plan_semantics = {}
+    operator_semantics_contract = artifact.get("operator_semantics_contract", {})
+    if not isinstance(operator_semantics_contract, dict):
+        operator_semantics_contract = {}
+    formal_estimator_model_contract = artifact.get(
+        "formal_estimator_model_contract",
+        {},
+    )
+    if not isinstance(formal_estimator_model_contract, dict):
+        formal_estimator_model_contract = {}
     proof_obligations = artifact.get("proof_obligations", [])
     if not isinstance(proof_obligations, list):
         proof_obligations = []
@@ -1705,6 +2396,15 @@ def _review_artifact_binding(artifact: dict[str, Any]) -> dict[str, Any]:
         "estimator_result_binding_status": estimator_binding.get("status"),
         "review_status": review.get("status"),
         "required_reviewers": review.get("required_reviewers"),
+        "attack_plan_semantics_sha256": attack_plan_semantics.get(
+            "semantics_sha256"
+        ),
+        "operator_semantics_sha256": operator_semantics_contract.get(
+            "semantics_sha256"
+        ),
+        "formal_estimator_model_contract_sha256": (
+            formal_estimator_model_contract.get("contract_sha256")
+        ),
         "proof_obligation_sha256": [
             obligation.get("obligation_sha256")
             for obligation in proof_obligations

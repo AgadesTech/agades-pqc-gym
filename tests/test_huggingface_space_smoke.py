@@ -3,16 +3,16 @@ from __future__ import annotations
 import importlib.util
 import json
 from pathlib import Path
+from types import ModuleType
+from typing import Any
 
+import pytest
 from typer.testing import CliRunner
 
 from agades_pqc_gym.cli import app
 from agades_pqc_gym.integrations.huggingface_space_smoke import (
-    build_huggingface_space_launch_smoke_report,
     build_huggingface_space_smoke_report,
-    verify_huggingface_space_launch_smoke_report,
     verify_huggingface_space_smoke_report,
-    write_huggingface_space_launch_smoke_report,
     write_huggingface_space_smoke_report,
 )
 
@@ -51,18 +51,40 @@ def test_huggingface_space_smoke_report_exercises_public_demo(
         "rollout_trace_schema": "agades.pqc.rl.rollout_trace.v1",
         "has_prompt": True,
         "reward": 1.0,
+        "reviewer_quality": 1.0,
+        "review_governance_ok": True,
+        "review_governance_binding_schema": (
+            "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+        ),
+        "summary_contains_review_governance": True,
         "task_match": 1.0,
         "trace_public_release_ok": True,
         "private_fields_present": False,
         "claims_pqc_break": False,
     }
+    assert report["example_runtime"] == {
+        "all_claims_pqc_break_false": True,
+        "all_observations_have_prompt": True,
+        "all_private_fields_absent": True,
+        "all_traces_public_release_ok": True,
+        "blocked_reward_count": 20,
+        "checked_example_count": 79,
+        "failure_count": 0,
+        "failures": [],
+        "ok_count": 59,
+        "other_status_count": 0,
+        "rewarded_count": 59,
+        "unsupported_count": 20,
+    }
     assert report["unsupported_behavior"] == {
-        "invalid_json_evaluation_summary_has_reason": True,
-        "invalid_json_reward_summary_has_reason": True,
-        "unsupported_family_evaluation_summary_has_reason": True,
-        "unsupported_family_reward_summary_has_reason": True,
-        "unsupported_family_accepted": False,
-        "unsupported_family_reward": 0.0,
+        "invalid_json_reward": 0.0,
+        "invalid_json_summary_contains_reason": True,
+        "invalid_json_public_release_ok": True,
+        "schema_only_reward": 0.0,
+        "schema_only_summary_contains_reason": True,
+        "schema_only_public_release_ok": True,
+        "claims_pqc_break": False,
+        "private_fields_present": False,
     }
     assert report["safety"] == {
         "arbitrary_code_execution": False,
@@ -72,21 +94,116 @@ def test_huggingface_space_smoke_report_exercises_public_demo(
         "security_claim": False,
     }
     assert report["release_gates"] == [
-        "uv run --extra dev pytest tests/test_huggingface_space_smoke.py -q",
-        "uv run --extra dev agades-pqc hf-space-smoke --out "
+        "uv run pytest tests/test_huggingface_space_smoke.py -q",
+        "uv run agades-pqc hf-space-smoke --out reports/hf_space_smoke.json",
+        "uv run agades-pqc hf-space-smoke-verify --report "
         "reports/hf_space_smoke.json",
-        "uv run --extra dev agades-pqc hf-space-smoke-verify --report "
-        "reports/hf_space_smoke.json",
-        "uv run --extra dev agades-pqc hf-space-launch-smoke --out "
-        "reports/hf_space_launch_smoke.json",
-        "uv run --extra dev agades-pqc hf-space-launch-smoke-verify --report "
-        "reports/hf_space_launch_smoke.json",
-        "uv run --extra dev agades-pqc ecosystem-smoke-verify --report "
+        "uv run agades-pqc ecosystem-smoke-verify --report "
         "reports/ecosystem_smoke.json",
-        "uv run --extra dev agades-pqc release-audit --out "
-        "public/release_audit.json",
+        "uv run agades-pqc release-audit --out public/release_audit.json",
     ]
     assert report["failures"] == []
+
+
+def test_huggingface_space_agent_env_explains_invalid_json() -> None:
+    module = _load_space_module()
+
+    summary, reward_payload, trace_payload = module.score_attack_plan_for_task(
+        module.DEFAULT_EXAMPLE_LABEL,
+        "not json",
+    )
+
+    reward = json.loads(reward_payload)
+    trace = json.loads(trace_payload)
+    assert reward["reward"] == 0.0
+    assert reward["accepted"] is False
+    assert "Invalid AttackPlan JSON" in summary
+    assert trace["public_release_ok"] is True
+    assert trace["claim_boundary"]["claims_pqc_break"] is False
+
+
+def test_huggingface_space_agent_env_explains_schema_only_family() -> None:
+    module = _load_space_module()
+    ntru_label = next(
+        choice
+        for choice in module.example_plan_choices()
+        if choice.startswith("NTRU / ")
+    )
+
+    summary, reward_payload, trace_payload = module.score_attack_plan_for_task(
+        module.DEFAULT_EXAMPLE_LABEL,
+        module.load_example_plan(ntru_label),
+    )
+
+    reward = json.loads(reward_payload)
+    trace = json.loads(trace_payload)
+    assert reward["reward"] == 0.0
+    assert reward["accepted"] is False
+    assert "schema_only" in summary
+    assert "NTRU" in summary
+    assert trace["public_release_ok"] is True
+    assert trace["claim_boundary"]["claims_pqc_break"] is False
+
+
+def test_huggingface_space_verifier_summary_hides_unsupported_sentinel() -> None:
+    module = _load_space_module()
+    ntru_label = next(
+        choice
+        for choice in module.example_plan_choices()
+        if choice.startswith("NTRU / ")
+    )
+
+    summary, verifier_payload = module.evaluate_attack_plan_json(
+        module.load_example_plan(ntru_label),
+    )
+
+    verifier = json.loads(verifier_payload)
+    assert verifier["evaluation_status"] == "unsupported"
+    assert "NTRU: unsupported" in summary
+    assert "score=n/a" in summary
+    assert "score=-1000000000.0" not in summary
+    assert "not a security claim" in summary
+
+
+def test_huggingface_space_agent_env_falls_back_on_runtime_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _load_space_module()
+
+    class BrokenEnvironment:
+        def __init__(
+            self,
+            tasks: list[dict[str, Any]],
+            *,
+            root: Path | None = None,
+        ) -> None:
+            self.tasks = tasks
+            self.root = root
+
+        def reset(self) -> dict[str, Any]:
+            return {}
+
+        def step(self, candidate_json: str) -> dict[str, Any]:
+            raise RuntimeError(
+                "Lean source is missing: formal/lean/AgadesPQC/Lattice/Target.lean"
+            )
+
+    monkeypatch.setattr(module, "AgadesPQCGymEnvironment", BrokenEnvironment)
+
+    summary, reward_payload, trace_payload = module.score_attack_plan_for_task(
+        module.DEFAULT_EXAMPLE_LABEL,
+        module.DEFAULT_PLAN,
+    )
+
+    reward = json.loads(reward_payload)
+    trace = json.loads(trace_payload)
+    assert reward["reward"] == 0.0
+    assert reward["accepted"] is False
+    assert "runtime_error" in reward["blocking_reasons"]
+    assert "Lean source is missing" in summary
+    assert trace["public_release_ok"] is True
+    assert trace["private_fields_present"] is False
+    assert trace["claim_boundary"]["claims_pqc_break"] is False
 
 
 def test_committed_huggingface_space_smoke_report_is_in_sync(
@@ -110,6 +227,7 @@ def test_huggingface_space_smoke_verify_accepts_committed_report() -> None:
         "summary": {
             "default_label": "LWE / lattice_primal_usvp_toy_v1",
             "example_count": 79,
+            "example_runtime_failures": 0,
             "failure_count": 0,
             "imports_without_gradio": True,
             "summary_contains_not_security_claim": True,
@@ -137,78 +255,6 @@ def test_huggingface_space_smoke_verify_rejects_stale_report(
     ]
 
 
-def test_huggingface_space_summaries_explain_invalid_and_unsupported_inputs() -> None:
-    spec = importlib.util.spec_from_file_location("hf_app_test", Path("hf/app.py"))
-    assert spec is not None
-    assert spec.loader is not None
-    hf_app = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(hf_app)
-
-    invalid_summary, _ = hf_app.evaluate_attack_plan_json("{not json")
-    invalid_reward_summary, _, _ = hf_app.score_attack_plan_for_task(
-        hf_app.DEFAULT_EXAMPLE_LABEL,
-        "{not json",
-    )
-    unsupported_plan = json.loads(hf_app.DEFAULT_PLAN)
-    unsupported_plan["target"]["family"] = "NTRU"
-    unsupported_raw = json.dumps(unsupported_plan)
-
-    unsupported_summary, _ = hf_app.evaluate_attack_plan_json(unsupported_raw)
-    unsupported_reward_summary, _, _ = hf_app.score_attack_plan_for_task(
-        hf_app.DEFAULT_EXAMPLE_LABEL,
-        unsupported_raw,
-    )
-
-    assert "Invalid JSON" in invalid_summary
-    assert "Invalid JSON" in invalid_reward_summary
-    assert "NTRU targets are schema_only" in unsupported_summary
-    assert "NTRU targets are schema_only" in unsupported_reward_summary
-    assert "blocked=schema_valid" in unsupported_reward_summary
-    assert "not a security claim" in unsupported_summary
-    assert "not a security claim" in unsupported_reward_summary
-
-
-def test_huggingface_space_score_handler_falls_back_when_runtime_step_raises(
-    monkeypatch,
-) -> None:
-    spec = importlib.util.spec_from_file_location(
-        "hf_app_fallback_test",
-        Path("hf/app.py"),
-    )
-    assert spec is not None
-    assert spec.loader is not None
-    hf_app = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(hf_app)
-
-    class RaisingEnvironment:
-        def __init__(self, tasks: list[dict[str, object]]) -> None:
-            self.tasks = tasks
-
-        def reset(self) -> dict[str, object]:
-            return {"task": self.tasks[0]}
-
-        def step(self, candidate_json: str) -> dict[str, object]:
-            raise RuntimeError("private runtime traceback should not be exposed")
-
-    monkeypatch.setattr(hf_app, "AgadesPQCGymEnvironment", RaisingEnvironment)
-
-    summary, reward_payload, trace_payload = hf_app.score_attack_plan_for_task(
-        hf_app.DEFAULT_EXAMPLE_LABEL,
-        "{not json",
-    )
-
-    reward = json.loads(reward_payload)
-    trace = json.loads(trace_payload)
-    assert reward["accepted"] is False
-    assert reward["reward"] == 0.0
-    assert "Invalid JSON" in summary
-    assert "private runtime traceback" not in summary
-    assert trace["schema_version"] == "agades.pqc.rl.rollout_trace.v1"
-    assert trace["public_release_ok"] is True
-    assert trace["private_fields_present"] is False
-    assert trace["claim_boundary"]["claims_pqc_break"] is False
-
-
 def test_huggingface_space_smoke_cli_writes_report(tmp_path: Path) -> None:
     out = tmp_path / "hf_space_smoke.json"
 
@@ -230,92 +276,11 @@ def test_huggingface_space_smoke_verify_cli_accepts_current_report() -> None:
     assert '"accepted": true' in result.output
 
 
-def test_huggingface_space_launch_smoke_builds_gradio_agent_environment(
-    tmp_path: Path,
-) -> None:
-    out = tmp_path / "hf_space_launch_smoke.json"
-
-    report = write_huggingface_space_launch_smoke_report(out)
-
-    assert report == build_huggingface_space_launch_smoke_report()
-    assert json.loads(out.read_text(encoding="utf-8")) == report
-    assert report["schema_version"] == "agades.pqc.hf_space_launch_smoke.v1"
-    assert report["accepted"] is True
-    assert report["gradio"] == {
-        "available": True,
-        "demo_class": "Blocks",
-        "title": "Agades PQC Gym",
-        "component_count": 22,
-    }
-    assert report["api"] == {
-        "api_names": [
-            "load_example_plan",
-            "evaluate_attack_plan_json",
-            "load_example_plan_1",
-            "load_environment_observation",
-            "score_attack_plan_for_task",
-        ],
-        "required_api_names_present": True,
-        "agent_environment_api_names_present": True,
-    }
-    assert report["backend_smoke"] == {
-        "accepted": True,
-        "default_label": "LWE / lattice_primal_usvp_toy_v1",
-        "example_count": 79,
-        "reward": 1.0,
-        "trace_public_release_ok": True,
-        "claims_pqc_break": False,
-    }
-    assert report["safety"] == {
-        "contains_private_traces": False,
-        "publishes_private_candidates": False,
-        "security_claim": False,
-    }
-    assert report["failures"] == []
-
-
-def test_huggingface_space_launch_smoke_verify_accepts_committed_report() -> None:
-    result = verify_huggingface_space_launch_smoke_report(
-        Path("reports/hf_space_launch_smoke.json")
-    )
-
-    assert result == {
-        "schema_version": "agades.pqc.hf_space_launch_smoke_verification.v1",
-        "report_path": "reports/hf_space_launch_smoke.json",
-        "accepted": True,
-        "summary": {
-            "agent_environment_api_names_present": True,
-            "component_count": 22,
-            "demo_class": "Blocks",
-            "failure_count": 0,
-            "gradio_available": True,
-            "required_api_names_present": True,
-            "title": "Agades PQC Gym",
-        },
-        "failures": [],
-    }
-
-
-def test_huggingface_space_launch_smoke_cli_writes_report(tmp_path: Path) -> None:
-    out = tmp_path / "hf_space_launch_smoke.json"
-
-    result = CliRunner().invoke(app, ["hf-space-launch-smoke", "--out", str(out)])
-
-    assert result.exit_code == 0
-    assert f"hf_space_launch_smoke={out}" in result.output
-    assert json.loads(out.read_text(encoding="utf-8"))["accepted"] is True
-
-
-def test_huggingface_space_launch_smoke_verify_cli_accepts_current_report() -> None:
-    result = CliRunner().invoke(
-        app,
-        [
-            "hf-space-launch-smoke-verify",
-            "--report",
-            "reports/hf_space_launch_smoke.json",
-        ],
-    )
-
-    assert result.exit_code == 0
-    assert "agades.pqc.hf_space_launch_smoke_verification.v1" in result.output
-    assert '"accepted": true' in result.output
+def _load_space_module() -> ModuleType:
+    app_path = Path("hf/app.py")
+    spec = importlib.util.spec_from_file_location("agades_pqc_hf_space_test", app_path)
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module

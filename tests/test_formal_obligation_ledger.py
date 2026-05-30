@@ -123,7 +123,7 @@ def test_formal_obligation_ledger_verify_accepts_committed_artifact() -> None:
             "families": 9,
             "family_invariants": 12,
             "proof_obligations": 22,
-            "linked_artifacts": 8,
+            "linked_artifacts": 9,
             "failure_count": 0,
         },
         "failures": [],

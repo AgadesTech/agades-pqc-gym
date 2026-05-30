@@ -12,7 +12,7 @@ This report summarizes toy/downscaled AttackPlan evaluations.
 
 ## Results
 
-| Candidate | Family | Target | Status | Reproduction | Valid | Score | Time Bits | Memory Bits | Estimator |
+| Candidate | Family | Target | Status | Reproduction | Accepted | Score | Time Bits | Memory Bits | Estimator |
 | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | --- |
 | toy_lwe_n64_q257_primal_seed-0 | LWE | toy_lwe_n64_q257 | ok | not_requested | True | -67.4696 | 63.5296 | 17.36 | mock-lattice-estimator |
 | toy_lwe_n96_q769_primal_seed-1 | LWE | toy_lwe_n96_q769 | ok | not_requested | True | -97.0376 | 91.1776 | 25.04 | mock-lattice-estimator |

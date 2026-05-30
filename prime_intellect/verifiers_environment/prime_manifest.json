@@ -137,8 +137,90 @@
     "acceptance_rule": "schema_valid == true and accepted == true from agades_pqc_gym.verifier.verify_attack_plan_json",
     "accepted_reward": 1.0,
     "accepts_executable_code": false,
+    "formal_artifact_binding_schema": "agades.pqc.rl.formal_artifact_binding.v1",
+    "formal_binding_rule": "accepted Prime rewards must attach an agades.pqc.rl.formal_artifact_binding.v1 proof binding with review_governance_ok == true",
     "invalid_reward": 0.0,
+    "prompt_profiles": {
+      "attackplan_json": {
+        "contract": "submit one AttackPlan JSON object for the seed task; return an already valid seed unchanged; do not invent pre-evaluation claims; do not include markdown, prose, analysis, comments, code fences, or wrapper text",
+        "intended_use": "private_training_or_eval"
+      },
+      "claims_guard_decoy_format_repair": {
+        "contract": "ignore an AttackPlan-like decoy from a different task, extract the fenced public toy AttackPlan, repair invalid pre-evaluation claim estimates back to unknown nulls, and return one JSON object without wrapper text",
+        "intended_use": "private_format_and_claims_repair_curriculum"
+      },
+      "claims_guard_format_repair": {
+        "contract": "extract a fenced public toy AttackPlan, repair invalid pre-evaluation claim estimates back to unknown nulls, and return one JSON object without wrapper text",
+        "intended_use": "private_format_and_claims_repair_curriculum"
+      },
+      "claims_guard_repair": {
+        "contract": "repair invalid pre-evaluation claim estimates by restoring unknown null claims without adding external claim evidence",
+        "intended_use": "private_claims_repair_curriculum"
+      },
+      "format_first_copy_seed": {
+        "contract": "copy the seed AttackPlan unchanged as one JSON object",
+        "intended_use": "format_smoke_and_supported_strict_eval"
+      },
+      "format_repair_extract_seed": {
+        "contract": "extract the public seed AttackPlan from wrapped prose and markdown",
+        "intended_use": "private_format_curriculum"
+      }
+    },
     "requires_single_json_object": true,
+    "review_governance_binding_schema": "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1",
+    "reviewer_quality_requires_governance": true,
+    "reward_profiles": {
+      "format_repair_dense": {
+        "accepted_candidates_still_require_strict_acceptance": true,
+        "aggregate_rule": "weighted format-repair signal; exact valid concise JSON can receive full reward, wrapped JSON can receive partial non-accepted reward, and hidden reasoning bloat lowers student_readability",
+        "intended_use": "private_prime_rl_training",
+        "rubric_weights": {
+          "accepted_attack_plan": 0.2,
+          "cryptographic_applicability": 0.05,
+          "formal_validity": 0.2,
+          "no_security_overclaim": 0.15,
+          "proof_obligation_coverage": 0.02,
+          "reproducibility": 0.03,
+          "reviewer_quality": 0.03,
+          "single_json_object": 0.2,
+          "student_readability": 0.08,
+          "task_match": 0.04
+        }
+      },
+      "pedagogical_dense": {
+        "accepted_candidates_still_require_strict_acceptance": true,
+        "aggregate_rule": "weighted training signal over JSON-format compliance and existing verifier sub-scores",
+        "intended_use": "private_prime_rl_training",
+        "rubric_weights": {
+          "accepted_attack_plan": 0.3,
+          "cryptographic_applicability": 0.1,
+          "formal_validity": 0.15,
+          "no_security_overclaim": 0.1,
+          "proof_obligation_coverage": 0.04,
+          "reproducibility": 0.05,
+          "reviewer_quality": 0.05,
+          "single_json_object": 0.1,
+          "student_readability": 0.07,
+          "task_match": 0.04
+        }
+      },
+      "strict": {
+        "aggregate_rule": "accepted_attack_plan only",
+        "intended_use": "public_eval",
+        "rubric_weights": {
+          "accepted_attack_plan": 1.0,
+          "cryptographic_applicability": 0.0,
+          "formal_validity": 0.0,
+          "no_security_overclaim": 0.0,
+          "proof_obligation_coverage": 0.0,
+          "reproducibility": 0.0,
+          "reviewer_quality": 0.0,
+          "single_json_object": 0.0,
+          "student_readability": 0.0,
+          "task_match": 0.0
+        }
+      }
+    },
     "reward_range": [
       0.0,
       1.0

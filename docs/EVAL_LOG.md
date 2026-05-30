@@ -63,8 +63,8 @@ uv run agades-pqc evaluate examples/attack_plans/code_based_isd_placeholder.json
 Result:
 
 | Candidate | Status | Score | Estimator |
-| --- | --- | ---: | --- |
-| `code_based_isd_placeholder_v1` | `unsupported` | -1000000000.0 | `code-based-placeholder-estimator` |
+| --- | --- | --- | --- |
+| `code_based_isd_placeholder_v1` | `unsupported` | n/a | `code-based-placeholder-estimator` |
 
 Failure mode:
 
@@ -100,8 +100,8 @@ uv run agades-pqc benchmark benchmarks/implementation_security_schema_only --out
 Result:
 
 | Candidate | Status | Score | Estimator |
-| --- | --- | ---: | --- |
-| `kyber_reference_constant_time_schema_schema_placeholder_seed-0` | `unsupported` | -1000000000.0 | `implementation-security-placeholder-evaluator` |
+| --- | --- | --- | --- |
+| `kyber_reference_constant_time_schema_schema_placeholder_seed-0` | `unsupported` | n/a | `implementation-security-placeholder-evaluator` |
 
 Failure mode:
 

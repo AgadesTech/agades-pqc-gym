@@ -8,6 +8,14 @@ from typing import Any
 from agades_pqc_gym.core.target import TargetFamily
 from agades_pqc_gym.formal.artifacts import MVP_VERTICAL_PROOF_ARTIFACT_PATHS
 from agades_pqc_gym.rl.pedagogy import PEDAGOGICAL_REWARD_REPORT_SCHEMA
+from agades_pqc_gym.rl.private_trace import (
+    PRIVATE_PEDAGOGICAL_TRACE_SCHEMA,
+    PRIVATE_TRACE_FORBIDDEN_PUBLIC_FIELDS,
+    PRIVATE_TRACE_QUALITY_GATES,
+    PRIVATE_TRACE_REQUIRED_RECORD_FIELDS,
+    PRIVATE_TRACE_STORAGE_ROOTS,
+    private_pedagogical_trace_contract,
+)
 
 PEDAGOGICAL_RL_METHOD_SCHEMA = "agades.pqc.pedagogical_rl_method.v1"
 PEDAGOGICAL_RL_METHOD_VERIFICATION_SCHEMA = (
@@ -109,6 +117,7 @@ LINKED_ARTIFACT_PATHS = {
     "prime_eval_config_manifest": "docs/prime_eval_config_manifest.json",
     "private_run_policy": "docs/private_run_policy.json",
     "rl_pedagogy_runtime": "src/agades_pqc_gym/rl/pedagogy.py",
+    "private_trace_runtime": "src/agades_pqc_gym/rl/private_trace.py",
 }
 FORBIDDEN_PUBLIC_CLAIMS = [
     "unreviewed_pqc_break_claims",
@@ -255,6 +264,7 @@ def build_pedagogical_rl_method(root: Path | None = None) -> dict[str, Any]:
             "fine_tuned_weights_publication_allowed": False,
             "sanitized_metadata_cards_allowed": True,
         },
+        "private_trace_contract": private_pedagogical_trace_contract(),
         "publication_boundary": {
             "public_claims_allowed": [
                 "environment_scoring_contracts",
@@ -330,6 +340,7 @@ def verify_pedagogical_rl_method(
         _verify_assimilation(method, failures)
         _verify_datasets(method, failures)
         _verify_privacy(method, failures)
+        _verify_private_trace_contract(method, failures)
         _verify_publication_boundary(method, failures)
         _verify_integration_bindings(method, failures)
         _verify_linked_artifacts(method, expected, project_root, failures)
@@ -476,6 +487,39 @@ def _verify_privacy(method: dict[str, Any], failures: list[str]) -> None:
                 failures.append(f"Pedagogical RL privacy control {key} must be false.")
     if privacy.get("sanitized_metadata_cards_allowed") is not True:
         failures.append("Sanitized metadata cards should remain allowed.")
+
+
+def _verify_private_trace_contract(
+    method: dict[str, Any],
+    failures: list[str],
+) -> None:
+    contract = _dict_or_empty(method.get("private_trace_contract"))
+    expected = private_pedagogical_trace_contract()
+    if contract.get("schema_version") != PRIVATE_PEDAGOGICAL_TRACE_SCHEMA:
+        failures.append("Private pedagogical RL trace schema is incorrect.")
+    if contract.get("record_kind") != "private_teacher_student_trace":
+        failures.append("Private pedagogical RL trace kind is incorrect.")
+    if contract.get("storage_roots") != PRIVATE_TRACE_STORAGE_ROOTS:
+        failures.append("Private pedagogical RL trace roots are incorrect.")
+    if contract.get("public_release_ok") is not False:
+        failures.append("Private pedagogical RL trace contract must not be public.")
+    if contract.get("raw_private_signals_included") is not False:
+        failures.append(
+            "Private pedagogical RL trace contract must not expose raw signals."
+        )
+    if contract.get("required_bindings") != expected["required_bindings"]:
+        failures.append("Private pedagogical RL trace bindings are incorrect.")
+    if contract.get("required_record_fields") != PRIVATE_TRACE_REQUIRED_RECORD_FIELDS:
+        failures.append("Private pedagogical RL trace required fields are incorrect.")
+    forbidden = contract.get("forbidden_public_fields")
+    if not isinstance(forbidden, list) or not set(
+        PRIVATE_TRACE_FORBIDDEN_PUBLIC_FIELDS
+    ).issubset(set(forbidden)):
+        failures.append(
+            "Private pedagogical RL trace contract forbidden fields are incomplete."
+        )
+    if contract.get("quality_gates") != PRIVATE_TRACE_QUALITY_GATES:
+        failures.append("Private pedagogical RL trace quality gates are incorrect.")
 
 
 def _verify_publication_boundary(

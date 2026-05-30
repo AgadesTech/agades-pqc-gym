@@ -1,0 +1,68 @@
+{
+  "accepted": true,
+  "build": {
+    "command": [
+      "lake",
+      "build"
+    ],
+    "cwd": "formal/lean",
+    "environment_exported": false,
+    "return_code": 0,
+    "stderr_sha256": "b27bf2d04b7145ad625a6c952a8b02c9729236fd1f6c0598acbdb5aade23d2d9",
+    "stderr_tail": "info: mathlib: cloning https://github.com/leanprover-community/mathlib4.git to '././.lake/packages/mathlib'\ninfo: batteries: cloning https://github.com/leanprover-community/batteries to '././.lake/packages/batteries'\ninfo: Qq: cloning https://github.com/leanprover-community/quote4 to '././.lake/packages/Qq'\ninfo: aesop: cloning https://github.com/leanprover-community/aesop to '././.lake/packages/aesop'\ninfo: proofwidgets: cloning https://github.com/leanprover-community/ProofWidgets4 to '././.lake/packages/proofwidgets'\ninfo: importGraph: cloning https://github.com/leanprover-community/import-graph to '././.lake/packages/importGraph'\ninfo: LeanSearchClient: cloning https://github.com/leanprover-community/LeanSearchClient to '././.lake/packages/LeanSearchClient'\ninfo: Cli: cloning https://github.com/leanprover/lean4-cli to '././.lake/packages/Cli'",
+    "stdout_sha256": "a30d6eefe7ccec7803482bd446c3d48f7cc46ed86ba99cb839fca134dd7a5a3d",
+    "stdout_tail": "Build completed successfully.",
+    "timed_out": false
+  },
+  "formal_backend_manifest": {
+    "ci_lean_build_gate": true,
+    "manifest_sha256": "656657789b889089a6764991faa0d2fabed032eb7f7b43c561ee411247989ca4",
+    "path": "docs/formal_lean_backend.json",
+    "placeholder_failures": 0,
+    "schema_version": "agades.pqc.formal.lean_backend.v1",
+    "sha256": "36793f0ba088ef4e4d692616b119bbff6f3e3653923aea3ebe39ceec6595d526",
+    "source_modules": 15,
+    "theorem_declarations": 41
+  },
+  "formal_backend_verification": {
+    "accepted": true,
+    "backend_path": "docs/formal_lean_backend.json",
+    "failures": [],
+    "schema_version": "agades.pqc.formal.lean_backend_verification.v1",
+    "summary": {
+      "ci_lean_build_gate": true,
+      "failure_count": 0,
+      "placeholder_failures": 0,
+      "source_modules": 15,
+      "theorem_declarations": 41
+    }
+  },
+  "lean_project": {
+    "entry_module": "formal/lean/AgadesPQC.lean",
+    "lake_manifest": "formal/lean/lake-manifest.json",
+    "lakefile": "formal/lean/lakefile.lean",
+    "root": "formal/lean",
+    "toolchain": "formal/lean/lean-toolchain"
+  },
+  "notes": [
+    "This report proves that the checked Lean source bundle compiled for the configured backend; it is not a cryptographic soundness review and it does not authorize a public security claim.",
+    "No process environment is captured in this report. The CLI uses the fixed `lake build` argv; the report records command argv, cwd, return code, output hashes, and short output tails."
+  ],
+  "report_sha256": "006d32456bbbe050c0f8c88b148fb6901afea994297e4576b5577f784b777c7f",
+  "schema_version": "agades.pqc.formal.lean_build_smoke.v1",
+  "scope": {
+    "compiles_lean_sources": true,
+    "cryptographic_soundness_review_required": true,
+    "executes_cryptographic_estimators": false,
+    "publishes_artifacts": false,
+    "security_claim_allowed": false
+  },
+  "summary": {
+    "accepted": true,
+    "ci_lean_build_gate": true,
+    "placeholder_failures": 0,
+    "security_claim_allowed": false,
+    "source_modules": 15,
+    "theorem_declarations": 41
+  }
+}

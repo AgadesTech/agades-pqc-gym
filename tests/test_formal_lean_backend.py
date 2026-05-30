@@ -94,14 +94,23 @@ def test_formal_lean_backend_manifest_binds_sources_and_ci(
         "contains_admit": False,
         "contains_axiom": False,
     }
-    assert manifest["summary"]["source_modules"] == 14
+    assert manifest["summary"]["source_modules"] == 15
     assert manifest["summary"]["theorem_declarations"] >= 20
     assert manifest["summary"]["ci_lean_build_gate"] is True
     assert manifest["summary"]["placeholder_failures"] == 0
+    assert (
+        "uv run agades-pqc formal-lean-build-smoke --out "
+        "reports/formal_lean_build_smoke.json"
+    ) in manifest["release_gates"]
+    assert (
+        "uv run agades-pqc formal-lean-build-smoke-verify --report "
+        "reports/formal_lean_build_smoke.json"
+    ) in manifest["release_gates"]
 
     source_paths = {source["path"] for source in manifest["lean_sources"]}
     assert "formal/lean/AgadesPQC.lean" in source_paths
     assert "formal/lean/AgadesPQC/EstimatorModel.lean" in source_paths
+    assert "formal/lean/AgadesPQC/AttackPlan.lean" in source_paths
     assert "formal/lean/AgadesPQC/Evaluator.lean" in source_paths
     assert "formal/lean/AgadesPQC/OperatorSemantics.lean" in source_paths
     assert "formal/lean/AgadesPQC/ProofObligation.lean" in source_paths
@@ -116,6 +125,17 @@ def test_formal_lean_backend_manifest_binds_sources_and_ci(
         for theorem in source["theorems"]
     }
     assert "AgadesPQC.Evaluator.no_security_claim" in theorem_names
+    assert (
+        "AgadesPQC.AttackPlan.schema_contract_well_formed"
+        in theorem_names
+    )
+    assert "AgadesPQC.AttackPlan.canonicalization_stable" in theorem_names
+    assert "AgadesPQC.AttackPlan.operators_nonempty" in theorem_names
+    assert "AgadesPQC.AttackPlan.unsupported_operator_rejected" in theorem_names
+    assert (
+        "AgadesPQC.AttackPlan.unreviewed_security_claim_forbidden"
+        in theorem_names
+    )
     assert "AgadesPQC.EstimatorModel.operator_compatibility_declared" in theorem_names
     assert (
         "AgadesPQC.EstimatorModel.result_binding_required_before_claim"
@@ -184,7 +204,7 @@ def test_formal_lean_backend_verify_accepts_committed_artifact() -> None:
         "backend_path": BACKEND_PATH.as_posix(),
         "accepted": True,
         "summary": {
-            "source_modules": 14,
+            "source_modules": 15,
             "theorem_declarations": result["summary"]["theorem_declarations"],
             "ci_lean_build_gate": True,
             "placeholder_failures": 0,
