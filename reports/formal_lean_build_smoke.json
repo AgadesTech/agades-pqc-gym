@@ -8,8 +8,8 @@
     "cwd": "formal/lean",
     "environment_exported": false,
     "return_code": 0,
-    "stderr_sha256": "b27bf2d04b7145ad625a6c952a8b02c9729236fd1f6c0598acbdb5aade23d2d9",
-    "stderr_tail": "info: mathlib: cloning https://github.com/leanprover-community/mathlib4.git to '././.lake/packages/mathlib'\ninfo: batteries: cloning https://github.com/leanprover-community/batteries to '././.lake/packages/batteries'\ninfo: Qq: cloning https://github.com/leanprover-community/quote4 to '././.lake/packages/Qq'\ninfo: aesop: cloning https://github.com/leanprover-community/aesop to '././.lake/packages/aesop'\ninfo: proofwidgets: cloning https://github.com/leanprover-community/ProofWidgets4 to '././.lake/packages/proofwidgets'\ninfo: importGraph: cloning https://github.com/leanprover-community/import-graph to '././.lake/packages/importGraph'\ninfo: LeanSearchClient: cloning https://github.com/leanprover-community/LeanSearchClient to '././.lake/packages/LeanSearchClient'\ninfo: Cli: cloning https://github.com/leanprover/lean4-cli to '././.lake/packages/Cli'",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_tail": "",
     "stdout_sha256": "a30d6eefe7ccec7803482bd446c3d48f7cc46ed86ba99cb839fca134dd7a5a3d",
     "stdout_tail": "Build completed successfully.",
     "timed_out": false
@@ -48,7 +48,7 @@
     "This report proves that the checked Lean source bundle compiled for the configured backend; it is not a cryptographic soundness review and it does not authorize a public security claim.",
     "No process environment is captured in this report. The CLI uses the fixed `lake build` argv; the report records command argv, cwd, return code, output hashes, and short output tails."
   ],
-  "report_sha256": "006d32456bbbe050c0f8c88b148fb6901afea994297e4576b5577f784b777c7f",
+  "report_sha256": "f76f45cd978b6f093f8a044331ca3a313a09f7148f40bc5fb60fbb864924693c",
   "schema_version": "agades.pqc.formal.lean_build_smoke.v1",
   "scope": {
     "compiles_lean_sources": true,
