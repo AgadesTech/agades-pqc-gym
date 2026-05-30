@@ -317,9 +317,10 @@ app = typer.Typer(
     rich_markup_mode=None,
     help=(
         "Run Agades PQC Gym experiments. Start with `quickstart`, inspect "
-        "`examples`, then use `validate`, `evaluate`, `benchmark`, and `report` "
-        "for the core loop. Advanced release and ecosystem commands remain "
-        "available by name but are hidden from this first-screen help."
+        "`examples`, then use `validate`, `run`/`evaluate`, `benchmark`, "
+        "and `report` for the core loop. Advanced release and ecosystem "
+        "commands remain available by name but are hidden from this first-screen "
+        "help."
     ),
 )
 console = Console()
@@ -460,7 +461,7 @@ def examples_command() -> None:
             f"({example['purpose']})"
         )
     typer.echo(
-        "tip=Run `uv run agades-pqc evaluate <path> --trace runs/demo.jsonl` "
+        "tip=Run `uv run agades-pqc run <path> --trace runs/demo.jsonl` "
         "for status=ok or status=unsupported examples."
     )
     typer.echo(
@@ -530,14 +531,15 @@ def _print_validation_route_hint(plan: AttackPlan, plan_path: Path) -> None:
     if route_result.warnings:
         console.print(f"reason={route_result.warnings[0]}", soft_wrap=True)
     console.print(
-        "next=Run `uv run agades-pqc evaluate "
+        "next=Run `uv run agades-pqc run "
         f"{plan_path} --trace runs/demo.jsonl` to record the unsupported "
         "result without inventing an estimate.",
         soft_wrap=True,
     )
 
 
-@app.command()
+@app.command("evaluate")
+@app.command("run")
 def evaluate(
     plan_path: Path,
     out: Annotated[

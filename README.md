@@ -82,12 +82,13 @@ Manual core-loop commands:
 ```bash
 uv run agades-pqc examples
 uv run agades-pqc validate examples/attack_plans/lattice_primal_usvp_toy.json
-uv run agades-pqc evaluate examples/attack_plans/lattice_primal_usvp_toy.json --trace runs/demo_trace.jsonl
+uv run agades-pqc run examples/attack_plans/lattice_primal_usvp_toy.json --trace runs/demo_trace.jsonl
 uv run agades-pqc benchmark benchmarks/lattice_toy_lwe --trace runs/demo_benchmark.jsonl
 uv run agades-pqc report runs/demo_trace.jsonl --out reports/demo_report.md
 ```
 
-`evaluate` and `benchmark` print the same concise status fields:
+`run` is the short alias for `evaluate`. `run`/`evaluate` and `benchmark`
+print the same concise status fields:
 `status`, `score`, `accepted`, `plan_valid`, and `trace`.
 
 Schema-only examples validate structurally but return `status=unsupported`
@@ -95,7 +96,7 @@ with `accepted=False` instead of cryptanalytic estimates:
 
 ```bash
 uv run agades-pqc validate examples/attack_plans/code_based_isd_placeholder.json
-uv run agades-pqc evaluate examples/attack_plans/code_based_isd_placeholder.json --trace runs/code_based_placeholder.jsonl
+uv run agades-pqc run examples/attack_plans/code_based_isd_placeholder.json --trace runs/code_based_placeholder.jsonl
 ```
 
 Optional formal check:
