@@ -125,6 +125,24 @@ def test_quickstart_command_runs_guided_gym_demo(tmp_path: Path) -> None:
     ).read_text(encoding="utf-8")
 
 
+def test_quickstart_accepts_out_alias(tmp_path: Path) -> None:
+    out_dir = tmp_path / "quickstart_alias"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "quickstart",
+            "--out",
+            str(out_dir),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "quickstart complete" in result.output.lower()
+    assert (out_dir / "lattice_trace.jsonl").exists()
+    assert (out_dir / "unsupported_placeholder_trace.jsonl").exists()
+
+
 def test_examples_command_lists_safe_guided_examples() -> None:
     result = CliRunner().invoke(app, ["examples"])
 

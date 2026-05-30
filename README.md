@@ -75,6 +75,13 @@ The quickstart runs the short core loop and writes local artifacts under
 - `code_based_prange_trace.jsonl`: a toy code-based evaluator trace.
 - `unsupported_placeholder_trace.jsonl`: a schema-only unsupported example.
 
+To choose the output directory, use either `--out-dir` or the shorter `--out`
+alias:
+
+```bash
+uv run agades-pqc quickstart --out runs/my_quickstart
+```
+
 See `docs/QUICKSTART.md` for the guided walkthrough.
 
 Manual core-loop commands:
