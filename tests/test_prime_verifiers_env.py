@@ -139,6 +139,22 @@ def test_prime_verifiers_dataset_rows_cover_all_public_valid_families() -> None:
         assert row["info"]["seed_attack_plan_sha256"] == expected_digest
 
 
+def test_prime_verifiers_default_prompt_is_strict_json_boundary() -> None:
+    module = _load_env_module()
+
+    rows = module.build_dataset_rows(
+        attack_plan_id="lattice_bkw_toy_v1",
+        prompt_profile="attackplan_json",
+    )
+
+    prompt = rows[0]["prompt"][0]["content"]
+    assert "If the Seed AttackPlan already satisfies the task, return it unchanged" in prompt
+    assert "Do not include markdown, prose, analysis, comments, code fences, or wrapper text" in prompt
+    assert "first non-whitespace character must be {" in prompt
+    assert "final non-whitespace character must be }" in prompt
+    assert "Seed AttackPlan:" in prompt
+
+
 def test_prime_verifiers_dataset_respects_num_examples_limit() -> None:
     module = _load_env_module()
 

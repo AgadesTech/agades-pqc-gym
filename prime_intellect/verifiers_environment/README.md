@@ -28,6 +28,12 @@ weights JSON-format compliance and the existing verifier sub-scores to avoid a
 zero-advantage collapse during private RL. Public evaluation should remain on
 `strict`.
 
+The default `prompt_profile="attackplan_json"` is strict about the model output
+boundary: if the seed already satisfies the task, return it unchanged; do not
+wrap it in markdown, prose, comments, analysis, code fences, or any prefix/suffix
+text. The first non-whitespace character must be `{` and the final
+non-whitespace character must be `}`.
+
 For private format-curriculum experiments, `prompt_profile="format_repair_extract_seed"`
 wraps the seed plan in prose and a markdown fence and asks the model to return
 only the repaired JSON object. Pair it with

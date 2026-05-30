@@ -142,7 +142,7 @@
     "invalid_reward": 0.0,
     "prompt_profiles": {
       "attackplan_json": {
-        "contract": "submit one AttackPlan JSON object for the seed task; do not invent pre-evaluation claims",
+        "contract": "submit one AttackPlan JSON object for the seed task; return an already valid seed unchanged; do not invent pre-evaluation claims; do not include markdown, prose, analysis, comments, code fences, or wrapper text",
         "intended_use": "private_training_or_eval"
       },
       "claims_guard_decoy_format_repair": {

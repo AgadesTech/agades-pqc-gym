@@ -318,6 +318,12 @@ def _question_for_seed_attack_plan(raw_json: str, *, prompt_profile: str) -> str
                 "Do not invent pre-evaluation estimates. Keep claims unknown "
                 "unless the JSON already contains reviewed external_claim "
                 "evidence with a source.",
+                "If the Seed AttackPlan already satisfies the task, return it "
+                "unchanged.",
+                "Do not include markdown, prose, analysis, comments, code "
+                "fences, or wrapper text.",
+                "The first non-whitespace character must be { and the final "
+                "non-whitespace character must be }.",
                 "Toy/demo verifier output only; do not claim real-world PQC breaks.",
                 "",
                 "Seed AttackPlan:",
