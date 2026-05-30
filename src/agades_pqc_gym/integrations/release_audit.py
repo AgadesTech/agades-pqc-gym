@@ -5357,17 +5357,22 @@ def _release_gate_closure(root: Path) -> dict[str, Any]:
 
 
 def _release_gate_artifact_paths(root: Path) -> list[Path]:
+    paths = [
+        *root.joinpath("docs").glob("*.json"),
+        *root.joinpath("hf").rglob("*.json"),
+        *root.joinpath("nvidia").glob("*.json"),
+        *root.joinpath("prime_intellect").glob("**/*.json"),
+        *root.joinpath("public").glob("*.json"),
+        *root.joinpath("reports").glob("*.json"),
+    ]
     return sorted(
-        [
-            *root.joinpath("docs").glob("*.json"),
-            *root.joinpath("hf").rglob("*.json"),
-            *root.joinpath("nvidia").glob("*.json"),
-            *root.joinpath("prime_intellect").glob("**/*.json"),
-            *root.joinpath("public").glob("*.json"),
-            *root.joinpath("reports").glob("*.json"),
-        ],
+        (path for path in paths if not _is_local_smoke_report(path)),
         key=lambda path: path.relative_to(root).as_posix(),
     )
+
+
+def _is_local_smoke_report(path: Path) -> bool:
+    return path.name.endswith((".current.local.json", ".local.json"))
 
 
 def _release_gate_indices(release_gates: list[Any], gate_id: str) -> list[int]:

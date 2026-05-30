@@ -13,6 +13,8 @@ build/
 *.egg-info/
 formal/lean/.lake/
 runs/
+reports/*.current.local.json
+reports/*.local.json
 public/*
 !public/run_export/
 !public/run_export/**

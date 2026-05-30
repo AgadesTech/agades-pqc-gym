@@ -13,6 +13,11 @@ def test_release_audit_gates_are_preceded_by_ecosystem_smoke_gate() -> None:
         *Path("public").glob("*.json"),
         *Path("reports").glob("*.json"),
     ]
+    checked_artifacts = [
+        path
+        for path in checked_artifacts
+        if not path.name.endswith((".current.local.json", ".local.json"))
+    ]
     checked_artifact_paths = [path.as_posix() for path in sorted(checked_artifacts)]
     release_audit_artifacts: list[str] = []
     ecosystem_smoke_artifacts: list[str] = []
