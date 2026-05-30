@@ -60,6 +60,10 @@ estimates.
 uv sync --extra dev
 ```
 
+Use the project environment for checks. The Hugging Face Space launch smoke
+requires the optional Gradio dependency, so run release gates with
+`uv run --extra dev`, not a global `python` or `pytest`.
+
 ## Quick Start
 
 ```bash
@@ -99,23 +103,23 @@ uv run agades-pqc evaluate examples/attack_plans/code_based_isd_placeholder.json
 The public release packet is deterministic and review-gated:
 
 ```bash
-uv run agades-pqc openevolve-config --out examples/openevolve/config.yaml
-uv run agades-pqc openevolve-config-verify --config examples/openevolve/config.yaml
-uv run agades-pqc hf-space-smoke --out reports/hf_space_smoke.json
-uv run agades-pqc hf-space-smoke-verify --report reports/hf_space_smoke.json
-uv run agades-pqc hf-space-launch-smoke --out reports/hf_space_launch_smoke.json
-uv run agades-pqc hf-space-launch-smoke-verify --report reports/hf_space_launch_smoke.json
-uv run agades-pqc hf-space-remote-smoke --space-id agades/agades-pqc-gym-agent-env --out reports/hf_space_remote_smoke.json
-uv run agades-pqc hf-space-remote-smoke-verify --report reports/hf_space_remote_smoke.json
-uv run agades-pqc nvidia-manifest-safety --out reports/nvidia_manifest_safety.json
-uv run agades-pqc nvidia-manifest-safety-verify --report reports/nvidia_manifest_safety.json
-uv run agades-pqc openevolve-smoke --out reports/openevolve_smoke.json
-uv run agades-pqc openevolve-smoke-verify --report reports/openevolve_smoke.json
-uv run agades-pqc prime-environment-smoke --out reports/prime_environment_smoke.json
-uv run agades-pqc prime-environment-smoke-verify --report reports/prime_environment_smoke.json
-uv run agades-pqc ecosystem-smoke --out reports/ecosystem_smoke.json
-uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json
-uv run agades-pqc release-artifacts --max-passes 6
+uv run --extra dev agades-pqc openevolve-config --out examples/openevolve/config.yaml
+uv run --extra dev agades-pqc openevolve-config-verify --config examples/openevolve/config.yaml
+uv run --extra dev agades-pqc hf-space-smoke --out reports/hf_space_smoke.json
+uv run --extra dev agades-pqc hf-space-smoke-verify --report reports/hf_space_smoke.json
+uv run --extra dev agades-pqc hf-space-launch-smoke --out reports/hf_space_launch_smoke.json
+uv run --extra dev agades-pqc hf-space-launch-smoke-verify --report reports/hf_space_launch_smoke.json
+uv run --extra dev agades-pqc hf-space-remote-smoke --space-id agades/agades-pqc-gym-agent-env --out reports/hf_space_remote_smoke.json
+uv run --extra dev agades-pqc hf-space-remote-smoke-verify --report reports/hf_space_remote_smoke.json
+uv run --extra dev agades-pqc nvidia-manifest-safety --out reports/nvidia_manifest_safety.json
+uv run --extra dev agades-pqc nvidia-manifest-safety-verify --report reports/nvidia_manifest_safety.json
+uv run --extra dev agades-pqc openevolve-smoke --out reports/openevolve_smoke.json
+uv run --extra dev agades-pqc openevolve-smoke-verify --report reports/openevolve_smoke.json
+uv run --extra dev agades-pqc prime-environment-smoke --out reports/prime_environment_smoke.json
+uv run --extra dev agades-pqc prime-environment-smoke-verify --report reports/prime_environment_smoke.json
+uv run --extra dev agades-pqc ecosystem-smoke --out reports/ecosystem_smoke.json
+uv run --extra dev agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json
+uv run --extra dev agades-pqc release-artifacts --max-passes 6
 ```
 
 Additional checked artifacts:

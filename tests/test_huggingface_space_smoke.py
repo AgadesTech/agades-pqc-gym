@@ -72,17 +72,19 @@ def test_huggingface_space_smoke_report_exercises_public_demo(
         "security_claim": False,
     }
     assert report["release_gates"] == [
-        "uv run pytest tests/test_huggingface_space_smoke.py -q",
-        "uv run agades-pqc hf-space-smoke --out reports/hf_space_smoke.json",
-        "uv run agades-pqc hf-space-smoke-verify --report "
+        "uv run --extra dev pytest tests/test_huggingface_space_smoke.py -q",
+        "uv run --extra dev agades-pqc hf-space-smoke --out "
         "reports/hf_space_smoke.json",
-        "uv run agades-pqc hf-space-launch-smoke --out "
+        "uv run --extra dev agades-pqc hf-space-smoke-verify --report "
+        "reports/hf_space_smoke.json",
+        "uv run --extra dev agades-pqc hf-space-launch-smoke --out "
         "reports/hf_space_launch_smoke.json",
-        "uv run agades-pqc hf-space-launch-smoke-verify --report "
+        "uv run --extra dev agades-pqc hf-space-launch-smoke-verify --report "
         "reports/hf_space_launch_smoke.json",
-        "uv run agades-pqc ecosystem-smoke-verify --report "
+        "uv run --extra dev agades-pqc ecosystem-smoke-verify --report "
         "reports/ecosystem_smoke.json",
-        "uv run agades-pqc release-audit --out public/release_audit.json",
+        "uv run --extra dev agades-pqc release-audit --out "
+        "public/release_audit.json",
     ]
     assert report["failures"] == []
 
