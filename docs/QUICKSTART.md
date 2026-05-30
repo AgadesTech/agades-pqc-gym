@@ -48,6 +48,12 @@ an estimate for a family route that has no reviewed evaluator.
 
 ## 3. Run The Core Loop Manually
 
+Show guided examples with copy-pasteable commands and expected outcomes:
+
+```bash
+uv run agades-pqc examples
+```
+
 Validate a toy LWE plan:
 
 ```bash

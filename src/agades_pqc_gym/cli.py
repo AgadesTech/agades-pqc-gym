@@ -457,18 +457,24 @@ def examples_command() -> None:
     """Show safe example AttackPlans and the expected CLI outcome."""
     typer.echo("Safe guided examples:")
     for example in GUIDED_EXAMPLES:
+        command = _guided_example_command(example)
         typer.echo(
-            f"{example['id']}: {example['path']} -> {example['expected']} "
-            f"({example['purpose']})"
+            f"{example['id']}: path={example['path']} expect={example['expected']}"
         )
+        typer.echo(f"  command={command}")
+        typer.echo(f"  why={example['purpose']}")
     typer.echo(
-        "tip=Run `uv run agades-pqc run <path> --trace runs/demo.jsonl` "
-        "for status=ok or status=unsupported examples."
+        "tip=Schema-only unsupported examples are successful CLI runs with "
+        "accepted=False and score=n/a; they do not produce cryptanalytic estimates."
     )
-    typer.echo(
-        "tip=Use the path column as the command argument; example IDs are labels, "
-        "not filenames."
-    )
+
+
+def _guided_example_command(example: dict[str, str]) -> str:
+    path = example["path"]
+    if example["expected"] == "validate exits non-zero":
+        return f"uv run agades-pqc validate {path}"
+    trace_name = example["id"].replace("-", "_")
+    return f"uv run agades-pqc run {path} --trace runs/{trace_name}.jsonl"
 
 
 def _require_attack_plan_file(plan_path: Path) -> None:
