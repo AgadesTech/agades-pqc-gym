@@ -132,6 +132,8 @@ uv run agades-pqc openevolve-config --out examples/openevolve/config.yaml
 uv run agades-pqc openevolve-config-verify --config examples/openevolve/config.yaml
 uv run agades-pqc hf-space-smoke --out reports/hf_space_smoke.json
 uv run agades-pqc hf-space-smoke-verify --report reports/hf_space_smoke.json
+uv run agades-pqc hf-space-launch-smoke --out reports/hf_space_launch_smoke.json
+uv run agades-pqc hf-space-launch-smoke-verify --report reports/hf_space_launch_smoke.json
 uv run agades-pqc nvidia-manifest-safety --out reports/nvidia_manifest_safety.json
 uv run agades-pqc nvidia-manifest-safety-verify --report reports/nvidia_manifest_safety.json
 uv run agades-pqc openevolve-smoke --out reports/openevolve_smoke.json

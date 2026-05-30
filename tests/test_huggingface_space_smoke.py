@@ -11,8 +11,11 @@ from typer.testing import CliRunner
 
 from agades_pqc_gym.cli import app
 from agades_pqc_gym.integrations.huggingface_space_smoke import (
+    build_huggingface_space_launch_smoke_report,
     build_huggingface_space_smoke_report,
+    verify_huggingface_space_launch_smoke_report,
     verify_huggingface_space_smoke_report,
+    write_huggingface_space_launch_smoke_report,
     write_huggingface_space_smoke_report,
 )
 
@@ -98,10 +101,55 @@ def test_huggingface_space_smoke_report_exercises_public_demo(
         "uv run agades-pqc hf-space-smoke --out reports/hf_space_smoke.json",
         "uv run agades-pqc hf-space-smoke-verify --report "
         "reports/hf_space_smoke.json",
+        "uv run agades-pqc hf-space-launch-smoke --out "
+        "reports/hf_space_launch_smoke.json",
+        "uv run agades-pqc hf-space-launch-smoke-verify --report "
+        "reports/hf_space_launch_smoke.json",
         "uv run agades-pqc ecosystem-smoke-verify --report "
         "reports/ecosystem_smoke.json",
         "uv run agades-pqc release-audit --out public/release_audit.json",
     ]
+    assert report["failures"] == []
+
+
+def test_huggingface_space_launch_smoke_report_exercises_gradio_contract(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "hf_space_launch_smoke.json"
+
+    report = write_huggingface_space_launch_smoke_report(out)
+
+    assert report == build_huggingface_space_launch_smoke_report()
+    assert json.loads(out.read_text(encoding="utf-8")) == report
+    assert report["schema_version"] == "agades.pqc.hf_space_launch_smoke.v1"
+    assert report["accepted"] is True
+    assert report["gradio"] == {
+        "available": True,
+        "demo_class": "Blocks",
+        "title": "Agades PQC Gym",
+        "component_count": 22,
+    }
+    assert report["api"]["required_api_names_present"] is True
+    assert report["api"]["agent_environment_api_names_present"] is True
+    assert set(report["api"]["api_names"]) >= {
+        "load_example_plan",
+        "evaluate_attack_plan_json",
+        "load_environment_observation",
+        "score_attack_plan_for_task",
+    }
+    assert report["backend_smoke"] == {
+        "accepted": True,
+        "default_label": "LWE / lattice_primal_usvp_toy_v1",
+        "example_count": 79,
+        "reward": 1.0,
+        "trace_public_release_ok": True,
+        "claims_pqc_break": False,
+    }
+    assert report["safety"] == {
+        "contains_private_traces": False,
+        "publishes_private_candidates": False,
+        "security_claim": False,
+    }
     assert report["failures"] == []
 
 
@@ -217,6 +265,17 @@ def test_committed_huggingface_space_smoke_report_is_in_sync(
     assert committed.read_bytes() == generated.read_bytes()
 
 
+def test_committed_huggingface_space_launch_smoke_report_is_in_sync(
+    tmp_path: Path,
+) -> None:
+    generated = tmp_path / "hf_space_launch_smoke.json"
+    committed = Path("reports/hf_space_launch_smoke.json")
+
+    write_huggingface_space_launch_smoke_report(generated)
+
+    assert committed.read_bytes() == generated.read_bytes()
+
+
 def test_huggingface_space_smoke_verify_accepts_committed_report() -> None:
     result = verify_huggingface_space_smoke_report(Path("reports/hf_space_smoke.json"))
 
@@ -233,6 +292,28 @@ def test_huggingface_space_smoke_verify_accepts_committed_report() -> None:
             "summary_contains_not_security_claim": True,
             "uses_rl_environment": True,
             "uses_shared_verifier": True,
+        },
+        "failures": [],
+    }
+
+
+def test_huggingface_space_launch_smoke_verify_accepts_committed_report() -> None:
+    result = verify_huggingface_space_launch_smoke_report(
+        Path("reports/hf_space_launch_smoke.json")
+    )
+
+    assert result == {
+        "schema_version": "agades.pqc.hf_space_launch_smoke_verification.v1",
+        "report_path": "reports/hf_space_launch_smoke.json",
+        "accepted": True,
+        "summary": {
+            "agent_environment_api_names_present": True,
+            "component_count": 22,
+            "demo_class": "Blocks",
+            "failure_count": 0,
+            "gradio_available": True,
+            "required_api_names_present": True,
+            "title": "Agades PQC Gym",
         },
         "failures": [],
     }
@@ -265,6 +346,16 @@ def test_huggingface_space_smoke_cli_writes_report(tmp_path: Path) -> None:
     assert json.loads(out.read_text(encoding="utf-8"))["accepted"] is True
 
 
+def test_huggingface_space_launch_smoke_cli_writes_report(tmp_path: Path) -> None:
+    out = tmp_path / "hf_space_launch_smoke.json"
+
+    result = CliRunner().invoke(app, ["hf-space-launch-smoke", "--out", str(out)])
+
+    assert result.exit_code == 0
+    assert f"hf_space_launch_smoke={out}" in result.output
+    assert json.loads(out.read_text(encoding="utf-8"))["accepted"] is True
+
+
 def test_huggingface_space_smoke_verify_cli_accepts_current_report() -> None:
     result = CliRunner().invoke(
         app,
@@ -273,6 +364,21 @@ def test_huggingface_space_smoke_verify_cli_accepts_current_report() -> None:
 
     assert result.exit_code == 0
     assert "agades.pqc.hf_space_smoke_verification.v1" in result.output
+    assert '"accepted": true' in result.output
+
+
+def test_huggingface_space_launch_smoke_verify_cli_accepts_current_report() -> None:
+    result = CliRunner().invoke(
+        app,
+        [
+            "hf-space-launch-smoke-verify",
+            "--report",
+            "reports/hf_space_launch_smoke.json",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert "agades.pqc.hf_space_launch_smoke_verification.v1" in result.output
     assert '"accepted": true' in result.output
 
 

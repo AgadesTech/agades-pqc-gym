@@ -152,7 +152,9 @@ from agades_pqc_gym.integrations.huggingface_space_remote_smoke import (
     write_huggingface_space_remote_smoke_report,
 )
 from agades_pqc_gym.integrations.huggingface_space_smoke import (
+    verify_huggingface_space_launch_smoke_report,
     verify_huggingface_space_smoke_report,
+    write_huggingface_space_launch_smoke_report,
     write_huggingface_space_smoke_report,
 )
 from agades_pqc_gym.integrations.lattice_estimator_baseline_contracts import (
@@ -1629,6 +1631,32 @@ def hf_space_smoke_verify(
 ) -> None:
     """Verify the checked Hugging Face Space smoke report."""
     result = verify_huggingface_space_smoke_report(report)
+    console.print_json(data=result)
+    if not result["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("hf-space-launch-smoke", hidden=True)
+def hf_space_launch_smoke(
+    out: Annotated[Path, typer.Option("--out")] = Path(
+        "reports/hf_space_launch_smoke.json"
+    ),
+) -> None:
+    """Write a deterministic Hugging Face Space Gradio launch smoke report."""
+    report = write_huggingface_space_launch_smoke_report(out)
+    typer.echo(f"hf_space_launch_smoke={out}")
+    if not report["accepted"]:
+        raise typer.Exit(1)
+
+
+@app.command("hf-space-launch-smoke-verify", hidden=True)
+def hf_space_launch_smoke_verify(
+    report: Annotated[Path, typer.Option("--report")] = Path(
+        "reports/hf_space_launch_smoke.json"
+    ),
+) -> None:
+    """Verify the checked Hugging Face Space Gradio launch smoke report."""
+    result = verify_huggingface_space_launch_smoke_report(report)
     console.print_json(data=result)
     if not result["accepted"]:
         raise typer.Exit(1)
