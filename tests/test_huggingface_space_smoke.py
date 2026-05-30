@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+import importlib.util
 import json
 from pathlib import Path
+from types import ModuleType
+from typing import Any
 
+import pytest
 from typer.testing import CliRunner
 
 from agades_pqc_gym.cli import app
@@ -52,6 +56,16 @@ def test_huggingface_space_smoke_report_exercises_public_demo(
         "private_fields_present": False,
         "claims_pqc_break": False,
     }
+    assert report["unsupported_behavior"] == {
+        "invalid_json_reward": 0.0,
+        "invalid_json_summary_contains_reason": True,
+        "invalid_json_public_release_ok": True,
+        "schema_only_reward": 0.0,
+        "schema_only_summary_contains_reason": True,
+        "schema_only_public_release_ok": True,
+        "claims_pqc_break": False,
+        "private_fields_present": False,
+    }
     assert report["safety"] == {
         "arbitrary_code_execution": False,
         "contains_private_traces": False,
@@ -69,6 +83,81 @@ def test_huggingface_space_smoke_report_exercises_public_demo(
         "uv run agades-pqc release-audit --out public/release_audit.json",
     ]
     assert report["failures"] == []
+
+
+def test_huggingface_space_agent_env_explains_invalid_json() -> None:
+    module = _load_space_module()
+
+    summary, reward_payload, trace_payload = module.score_attack_plan_for_task(
+        module.DEFAULT_EXAMPLE_LABEL,
+        "not json",
+    )
+
+    reward = json.loads(reward_payload)
+    trace = json.loads(trace_payload)
+    assert reward["reward"] == 0.0
+    assert reward["accepted"] is False
+    assert "Invalid AttackPlan JSON" in summary
+    assert trace["public_release_ok"] is True
+    assert trace["claim_boundary"]["claims_pqc_break"] is False
+
+
+def test_huggingface_space_agent_env_explains_schema_only_family() -> None:
+    module = _load_space_module()
+    ntru_label = next(
+        choice
+        for choice in module.example_plan_choices()
+        if choice.startswith("NTRU / ")
+    )
+
+    summary, reward_payload, trace_payload = module.score_attack_plan_for_task(
+        module.DEFAULT_EXAMPLE_LABEL,
+        module.load_example_plan(ntru_label),
+    )
+
+    reward = json.loads(reward_payload)
+    trace = json.loads(trace_payload)
+    assert reward["reward"] == 0.0
+    assert reward["accepted"] is False
+    assert "schema_only" in summary
+    assert "NTRU" in summary
+    assert trace["public_release_ok"] is True
+    assert trace["claim_boundary"]["claims_pqc_break"] is False
+
+
+def test_huggingface_space_agent_env_falls_back_on_runtime_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _load_space_module()
+
+    class BrokenEnvironment:
+        def __init__(self, tasks: list[dict[str, Any]]) -> None:
+            self.tasks = tasks
+
+        def reset(self) -> dict[str, Any]:
+            return {}
+
+        def step(self, candidate_json: str) -> dict[str, Any]:
+            raise RuntimeError(
+                "Lean source is missing: formal/lean/AgadesPQC/Lattice/Target.lean"
+            )
+
+    monkeypatch.setattr(module, "AgadesPQCGymEnvironment", BrokenEnvironment)
+
+    summary, reward_payload, trace_payload = module.score_attack_plan_for_task(
+        module.DEFAULT_EXAMPLE_LABEL,
+        module.DEFAULT_PLAN,
+    )
+
+    reward = json.loads(reward_payload)
+    trace = json.loads(trace_payload)
+    assert reward["reward"] == 0.0
+    assert reward["accepted"] is False
+    assert "runtime_error" in reward["blocking_reasons"]
+    assert "Lean source is missing" in summary
+    assert trace["public_release_ok"] is True
+    assert trace["private_fields_present"] is False
+    assert trace["claim_boundary"]["claims_pqc_break"] is False
 
 
 def test_committed_huggingface_space_smoke_report_is_in_sync(
@@ -138,3 +227,13 @@ def test_huggingface_space_smoke_verify_cli_accepts_current_report() -> None:
     assert result.exit_code == 0
     assert "agades.pqc.hf_space_smoke_verification.v1" in result.output
     assert '"accepted": true' in result.output
+
+
+def _load_space_module() -> ModuleType:
+    app_path = Path("hf/app.py")
+    spec = importlib.util.spec_from_file_location("agades_pqc_hf_space_test", app_path)
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module

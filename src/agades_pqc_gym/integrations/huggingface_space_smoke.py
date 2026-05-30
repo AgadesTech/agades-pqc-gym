@@ -63,6 +63,16 @@ def build_huggingface_space_smoke_report(
         "private_fields_present": None,
         "claims_pqc_break": None,
     }
+    unsupported_behavior = {
+        "invalid_json_reward": None,
+        "invalid_json_summary_contains_reason": False,
+        "invalid_json_public_release_ok": False,
+        "schema_only_reward": None,
+        "schema_only_summary_contains_reason": False,
+        "schema_only_public_release_ok": False,
+        "claims_pqc_break": None,
+        "private_fields_present": None,
+    }
 
     try:
         module = _load_python_module(app_path, "agades_pqc_hf_space_smoke")
@@ -78,9 +88,29 @@ def build_huggingface_space_smoke_report(
             reward_payload,
             trace_payload,
         ) = module.score_attack_plan_for_task(default_label, default_plan)
+        (
+            invalid_json_summary,
+            invalid_json_reward_payload,
+            invalid_json_trace_payload,
+        ) = module.score_attack_plan_for_task(default_label, "not json")
+        schema_only_label = _schema_only_example_label(choices)
+        if schema_only_label is None:
+            raise ValueError("Hugging Face Space exposes no schema-only example.")
+        (
+            schema_only_summary,
+            schema_only_reward_payload,
+            schema_only_trace_payload,
+        ) = module.score_attack_plan_for_task(
+            default_label,
+            module.load_example_plan(schema_only_label),
+        )
         observation = json.loads(observation_payload)
         reward_report = json.loads(reward_payload)
         trace = json.loads(trace_payload)
+        invalid_json_reward = json.loads(invalid_json_reward_payload)
+        invalid_json_trace = json.loads(invalid_json_trace_payload)
+        schema_only_reward = json.loads(schema_only_reward_payload)
+        schema_only_trace = json.loads(schema_only_trace_payload)
     except Exception as exc:  # noqa: BLE001 - smoke report must capture app issues.
         failures.append(f"Hugging Face Space smoke failed: {exc}")
     else:
@@ -113,11 +143,39 @@ def build_huggingface_space_smoke_report(
                 "claims_pqc_break"
             ),
         }
+        unsupported_behavior = {
+            "invalid_json_reward": invalid_json_reward.get("reward"),
+            "invalid_json_summary_contains_reason": (
+                "Invalid AttackPlan JSON" in invalid_json_summary
+            ),
+            "invalid_json_public_release_ok": invalid_json_trace.get(
+                "public_release_ok"
+            ),
+            "schema_only_reward": schema_only_reward.get("reward"),
+            "schema_only_summary_contains_reason": (
+                "schema_only" in schema_only_summary
+                and any(family in schema_only_summary for family in ("NTRU", "SIS"))
+            ),
+            "schema_only_public_release_ok": schema_only_trace.get(
+                "public_release_ok"
+            ),
+            "claims_pqc_break": (
+                invalid_json_trace.get("claim_boundary", {}).get("claims_pqc_break")
+                or schema_only_trace.get("claim_boundary", {}).get(
+                    "claims_pqc_break"
+                )
+            ),
+            "private_fields_present": (
+                invalid_json_trace.get("private_fields_present")
+                or schema_only_trace.get("private_fields_present")
+            ),
+        }
         _validate_smoke_contract(
             app,
             examples,
             evaluation,
             agent_environment,
+            unsupported_behavior,
             reward_summary,
             failures,
         )
@@ -130,6 +188,7 @@ def build_huggingface_space_smoke_report(
         "agent_environment": agent_environment,
         "examples": examples,
         "evaluation": evaluation,
+        "unsupported_behavior": unsupported_behavior,
         "safety": safety,
         "release_gates": list(_RELEASE_GATES),
         "failures": failures,
@@ -166,6 +225,7 @@ def verify_huggingface_space_smoke_report(
     _verify_schema(report, failures)
     _verify_app(report, failures)
     _verify_agent_environment(report, failures)
+    _verify_unsupported_behavior(report, failures)
     _verify_examples(report, failures)
     _verify_evaluation(report, failures)
     _verify_safety(report, failures)
@@ -185,6 +245,7 @@ def _validate_smoke_contract(
     examples: dict[str, Any],
     evaluation: dict[str, Any],
     agent_environment: dict[str, Any],
+    unsupported_behavior: dict[str, Any],
     reward_summary: str,
     failures: list[str],
 ) -> None:
@@ -224,6 +285,27 @@ def _validate_smoke_contract(
         failures.append("Hugging Face Space Agent Environment claims a PQC break.")
     if "not a security claim" not in reward_summary:
         failures.append("Hugging Face Space Agent Environment summary lacks boundary.")
+    _validate_unsupported_behavior(unsupported_behavior, failures)
+
+
+def _validate_unsupported_behavior(
+    unsupported_behavior: dict[str, Any],
+    failures: list[str],
+) -> None:
+    expected = {
+        "invalid_json_reward": 0.0,
+        "invalid_json_summary_contains_reason": True,
+        "invalid_json_public_release_ok": True,
+        "schema_only_reward": 0.0,
+        "schema_only_summary_contains_reason": True,
+        "schema_only_public_release_ok": True,
+        "claims_pqc_break": False,
+        "private_fields_present": False,
+    }
+    if unsupported_behavior != expected:
+        failures.append(
+            "Hugging Face Space unsupported behavior is not user-readable."
+        )
 
 
 def _read_report(path: Path, failures: list[str]) -> dict[str, Any]:
@@ -294,6 +376,21 @@ def _verify_agent_environment(report: dict[str, Any], failures: list[str]) -> No
     }
     if agent_environment != expected:
         failures.append("Hugging Face Space smoke report Agent Environment drifted.")
+
+
+def _verify_unsupported_behavior(report: dict[str, Any], failures: list[str]) -> None:
+    unsupported_behavior = report.get("unsupported_behavior")
+    if not isinstance(unsupported_behavior, dict):
+        failures.append(
+            "Hugging Face Space smoke report unsupported_behavior must be an object."
+        )
+        return
+    before = len(failures)
+    _validate_unsupported_behavior(unsupported_behavior, failures)
+    if len(failures) > before:
+        failures.append(
+            "Hugging Face Space smoke report unsupported behavior drifted."
+        )
 
 
 def _verify_examples(report: dict[str, Any], failures: list[str]) -> None:
@@ -382,6 +479,14 @@ def _load_python_module(path: Path, module_name: str) -> Any:
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def _schema_only_example_label(choices: list[str]) -> str | None:
+    for family in ("NTRU / ", "SIS / "):
+        for choice in choices:
+            if choice.startswith(family):
+                return choice
+    return None
 
 
 def _resolve_path(path: Path, *, root: Path | None) -> Path:
