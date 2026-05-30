@@ -24,6 +24,10 @@ from agades_pqc_gym.integrations.private_run_policy import build_private_run_pol
 from agades_pqc_gym.traces.schema import TraceRecord
 
 
+def _single_line(output: str) -> str:
+    return " ".join(output.split())
+
+
 def test_validate_command_accepts_valid_plan() -> None:
     result = CliRunner().invoke(
         app,
@@ -106,6 +110,7 @@ def test_quickstart_command_runs_guided_gym_demo(tmp_path: Path) -> None:
     assert "score=n/a" in result.output
     assert "score=-1000000000.0" not in result.output
     assert "No estimate was produced" in result.output
+    assert "not a security claim" in _single_line(result.output)
     assert (out_dir / "lattice_trace.jsonl").exists()
     assert (out_dir / "lattice_report.md").exists()
     assert (out_dir / "lattice_benchmark.jsonl").exists()
@@ -222,6 +227,7 @@ def test_benchmark_command_explains_unsupported_results(tmp_path: Path) -> None:
     assert "plan_valid=True" in result.output
     assert "CODE_BASED evaluator is not implemented" in result.output
     assert "No estimate was produced" in result.output
+    assert "not a security claim" in _single_line(result.output)
     assert trace_path.exists()
 
 
@@ -246,6 +252,7 @@ def test_evaluate_command_explains_unsupported_results(tmp_path: Path) -> None:
     assert "plan_valid=True" in result.output
     assert "CODE_BASED evaluator is not implemented" in result.output
     assert "No estimate was produced" in result.output
+    assert "not a security claim" in _single_line(result.output)
     assert trace_path.exists()
 
 

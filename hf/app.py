@@ -239,6 +239,7 @@ def _verifier_summary(result: dict[str, Any]) -> str:
             f"Invalid AttackPlan JSON: {reason}. "
             "Toy/demo output only; not a security claim."
         )
+    score = "n/a" if status == "unsupported" else result["combined_score"]
     return (
         f"{family}: {status}; score={score}. "
         "Toy/demo output only; not a security claim."

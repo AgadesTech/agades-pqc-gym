@@ -3581,8 +3581,9 @@ def format_evaluation_summary(result: CascadeResult, out: Path) -> str:
         summary += f" reason={result.validation.errors[0]}"
     if status == "unsupported":
         summary += (
-            " next=No estimate was produced; use an implemented toy route or "
-            "add a reviewed adapter before expecting estimates."
+            " next=No estimate was produced; this is not a security claim; "
+            "use an implemented toy route or add a reviewed adapter before "
+            "expecting estimates."
         )
     return summary
 
