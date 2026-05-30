@@ -47,9 +47,17 @@ class FakeClient:
                 "target": {"family": "LWE"},
             }
         )
+        self.unsupported_plan = json.dumps(
+            {
+                "attack_plan_id": "lattice_ntru_schema_placeholder_v1",
+                "target": {"family": "NTRU"},
+            }
+        )
 
     def predict(self, *args: object, api_name: str) -> object:
         if api_name == "/load_example_plan":
+            if args and args[0] == "NTRU / lattice_ntru_schema_placeholder_v1":
+                return self.unsupported_plan
             return self.plan
         if api_name == "/evaluate_attack_plan_json":
             raw = str(args[0])
@@ -61,9 +69,9 @@ class FakeClient:
                 )
             if '"NTRU"' in raw:
                 return (
-                    "Invalid AttackPlan JSON: NTRU targets are schema_only. "
+                    "NTRU: unsupported; score=n/a. "
                     "Toy/demo output only; not a security claim.",
-                    json.dumps({"accepted": False, "evaluation_status": "invalid"}),
+                    json.dumps({"accepted": False, "evaluation_status": "unsupported"}),
                 )
             return (
                 "LWE: ok; score=-80.9096. Toy/demo output only; "
@@ -116,6 +124,17 @@ class FakeClient:
         raise AssertionError(f"unexpected api_name: {api_name}")
 
 
+class FakeInvalidUnsupportedClient(FakeClient):
+    def predict(self, *args: object, api_name: str) -> object:
+        if api_name == "/evaluate_attack_plan_json" and '"NTRU"' in str(args[0]):
+            return (
+                "Invalid AttackPlan JSON: NTRU candidate malformed. "
+                "Toy/demo output only; not a security claim.",
+                json.dumps({"accepted": False, "evaluation_status": "invalid"}),
+            )
+        return super().predict(*args, api_name=api_name)
+
+
 def test_remote_smoke_accepts_private_running_agent_environment() -> None:
     report = build_huggingface_space_remote_smoke_report(
         "agades/agades-pqc-gym-agent-env",
@@ -138,6 +157,7 @@ def test_remote_smoke_accepts_private_running_agent_environment() -> None:
     assert report["accepted_path"]["reward"] == 1.0
     assert report["invalid_json_path"]["accepted"] is False
     assert report["unsupported_path"]["reward"] == 0.0
+    assert report["unsupported_path"]["evaluation_status"] == "unsupported"
     assert report["safety"] == {
         "records_token_value": False,
         "records_raw_attack_plan": False,
@@ -146,6 +166,20 @@ def test_remote_smoke_accepts_private_running_agent_environment() -> None:
         "private_fields_present": False,
     }
     assert report["failures"] == []
+
+
+def test_remote_smoke_rejects_invalid_status_for_unsupported_path() -> None:
+    report = build_huggingface_space_remote_smoke_report(
+        "agades/agades-pqc-gym-agent-env",
+        api=FakeApi(FakeSpaceInfo()),
+        client=FakeInvalidUnsupportedClient(),
+        token_present=True,
+    )
+
+    assert report["accepted"] is False
+    assert "Remote unsupported evaluation_status must be unsupported." in report[
+        "failures"
+    ]
 
 
 def test_remote_smoke_rejects_non_private_space() -> None:

@@ -74,18 +74,12 @@
   "unsupported_path": {
     "accepted": false,
     "blocking_reasons": [
-      "schema_valid",
-      "formal_validity",
-      "cryptographic_applicability",
-      "no_security_overclaim",
-      "proof_obligation_coverage",
-      "reviewer_quality",
-      "task_match"
+      "cryptographic_applicability"
     ],
     "claims_pqc_break": false,
     "evaluated_accepted": false,
     "evaluation_ran": true,
-    "evaluation_status": "invalid",
+    "evaluation_status": "unsupported",
     "evaluation_summary_has_no_claim": true,
     "has_prompt": true,
     "observation_ran": true,
