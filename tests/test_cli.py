@@ -104,6 +104,9 @@ def test_quickstart_command_runs_guided_gym_demo(tmp_path: Path) -> None:
     assert result.exit_code == 0, result.output
     assert "quickstart complete" in result.output.lower()
     assert "lattice_primal_usvp_toy_v1" in result.output
+    assert (
+        "path=examples/attack_plans/lattice_primal_usvp_toy.json" in result.output
+    )
     assert "unsupported example" in result.output.lower()
     assert "accepted=False" in result.output
     assert "plan_valid=True" in result.output
@@ -131,6 +134,7 @@ def test_examples_command_lists_safe_guided_examples() -> None:
     assert "invalid-plan" in result.output
     assert "status=unsupported" in result.output
     assert "--trace runs/demo.jsonl" in result.output
+    assert "Use the path column" in result.output
 
 
 def test_evaluate_export_and_report_commands(tmp_path: Path) -> None:
@@ -287,11 +291,14 @@ def test_evaluate_command_does_not_claim_invalid_trace_written(tmp_path: Path) -
 
     assert result.exit_code == 1
     assert "status=invalid" in result.output
+    assert "score=n/a" in result.output
+    assert "score=-1000000000.0" not in result.output
     assert "trace=not_written" in result.output
     assert str(trace_path) not in result.output
     assert "module_lattice_reduction_hypothesis requires an MLWE target" in (
         result.output
     )
+    assert "uv run agades-pqc examples" in result.output
     assert not trace_path.exists()
 
 

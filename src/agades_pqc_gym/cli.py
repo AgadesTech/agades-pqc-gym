@@ -433,7 +433,10 @@ def quickstart(
     )
 
     typer.echo("Quickstart complete")
-    typer.echo(f"validated={lattice_plan.attack_plan_id}")
+    typer.echo(
+        f"validated={lattice_plan.attack_plan_id} "
+        f"path={QUICKSTART_LATTICE_PLAN.as_posix()}"
+    )
     typer.echo(format_evaluation_summary(lattice_result, lattice_trace))
     typer.echo(f"report={lattice_report}")
     typer.echo(f"benchmark={lattice_benchmark} records={len(benchmark_records)}")
@@ -459,6 +462,10 @@ def examples_command() -> None:
     typer.echo(
         "tip=Run `uv run agades-pqc evaluate <path> --trace runs/demo.jsonl` "
         "for status=ok or status=unsupported examples."
+    )
+    typer.echo(
+        "tip=Use the path column as the command argument; example IDs are labels, "
+        "not filenames."
     )
 
 
@@ -3635,7 +3642,7 @@ def format_evaluation_summary(result: CascadeResult, out: Path) -> str:
         status = "invalid" if not result.validation.valid else "unknown"
     score = result.metrics.get("combined_score")
     displayed_score: object = score
-    if status == "unsupported":
+    if status != "ok":
         displayed_score = "n/a"
     trace_display = "not_written" if result.plan is None else str(out)
     summary = (
@@ -3651,6 +3658,11 @@ def format_evaluation_summary(result: CascadeResult, out: Path) -> str:
             " next=No estimate was produced; this is not a security claim; "
             "use an implemented toy route or add a reviewed adapter before "
             "expecting estimates."
+        )
+    elif status == "invalid":
+        summary += (
+            " next=Run `uv run agades-pqc examples` to pick a guided "
+            "AttackPlan or compare against the nearest same-family toy example."
         )
     return summary
 
