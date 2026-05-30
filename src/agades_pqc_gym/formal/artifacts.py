@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from importlib import resources
 from pathlib import Path
 from typing import Any
 
@@ -48,6 +49,7 @@ BACKEND = {
     "smt_assist": "z3_optional_finite_decidable_obligations_only",
 }
 ROOT = Path(__file__).resolve().parents[3]
+PACKAGED_FORMAL_RESOURCE_ROOT = Path("resources")
 LEAN_BACKEND_ROOT = Path("formal/lean")
 FORMAL_LEAN_BACKEND_PATH = Path("docs/formal_lean_backend.json")
 MVP_VERTICAL_PROOF_ARTIFACT_PATHS = {
@@ -892,14 +894,31 @@ def _artifact_sha256(artifact: dict[str, Any]) -> str:
 def _lean_source(lean_theorem: str) -> dict[str, Any]:
     path = LEAN_THEOREM_SOURCES[lean_theorem]
     declaration = lean_theorem.rsplit(".", 1)[1]
-    source_path = ROOT / path
+    raw_source = _formal_resource_bytes(Path(path))
     return {
         "lean_source": {
             "path": path,
-            "sha256": hashlib.sha256(source_path.read_bytes()).hexdigest(),
+            "sha256": hashlib.sha256(raw_source).hexdigest(),
             "declaration": declaration,
         }
     }
+
+
+def _formal_resource_bytes(relative_path: Path) -> bytes:
+    checkout_path = ROOT / relative_path
+    try:
+        return checkout_path.read_bytes()
+    except FileNotFoundError:
+        return _packaged_formal_resource_bytes(relative_path)
+
+
+def _packaged_formal_resource_bytes(relative_path: Path) -> bytes:
+    resource = resources.files("agades_pqc_gym.formal") / (
+        PACKAGED_FORMAL_RESOURCE_ROOT.as_posix()
+    )
+    for part in relative_path.parts:
+        resource = resource / part
+    return resource.read_bytes()
 
 
 def _read_json_object(path: Path, failures: list[str]) -> dict[str, Any]:
@@ -1217,13 +1236,17 @@ def _formal_backend_binding(
         raw = manifest_path.read_bytes()
         manifest = json.loads(raw.decode("utf-8"))
     except FileNotFoundError:
-        if failures is not None:
-            failures.append(
-                "Formal Lean backend manifest is missing: "
-                f"{FORMAL_LEAN_BACKEND_PATH.as_posix()}."
-            )
-        manifest = {}
-        raw = b""
+        try:
+            raw = _packaged_formal_resource_bytes(FORMAL_LEAN_BACKEND_PATH)
+            manifest = json.loads(raw.decode("utf-8"))
+        except FileNotFoundError:
+            if failures is not None:
+                failures.append(
+                    "Formal Lean backend manifest is missing: "
+                    f"{FORMAL_LEAN_BACKEND_PATH.as_posix()}."
+                )
+            manifest = {}
+            raw = b""
     except json.JSONDecodeError as exc:
         if failures is not None:
             failures.append(

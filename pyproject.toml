@@ -37,6 +37,10 @@ agades_pqc_gym = [
     "families/isogeny_historical/fixtures/*.json",
     "families/lattice/fixtures/*.json",
     "families/multivariate/fixtures/*.json",
+    "formal/resources/docs/*.json",
+    "formal/resources/formal/lean/*",
+    "formal/resources/formal/lean/AgadesPQC/*.lean",
+    "formal/resources/formal/lean/AgadesPQC/*/*.lean",
 ]
 
 [tool.pytest.ini_options]

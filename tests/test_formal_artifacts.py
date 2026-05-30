@@ -10,9 +10,11 @@ from typer.testing import CliRunner
 from agades_pqc_gym.cli import app
 from agades_pqc_gym.core.attack_plan import AttackPlan
 from agades_pqc_gym.core.evaluator_result import EvaluatorResult
+from agades_pqc_gym.formal import artifacts as artifacts_module
 from agades_pqc_gym.formal.artifacts import (
     MVP_VERTICAL_ESTIMATOR_RESULT_PATHS,
     build_attack_plan_proof_artifact,
+    build_attack_plan_proof_artifact_from_json,
     verify_attack_plan_proof_artifact,
     write_attack_plan_evaluator_result,
     write_attack_plan_proof_artifact,
@@ -173,6 +175,31 @@ def test_lattice_proof_artifact_binds_existing_lean_sources() -> None:
         assert path.is_file()
         assert hashlib.sha256(raw).hexdigest() == source["sha256"]
         assert f"theorem {source['declaration']}" in raw.decode("utf-8")
+
+
+def test_proof_artifact_uses_packaged_formal_resources_when_checkout_is_absent(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    raw_plan = Path("examples/attack_plans/lattice_primal_usvp_toy.json").read_text(
+        encoding="utf-8"
+    )
+
+    monkeypatch.setattr(artifacts_module, "ROOT", tmp_path)
+
+    artifact = build_attack_plan_proof_artifact_from_json(
+        raw_plan,
+        source_label="wheel-like-runtime",
+    )
+
+    lean_source = artifact["proof_obligations"][0]["lean_source"]
+    assert lean_source["path"] == "formal/lean/AgadesPQC/Lattice/Target.lean"
+    assert lean_source["sha256"] == hashlib.sha256(
+        Path(lean_source["path"]).read_bytes()
+    ).hexdigest()
+    assert artifact["formal_backend"]["backend_manifest"]["schema_version"] == (
+        "agades.pqc.formal.lean_backend.v1"
+    )
 
 
 def test_schema_only_code_based_proof_artifact_refuses_fake_estimator_obligations(
