@@ -63,5 +63,15 @@
     "publishes_private_candidates": false,
     "security_claim": false
   },
-  "schema_version": "agades.pqc.hf_space_smoke.v1"
+  "schema_version": "agades.pqc.hf_space_smoke.v1",
+  "unsupported_behavior": {
+    "claims_pqc_break": false,
+    "invalid_json_public_release_ok": true,
+    "invalid_json_reward": 0.0,
+    "invalid_json_summary_contains_reason": true,
+    "private_fields_present": false,
+    "schema_only_public_release_ok": true,
+    "schema_only_reward": 0.0,
+    "schema_only_summary_contains_reason": true
+  }
 }
