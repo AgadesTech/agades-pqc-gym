@@ -27,4 +27,8 @@ def test_package_data_includes_all_public_reproduction_fixture_families() -> Non
         "families/isogeny_historical/fixtures/*.json",
         "families/lattice/fixtures/*.json",
         "families/multivariate/fixtures/*.json",
+        "formal/resources/docs/*.json",
+        "formal/resources/formal/lean/*",
+        "formal/resources/formal/lean/AgadesPQC/*.lean",
+        "formal/resources/formal/lean/AgadesPQC/*/*.lean",
     ]
