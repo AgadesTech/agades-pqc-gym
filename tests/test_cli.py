@@ -49,7 +49,7 @@ def test_validate_command_warns_when_valid_plan_route_is_unsupported() -> None:
     assert "evaluation_status=unsupported" in result.output
     assert "accepted=False" in result.output
     assert "CODE_BASED evaluator is not implemented" in result.output
-    assert "uv run agades-pqc evaluate" in result.output
+    assert "uv run agades-pqc run" in result.output
 
 
 def test_help_prioritizes_core_gym_commands() -> None:
@@ -60,6 +60,7 @@ def test_help_prioritizes_core_gym_commands() -> None:
     assert "examples" in result.output
     assert "validate" in result.output
     assert "evaluate" in result.output
+    assert "run" in result.output
     assert "benchmark" in result.output
     assert "report" in result.output
     assert "formal-check" in result.output
@@ -185,6 +186,26 @@ def test_evaluate_command_accepts_trace_alias_for_output_path(
     )
 
     assert result.exit_code == 0, result.output
+    assert f"trace={trace_path}" in result.output
+    assert trace_path.exists()
+
+
+def test_run_command_is_clear_alias_for_evaluate(tmp_path: Path) -> None:
+    trace_path = tmp_path / "run_alias_trace.jsonl"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "run",
+            "examples/attack_plans/lattice_primal_usvp_toy.json",
+            "--trace",
+            str(trace_path),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "status=ok" in result.output
+    assert "accepted=True" in result.output
     assert f"trace={trace_path}" in result.output
     assert trace_path.exists()
 

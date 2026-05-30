@@ -50,8 +50,11 @@ uv run agades-pqc validate examples/attack_plans/lattice_primal_usvp_toy.json
 Evaluate it and write a trace:
 
 ```bash
-uv run agades-pqc evaluate examples/attack_plans/lattice_primal_usvp_toy.json --trace runs/demo_trace.jsonl
+uv run agades-pqc run examples/attack_plans/lattice_primal_usvp_toy.json --trace runs/demo_trace.jsonl
 ```
+
+`run` is the short alias for `evaluate`; both commands write the same trace
+and print the same status fields.
 
 Run the smallest bundled lattice benchmark:
 
@@ -59,10 +62,10 @@ Run the smallest bundled lattice benchmark:
 uv run agades-pqc benchmark benchmarks/lattice_toy_lwe --trace runs/demo_benchmark.jsonl
 ```
 
-Each benchmark line uses the same status fields as `evaluate`, for example
-`status=ok`, `accepted=True`, `plan_valid=True`, and `trace=...`. Unsupported
-benchmark rows use `status=unsupported score=n/a` and include the refusal
-reason instead of printing an internal sentinel score.
+Each benchmark line uses the same status fields as `run`/`evaluate`, for
+example `status=ok`, `accepted=True`, `plan_valid=True`, and `trace=...`.
+Unsupported benchmark rows use `status=unsupported score=n/a` and include the
+refusal reason instead of printing an internal sentinel score.
 
 Generate a report from the trace:
 
@@ -73,7 +76,7 @@ uv run agades-pqc report runs/demo_trace.jsonl --out reports/demo_report.md
 ## 4. Inspect Unsupported Behavior
 
 ```bash
-uv run agades-pqc evaluate examples/attack_plans/code_based_isd_placeholder.json --trace runs/code_based_placeholder.jsonl
+uv run agades-pqc run examples/attack_plans/code_based_isd_placeholder.json --trace runs/code_based_placeholder.jsonl
 ```
 
 This should exit successfully as a CLI command but report `status=unsupported`
@@ -85,7 +88,7 @@ Invalid AttackPlan JSON is different: the gym rejects it and does not claim a
 trace file was written.
 
 ```bash
-uv run agades-pqc evaluate examples/attack_plans/invalid_plan_should_fail.json --trace runs/invalid_trace.jsonl
+uv run agades-pqc run examples/attack_plans/invalid_plan_should_fail.json --trace runs/invalid_trace.jsonl
 ```
 
 Expected shape:
@@ -141,6 +144,7 @@ it does not authorize any public security claim.
 - `quickstart`
 - `examples`
 - `validate`
+- `run`
 - `evaluate`
 - `verify`
 - `benchmark`
