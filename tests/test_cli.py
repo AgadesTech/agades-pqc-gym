@@ -56,6 +56,7 @@ def test_help_prioritizes_core_gym_commands() -> None:
     result = CliRunner().invoke(app, ["--help"])
 
     assert result.exit_code == 0
+    assert "demo" in result.output
     assert "quickstart" in result.output
     assert "examples" in result.output
     assert "validate" in result.output
@@ -123,6 +124,55 @@ def test_quickstart_command_runs_guided_gym_demo(tmp_path: Path) -> None:
     assert "Mock Vs Real Estimator Status" in (
         out_dir / "lattice_report.md"
     ).read_text(encoding="utf-8")
+
+
+def test_demo_command_writes_end_to_end_demo_bundle(tmp_path: Path) -> None:
+    out_dir = tmp_path / "demo"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "demo",
+            "--out",
+            str(out_dir),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "demo=accepted" in result.output
+    assert "verifier=status=ok accepted=True" in result.output
+    assert "agent_environment=reward=1.0 accepted=True" in result.output
+    assert "unsupported_guard=status=unsupported" in result.output
+    assert "claim_boundary=not_a_security_claim" in result.output
+
+    summary = json.loads((out_dir / "demo_summary.json").read_text(encoding="utf-8"))
+    assert summary["schema_version"] == "agades.pqc.demo_bundle.v1"
+    assert summary["accepted"] is True
+    assert summary["verifier"]["evaluation_status"] == "ok"
+    assert summary["agent_environment"] == {
+        "accepted": True,
+        "blocked": False,
+        "private_fields_present": False,
+        "review_governance_ok": True,
+        "reward": 1.0,
+        "trace_public_release_ok": True,
+    }
+    assert summary["unsupported_guard"] == {
+        "accepted": False,
+        "estimate_produced": False,
+        "evaluation_status": "unsupported",
+        "trace": (out_dir / "unsupported_placeholder_trace.jsonl").as_posix(),
+    }
+    assert summary["claim_boundary"] == {
+        "claims_pqc_break": False,
+        "human_review_required_before_claim": True,
+        "security_claim": False,
+    }
+    assert (out_dir / "verifier.json").exists()
+    assert (out_dir / "agent_observation.json").exists()
+    assert (out_dir / "reward_report.json").exists()
+    assert (out_dir / "rollout_trace.json").exists()
+    assert (out_dir / "lattice_report.md").exists()
 
 
 def test_quickstart_accepts_out_alias(tmp_path: Path) -> None:

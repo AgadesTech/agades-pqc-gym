@@ -300,6 +300,7 @@ from agades_pqc_gym.openevolve_adapter.smoke import (
 from agades_pqc_gym.reporting.report import render_report_from_jsonl
 from agades_pqc_gym.rl.environment import (
     DEFAULT_ROLLOUT_PLANS,
+    AgadesPQCGymEnvironment,
     write_public_rollout_examples,
 )
 from agades_pqc_gym.traces.public_bundle import write_public_run_bundle
@@ -329,6 +330,7 @@ DEFAULT_BENCHMARK_TRACE = Path("runs/benchmark_trace.jsonl")
 DEFAULT_PUBLIC_TRACE = Path("public/trace_public.jsonl")
 DEFAULT_PUBLIC_LEDGER = Path("public/run_ledger.json")
 DEFAULT_REPORT = Path("reports/report.md")
+DEFAULT_DEMO_DIR = Path("runs/demo")
 DEFAULT_QUICKSTART_DIR = Path("runs/quickstart")
 QUICKSTART_LATTICE_PLAN = Path("examples/attack_plans/lattice_primal_usvp_toy.json")
 QUICKSTART_CODE_TOY_PLAN = Path("examples/attack_plans/code_based_prange_toy.json")
@@ -381,6 +383,139 @@ def _estimator_choice(
     if isinstance(estimator, EstimatorBackend):
         return estimator.value
     return estimator
+
+
+@app.command("demo")
+def demo(
+    out_dir: Annotated[
+        Path,
+        typer.Option(
+            "--out-dir",
+            "--out",
+            help="Directory for the self-contained demo bundle.",
+        ),
+    ] = DEFAULT_DEMO_DIR,
+) -> None:
+    """Build a self-contained demo bundle for the verifier and agent environment."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    lattice_trace = out_dir / "lattice_trace.jsonl"
+    lattice_report = out_dir / "lattice_report.md"
+    unsupported_trace = out_dir / "unsupported_placeholder_trace.jsonl"
+    verifier_path = out_dir / "verifier.json"
+    observation_path = out_dir / "agent_observation.json"
+    reward_report_path = out_dir / "reward_report.json"
+    rollout_trace_path = out_dir / "rollout_trace.json"
+    summary_path = out_dir / "demo_summary.json"
+
+    lattice_trace.write_text("", encoding="utf-8")
+    unsupported_trace.write_text("", encoding="utf-8")
+
+    lattice_result = evaluate_attack_plan(QUICKSTART_LATTICE_PLAN, lattice_trace)
+    unsupported_result = evaluate_attack_plan(
+        QUICKSTART_UNSUPPORTED_PLAN,
+        unsupported_trace,
+    )
+    lattice_report.write_text(
+        render_report_from_jsonl(lattice_trace, title="Agades PQC Gym Demo"),
+        encoding="utf-8",
+    )
+
+    verifier_result = verify_attack_plan_path(QUICKSTART_LATTICE_PLAN)
+    _write_json_artifact(verifier_path, verifier_result)
+
+    raw_plan = QUICKSTART_LATTICE_PLAN.read_text(encoding="utf-8")
+    env = AgadesPQCGymEnvironment.from_attack_plan_paths(
+        [QUICKSTART_LATTICE_PLAN],
+        root=Path.cwd(),
+    )
+    observation = env.reset()
+    step = env.step(raw_plan)
+    reward_report = step["info"]["reward_report"]
+    rollout_trace = step["info"]["trace"]
+    _write_json_artifact(observation_path, observation)
+    _write_json_artifact(reward_report_path, reward_report)
+    _write_json_artifact(rollout_trace_path, rollout_trace)
+
+    summary = {
+        "schema_version": "agades.pqc.demo_bundle.v1",
+        "accepted": (
+            lattice_result.valid
+            and verifier_result["accepted"] is True
+            and reward_report["accepted"] is True
+            and rollout_trace["public_release_ok"] is True
+            and unsupported_result.metrics.get("evaluation_status") == "unsupported"
+            and unsupported_result.valid is False
+        ),
+        "artifacts": {
+            "lattice_trace": lattice_trace.as_posix(),
+            "lattice_report": lattice_report.as_posix(),
+            "unsupported_trace": unsupported_trace.as_posix(),
+            "verifier_json": verifier_path.as_posix(),
+            "agent_observation": observation_path.as_posix(),
+            "reward_report": reward_report_path.as_posix(),
+            "rollout_trace": rollout_trace_path.as_posix(),
+        },
+        "verifier": {
+            "evaluation_status": verifier_result["evaluation_status"],
+            "accepted": verifier_result["accepted"],
+            "target_family": verifier_result["target_family"],
+            "combined_score": verifier_result["combined_score"],
+        },
+        "agent_environment": {
+            "reward": reward_report["reward"],
+            "accepted": reward_report["accepted"],
+            "blocked": reward_report["blocked"],
+            "review_governance_ok": reward_report["formal_summary"][
+                "review_governance_ok"
+            ],
+            "trace_public_release_ok": rollout_trace["public_release_ok"],
+            "private_fields_present": rollout_trace["private_fields_present"],
+        },
+        "unsupported_guard": {
+            "evaluation_status": unsupported_result.metrics.get(
+                "evaluation_status"
+            ),
+            "accepted": unsupported_result.valid,
+            "trace": unsupported_trace.as_posix(),
+            "estimate_produced": False,
+        },
+        "claim_boundary": {
+            "claims_pqc_break": False,
+            "security_claim": False,
+            "human_review_required_before_claim": True,
+        },
+    }
+    _write_json_artifact(summary_path, summary)
+
+    if not summary["accepted"]:
+        typer.echo(f"demo=rejected summary={summary_path}")
+        raise typer.Exit(1)
+
+    typer.echo(f"demo=accepted artifact_dir={out_dir}")
+    typer.echo(
+        "verifier="
+        f"status={verifier_result['evaluation_status']} "
+        f"accepted={verifier_result['accepted']} "
+        f"score={verifier_result['combined_score']} "
+        f"json={verifier_path}"
+    )
+    typer.echo(
+        "agent_environment="
+        f"reward={reward_report['reward']} "
+        f"accepted={reward_report['accepted']} "
+        "review_governance=accepted "
+        f"trace={rollout_trace_path}"
+    )
+    typer.echo(
+        "unsupported_guard="
+        + format_evaluation_summary(unsupported_result, unsupported_trace)
+    )
+    typer.echo(
+        "claim_boundary=not_a_security_claim "
+        "human_review_required_before_claim=True"
+    )
+    typer.echo(f"report={lattice_report}")
+    typer.echo(f"summary={summary_path}")
 
 
 @app.command("quickstart")
@@ -475,6 +610,14 @@ def _guided_example_command(example: dict[str, str]) -> str:
         return f"uv run agades-pqc validate {path}"
     trace_name = example["id"].replace("-", "_")
     return f"uv run agades-pqc run {path} --trace runs/{trace_name}.jsonl"
+
+
+def _write_json_artifact(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
 
 
 def _require_attack_plan_file(plan_path: Path) -> None:
