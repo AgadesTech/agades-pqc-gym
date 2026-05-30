@@ -76,6 +76,97 @@ FORBIDDEN_PUBLIC_ARTIFACTS = [
     "student_prompts",
     "fine_tuning_corpora",
 ]
+EVIDENCE_CONTRACTS = {
+    "license_review": {
+        "artifact_path": "private/reports/dataset_curation/license_review.json",
+        "blocks_training_until_accepted": True,
+        "must_remain_private": True,
+        "required_fields": [
+            "source_id",
+            "source",
+            "upstream_url",
+            "license_identifier",
+            "license_text_sha256",
+            "allowed_private_training",
+            "decision",
+            "restrictions",
+            "reviewer_id",
+            "reviewed_at_utc",
+        ],
+        "schema_version": "agades.pqc.private_dataset.license_review_evidence.v1",
+    },
+    "provenance_tracking": {
+        "artifact_path": "private/reports/dataset_curation/provenance_manifest.json",
+        "blocks_training_until_accepted": True,
+        "must_remain_private": True,
+        "required_fields": [
+            "row_id",
+            "source_id",
+            "source_revision_or_commit",
+            "retrieved_at_utc",
+            "raw_content_sha256",
+            "normalized_content_sha256",
+            "transform_config_sha256",
+            "private_storage_path",
+            "license_review_id",
+        ],
+        "schema_version": (
+            "agades.pqc.private_dataset.provenance_manifest_evidence.v1"
+        ),
+    },
+    "deduplication": {
+        "artifact_path": "private/reports/dataset_curation/deduplication_report.json",
+        "blocks_training_until_accepted": True,
+        "must_remain_private": True,
+        "required_fields": [
+            "exact_hash_groups",
+            "normalized_hash_groups",
+            "near_duplicate_clusters",
+            "cross_source_duplicate_count",
+            "removed_row_ids_sha256",
+            "deduplicated_row_count",
+            "reviewer_id",
+            "accepted",
+        ],
+        "schema_version": (
+            "agades.pqc.private_dataset.deduplication_report_evidence.v1"
+        ),
+    },
+    "redaction": {
+        "artifact_path": "private/reports/dataset_curation/redaction_report.json",
+        "blocks_training_until_accepted": True,
+        "must_remain_private": True,
+        "required_fields": [
+            "credential_scan_digest",
+            "personal_data_scan_digest",
+            "unlicensed_span_removal_digest",
+            "private_path_scrub_digest",
+            "remaining_findings",
+            "reviewer_id",
+            "accepted",
+        ],
+        "schema_version": "agades.pqc.private_dataset.redaction_report_evidence.v1",
+    },
+    "contamination_audit": {
+        "artifact_path": "private/reports/dataset_curation/contamination_audit.json",
+        "blocks_training_until_accepted": True,
+        "must_remain_private": True,
+        "required_fields": [
+            "public_reference_digest",
+            "exact_public_overlap_count",
+            "prompt_leakage_count",
+            "reviewer_annotation_leakage_count",
+            "similarity_threshold",
+            "similarity_report_sha256",
+            "manual_review_status",
+            "reviewer_id",
+            "accepted",
+        ],
+        "schema_version": (
+            "agades.pqc.private_dataset.contamination_audit_evidence.v1"
+        ),
+    },
+}
 
 
 def build_private_dataset_curation(root: Path | None = None) -> dict[str, Any]:
@@ -156,6 +247,25 @@ def build_private_dataset_curation(root: Path | None = None) -> dict[str, Any]:
             "requires_hash_and_similarity_report": True,
             "requires_manual_review": True,
         },
+        "evidence_contracts": copy.deepcopy(EVIDENCE_CONTRACTS),
+        "evidence_verification": {
+            "schema_version": "agades.pqc.private_dataset_evidence_verification.v1",
+            "verifier": (
+                "agades_pqc_gym.integrations.private_dataset_evidence."
+                "verify_private_dataset_evidence_bundle"
+            ),
+            "command": (
+                "uv run agades-pqc private-dataset-evidence-verify --curation "
+                "docs/private_dataset_curation.json --evidence-root ."
+            ),
+            "public_output_allowed": False,
+            "prints_private_values": False,
+            "training_eligible_requires_all_artifacts_accepted": True,
+            "required_artifacts": [
+                contract["artifact_path"]
+                for contract in EVIDENCE_CONTRACTS.values()
+            ],
+        },
         "review": {
             "launch_readiness": (
                 "blocked_until_license_provenance_redaction_and_contamination_review"
@@ -231,6 +341,8 @@ def verify_private_dataset_curation(
         _verify_outputs(curation, failures)
         _verify_controls(curation, failures)
         _verify_contamination_audit(curation, failures)
+        _verify_evidence_contracts(curation, failures)
+        _verify_evidence_verification(curation, failures)
         _verify_review(curation, failures)
         _verify_publication_boundary(curation, failures)
         _verify_linked_artifacts(curation, expected, project_root, failures)
@@ -243,6 +355,7 @@ def verify_private_dataset_curation(
             "sources": len(curation.get("sources", {})),
             "pipeline_stages": len(curation.get("pipeline", [])),
             "required_controls": len(curation.get("required_controls", [])),
+            "evidence_contracts": len(curation.get("evidence_contracts", {})),
             "linked_artifacts": len(curation.get("linked_artifacts", {})),
             "failure_count": len(failures),
         },
@@ -411,6 +524,94 @@ def _verify_contamination_audit(
     ):
         if audit.get(key) is not True:
             failures.append(f"Private dataset contamination audit {key} must be true.")
+
+
+def _verify_evidence_contracts(
+    curation: dict[str, Any],
+    failures: list[str],
+) -> None:
+    contracts = curation.get("evidence_contracts")
+    if contracts != EVIDENCE_CONTRACTS:
+        failures.append("Private dataset evidence contracts are incomplete.")
+    if not isinstance(contracts, dict):
+        return
+
+    for control in REQUIRED_CONTROLS:
+        contract = contracts.get(control)
+        if not isinstance(contract, dict):
+            failures.append(
+                f"Private dataset evidence contract {control} must be object."
+            )
+            continue
+        _verify_evidence_contract(control, contract, failures)
+
+
+def _verify_evidence_contract(
+    control: str,
+    contract: dict[str, Any],
+    failures: list[str],
+) -> None:
+    artifact_path = contract.get("artifact_path")
+    if not isinstance(artifact_path, str) or not artifact_path.startswith("private/"):
+        failures.append(
+            f"Private dataset evidence contract {control} path must stay private."
+        )
+    if contract.get("must_remain_private") is not True:
+        failures.append(
+            f"Private dataset evidence contract {control} must remain private."
+        )
+    if contract.get("blocks_training_until_accepted") is not True:
+        failures.append(
+            "Private dataset evidence contract "
+            f"{control} must block training until accepted."
+        )
+
+    expected = EVIDENCE_CONTRACTS[control]
+    if contract.get("schema_version") != expected["schema_version"]:
+        failures.append(
+            f"Private dataset evidence contract {control} schema is incorrect."
+        )
+    required_fields = contract.get("required_fields")
+    if not isinstance(required_fields, list):
+        failures.append(
+            f"Private dataset evidence contract {control} fields must be a list."
+        )
+        required_fields = []
+    for field in expected["required_fields"]:
+        if field not in required_fields:
+            failures.append(
+                f"Private dataset evidence contract {control} is missing "
+                f"required field: {field}."
+            )
+
+
+def _verify_evidence_verification(
+    curation: dict[str, Any],
+    failures: list[str],
+) -> None:
+    verification = _dict_or_empty(curation.get("evidence_verification"))
+    if verification.get("schema_version") != (
+        "agades.pqc.private_dataset_evidence_verification.v1"
+    ):
+        failures.append("Private dataset evidence verifier schema is incorrect.")
+    if "private-dataset-evidence-verify" not in str(verification.get("command")):
+        failures.append("Private dataset evidence verifier command is missing.")
+    for key in (
+        "public_output_allowed",
+        "prints_private_values",
+    ):
+        if verification.get(key) is not False:
+            failures.append(f"Private dataset evidence verifier {key} must be false.")
+    if verification.get(
+        "training_eligible_requires_all_artifacts_accepted",
+    ) is not True:
+        failures.append(
+            "Private dataset evidence verifier must require all artifacts accepted."
+        )
+    if verification.get("required_artifacts") != [
+        contract["artifact_path"] for contract in EVIDENCE_CONTRACTS.values()
+    ]:
+        failures.append("Private dataset evidence verifier artifacts are incorrect.")
 
 
 def _verify_review(curation: dict[str, Any], failures: list[str]) -> None:

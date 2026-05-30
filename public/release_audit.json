@@ -110,14 +110,14 @@
           "verify-family-operator-catalog",
           "generate-formal-lean-backend",
           "verify-formal-lean-backend",
+          "smoke-build-formal-lean",
+          "verify-formal-lean-build-smoke",
           "generate-hf-dataset",
           "verify-hf-dataset",
           "generate-hf-space-manifest",
           "verify-hf-space-manifest",
           "generate-hf-space-smoke",
           "verify-hf-space-smoke",
-          "generate-hf-space-launch-smoke",
-          "verify-hf-space-launch-smoke",
           "generate-hf-collection-manifest",
           "verify-hf-collection-manifest",
           "generate-hf-publication-handoff",
@@ -183,22 +183,6 @@
       "status": "passed"
     },
     {
-      "artifact": "reports/hf_space_launch_smoke.json",
-      "blocking": true,
-      "detail": "Hugging Face Space launch smoke builds the Gradio Blocks UI and verifies the public Agent Environment API endpoints.",
-      "evidence": {
-        "agent_environment_api_names_present": true,
-        "component_count": 22,
-        "demo_class": "Blocks",
-        "gradio_available": true,
-        "required_api_names_present": true,
-        "title": "Agades PQC Gym"
-      },
-      "failures": [],
-      "id": "hf-space-launch-smoke",
-      "status": "passed"
-    },
-    {
       "artifact": "hf/space_manifest.json",
       "blocking": true,
       "detail": "Hugging Face Space manifest is checked in, synchronized with the Space example selector, and documents the no-code/no-claim verifier contract.",
@@ -222,7 +206,7 @@
           "NTRU",
           "SIS"
         ],
-        "hub_create_command_template": "hf repos create agades/agades-pqc-gym-agent-env --type=space --space-sdk gradio --private --exist-ok",
+        "hub_create_command_template": "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space --space_sdk gradio --private --exist-ok",
         "hub_upload_command_template": "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Agent Environment\"",
         "labels_match_valid_dataset_rows": true
       },
@@ -1149,11 +1133,11 @@
       "blocking": true,
       "detail": "Checked-in release gates that depend on release-audit must first declare ecosystem-smoke-verify, including nested Hugging Face dataset metadata.",
       "evidence": {
-        "checked_release_gate_artifacts": 40,
-        "ecosystem_smoke_gate_artifacts": 27,
+        "checked_release_gate_artifacts": 107,
+        "ecosystem_smoke_gate_artifacts": 59,
         "late_ecosystem_smoke_gate": [],
         "missing_ecosystem_smoke_gate": [],
-        "release_audit_gate_artifacts": 25
+        "release_audit_gate_artifacts": 55
       },
       "failures": [],
       "id": "release-gate-closure",
@@ -1614,7 +1598,7 @@
       "blocking": true,
       "detail": "Pedagogical RL is captured as a verifiable private method contract with teacher/student roles, spike-aware reward, surprisal-gated assimilation, and publication boundaries.",
       "evidence": {
-        "linked_artifacts": 10,
+        "linked_artifacts": 11,
         "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
         "privacy_preserving": true,
         "reward_terms": 8,
@@ -1758,11 +1742,12 @@
       "blocking": true,
       "detail": "Private evolution traces and candidate strategies are confined to private roots and require redaction/preflight before public export.",
       "evidence": {
-        "allowed_private_commands": 16,
+        "allowed_private_commands": 18,
         "allowed_private_roots": 6,
         "forbidden_public_roots": 5,
         "private_dataset_sources": 3,
         "private_rl_reward_terms": 6,
+        "qwen_artifact_gates": 8,
         "required_publication_controls": 5,
         "scheduler_allowed_triggers": 2,
         "scheduler_approval_gates": 4,
@@ -1822,8 +1807,8 @@
   "schema_version": "agades.pqc.release_audit.v1",
   "summary": {
     "failed": 0,
-    "passed": 61,
-    "total": 62,
+    "passed": 60,
+    "total": 61,
     "warning": 1
   }
 }

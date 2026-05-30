@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import hashlib
-import inspect
 import json
 from pathlib import Path
 from typing import Any
@@ -14,14 +13,15 @@ except ImportError:  # pragma: no cover - exercised in deployments with Gradio.
 from agades_pqc_gym.core.attack_plan import AttackPlan
 from agades_pqc_gym.integrations.task_metadata import task_metadata_for_plan
 from agades_pqc_gym.rl.environment import (
+    REWARD_TERMS,
+    RL_REWARD_REPORT_SCHEMA,
+    ROLLOUT_TRACE_SCHEMA,
     AgadesPQCGymEnvironment,
-    score_attack_plan_candidate,
 )
 from agades_pqc_gym.verifier import verify_attack_plan_json
 
 APP_DIR = Path(__file__).resolve().parent
 ROOT = APP_DIR.parent
-FORMAL_ROOT = APP_DIR if (APP_DIR / "formal" / "lean").is_dir() else ROOT
 DATASET_ATTACK_PLANS = APP_DIR / "dataset" / "attack_plans.jsonl"
 REPO_ATTACK_PLAN_DIR = ROOT / "examples" / "attack_plans"
 
@@ -89,13 +89,7 @@ def load_example_plan(label: str) -> str:
 
 def evaluate_attack_plan_json(raw_plan: str) -> tuple[str, str]:
     result = verify_attack_plan_json(raw_plan)
-    status = result["evaluation_status"]
-    family = result["target_family"] or "unknown"
-    score = result["combined_score"]
-    reason = _verifier_reason(result)
-    reason_text = f" reason={reason}." if reason else ""
-    summary = f"{family}: {status}; score={score}.{reason_text} "
-    summary += "Toy/demo output only; not a security claim."
+    summary = _verifier_summary(result)
     return summary, json.dumps(_json_safe(result), indent=2, sort_keys=True)
 
 
@@ -107,35 +101,24 @@ def load_environment_observation(label: str) -> str:
 
 
 def score_attack_plan_for_task(label: str, raw_plan: str) -> tuple[str, str, str]:
-    task_seed = load_example_plan(label)
-    task = _task_for_raw_plan(task_seed, source_path=f"hf-space:{label}")
-    env = AgadesPQCGymEnvironment([task])
-    env.reset()
+    task: dict[str, Any] | None = None
     try:
+        task_seed = load_example_plan(label)
+        task = _task_for_raw_plan(task_seed, source_path=f"hf-space:{label}")
+        env = AgadesPQCGymEnvironment([task], root=SPACE_RUNTIME_ROOT)
+        env.reset()
         step = env.step(raw_plan)
         reward_report = step["info"]["reward_report"]
         trace = step["info"]["trace"]
-    except Exception:  # noqa: BLE001 - Space handlers must not leak raw tracebacks.
-        reward_report = _score_candidate_for_space(raw_plan, task=task)
-        trace = _fallback_rollout_trace(
-            task=task,
-            candidate_json=raw_plan,
-            reward_report=reward_report,
+    except Exception as exc:  # noqa: BLE001 - UI boundary must not leak tracebacks.
+        reason = f"runtime_error: {_safe_error_message(exc)}"
+        reward_report = _minimal_reward_report(
+            raw_plan,
+            blocking_reason="runtime_error",
+            reason=reason,
         )
-    blocked_reasons = reward_report.get("blocking_reasons") or []
-    blocked_text = (
-        f"blocked={','.join(str(reason) for reason in blocked_reasons)}; "
-        if blocked_reasons
-        else ""
-    )
-    reason = _reward_reason(reward_report)
-    reason_text = f"reason={reason}. " if reason else ""
-    summary = (
-        f"reward={reward_report['reward']}; "
-        f"accepted={str(reward_report['accepted']).lower()}. "
-        f"{blocked_text}{reason_text}"
-        "Toy/demo Agent Environment output only; not a security claim."
-    )
+        trace = _fallback_rollout_trace(task, raw_plan, reward_report)
+    summary = _reward_summary(reward_report, trace)
     return (
         summary,
         json.dumps(_json_safe(reward_report), indent=2, sort_keys=True),
@@ -214,7 +197,8 @@ def _environment_for_raw_plan(
     source_path: str,
 ) -> AgadesPQCGymEnvironment:
     return AgadesPQCGymEnvironment(
-        [_task_for_raw_plan(raw_plan, source_path=source_path)]
+        [_task_for_raw_plan(raw_plan, source_path=source_path)],
+        root=SPACE_RUNTIME_ROOT,
     )
 
 
@@ -227,96 +211,106 @@ def _task_for_raw_plan(raw_plan: str, *, source_path: str) -> dict[str, Any]:
     )
 
 
-def _json_safe(value: Any) -> Any:
-    if isinstance(value, dict):
-        return {str(key): _json_safe(item) for key, item in value.items()}
-    if isinstance(value, list):
-        return [_json_safe(item) for item in value]
-    return value
+def _space_runtime_bundle_exists(path: Path) -> bool:
+    required_paths = (
+        path / "docs" / "formal_attackplan_semantics.json",
+        path / "docs" / "formal_operator_semantics.json",
+        path / "docs" / "formal_estimator_model.json",
+        path / "docs" / "reviewer_governance.json",
+        path / "formal" / "lean" / "AgadesPQC" / "AttackPlan.lean",
+        path / "formal" / "lean" / "AgadesPQC" / "ProofObligation.lean",
+    )
+    return all(required.is_file() for required in required_paths)
 
 
-def _verifier_reason(result: dict[str, Any]) -> str | None:
-    validation_errors = result.get("validation_errors")
-    if isinstance(validation_errors, list):
-        for error in validation_errors:
-            if isinstance(error, str) and error.strip():
-                return error.strip()
-    warnings = result.get("warnings")
-    if isinstance(warnings, list):
-        for warning in warnings:
-            if isinstance(warning, str) and warning.strip():
-                return warning.strip()
-    return None
+SPACE_RUNTIME_ROOT = APP_DIR if _space_runtime_bundle_exists(APP_DIR) else ROOT
 
 
-def _reward_reason(reward_report: dict[str, Any]) -> str | None:
-    validation_errors = reward_report.get("validation_errors")
-    if isinstance(validation_errors, list):
-        for error in validation_errors:
-            if isinstance(error, str) and error.strip():
-                return error.strip()
-    blocking_reasons = reward_report.get("blocking_reasons")
-    if isinstance(blocking_reasons, list):
-        for reason in blocking_reasons:
-            if isinstance(reason, str) and reason.strip():
-                return reason.strip()
-    return None
+def _verifier_summary(result: dict[str, Any]) -> str:
+    status = result["evaluation_status"]
+    family = result["target_family"] or "unknown"
+    score = result["combined_score"]
+    if status == "invalid":
+        reason = (
+            _first_text(result.get("validation_errors"))
+            or "schema validation failed"
+        )
+        return (
+            f"Invalid AttackPlan JSON: {reason}. "
+            "Toy/demo output only; not a security claim."
+        )
+    score = "n/a" if status == "unsupported" else result["combined_score"]
+    return (
+        f"{family}: {status}; score={score}. "
+        "Toy/demo output only; not a security claim."
+    )
 
 
-def _score_candidate_for_space(
-    candidate_json: str,
-    *,
-    task: dict[str, Any],
-) -> dict[str, Any]:
-    kwargs: dict[str, Any] = {
-        "task_info": task,
-        "require_task_match": True,
-    }
-    if "root" in inspect.signature(score_attack_plan_candidate).parameters:
-        kwargs["root"] = FORMAL_ROOT
-    try:
-        return score_attack_plan_candidate(candidate_json, **kwargs)
-    except Exception:  # noqa: BLE001 - return a public-safe non-claim fallback.
-        return _minimal_reward_report(candidate_json, task=task)
+def _reward_summary(
+    reward_report: dict[str, Any],
+    trace: dict[str, Any],
+) -> str:
+    formal_binding = trace.get("formal_artifact_binding", {})
+    return (
+        f"reward={reward_report['reward']}; "
+        f"accepted={str(reward_report['accepted']).lower()}; "
+        f"reason={_reward_reason(reward_report)}; "
+        f"review_governance={_review_governance_status(formal_binding)}. "
+        "Toy/demo Agent Environment output only; not a security claim."
+    )
+
+
+def _reward_reason(reward_report: dict[str, Any]) -> str:
+    diagnostic = reward_report.get("diagnostic")
+    if isinstance(diagnostic, dict) and isinstance(diagnostic.get("reason"), str):
+        return diagnostic["reason"]
+    validation_error = _first_text(reward_report.get("validation_errors"))
+    verifier_summary = reward_report.get("verifier_summary")
+    if isinstance(verifier_summary, dict):
+        family = verifier_summary.get("target_family")
+        status = verifier_summary.get("evaluation_status")
+        if verifier_summary.get("schema_valid") is False and validation_error:
+            return f"Invalid AttackPlan JSON: {validation_error}"
+        if status == "unsupported":
+            family_label = family if isinstance(family, str) else "target"
+            return (
+                f"{family_label} targets are schema_only or unsupported in this "
+                "public Space"
+            )
+    blocking = reward_report.get("blocking_reasons")
+    if isinstance(blocking, list) and blocking:
+        return "blocked_by=" + ",".join(str(item) for item in blocking)
+    if reward_report.get("accepted") is True:
+        return "accepted"
+    return "not_accepted"
 
 
 def _minimal_reward_report(
     candidate_json: str,
     *,
-    task: dict[str, Any],
+    blocking_reason: str,
+    reason: str,
 ) -> dict[str, Any]:
-    verifier_result = verify_attack_plan_json(candidate_json)
-    validation_errors = verifier_result.get("validation_errors")
-    if not isinstance(validation_errors, list):
-        validation_errors = []
-    blocking_reasons = ["schema_valid", "cryptographic_applicability"]
-    if task:
-        blocking_reasons.append("task_match")
     return {
-        "schema_version": "agades.pqc.rl.reward_report.v1",
+        "schema_version": RL_REWARD_REPORT_SCHEMA,
         "reward": 0.0,
         "accepted": False,
         "blocked": True,
-        "blocking_reasons": blocking_reasons,
-        "terms": {
-            "formal_validity": 0.0,
-            "cryptographic_applicability": 0.0,
-            "no_security_overclaim": 0.0,
-            "student_readability": 0.0,
-            "reproducibility": 0.0,
-            "reviewer_quality": 0.0,
-            "task_match": 0.0,
-            "proof_obligation_coverage": 0.0,
-        },
+        "blocking_reasons": [blocking_reason],
+        "terms": dict.fromkeys(REWARD_TERMS, 0.0),
         "pedagogical_reward": {
             "schema_version": "agades.pqc.rl.pedagogical_reward.v1",
             "base_reward": 0.0,
+            "pedagogy_multiplier": 1.0,
             "final_reward": 0.0,
             "signal_error": False,
-            "terms": {},
+            "signals": {},
         },
         "formal_summary": {
             "accepted": False,
+            "attackplan_semantics": {},
+            "operator_semantics": {},
+            "formal_estimator_model": {},
             "family_invariants": 0,
             "proof_obligations": 0,
             "typed_proof_obligations": 0,
@@ -325,52 +319,39 @@ def _minimal_reward_report(
             "lean_theorems": 0,
             "required_reviewers": 0,
             "claim_boundary_ok": False,
+            "review_governance": {},
+            "review_governance_ok": False,
         },
         "verifier_summary": {
-            "schema_valid": verifier_result.get("schema_valid"),
-            "accepted": verifier_result.get("accepted"),
-            "evaluation_status": verifier_result.get("evaluation_status"),
-            "target_family": verifier_result.get("target_family"),
-            "safety": verifier_result.get("safety"),
+            "schema_valid": False,
+            "accepted": False,
+            "evaluation_status": "runtime_error",
+            "target_family": _candidate_summary(candidate_json)["target_family"],
+            "safety": {
+                "arbitrary_code_execution": False,
+                "live_targeting": False,
+                "security_claim": False,
+            },
         },
         "claim_boundary": {
             "trains_agent_behavior": True,
             "claims_pqc_break": False,
             "requires_human_review_before_claim": True,
         },
-        "validation_errors": validation_errors,
+        "validation_errors": [reason],
+        "diagnostic": {"reason": reason},
     }
 
 
 def _fallback_rollout_trace(
-    *,
-    task: dict[str, Any],
+    task: dict[str, Any] | None,
     candidate_json: str,
     reward_report: dict[str, Any],
 ) -> dict[str, Any]:
     return {
-        "schema_version": "agades.pqc.rl.rollout_trace.v1",
+        "schema_version": ROLLOUT_TRACE_SCHEMA,
         "task": task,
         "candidate": _candidate_summary(candidate_json),
-        "formal_artifact_binding": {
-            "schema_version": "agades.pqc.rl.formal_artifact_binding.v1",
-            "status": "unavailable",
-            "attack_plan_id": None,
-            "family": None,
-            "artifact_sha256": None,
-            "family_invariant_ids": [],
-            "proof_obligation_ids": [],
-            "proof_obligation_sha256": [],
-            "proof_obligation_type_rule_sha256": [],
-            "review_status": None,
-            "required_reviewers": [],
-            "claim_allowed": False,
-            "claim_boundary": (
-                "formal artifact unavailable for invalid candidate; no claim "
-                "is allowed"
-            ),
-            "error_code": "formal_artifact_unavailable",
-        },
         "reward_report": reward_report,
         "public_release_ok": True,
         "private_fields_present": False,
@@ -396,6 +377,39 @@ def _candidate_summary(candidate_json: str) -> dict[str, Any]:
         "target_family": plan.target.family.value,
         "sha256": sha256,
     }
+
+
+def _first_text(value: Any) -> str | None:
+    if isinstance(value, list):
+        for item in value:
+            if isinstance(item, str) and item:
+                return item
+    if isinstance(value, str) and value:
+        return value
+    return None
+
+
+def _safe_error_message(exc: Exception) -> str:
+    message = str(exc).strip()
+    if not message:
+        return exc.__class__.__name__
+    return message
+
+
+def _json_safe(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {str(key): _json_safe(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_json_safe(item) for item in value]
+    return value
+
+
+def _review_governance_status(formal_binding: object) -> str:
+    if not isinstance(formal_binding, dict):
+        return "missing"
+    if formal_binding.get("review_governance_ok") is True:
+        return "accepted"
+    return "rejected"
 
 
 if __name__ == "__main__":

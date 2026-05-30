@@ -24,6 +24,10 @@ from agades_pqc_gym.integrations.private_run_policy import build_private_run_pol
 from agades_pqc_gym.traces.schema import TraceRecord
 
 
+def _single_line(output: str) -> str:
+    return " ".join(output.split())
+
+
 def test_validate_command_accepts_valid_plan() -> None:
     result = CliRunner().invoke(
         app,
@@ -34,18 +38,18 @@ def test_validate_command_accepts_valid_plan() -> None:
     assert "valid" in result.output.lower()
 
 
-def test_validate_command_reports_stable_attackplan_errors() -> None:
+def test_validate_command_warns_when_valid_plan_route_is_unsupported() -> None:
     result = CliRunner().invoke(
         app,
-        ["validate", "examples/attack_plans/invalid_plan_should_fail.json"],
+        ["validate", "examples/attack_plans/code_based_isd_placeholder.json"],
     )
 
-    assert result.exit_code == 1
-    assert "invalid AttackPlan" in result.output
-    assert "module_lattice_reduction_hypothesis requires an MLWE target" in (
-        result.output
-    )
-    assert "errors.pydantic.dev" not in result.output
+    assert result.exit_code == 0, result.output
+    assert "valid: code_based_isd_placeholder_v1" in result.output
+    assert "evaluation_status=unsupported" in result.output
+    assert "accepted=False" in result.output
+    assert "CODE_BASED evaluator is not implemented" in result.output
+    assert "uv run agades-pqc evaluate" in result.output
 
 
 def test_help_prioritizes_core_gym_commands() -> None:
@@ -53,12 +57,36 @@ def test_help_prioritizes_core_gym_commands() -> None:
 
     assert result.exit_code == 0
     assert "quickstart" in result.output
+    assert "examples" in result.output
     assert "validate" in result.output
     assert "evaluate" in result.output
     assert "benchmark" in result.output
     assert "report" in result.output
+    assert "formal-check" in result.output
     assert "publication-manifest" not in result.output
     assert "lattice-estimator-baseline-review-packet-verify" not in result.output
+    assert "formal-lean-build-smoke" not in result.output
+
+
+def test_formal_check_command_summarizes_verifiable_formal_surface() -> None:
+    result = CliRunner().invoke(app, ["formal-check"])
+
+    assert result.exit_code == 0, result.output
+    assert "formal_check=accepted" in result.output
+    assert "lean_backend=accepted" in result.output
+    assert "lean_build_smoke=accepted" in result.output
+    assert "attackplan_semantics=accepted" in result.output
+    assert "operator_semantics=accepted" in result.output
+    assert "estimator_model=accepted" in result.output
+    assert "obligation_ledger=accepted proof_obligations=22" in result.output
+    assert "family_coverage=accepted families=9" in result.output
+    assert "proof_artifacts=2/2 accepted" in result.output
+    assert "reviewer_governance=accepted" in result.output
+    assert "security_claim_allowed=False" in result.output
+    assert "cryptographic_soundness_review_required=True" in result.output
+    assert "formal-lean-build-smoke --out reports/formal_lean_build_smoke.json" in (
+        result.output
+    )
 
 
 def test_quickstart_command_runs_guided_gym_demo(tmp_path: Path) -> None:
@@ -77,6 +105,12 @@ def test_quickstart_command_runs_guided_gym_demo(tmp_path: Path) -> None:
     assert "quickstart complete" in result.output.lower()
     assert "lattice_primal_usvp_toy_v1" in result.output
     assert "unsupported example" in result.output.lower()
+    assert "accepted=False" in result.output
+    assert "plan_valid=True" in result.output
+    assert "score=n/a" in result.output
+    assert "score=-1000000000.0" not in result.output
+    assert "No estimate was produced" in result.output
+    assert "not a security claim" in _single_line(result.output)
     assert (out_dir / "lattice_trace.jsonl").exists()
     assert (out_dir / "lattice_report.md").exists()
     assert (out_dir / "lattice_benchmark.jsonl").exists()
@@ -85,6 +119,18 @@ def test_quickstart_command_runs_guided_gym_demo(tmp_path: Path) -> None:
     assert "Mock Vs Real Estimator Status" in (
         out_dir / "lattice_report.md"
     ).read_text(encoding="utf-8")
+
+
+def test_examples_command_lists_safe_guided_examples() -> None:
+    result = CliRunner().invoke(app, ["examples"])
+
+    assert result.exit_code == 0, result.output
+    assert "lattice-ok" in result.output
+    assert "code-based-toy" in result.output
+    assert "schema-only-unsupported" in result.output
+    assert "invalid-plan" in result.output
+    assert "status=unsupported" in result.output
+    assert "--trace runs/demo.jsonl" in result.output
 
 
 def test_evaluate_export_and_report_commands(tmp_path: Path) -> None:
@@ -119,6 +165,72 @@ def test_evaluate_export_and_report_commands(tmp_path: Path) -> None:
     assert "Mock Vs Real Estimator Status" in report_path.read_text()
 
 
+def test_evaluate_command_accepts_trace_alias_for_output_path(
+    tmp_path: Path,
+) -> None:
+    trace_path = tmp_path / "trace_alias.jsonl"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "evaluate",
+            "examples/attack_plans/lattice_primal_usvp_toy.json",
+            "--trace",
+            str(trace_path),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert f"trace={trace_path}" in result.output
+    assert trace_path.exists()
+
+
+def test_benchmark_command_accepts_trace_alias_for_output_path(
+    tmp_path: Path,
+) -> None:
+    trace_path = tmp_path / "benchmark_trace_alias.jsonl"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "benchmark",
+            "benchmarks/lattice_toy_lwe",
+            "--trace",
+            str(trace_path),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert trace_path.exists()
+    assert trace_path.read_text(encoding="utf-8").count("\n") == 2
+
+
+def test_benchmark_command_explains_unsupported_results(tmp_path: Path) -> None:
+    trace_path = tmp_path / "unsupported_benchmark.jsonl"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "benchmark",
+            "examples/attack_plans/code_based_isd_placeholder.json",
+            "--trace",
+            str(trace_path),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "code_based_isd_placeholder_v1" in result.output
+    assert "status=unsupported" in result.output
+    assert "score=n/a" in result.output
+    assert "score=-1000000000.0" not in result.output
+    assert "accepted=False" in result.output
+    assert "plan_valid=True" in result.output
+    assert "CODE_BASED evaluator is not implemented" in result.output
+    assert "No estimate was produced" in result.output
+    assert "not a security claim" in _single_line(result.output)
+    assert trace_path.exists()
+
+
 def test_evaluate_command_explains_unsupported_results(tmp_path: Path) -> None:
     trace_path = tmp_path / "unsupported.jsonl"
 
@@ -134,17 +246,34 @@ def test_evaluate_command_explains_unsupported_results(tmp_path: Path) -> None:
 
     assert result.exit_code == 0, result.output
     assert "status=unsupported" in result.output
+    assert "score=n/a" in result.output
+    assert "score=-1000000000.0" not in result.output
     assert "accepted=False" in result.output
-    assert "valid=False" not in result.output
-    assert "unsupported_route=True" in result.output
+    assert "plan_valid=True" in result.output
     assert "CODE_BASED evaluator is not implemented" in result.output
+    assert "No estimate was produced" in result.output
+    assert "not a security claim" in _single_line(result.output)
     assert trace_path.exists()
 
 
-def test_evaluate_command_does_not_claim_invalid_trace_written(
-    tmp_path: Path,
-) -> None:
-    trace_path = tmp_path / "invalid.jsonl"
+def test_validate_command_formats_schema_errors_without_pydantic_url() -> None:
+    result = CliRunner().invoke(
+        app,
+        ["validate", "examples/attack_plans/invalid_plan_should_fail.json"],
+    )
+
+    assert result.exit_code == 1
+    assert "invalid" in result.output.lower()
+    assert "AttackPlan: Value error" in result.output
+    assert "module_lattice_reduction_hypothesis requires an MLWE target" in (
+        result.output
+    )
+    assert "next=Run `uv run agades-pqc examples`" in result.output
+    assert "errors.pydantic.dev" not in result.output
+
+
+def test_evaluate_command_does_not_claim_invalid_trace_written(tmp_path: Path) -> None:
+    trace_path = tmp_path / "invalid_trace.jsonl"
 
     result = CliRunner().invoke(
         app,
@@ -160,7 +289,72 @@ def test_evaluate_command_does_not_claim_invalid_trace_written(
     assert "status=invalid" in result.output
     assert "trace=not_written" in result.output
     assert str(trace_path) not in result.output
-    assert "errors.pydantic.dev" not in result.output
+    assert "module_lattice_reduction_hypothesis requires an MLWE target" in (
+        result.output
+    )
+    assert not trace_path.exists()
+
+
+def test_validate_command_reports_missing_plan_without_python_oserror(
+    tmp_path: Path,
+) -> None:
+    missing = tmp_path / "missing_attack_plan.json"
+
+    result = CliRunner().invoke(app, ["validate", str(missing)])
+
+    assert result.exit_code == 1
+    assert f"invalid: {missing}" in result.output
+    assert "file not found" in result.output
+    assert "uv run agades-pqc examples" in result.output
+    assert "No such file or directory" not in result.output
+
+
+def test_evaluate_command_reports_missing_plan_without_sentinel_score(
+    tmp_path: Path,
+) -> None:
+    missing = tmp_path / "missing_attack_plan.json"
+    trace_path = tmp_path / "missing_trace.jsonl"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "evaluate",
+            str(missing),
+            "--out",
+            str(trace_path),
+        ],
+    )
+
+    assert result.exit_code == 1
+    assert f"invalid: {missing}" in result.output
+    assert "file not found" in result.output
+    assert "uv run agades-pqc examples" in result.output
+    assert "score=-1000000000.0" not in result.output
+    assert "No such file or directory" not in result.output
+    assert not trace_path.exists()
+
+
+def test_benchmark_command_reports_missing_input_with_guidance(
+    tmp_path: Path,
+) -> None:
+    missing = tmp_path / "missing_benchmark"
+    trace_path = tmp_path / "missing_benchmark_trace.jsonl"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "benchmark",
+            str(missing),
+            "--trace",
+            str(trace_path),
+        ],
+    )
+
+    assert result.exit_code == 1
+    assert f"benchmark failed: {missing}" in result.output
+    assert "file or directory not found" in result.output
+    assert "uv run agades-pqc examples" in result.output
+    assert "No such file or directory" not in result.output
     assert not trace_path.exists()
 
 

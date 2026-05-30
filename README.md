@@ -60,10 +60,6 @@ estimates.
 uv sync --extra dev
 ```
 
-Use the project environment for checks. The Hugging Face Space launch smoke
-requires the optional Gradio dependency, so run release gates with
-`uv run --extra dev`, not a global `python` or `pytest`.
-
 ## Quick Start
 
 ```bash
@@ -84,43 +80,79 @@ See `docs/QUICKSTART.md` for the guided walkthrough.
 Manual core-loop commands:
 
 ```bash
+uv run agades-pqc examples
 uv run agades-pqc validate examples/attack_plans/lattice_primal_usvp_toy.json
-uv run agades-pqc evaluate examples/attack_plans/lattice_primal_usvp_toy.json --out runs/demo_trace.jsonl
+uv run agades-pqc evaluate examples/attack_plans/lattice_primal_usvp_toy.json --trace runs/demo_trace.jsonl
+uv run agades-pqc benchmark benchmarks/lattice_toy_lwe --trace runs/demo_benchmark.jsonl
 uv run agades-pqc report runs/demo_trace.jsonl --out reports/demo_report.md
 ```
 
+`evaluate` and `benchmark` print the same concise status fields:
+`status`, `score`, `accepted`, `plan_valid`, and `trace`.
+
 Schema-only examples validate structurally but return `status=unsupported`
-with `score=n/a`, `accepted=False`, and `unsupported_route=True` instead of
-cryptanalytic estimates:
+with `accepted=False` instead of cryptanalytic estimates:
 
 ```bash
 uv run agades-pqc validate examples/attack_plans/code_based_isd_placeholder.json
-uv run agades-pqc evaluate examples/attack_plans/code_based_isd_placeholder.json --out runs/code_based_placeholder.jsonl
+uv run agades-pqc evaluate examples/attack_plans/code_based_isd_placeholder.json --trace runs/code_based_placeholder.jsonl
 ```
+
+Optional formal check:
+
+```bash
+uv run agades-pqc formal-check
+```
+
+This checks the committed AttackPlan semantics, operator semantics, estimator
+model, typed obligation ledger, family coverage, proof artifacts, reviewer
+governance, and latest Lean build smoke report.
+
+To refresh the compiled Lean evidence:
+
+```bash
+uv run agades-pqc formal-lean-build-smoke --out reports/formal_lean_build_smoke.json
+uv run agades-pqc formal-lean-build-smoke-verify --report reports/formal_lean_build_smoke.json
+```
+
+Refreshing runs `lake build` for the Lean 4 + Mathlib source bundle and records
+a bounded local report. Passing means the checked formal contracts compile; it
+is not a cryptographic soundness review and does not create a security claim.
 
 ## Release Checks
 
 The public release packet is deterministic and review-gated:
 
 ```bash
-uv run --extra dev agades-pqc openevolve-config --out examples/openevolve/config.yaml
-uv run --extra dev agades-pqc openevolve-config-verify --config examples/openevolve/config.yaml
-uv run --extra dev agades-pqc hf-space-smoke --out reports/hf_space_smoke.json
-uv run --extra dev agades-pqc hf-space-smoke-verify --report reports/hf_space_smoke.json
-uv run --extra dev agades-pqc hf-space-launch-smoke --out reports/hf_space_launch_smoke.json
-uv run --extra dev agades-pqc hf-space-launch-smoke-verify --report reports/hf_space_launch_smoke.json
-uv run --extra dev agades-pqc hf-space-remote-smoke --space-id agades/agades-pqc-gym-agent-env --out reports/hf_space_remote_smoke.json
-uv run --extra dev agades-pqc hf-space-remote-smoke-verify --report reports/hf_space_remote_smoke.json
-uv run --extra dev agades-pqc nvidia-manifest-safety --out reports/nvidia_manifest_safety.json
-uv run --extra dev agades-pqc nvidia-manifest-safety-verify --report reports/nvidia_manifest_safety.json
-uv run --extra dev agades-pqc openevolve-smoke --out reports/openevolve_smoke.json
-uv run --extra dev agades-pqc openevolve-smoke-verify --report reports/openevolve_smoke.json
-uv run --extra dev agades-pqc prime-environment-smoke --out reports/prime_environment_smoke.json
-uv run --extra dev agades-pqc prime-environment-smoke-verify --report reports/prime_environment_smoke.json
-uv run --extra dev agades-pqc ecosystem-smoke --out reports/ecosystem_smoke.json
-uv run --extra dev agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json
-uv run --extra dev agades-pqc release-artifacts --max-passes 6
+uv run agades-pqc formal-lean-backend --out docs/formal_lean_backend.json
+uv run agades-pqc formal-lean-backend-verify --backend docs/formal_lean_backend.json
+uv run agades-pqc formal-lean-build-smoke --out reports/formal_lean_build_smoke.json
+uv run agades-pqc formal-lean-build-smoke-verify --report reports/formal_lean_build_smoke.json
+uv run agades-pqc openevolve-config --out examples/openevolve/config.yaml
+uv run agades-pqc openevolve-config-verify --config examples/openevolve/config.yaml
+uv run agades-pqc hf-space-smoke --out reports/hf_space_smoke.json
+uv run agades-pqc hf-space-smoke-verify --report reports/hf_space_smoke.json
+uv run agades-pqc nvidia-manifest-safety --out reports/nvidia_manifest_safety.json
+uv run agades-pqc nvidia-manifest-safety-verify --report reports/nvidia_manifest_safety.json
+uv run agades-pqc openevolve-smoke --out reports/openevolve_smoke.json
+uv run agades-pqc openevolve-smoke-verify --report reports/openevolve_smoke.json
+uv run agades-pqc prime-environment-smoke --out reports/prime_environment_smoke.json
+uv run agades-pqc prime-environment-smoke-verify --report reports/prime_environment_smoke.json
+uv run agades-pqc ecosystem-smoke --out reports/ecosystem_smoke.json
+uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json
+uv run agades-pqc release-artifacts --max-passes 6
 ```
+
+Optional private live check after uploading the Space:
+
+```bash
+uv run agades-pqc hf-live-space-smoke --out reports/hf_live_space_smoke.json
+uv run agades-pqc hf-live-space-smoke-verify --report reports/hf_live_space_smoke.json
+```
+
+The live check exercises the deployed Gradio API through
+`/gradio_api/call/<api_name>`. The report is intentionally Git-ignored because
+it proves access to a private Space and may contain deployment metadata.
 
 Additional checked artifacts:
 

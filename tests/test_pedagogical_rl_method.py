@@ -102,6 +102,56 @@ def test_pedagogical_rl_method_defines_agades_teacher_student_pipeline(
     )
     assert payload["privacy"]["raw_rollouts_publication_allowed"] is False
     assert payload["privacy"]["teacher_prompts_publication_allowed"] is False
+    assert payload["private_trace_contract"] == {
+        "schema_version": "agades.pqc.rl.private_pedagogical_trace.v1",
+        "record_kind": "private_teacher_student_trace",
+        "storage_roots": [
+            "private/traces/pedagogical_rl",
+            "private/datasets/agades_pedagogical_rl",
+        ],
+        "public_release_ok": False,
+        "raw_private_signals_included": False,
+        "required_bindings": {
+            "reward_report_schema": "agades.pqc.rl.reward_report.v1",
+            "pedagogical_reward_schema": "agades.pqc.rl.pedagogical_reward.v1",
+            "formal_artifact_binding_schema": (
+                "agades.pqc.rl.formal_artifact_binding.v1"
+            ),
+            "dataset_curation_manifest_path": "docs/private_dataset_curation.json",
+            "reviewer_governance_manifest_path": "docs/reviewer_governance.json",
+            "formal_obligation_ledger_path": "docs/formal_obligation_ledger.json",
+        },
+        "required_record_fields": [
+            "trace_id",
+            "task_digest",
+            "candidate_digest",
+            "reward_report_digest",
+            "pedagogical_reward",
+            "formal_artifact_binding",
+            "dataset_curation_digest",
+            "dataset_curation_gate",
+            "review_gate",
+            "privacy_boundary",
+        ],
+        "forbidden_public_fields": [
+            "teacher_prompt",
+            "teacher_completion",
+            "student_prompt",
+            "student_token_logprobs",
+            "surprise_gaps",
+            "reviewer_annotations",
+            "raw_dataset_rows",
+        ],
+        "quality_gates": [
+            "attackplan_schema_valid",
+            "formal_artifact_attached",
+            "proof_obligations_typed",
+            "dataset_license_reviewed",
+            "provenance_captured",
+            "human_crypto_review_required",
+            "publication_boundary_review_required",
+        ],
+    }
     assert payload["publication_boundary"]["public_claims_allowed"] == [
         "environment_scoring_contracts",
         "sanitized_metadata_cards",
@@ -115,6 +165,9 @@ def test_pedagogical_rl_method_defines_agades_teacher_student_pipeline(
     ]
     assert payload["linked_artifacts"]["rl_pedagogy_runtime"]["path"] == (
         "src/agades_pqc_gym/rl/pedagogy.py"
+    )
+    assert payload["linked_artifacts"]["private_trace_runtime"]["path"] == (
+        "src/agades_pqc_gym/rl/private_trace.py"
     )
     assert payload["linked_artifacts"]["formal_obligation_ledger"]["path"] == (
         "docs/formal_obligation_ledger.json"
@@ -139,7 +192,7 @@ def test_pedagogical_rl_method_verify_accepts_committed_artifact() -> None:
         "summary": {
             "stages": 4,
             "reward_terms": 8,
-            "linked_artifacts": 10,
+            "linked_artifacts": 11,
             "failure_count": 0,
         },
         "failures": [],
@@ -162,6 +215,28 @@ def test_pedagogical_rl_method_rejects_additive_or_public_trace_variants(
     assert result["accepted"] is False
     assert "Pedagogical reward must be multiplicative." in result["failures"]
     assert "Private pedagogical RL raw rollouts must never be public." in (
+        result["failures"]
+    )
+
+
+def test_pedagogical_rl_method_rejects_public_private_trace_contract(
+    tmp_path: Path,
+) -> None:
+    out = tmp_path / "pedagogical_rl_method.json"
+    payload = write_pedagogical_rl_method(out)
+    payload["private_trace_contract"]["public_release_ok"] = True
+    payload["private_trace_contract"]["forbidden_public_fields"].remove(
+        "student_token_logprobs"
+    )
+    out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+
+    result = verify_pedagogical_rl_method(out)
+
+    assert result["accepted"] is False
+    assert "Private pedagogical RL trace contract must not be public." in (
+        result["failures"]
+    )
+    assert "Private pedagogical RL trace contract forbidden fields are incomplete." in (
         result["failures"]
     )
 

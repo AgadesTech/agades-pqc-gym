@@ -1,0 +1,97 @@
+{
+  "safety": {
+    "stores_absolute_paths": false,
+    "stores_source_text": false
+  },
+  "schema_version": "agades.pqc.runbook_input_manifest.v1",
+  "source_inputs": [
+    {
+      "anchor_groups": {
+        "dataset_terms": [
+          "post-quantum-crypto-fr",
+          "post-quantum-crypto-en",
+          "Q-GRID/pqc-ssl-scans",
+          "facebook/TAPAS",
+          "facebookresearch/LWE-benchmarking"
+        ],
+        "ecosystem_terms": [
+          "Hugging Face",
+          "Prime Intellect"
+        ],
+        "evaluator_terms": [
+          "KAT",
+          "ACVP",
+          "dudect",
+          "ctgrind",
+          "TIMECOP"
+        ],
+        "evolution_terms": [
+          "OpenEvolve",
+          "DeepEvolve",
+          "evolutionary trace",
+          "evaluator"
+        ],
+        "implementation_terms": [
+          "PQClean",
+          "liboqs",
+          "pqm4",
+          "PQ Code Package"
+        ],
+        "moat_terms": [
+          "trace",
+          "moat",
+          "claim"
+        ]
+      },
+      "id": "project_context",
+      "kind": "project_context",
+      "line_count": 629,
+      "sha256": "bc5cdbb52c44a248564c2f75096706aaa740886b47a13dfd468bcf7acd870e9d",
+      "source_label": "contexte-projet-agades.md"
+    },
+    {
+      "anchor_groups": {
+        "boundary_terms": [
+          "multi-family",
+          "Lattice Estimator",
+          "universal PQC oracle",
+          "applicability validator"
+        ],
+        "core_terms": [
+          "TargetSpec",
+          "AttackPlan",
+          "AttackOperator",
+          "AssumptionSet",
+          "EvaluatorResult",
+          "FitnessReport",
+          "TraceRecord",
+          "ReportGenerator",
+          "Public/private redaction layer"
+        ],
+        "ecosystem_terms": [
+          "GitHub",
+          "Hugging Face",
+          "Prime Intellect"
+        ],
+        "family_plugins": [
+          "lattice/",
+          "code_based/",
+          "multivariate/",
+          "hash_based/",
+          "isogeny_historical/",
+          "implementation_security/"
+        ]
+      },
+      "id": "source_brief",
+      "kind": "source_brief",
+      "line_count": 1663,
+      "project_name_override": {
+        "name": "Agades PQC Gym",
+        "package": "agades_pqc_gym",
+        "repository_slug": "agades-pqc-gym"
+      },
+      "sha256": "9d8b5652e4a9d7e554748175a6ea9d78830f2e4ca9bb2f0bfde9a82adcd3ffa3",
+      "source_label": "agades_codex_long_running_brief_v3_multifamily.md"
+    }
+  ]
+}

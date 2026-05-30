@@ -2,8 +2,8 @@
   "audit": {
     "accepted": true,
     "failed": 0,
-    "passed": 61,
-    "total": 62,
+    "passed": 60,
+    "total": 61,
     "warning": 1,
     "warning_check_ids": [
       "prime-hub-publication"

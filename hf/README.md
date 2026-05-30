@@ -17,15 +17,14 @@ short_description: Public-safe AttackPlan Agent Environment for Agades PQC Gym.
 
 # Agades PQC Gym Agent Environment
 
-This private-first Hugging Face Space exposes a public-safe Agent Environment
-for Agades PQC Gym. It lets users inspect task observations, score candidate
-AttackPlan JSON, and view public rollout traces.
+This Space exposes a public-safe Agent Environment for Agades PQC Gym. It lets
+users inspect task observations, score candidate AttackPlan JSON, and view
+public rollout traces.
 
 The environment trains or evaluates agents to produce and validate conforming
 AttackPlans. It does not claim real-world PQC breaks, does not execute
-arbitrary code, does not accept live targets, and does not publish private RL
-traces, reviewer annotations, prompts, model weights, adapters, or serious
-research rollouts.
+arbitrary code, does not accept live targets, and does not publish private RL traces,
+reviewer annotations, prompts, model weights, or serious-research rollouts.
 
 ## Public Surfaces
 
@@ -35,6 +34,8 @@ research rollouts.
 - `dataset/attack_plans.jsonl` contains public toy/schema-only AttackPlan rows.
 - `dataset/task_metadata.jsonl` contains task constraints for scoring.
 - `dataset/rl_rollouts.jsonl` contains public example rollout traces.
+- `docs/` and `formal/lean/` contain the public formal runtime bundle required
+  by the Agent Environment reward and formal artifact binding.
 - `space_manifest.json` records the audited Agent Environment contract.
 - `collection_manifest.json` records the related public Hugging Face surfaces.
 
@@ -42,7 +43,18 @@ research rollouts.
 
 - Outputs are toy/demo verifier and reward signals, not security claims.
 - Unsupported schema-only families remain explicit zero-reward safety checks.
-- Private training data, RL traces, reviewer notes, prompts, adapters, and
-  model weights must stay outside this Space.
+- Private training data, RL traces, reviewer notes, prompts, adapters, and model
+  weights must stay outside this Space.
 - Public publication requires release review after the local manifest and smoke
   gates pass.
+
+## Private Live Smoke
+
+After a private Space upload, validate the deployed Gradio API with:
+
+```bash
+uv run agades-pqc hf-live-space-smoke --out reports/hf_live_space_smoke.json
+uv run agades-pqc hf-live-space-smoke-verify --report reports/hf_live_space_smoke.json
+```
+
+This check uses `/gradio_api/call/<api_name>` and keeps the report Git-ignored.

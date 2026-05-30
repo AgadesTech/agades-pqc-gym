@@ -13,6 +13,9 @@ from agades_pqc_gym.integrations.deepevolve_research_hooks import (
     verify_deepevolve_research_hooks_manifest,
     write_deepevolve_research_hooks_manifest,
 )
+from agades_pqc_gym.integrations.private_training_config import (
+    PRIVATE_TRAINING_REQUIRED_ENV_VARS,
+)
 
 
 def test_deepevolve_manifest_describes_review_gated_paper_cards(
@@ -35,9 +38,25 @@ def test_deepevolve_manifest_describes_review_gated_paper_cards(
     }
     assert manifest["private_qwen_research_binding"] == {
         "model": "Qwen3.6-27B-private",
+        "base_model_env": "AGADES_QWEN_BASE_MODEL",
+        "lora_adapter_env": "AGADES_QWEN_LORA_ADAPTER_PATH",
+        "gguf_otq_5bit_env": "AGADES_QWEN_GGUF_OTQ_5BIT_PATH",
+        "artifact_plan_env": "AGADES_QWEN_ARTIFACT_PLAN",
+        "artifact_plan_template": "private/reports/qwen/artifact_plan.json",
+        "artifact_plan_schema": "agades.pqc.private_qwen_artifact_plan.v1",
+        "artifact_verification_schema": (
+            "agades.pqc.private_qwen_artifact_verification.v1"
+        ),
+        "artifact_verification_command": (
+            "uv run agades-pqc private-qwen-artifacts-verify --plan "
+            "private/reports/qwen/artifact_plan.json"
+        ),
+        "required_env_vars": PRIVATE_TRAINING_REQUIRED_ENV_VARS,
         "training_manifest": "docs/private_training_config_manifest.json",
+        "training_readiness": "docs/private_training_readiness.json",
         "pedagogical_rl_method": "docs/pedagogical_rl_method.json",
         "dataset_curation_manifest": "docs/private_dataset_curation.json",
+        "public_model_id_allowed": False,
         "proposal_roles": [
             "generate_attackplan",
             "mutate_attackplan",
@@ -50,6 +69,7 @@ def test_deepevolve_manifest_describes_review_gated_paper_cards(
         "proposal_gate": {
             "attackplan_validation_required": True,
             "proof_obligation_generation_required": True,
+            "private_qwen_artifact_verification_required": True,
             "estimator_compatibility_required": True,
             "human_review_required_before_claim": True,
         },
@@ -127,6 +147,41 @@ def test_deepevolve_manifest_verify_rejects_unreviewed_proposal(
 
     assert result["accepted"] is False
     assert any("review_required" in failure for failure in result["failures"])
+
+
+def test_deepevolve_manifest_verify_rejects_incomplete_qwen_runtime_contract(
+    tmp_path: Path,
+) -> None:
+    manifest = build_deepevolve_research_hooks_manifest()
+    manifest["private_qwen_research_binding"]["required_env_vars"] = ["HF_TOKEN"]
+    path = tmp_path / "bad_qwen_manifest.json"
+    path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+
+    result = verify_deepevolve_research_hooks_manifest(path)
+
+    assert result["accepted"] is False
+    assert "DeepEvolve private Qwen runtime contract is incomplete." in (
+        result["failures"]
+    )
+
+
+def test_deepevolve_manifest_verify_rejects_missing_qwen_artifact_gate(
+    tmp_path: Path,
+) -> None:
+    manifest = build_deepevolve_research_hooks_manifest()
+    manifest["private_qwen_research_binding"]["proposal_gate"][
+        "private_qwen_artifact_verification_required"
+    ] = False
+    path = tmp_path / "bad_qwen_gate_manifest.json"
+    path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+
+    result = verify_deepevolve_research_hooks_manifest(path)
+
+    assert result["accepted"] is False
+    assert (
+        "private_qwen_research_binding.private_qwen_artifact_verification_required "
+        "must be true."
+    ) in result["failures"]
 
 
 def test_deepevolve_manifest_verify_rejects_runtime_manifest_drift(

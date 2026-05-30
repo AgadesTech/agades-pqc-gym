@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from agades_pqc_gym.core.attack_plan import AttackPlan
+from agades_pqc_gym.formal.artifacts import REVIEWER_GOVERNANCE_BINDING_SCHEMA
 from agades_pqc_gym.integrations.family_support import (
     summarize_family_support_matrix,
 )
@@ -30,6 +31,7 @@ from agades_pqc_gym.integrations.task_metadata import (
     summarize_task_metadata_rows,
     task_metadata_for_plan,
 )
+from agades_pqc_gym.rl.environment import FORMAL_ARTIFACT_BINDING_SCHEMA
 
 PRIME_ENVIRONMENT_MANIFEST_SCHEMA = "agades.pqc.prime_environment_manifest.v1"
 PRIME_ENVIRONMENT_MANIFEST_VERIFICATION_SCHEMA = (
@@ -144,15 +146,130 @@ def build_prime_environment_manifest(root: Path | None = None) -> dict[str, Any]
             "invalid_reward": 0.0,
             "requires_single_json_object": True,
             "accepts_executable_code": False,
+            "formal_artifact_binding_schema": FORMAL_ARTIFACT_BINDING_SCHEMA,
+            "review_governance_binding_schema": REVIEWER_GOVERNANCE_BINDING_SCHEMA,
+            "reviewer_quality_requires_governance": True,
             "acceptance_rule": (
                 "schema_valid == true and accepted == true from "
                 "agades_pqc_gym.verifier.verify_attack_plan_json"
+            ),
+            "formal_binding_rule": (
+                "accepted Prime rewards must attach an "
+                "agades.pqc.rl.formal_artifact_binding.v1 proof binding with "
+                "review_governance_ok == true"
             ),
             "task_match_rule": (
                 "accepted candidates must match the current task info for "
                 "target_family, target_name, support_level, and ordered "
                 "operator_types; attack_plan_id may change"
             ),
+            "prompt_profiles": {
+                "attackplan_json": {
+                    "intended_use": "private_training_or_eval",
+                    "contract": (
+                        "submit one AttackPlan JSON object for the seed task; "
+                        "return an already valid seed unchanged; do not invent "
+                        "pre-evaluation claims; do not include markdown, "
+                        "prose, analysis, comments, code fences, or wrapper text"
+                    ),
+                },
+                "format_first_copy_seed": {
+                    "intended_use": "format_smoke_and_supported_strict_eval",
+                    "contract": "copy the seed AttackPlan unchanged as one JSON object",
+                },
+                "format_repair_extract_seed": {
+                    "intended_use": "private_format_curriculum",
+                    "contract": (
+                        "extract the public seed AttackPlan from wrapped prose "
+                        "and markdown"
+                    ),
+                },
+                "claims_guard_repair": {
+                    "intended_use": "private_claims_repair_curriculum",
+                    "contract": (
+                        "repair invalid pre-evaluation claim estimates by "
+                        "restoring unknown null claims without adding external "
+                        "claim evidence"
+                    ),
+                },
+                "claims_guard_format_repair": {
+                    "intended_use": "private_format_and_claims_repair_curriculum",
+                    "contract": (
+                        "extract a fenced public toy AttackPlan, repair invalid "
+                        "pre-evaluation claim estimates back to unknown nulls, "
+                        "and return one JSON object without wrapper text"
+                    ),
+                },
+                "claims_guard_decoy_format_repair": {
+                    "intended_use": "private_format_and_claims_repair_curriculum",
+                    "contract": (
+                        "ignore an AttackPlan-like decoy from a different task, "
+                        "extract the fenced public toy AttackPlan, repair invalid "
+                        "pre-evaluation claim estimates back to unknown nulls, "
+                        "and return one JSON object without wrapper text"
+                    ),
+                },
+            },
+            "reward_profiles": {
+                "strict": {
+                    "intended_use": "public_eval",
+                    "aggregate_rule": "accepted_attack_plan only",
+                    "rubric_weights": {
+                        "accepted_attack_plan": 1.0,
+                        "single_json_object": 0.0,
+                        "formal_validity": 0.0,
+                        "cryptographic_applicability": 0.0,
+                        "no_security_overclaim": 0.0,
+                        "student_readability": 0.0,
+                        "reproducibility": 0.0,
+                        "reviewer_quality": 0.0,
+                        "task_match": 0.0,
+                        "proof_obligation_coverage": 0.0,
+                    },
+                },
+                "pedagogical_dense": {
+                    "intended_use": "private_prime_rl_training",
+                    "aggregate_rule": (
+                        "weighted training signal over JSON-format compliance "
+                        "and existing verifier sub-scores"
+                    ),
+                    "accepted_candidates_still_require_strict_acceptance": True,
+                    "rubric_weights": {
+                        "accepted_attack_plan": 0.30,
+                        "single_json_object": 0.10,
+                        "formal_validity": 0.15,
+                        "cryptographic_applicability": 0.10,
+                        "no_security_overclaim": 0.10,
+                        "student_readability": 0.07,
+                        "reproducibility": 0.05,
+                        "reviewer_quality": 0.05,
+                        "task_match": 0.04,
+                        "proof_obligation_coverage": 0.04,
+                    },
+                },
+                "format_repair_dense": {
+                    "intended_use": "private_prime_rl_training",
+                    "aggregate_rule": (
+                        "weighted format-repair signal; exact valid concise "
+                        "JSON can receive full reward, wrapped JSON can "
+                        "receive partial non-accepted reward, and hidden "
+                        "reasoning bloat lowers student_readability"
+                    ),
+                    "accepted_candidates_still_require_strict_acceptance": True,
+                    "rubric_weights": {
+                        "accepted_attack_plan": 0.20,
+                        "single_json_object": 0.20,
+                        "formal_validity": 0.20,
+                        "cryptographic_applicability": 0.05,
+                        "no_security_overclaim": 0.15,
+                        "student_readability": 0.08,
+                        "reproducibility": 0.03,
+                        "reviewer_quality": 0.03,
+                        "task_match": 0.04,
+                        "proof_obligation_coverage": 0.02,
+                    },
+                },
+            },
             "task_info_fields": [
                 "schema_version",
                 "source_path",
@@ -207,7 +324,7 @@ def write_prime_environment_manifest(
     root: Path | None = None,
 ) -> dict[str, Any]:
     project_root = (root or ROOT).resolve()
-    _sync_packaged_task_data(
+    _sync_packaged_environment_assets(
         project_root,
         project_root / ENVIRONMENT_DIR,
     )
@@ -346,6 +463,74 @@ def _verify_scoring_contract(
         failures.append("Prime manifest allows executable model submissions.")
     if scoring_contract.get("requires_single_json_object") is not True:
         failures.append("Prime manifest does not require a single JSON object.")
+    if (
+        scoring_contract.get("formal_artifact_binding_schema")
+        != FORMAL_ARTIFACT_BINDING_SCHEMA
+    ):
+        failures.append("Prime manifest formal artifact binding schema drifted.")
+    if (
+        scoring_contract.get("review_governance_binding_schema")
+        != REVIEWER_GOVERNANCE_BINDING_SCHEMA
+    ):
+        failures.append("Prime manifest reviewer governance schema drifted.")
+    if scoring_contract.get("reviewer_quality_requires_governance") is not True:
+        failures.append("Prime manifest reviewer quality is not governance-bound.")
+    reward_profiles = scoring_contract.get("reward_profiles")
+    if not isinstance(reward_profiles, dict):
+        failures.append("Prime manifest reward_profiles must be an object.")
+    else:
+        strict_profile = reward_profiles.get("strict")
+        dense_profile = reward_profiles.get("pedagogical_dense")
+        format_repair_profile = reward_profiles.get("format_repair_dense")
+        if not isinstance(strict_profile, dict):
+            failures.append("Prime manifest lacks strict reward profile.")
+        elif strict_profile.get("rubric_weights", {}).get(
+            "accepted_attack_plan"
+        ) != 1.0:
+            failures.append("Prime strict profile must weight accepted plans only.")
+        if not isinstance(dense_profile, dict):
+            failures.append("Prime manifest lacks pedagogical_dense reward profile.")
+        elif dense_profile.get(
+            "accepted_candidates_still_require_strict_acceptance"
+        ) is not True:
+            failures.append("Prime dense profile weakens accepted-candidate rule.")
+        if not isinstance(format_repair_profile, dict):
+            failures.append("Prime manifest lacks format_repair_dense reward profile.")
+        elif format_repair_profile.get(
+            "accepted_candidates_still_require_strict_acceptance"
+        ) is not True:
+            failures.append(
+                "Prime format-repair profile weakens accepted-candidate rule."
+            )
+        for name, profile in reward_profiles.items():
+            if not isinstance(profile, dict):
+                continue
+            weights = profile.get("rubric_weights")
+            if not isinstance(weights, dict):
+                failures.append(f"Prime reward profile {name} lacks weights.")
+                continue
+            if abs(sum(float(value) for value in weights.values()) - 1.0) > 1e-12:
+                failures.append(f"Prime reward profile {name} weights do not sum to 1.")
+    prompt_profiles = scoring_contract.get("prompt_profiles")
+    if not isinstance(prompt_profiles, dict):
+        failures.append("Prime manifest prompt_profiles must be an object.")
+    else:
+        expected_prompt_profiles = {
+            "attackplan_json",
+            "format_first_copy_seed",
+            "format_repair_extract_seed",
+            "claims_guard_repair",
+            "claims_guard_format_repair",
+            "claims_guard_decoy_format_repair",
+        }
+        if set(prompt_profiles) != expected_prompt_profiles:
+            failures.append("Prime manifest prompt_profiles drifted.")
+    if scoring_contract.get("formal_binding_rule") != (
+        "accepted Prime rewards must attach an "
+        "agades.pqc.rl.formal_artifact_binding.v1 proof binding with "
+        "review_governance_ok == true"
+    ):
+        failures.append("Prime manifest formal binding rule drifted.")
     task_info_fields = scoring_contract.get("task_info_fields")
     if not isinstance(task_info_fields, list) or not task_info_fields:
         failures.append("Prime manifest task_info_fields must be a non-empty list.")
@@ -687,6 +872,15 @@ def _verification_result(
             "requires_single_json_object": scoring_contract.get(
                 "requires_single_json_object"
             ),
+            "formal_artifact_binding_schema": scoring_contract.get(
+                "formal_artifact_binding_schema"
+            ),
+            "review_governance_binding_schema": scoring_contract.get(
+                "review_governance_binding_schema"
+            ),
+            "reviewer_quality_requires_governance": scoring_contract.get(
+                "reviewer_quality_requires_governance"
+            ),
             "task_count": task_manifest.get("task_count"),
         },
         "failures": failures,
@@ -709,6 +903,23 @@ def _packaged_task_rows(environment_dir: Path) -> list[dict[str, Any]]:
     return rows
 
 
+def _sync_packaged_environment_assets(
+    project_root: Path,
+    environment_dir: Path,
+) -> None:
+    _sync_packaged_task_data(project_root, environment_dir)
+    _sync_directory(
+        source_dir=project_root / "docs",
+        target_dir=environment_dir / "docs",
+        suffix=".json",
+    )
+    _sync_directory(
+        source_dir=project_root / "formal" / "lean",
+        target_dir=environment_dir / "formal" / "lean",
+        ignored_parts=frozenset({".lake"}),
+    )
+
+
 def _sync_packaged_task_data(project_root: Path, environment_dir: Path) -> None:
     data_dir = environment_dir / "data"
     source_paths = _valid_public_attack_plan_paths(project_root)
@@ -726,6 +937,43 @@ def _sync_packaged_task_data(project_root: Path, environment_dir: Path) -> None:
             or packaged_path.read_bytes() != source_path.read_bytes()
         ):
             shutil.copyfile(source_path, packaged_path)
+
+
+def _sync_directory(
+    *,
+    source_dir: Path,
+    target_dir: Path,
+    suffix: str | None = None,
+    ignored_parts: frozenset[str] = frozenset(),
+) -> None:
+    source_files = {
+        path.relative_to(source_dir): path
+        for path in sorted(source_dir.rglob("*"))
+        if path.is_file()
+        and not ignored_parts.intersection(path.relative_to(source_dir).parts)
+        and (suffix is None or path.suffix == suffix)
+    }
+    target_files = {
+        path.relative_to(target_dir): path
+        for path in sorted(target_dir.rglob("*"))
+        if path.is_file()
+        and not ignored_parts.intersection(path.relative_to(target_dir).parts)
+        and (suffix is None or path.suffix == suffix)
+    }
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    for relative_path, target_path in target_files.items():
+        if relative_path not in source_files:
+            target_path.unlink()
+
+    for relative_path, source_path in source_files.items():
+        target_path = target_dir / relative_path
+        target_path.parent.mkdir(parents=True, exist_ok=True)
+        if (
+            not target_path.is_file()
+            or target_path.read_bytes() != source_path.read_bytes()
+        ):
+            shutil.copyfile(source_path, target_path)
 
 
 def _source_mirror_contract(

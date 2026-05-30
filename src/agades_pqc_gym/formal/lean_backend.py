@@ -93,6 +93,10 @@ def build_formal_lean_backend(
             "docs/formal_lean_backend.json",
             "uv run agades-pqc formal-lean-backend-verify --backend "
             "docs/formal_lean_backend.json",
+            "uv run agades-pqc formal-lean-build-smoke --out "
+            "reports/formal_lean_build_smoke.json",
+            "uv run agades-pqc formal-lean-build-smoke-verify --report "
+            "reports/formal_lean_build_smoke.json",
             "GitHub CI: Build Lean formal backend via leanprover/lean-action@v1",
         ],
     }

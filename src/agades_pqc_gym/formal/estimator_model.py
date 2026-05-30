@@ -509,6 +509,20 @@ def _model_sha256(model: dict[str, Any]) -> str:
     return stable_sha256(payload)
 
 
+def formal_estimator_model_contract_sha256(model: dict[str, Any]) -> str:
+    return stable_sha256(formal_estimator_model_contract_payload(model))
+
+
+def formal_estimator_model_contract_payload(
+    model: dict[str, Any],
+) -> dict[str, Any]:
+    return {
+        key: value
+        for key, value in model.items()
+        if key not in {"linked_artifacts", "model_sha256"}
+    }
+
+
 def _entry_sha256(entry: dict[str, Any]) -> str:
     payload = {key: value for key, value in entry.items() if key != "entry_sha256"}
     return stable_sha256(payload)

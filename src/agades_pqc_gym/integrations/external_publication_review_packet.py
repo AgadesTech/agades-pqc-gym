@@ -290,8 +290,8 @@ def _publication_dry_run_plan(
             ),
             "command_templates": [
                 (
-                    f"hf repos create {dataset_repo_id} --type={dataset_repo_type} "
-                    "--private --exist-ok"
+                    f"hf repo create {dataset_repo_id} "
+                    f"--repo-type={dataset_repo_type} --private --exist-ok"
                 ),
                 (
                     f"hf upload {dataset_repo_id} {dataset_local_path} . "
@@ -1263,6 +1263,7 @@ def _command_keeps_private_or_draft_first(command: str) -> bool:
 
 def _command_controls_first_publication_visibility(tokens: list[str]) -> bool:
     return tokens[:3] in (
+        ["hf", "repo", "create"],
         ["hf", "repos", "create"],
         ["prime", "env", "push"],
     )

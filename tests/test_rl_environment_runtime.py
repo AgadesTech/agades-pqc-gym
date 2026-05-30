@@ -12,6 +12,9 @@ import agades_pqc_gym.rl.environment as rl_environment
 from agades_pqc_gym.cli import app
 from agades_pqc_gym.core.target import TargetFamily
 from agades_pqc_gym.formal.artifacts import build_attack_plan_proof_artifact_from_json
+from agades_pqc_gym.formal.estimator_model import (
+    formal_estimator_model_contract_sha256,
+)
 from agades_pqc_gym.rl.environment import (
     DEFAULT_ROLLOUT_PLANS,
     RL_REWARD_REPORT_SCHEMA,
@@ -57,6 +60,30 @@ def test_pedagogical_reward_scores_all_terms_for_matching_seed() -> None:
     assert report["formal_summary"]["proof_obligations"] == 4
     assert report["formal_summary"]["typed_proof_obligations"] == 4
     assert report["formal_summary"]["proof_obligation_type_rules"] == 5
+    assert report["formal_summary"]["attackplan_semantics"] == {
+        "schema_version": "agades.pqc.rl.attackplan_semantics_binding.v1",
+        "semantics_path": "docs/formal_attackplan_semantics.json",
+        "accepted": True,
+        "validation_rules": 7,
+        "formal_rules": 5,
+        "claim_policy_forbids_unreviewed_security_claims": True,
+        "semantics_sha256": report["formal_summary"]["attackplan_semantics"][
+            "semantics_sha256"
+        ],
+    }
+    assert len(
+        report["formal_summary"]["attackplan_semantics"]["semantics_sha256"]
+    ) == 64
+    assert report["formal_summary"]["operator_semantics"] == (
+        _expected_operator_semantics_binding()
+    )
+    assert report["formal_summary"]["formal_estimator_model"] == (
+        _expected_formal_estimator_model_binding()
+    )
+    assert report["formal_summary"]["review_governance"] == (
+        _expected_reviewer_governance_binding()
+    )
+    assert report["formal_summary"]["review_governance_ok"] is True
     assert report["formal_summary"]["type_rule_kinds"] == [
         "estimator_claim_boundary",
         "family_applicability_boundary",
@@ -108,6 +135,92 @@ def test_pedagogical_reward_blocks_untyped_formal_obligations(
     assert report["terms"]["proof_obligation_coverage"] == 0.0
     assert "proof_obligation_coverage" in report["blocking_reasons"]
     assert report["formal_summary"]["typed_proof_obligations"] == 3
+
+
+def test_pedagogical_reward_passes_project_root_to_proof_artifacts(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task_info = _task_info(LATTICE_PLAN)
+    expected_root = Path.cwd().resolve()
+    observed_root: Path | None = None
+
+    def build_artifact_with_root_capture(
+        raw_json: str,
+        *,
+        source_label: str,
+        estimator_result_path: Path | None = None,
+        review_status: str = "pending_review",
+        root: Path | None = None,
+    ) -> dict[str, Any]:
+        nonlocal observed_root
+        observed_root = root
+        return build_attack_plan_proof_artifact_from_json(
+            raw_json,
+            source_label=source_label,
+            estimator_result_path=estimator_result_path,
+            review_status=review_status,
+            root=root,
+        )
+
+    monkeypatch.setattr(
+        rl_environment,
+        "build_attack_plan_proof_artifact_from_json",
+        build_artifact_with_root_capture,
+    )
+
+    report = score_attack_plan_candidate(
+        LATTICE_PLAN.read_text(encoding="utf-8"),
+        task_info=task_info,
+        require_task_match=True,
+        root=expected_root,
+    )
+
+    assert report["reward"] == 1.0
+    assert observed_root == expected_root
+
+
+def test_pedagogical_reward_blocks_missing_reviewer_governance(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task_info = _task_info(LATTICE_PLAN)
+
+    def build_artifact_without_reviewer_governance(
+        raw_json: str,
+        *,
+        source_label: str,
+        estimator_result_path: Path | None = None,
+        review_status: str = "pending_review",
+        root: Path | None = None,
+    ) -> dict[str, Any]:
+        artifact = build_attack_plan_proof_artifact_from_json(
+            raw_json,
+            source_label=source_label,
+            estimator_result_path=estimator_result_path,
+            review_status=review_status,
+            root=root,
+        )
+        artifact.pop("review_governance", None)
+        return artifact
+
+    monkeypatch.setattr(
+        rl_environment,
+        "build_attack_plan_proof_artifact_from_json",
+        build_artifact_without_reviewer_governance,
+    )
+
+    report = score_attack_plan_candidate(
+        LATTICE_PLAN.read_text(encoding="utf-8"),
+        task_info=task_info,
+        require_task_match=True,
+    )
+
+    assert report["reward"] == 0.0
+    assert report["accepted"] is False
+    assert report["blocked"] is True
+    assert report["terms"]["reviewer_quality"] == 0.0
+    assert "reviewer_quality" in report["blocking_reasons"]
+    assert report["formal_summary"]["review_governance"] == {}
+    assert report["formal_summary"]["review_governance_ok"] is False
 
 
 def test_pedagogical_reward_blocks_forged_formal_type_rules(
@@ -260,6 +373,24 @@ def test_gym_environment_reset_step_emits_public_safe_rollout_trace() -> None:
     assert all(len(value) == 64 for value in binding["proof_obligation_sha256"])
     assert binding["review_status"] == "pending_review"
     assert binding["claim_allowed"] is False
+    assert binding["review_governance"] == _expected_reviewer_governance_binding()
+    assert binding["review_governance"]["required_reviewers_by_family"][
+        binding["family"]
+    ] == binding["required_reviewers"]
+    semantics = binding["attackplan_semantics"]
+    assert semantics["schema_version"] == (
+        "agades.pqc.rl.attackplan_semantics_binding.v1"
+    )
+    assert semantics["semantics_path"] == "docs/formal_attackplan_semantics.json"
+    assert semantics["accepted"] is True
+    assert semantics["validation_rules"] == 7
+    assert semantics["formal_rules"] == 5
+    assert semantics["claim_policy_forbids_unreviewed_security_claims"] is True
+    assert len(semantics["semantics_sha256"]) == 64
+    assert binding["operator_semantics"] == _expected_operator_semantics_binding()
+    assert binding["formal_estimator_model"] == (
+        _expected_formal_estimator_model_binding()
+    )
 
 
 def test_default_public_rollout_examples_cover_every_target_family() -> None:
@@ -271,6 +402,28 @@ def test_default_public_rollout_examples_cover_every_target_family() -> None:
     ]
     assert all(
         row["formal_artifact_binding"]["claim_allowed"] is False
+        for row in rows
+    )
+    assert all(
+        row["formal_artifact_binding"]["operator_semantics"]["accepted"] is True
+        for row in rows
+    )
+    assert all(
+        row["formal_artifact_binding"]["formal_estimator_model"]["accepted"] is True
+        for row in rows
+    )
+    assert all(
+        row["formal_artifact_binding"]["review_governance"][
+            "verification_accepted"
+        ]
+        is True
+        for row in rows
+    )
+    assert all(
+        row["formal_artifact_binding"]["review_governance"][
+            "required_reviewers_by_family"
+        ][row["candidate"]["target_family"]]
+        == row["formal_artifact_binding"]["required_reviewers"]
         for row in rows
     )
     assert all(row["private_fields_present"] is False for row in rows)
@@ -325,3 +478,56 @@ def test_rl_rollout_examples_cli_round_trip(tmp_path: Path) -> None:
 def _task_info(path: Path) -> dict[str, object]:
     env = AgadesPQCGymEnvironment.from_attack_plan_paths([path])
     return env.reset()["task"]
+
+
+def _expected_operator_semantics_binding() -> dict[str, object]:
+    payload = json.loads(
+        Path("docs/formal_operator_semantics.json").read_text(encoding="utf-8")
+    )
+    summary = payload["summary"]
+    return {
+        "schema_version": "agades.pqc.rl.operator_semantics_binding.v1",
+        "semantics_path": "docs/formal_operator_semantics.json",
+        "accepted": True,
+        "operators": summary["operators"],
+        "required_param_fields": summary["required_param_fields"],
+        "claim_policy_forbids_unreviewed_security_claims": True,
+        "semantics_sha256": payload["semantics_sha256"],
+    }
+
+
+def _expected_formal_estimator_model_binding() -> dict[str, object]:
+    payload = json.loads(
+        Path("docs/formal_estimator_model.json").read_text(encoding="utf-8")
+    )
+    summary = payload["summary"]
+    proof_binding = payload["proof_artifact_binding"]
+    return {
+        "schema_version": "agades.pqc.rl.formal_estimator_model_binding.v1",
+        "model_path": "docs/formal_estimator_model.json",
+        "accepted": True,
+        "model_schema_version": "agades.pqc.formal.estimator_model.v1",
+        "contract_sha256": formal_estimator_model_contract_sha256(payload),
+        "families": summary["families"],
+        "runtime_operator_count": summary["runtime_operator_count"],
+        "result_binding_required_before_claim": summary[
+            "result_binding_required_before_claim"
+        ],
+        "schema_only_no_estimator": summary["schema_only_no_estimator"],
+        "proof_artifact_binding_required_before_claim": (
+            proof_binding["estimator_result_binding_required_before_claim"]
+            is True
+            and proof_binding["security_claim_status_without_review"]
+            == "disallowed"
+        ),
+        "claim_policy_forbids_unreviewed_security_claims": True,
+        "linked_artifact_hashes_excluded_from_contract": True,
+    }
+
+
+def _expected_reviewer_governance_binding() -> dict[str, object]:
+    artifact = build_attack_plan_proof_artifact_from_json(
+        LATTICE_PLAN.read_text(encoding="utf-8"),
+        source_label="<rl-candidate>",
+    )
+    return artifact["review_governance"]

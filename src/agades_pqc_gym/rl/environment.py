@@ -12,7 +12,21 @@ from agades_pqc_gym.core.target import TargetFamily
 from agades_pqc_gym.formal.artifacts import (
     build_attack_plan_proof_artifact_from_json,
 )
+from agades_pqc_gym.formal.attack_plan_semantics import (
+    DEFAULT_ATTACKPLAN_SEMANTICS_PATH,
+    verify_formal_attackplan_semantics,
+)
+from agades_pqc_gym.formal.estimator_model import (
+    DEFAULT_ESTIMATOR_MODEL_PATH,
+    FORMAL_ESTIMATOR_MODEL_SCHEMA,
+    formal_estimator_model_contract_sha256,
+    verify_formal_estimator_model,
+)
 from agades_pqc_gym.formal.family_coverage import REPRESENTATIVE_ATTACK_PLANS
+from agades_pqc_gym.formal.operator_semantics import (
+    DEFAULT_OPERATOR_SEMANTICS_PATH,
+    verify_formal_operator_semantics,
+)
 from agades_pqc_gym.integrations.task_metadata import (
     attack_plan_matches_task_metadata,
     normalize_task_metadata,
@@ -25,6 +39,17 @@ from agades_pqc_gym.verifier import verify_attack_plan_json
 RL_REWARD_REPORT_SCHEMA = "agades.pqc.rl.reward_report.v1"
 ROLLOUT_TRACE_SCHEMA = "agades.pqc.rl.rollout_trace.v1"
 OBSERVATION_SCHEMA = "agades.pqc.rl.observation.v1"
+FORMAL_ARTIFACT_BINDING_SCHEMA = "agades.pqc.rl.formal_artifact_binding.v1"
+ATTACKPLAN_SEMANTICS_BINDING_SCHEMA = (
+    "agades.pqc.rl.attackplan_semantics_binding.v1"
+)
+OPERATOR_SEMANTICS_BINDING_SCHEMA = (
+    "agades.pqc.rl.operator_semantics_binding.v1"
+)
+FORMAL_ESTIMATOR_MODEL_BINDING_SCHEMA = (
+    "agades.pqc.rl.formal_estimator_model_binding.v1"
+)
+ROOT = Path(__file__).resolve().parents[3]
 REWARD_TERMS = (
     "formal_validity",
     "cryptographic_applicability",
@@ -43,10 +68,16 @@ DEFAULT_ROLLOUT_PLANS = [
 class AgadesPQCGymEnvironment:
     """Small public-safe single-step RL environment over AttackPlan tasks."""
 
-    def __init__(self, tasks: list[dict[str, Any]]) -> None:
+    def __init__(
+        self,
+        tasks: list[dict[str, Any]],
+        *,
+        root: Path | None = None,
+    ) -> None:
         if not tasks:
             raise ValueError("AgadesPQCGymEnvironment requires at least one task.")
         self._tasks = tasks
+        self._root = root
         self._current_task: dict[str, Any] | None = None
 
     @classmethod
@@ -64,7 +95,8 @@ class AgadesPQCGymEnvironment:
                     source_path=_source_path_label(path, project_root),
                 )
                 for path in paths
-            ]
+            ],
+            root=project_root,
         )
 
     def reset(self, index: int = 0) -> dict[str, Any]:
@@ -92,8 +124,14 @@ class AgadesPQCGymEnvironment:
             candidate_json,
             task_info=self._current_task,
             require_task_match=True,
+            root=self._root,
         )
-        trace = _rollout_trace(self._current_task, candidate_json, reward_report)
+        trace = _rollout_trace(
+            self._current_task,
+            candidate_json,
+            reward_report,
+            root=self._root,
+        )
         return {
             "observation": None,
             "reward": reward_report["reward"],
@@ -111,6 +149,7 @@ def score_attack_plan_candidate(
     task_info: dict[str, Any] | str | None = None,
     require_task_match: bool = False,
     pedagogical_signals: dict[str, Any] | None = None,
+    root: Path | None = None,
 ) -> dict[str, Any]:
     parsed_task = normalize_task_metadata(task_info)
     plan: AttackPlan | None = None
@@ -123,7 +162,7 @@ def score_attack_plan_candidate(
         validation_errors.append(str(exc))
 
     verifier_result = verify_attack_plan_json(candidate_json)
-    formal_summary = _formal_summary(candidate_json, plan)
+    formal_summary = _formal_summary(candidate_json, plan, root=root)
     task_match = (
         _task_match(plan, parsed_task)
         if parsed_task is not None
@@ -146,6 +185,7 @@ def score_attack_plan_candidate(
         "reviewer_quality": _bool_score(
             formal_summary["required_reviewers"] >= 3
             and formal_summary["claim_boundary_ok"] is True
+            and formal_summary["review_governance_ok"] is True
         ),
         "task_match": _bool_score(task_match),
         "proof_obligation_coverage": _proof_obligation_coverage_score(
@@ -272,10 +312,26 @@ def _prompt_for_task(task: dict[str, Any]) -> list[dict[str, str]]:
     ]
 
 
-def _formal_summary(candidate_json: str, plan: AttackPlan | None) -> dict[str, Any]:
+def _formal_summary(
+    candidate_json: str,
+    plan: AttackPlan | None,
+    *,
+    root: Path | None = None,
+) -> dict[str, Any]:
+    attackplan_semantics = build_attackplan_semantics_binding(root=root)
+    operator_semantics = build_operator_semantics_binding(root=root)
+    formal_estimator_model = build_formal_estimator_model_binding(root=root)
+    contracts_accepted = (
+        attackplan_semantics["accepted"] is True
+        and operator_semantics["accepted"] is True
+        and formal_estimator_model["accepted"] is True
+    )
     if plan is None:
         return {
             "accepted": False,
+            "attackplan_semantics": attackplan_semantics,
+            "operator_semantics": operator_semantics,
+            "formal_estimator_model": formal_estimator_model,
             "family_invariants": 0,
             "proof_obligations": 0,
             "typed_proof_obligations": 0,
@@ -284,10 +340,13 @@ def _formal_summary(candidate_json: str, plan: AttackPlan | None) -> dict[str, A
             "lean_theorems": 0,
             "required_reviewers": 0,
             "claim_boundary_ok": False,
+            "review_governance": {},
+            "review_governance_ok": False,
         }
     artifact = build_attack_plan_proof_artifact_from_json(
         candidate_json,
         source_label="<rl-candidate>",
+        root=root,
     )
     proof_obligations = artifact["proof_obligations"]
     family_invariants = artifact["family_invariants"]
@@ -300,13 +359,25 @@ def _formal_summary(candidate_json: str, plan: AttackPlan | None) -> dict[str, A
             continue
         type_rule_keys.add(type_rule_key)
         type_rule_kinds.add(rule["kind"])
+    review = artifact["review"]
+    review_governance = _dict_or_empty(artifact.get("review_governance"))
+    review_governance_ok = _review_governance_binding_ok(
+        review_governance,
+        family=artifact["family"],
+        required_reviewers=review["required_reviewers"],
+    )
     typed_proof_obligations = [
         obligation
         for obligation in proof_obligations
         if _obligation_has_matching_type_rule(obligation, type_rule_keys)
     ]
     return {
-        "accepted": True,
+        "accepted": contracts_accepted and review_governance_ok,
+        "attackplan_semantics": attackplan_semantics,
+        "operator_semantics": operator_semantics,
+        "formal_estimator_model": formal_estimator_model,
+        "review_governance": review_governance,
+        "review_governance_ok": review_governance_ok,
         "family_invariants": len(family_invariants),
         "proof_obligations": len(proof_obligations),
         "typed_proof_obligations": len(typed_proof_obligations),
@@ -319,9 +390,9 @@ def _formal_summary(candidate_json: str, plan: AttackPlan | None) -> dict[str, A
                 if obligation.get("lean_theorem")
             }
         ),
-        "required_reviewers": len(artifact["review"]["required_reviewers"]),
+        "required_reviewers": len(review["required_reviewers"]),
         "claim_boundary_ok": (
-            "not PQC break claims" in artifact["review"]["claim_boundary"]
+            "not PQC break claims" in review["claim_boundary"]
         ),
     }
 
@@ -382,6 +453,23 @@ def _obligation_has_matching_type_rule(
     )
 
 
+def _review_governance_binding_ok(
+    binding: dict[str, Any],
+    *,
+    family: str,
+    required_reviewers: list[str],
+) -> bool:
+    required_by_family = _dict_or_empty(binding.get("required_reviewers_by_family"))
+    return (
+        binding.get("schema_version")
+        == "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+        and binding.get("verification_accepted") is True
+        and binding.get("claim_policy_forbids_unreviewed_security_claims") is True
+        and binding.get("linked_artifact_hashes_excluded_from_contract") is True
+        and required_by_family.get(family) == required_reviewers
+    )
+
+
 def _type_rule_key(rule: object) -> str | None:
     if not isinstance(rule, dict):
         return None
@@ -436,12 +524,16 @@ def _blocking_reasons(
     reasons: list[str] = []
     if verifier_result["schema_valid"] is not True:
         reasons.append("schema_valid")
+    if terms["formal_validity"] != 1.0:
+        reasons.append("formal_validity")
     if verifier_result["accepted"] is not True:
         reasons.append("cryptographic_applicability")
     if terms["no_security_overclaim"] != 1.0:
         reasons.append("no_security_overclaim")
     if terms["proof_obligation_coverage"] != 1.0:
         reasons.append("proof_obligation_coverage")
+    if terms["reviewer_quality"] != 1.0:
+        reasons.append("reviewer_quality")
     if require_task_match and task_info is None:
         reasons.append("task_info")
     if terms["task_match"] != 1.0:
@@ -453,13 +545,18 @@ def _rollout_trace(
     task: dict[str, Any],
     candidate_json: str,
     reward_report: dict[str, Any],
+    *,
+    root: Path | None = None,
 ) -> dict[str, Any]:
     candidate = _candidate_summary(candidate_json)
     return {
         "schema_version": ROLLOUT_TRACE_SCHEMA,
         "task": task,
         "candidate": candidate,
-        "formal_artifact_binding": _formal_artifact_binding(candidate_json),
+        "formal_artifact_binding": build_formal_artifact_binding(
+            candidate_json,
+            root=root,
+        ),
         "reward_report": reward_report,
         "public_release_ok": True,
         "private_fields_present": False,
@@ -487,16 +584,23 @@ def _candidate_summary(candidate_json: str) -> dict[str, Any]:
     }
 
 
-def _formal_artifact_binding(candidate_json: str) -> dict[str, Any]:
-    schema = "agades.pqc.rl.formal_artifact_binding.v1"
+def build_formal_artifact_binding(
+    candidate_json: str,
+    *,
+    root: Path | None = None,
+) -> dict[str, Any]:
+    attackplan_semantics = build_attackplan_semantics_binding(root=root)
+    operator_semantics = build_operator_semantics_binding(root=root)
+    formal_estimator_model = build_formal_estimator_model_binding(root=root)
     try:
         artifact = build_attack_plan_proof_artifact_from_json(
             candidate_json,
             source_label="<rl-candidate>",
+            root=root,
         )
     except (json.JSONDecodeError, ValidationError, ValueError):
         return {
-            "schema_version": schema,
+            "schema_version": FORMAL_ARTIFACT_BINDING_SCHEMA,
             "status": "unavailable",
             "attack_plan_id": None,
             "family": None,
@@ -505,6 +609,11 @@ def _formal_artifact_binding(candidate_json: str) -> dict[str, Any]:
             "proof_obligation_ids": [],
             "proof_obligation_sha256": [],
             "proof_obligation_type_rule_sha256": [],
+            "attackplan_semantics": attackplan_semantics,
+            "operator_semantics": operator_semantics,
+            "formal_estimator_model": formal_estimator_model,
+            "review_governance": {},
+            "review_governance_ok": False,
             "review_status": None,
             "required_reviewers": [],
             "claim_allowed": False,
@@ -518,8 +627,9 @@ def _formal_artifact_binding(candidate_json: str) -> dict[str, Any]:
     proof_obligations = artifact["proof_obligations"]
     type_rules = artifact["proof_obligation_type_rules"]
     review = artifact["review"]
+    review_governance = _dict_or_empty(artifact.get("review_governance"))
     return {
-        "schema_version": schema,
+        "schema_version": FORMAL_ARTIFACT_BINDING_SCHEMA,
         "status": "attached",
         "attack_plan_id": artifact["attack_plan"]["id"],
         "attack_plan_canonical_sha256": artifact["attack_plan"][
@@ -540,11 +650,166 @@ def _formal_artifact_binding(candidate_json: str) -> dict[str, Any]:
         "proof_obligation_type_rule_sha256": [
             rule["type_rule_sha256"] for rule in type_rules
         ],
+        "attackplan_semantics": attackplan_semantics,
+        "operator_semantics": operator_semantics,
+        "formal_estimator_model": formal_estimator_model,
+        "review_governance": review_governance,
+        "review_governance_ok": _review_governance_binding_ok(
+            review_governance,
+            family=artifact["family"],
+            required_reviewers=review["required_reviewers"],
+        ),
         "review_status": review["status"],
         "required_reviewers": review["required_reviewers"],
         "claim_allowed": False,
         "claim_boundary": review["claim_boundary"],
     }
+
+
+def build_attackplan_semantics_binding(
+    *,
+    root: Path | None = None,
+) -> dict[str, Any]:
+    project_root = (root or ROOT).resolve()
+    verification = verify_formal_attackplan_semantics(
+        DEFAULT_ATTACKPLAN_SEMANTICS_PATH,
+        root=project_root,
+    )
+    contract = _read_attackplan_semantics_contract(project_root)
+    claim_policy = contract.get("claim_policy", {})
+    return {
+        "schema_version": ATTACKPLAN_SEMANTICS_BINDING_SCHEMA,
+        "semantics_path": DEFAULT_ATTACKPLAN_SEMANTICS_PATH.as_posix(),
+        "accepted": verification["accepted"],
+        "validation_rules": len(contract.get("validation_rules", [])),
+        "formal_rules": len(contract.get("formal_rules", [])),
+        "claim_policy_forbids_unreviewed_security_claims": (
+            isinstance(claim_policy, dict)
+            and claim_policy.get("security_claim_allowed_without_review") is False
+        ),
+        "semantics_sha256": contract.get("semantics_sha256"),
+    }
+
+
+def build_operator_semantics_binding(
+    *,
+    root: Path | None = None,
+) -> dict[str, Any]:
+    project_root = (root or ROOT).resolve()
+    verification = verify_formal_operator_semantics(
+        DEFAULT_OPERATOR_SEMANTICS_PATH,
+        root=project_root,
+    )
+    contract = _read_json_contract(project_root, DEFAULT_OPERATOR_SEMANTICS_PATH)
+    summary = _dict_or_empty(contract.get("summary"))
+    operators = [
+        entry
+        for entry in _list_or_empty(contract.get("operators"))
+        if isinstance(entry, dict)
+    ]
+    claim_policy_forbids_claims = bool(operators) and all(
+        _dict_or_empty(entry.get("claim_policy")).get(
+            "security_claim_allowed_without_review"
+        )
+        is False
+        for entry in operators
+    )
+    return {
+        "schema_version": OPERATOR_SEMANTICS_BINDING_SCHEMA,
+        "semantics_path": DEFAULT_OPERATOR_SEMANTICS_PATH.as_posix(),
+        "accepted": (
+            verification["accepted"] is True and claim_policy_forbids_claims
+        ),
+        "operators": summary.get("operators"),
+        "required_param_fields": summary.get("required_param_fields"),
+        "claim_policy_forbids_unreviewed_security_claims": (
+            claim_policy_forbids_claims
+        ),
+        "semantics_sha256": contract.get("semantics_sha256"),
+    }
+
+
+def build_formal_estimator_model_binding(
+    *,
+    root: Path | None = None,
+) -> dict[str, Any]:
+    project_root = (root or ROOT).resolve()
+    verification = verify_formal_estimator_model(
+        DEFAULT_ESTIMATOR_MODEL_PATH,
+        root=project_root,
+    )
+    model = _read_json_contract(project_root, DEFAULT_ESTIMATOR_MODEL_PATH)
+    summary = _dict_or_empty(model.get("summary"))
+    proof_binding = _dict_or_empty(model.get("proof_artifact_binding"))
+    families = [
+        entry
+        for entry in _list_or_empty(model.get("families"))
+        if isinstance(entry, dict)
+    ]
+    proof_artifact_binding_required = (
+        proof_binding.get("estimator_result_binding_required_before_claim") is True
+        and proof_binding.get("security_claim_status_without_review")
+        == "disallowed"
+    )
+    claim_policy_forbids_claims = bool(families) and all(
+        _dict_or_empty(entry.get("claim_policy")).get(
+            "security_claim_allowed_without_review"
+        )
+        is False
+        and _dict_or_empty(entry.get("estimator_model")).get(
+            "security_claim_allowed_without_review"
+        )
+        is False
+        for entry in families
+    )
+    return {
+        "schema_version": FORMAL_ESTIMATOR_MODEL_BINDING_SCHEMA,
+        "model_path": DEFAULT_ESTIMATOR_MODEL_PATH.as_posix(),
+        "accepted": (
+            verification["accepted"] is True
+            and proof_artifact_binding_required
+            and claim_policy_forbids_claims
+        ),
+        "model_schema_version": (
+            model.get("schema_version") or FORMAL_ESTIMATOR_MODEL_SCHEMA
+        ),
+        "contract_sha256": (
+            formal_estimator_model_contract_sha256(model) if model else None
+        ),
+        "families": summary.get("families"),
+        "runtime_operator_count": summary.get("runtime_operator_count"),
+        "result_binding_required_before_claim": summary.get(
+            "result_binding_required_before_claim"
+        ),
+        "schema_only_no_estimator": summary.get("schema_only_no_estimator"),
+        "proof_artifact_binding_required_before_claim": (
+            proof_artifact_binding_required
+        ),
+        "claim_policy_forbids_unreviewed_security_claims": (
+            claim_policy_forbids_claims
+        ),
+        "linked_artifact_hashes_excluded_from_contract": True,
+    }
+
+
+def _read_attackplan_semantics_contract(root: Path) -> dict[str, Any]:
+    return _read_json_contract(root, DEFAULT_ATTACKPLAN_SEMANTICS_PATH)
+
+
+def _read_json_contract(root: Path, path: Path) -> dict[str, Any]:
+    try:
+        payload = json.loads((root / path).read_text(encoding="utf-8"))
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def _list_or_empty(value: object) -> list[Any]:
+    return value if isinstance(value, list) else []
+
+
+def _dict_or_empty(value: object) -> dict[str, Any]:
+    return dict(value) if isinstance(value, dict) else {}
 
 
 def _bool_score(value: bool) -> float:

@@ -1,14 +1,17 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
 from typing import Any
 
+import yaml
 from pydantic import ValidationError
 
 from agades_pqc_gym.core.attack_plan import AttackPlan
 from agades_pqc_gym.rl.environment import (
+    FORMAL_ARTIFACT_BINDING_SCHEMA,
     OBSERVATION_SCHEMA,
     RL_REWARD_REPORT_SCHEMA,
     ROLLOUT_TRACE_SCHEMA,
@@ -23,6 +26,24 @@ ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_LABEL = "LWE / lattice_primal_usvp_toy_v1"
 DEFAULT_PRIVATE_SPACE_ID = "agades/agades-pqc-gym-agent-env"
 HF_SPACES_INJECTED_GRADIO = "gradio[oauth,mcp]==6.14.0"
+SPACE_README_PATH = Path("hf/README.md")
+SPACE_FORMAL_DOCS_PATH = Path("hf/docs")
+SPACE_FORMAL_LEAN_PATH = Path("hf/formal/lean")
+SPACE_CI_WORKFLOW_PATH = Path("hf/.github/workflows/ci.yml")
+SPACE_README_METADATA = {
+    "title": "Agades PQC Gym Agent Environment",
+    "sdk": "gradio",
+    "app_file": "app.py",
+    "python_version": "3.11",
+    "license": "apache-2.0",
+    "pinned": False,
+    "tags": [
+        "agent-environment",
+        "reinforcement-learning",
+        "post-quantum-cryptography",
+        "cryptanalysis",
+    ],
+}
 _EXPECTED_FALSE_SAFETY_FLAGS = (
     "contains_private_traces",
     "arbitrary_code_execution",
@@ -38,10 +59,6 @@ _REQUIRED_RELEASE_GATES = (
     "uv run agades-pqc hf-space-manifest-verify --manifest hf/space_manifest.json",
     "uv run agades-pqc hf-space-smoke --out reports/hf_space_smoke.json",
     "uv run agades-pqc hf-space-smoke-verify --report reports/hf_space_smoke.json",
-    "uv run agades-pqc hf-space-launch-smoke --out "
-    "reports/hf_space_launch_smoke.json",
-    "uv run agades-pqc hf-space-launch-smoke-verify --report "
-    "reports/hf_space_launch_smoke.json",
     "uv run agades-pqc ecosystem-smoke-verify --report "
     "reports/ecosystem_smoke.json",
     "uv run agades-pqc release-audit --out public/release_audit.json",
@@ -54,6 +71,7 @@ def build_huggingface_space_manifest(root: Path | None = None) -> dict[str, Any]
     labels = example_index["labels"]
 
     default_label = DEFAULT_LABEL if DEFAULT_LABEL in labels else labels[0]
+    space_readme = _space_readme_binding(project_root)
     return {
         "schema_version": HF_SPACE_MANIFEST_SCHEMA,
         "project": {
@@ -67,11 +85,14 @@ def build_huggingface_space_manifest(root: Path | None = None) -> dict[str, Any]
             "sdk": "gradio",
             "category": "agent-environment",
             "app_file": "hf/app.py",
+            "space_readme_file": SPACE_README_PATH.as_posix(),
+            "space_readme_sha256": space_readme["sha256"],
+            "space_readme_metadata": space_readme["metadata"],
             "requirements_file": "hf/requirements.txt",
             "dataset_bundle": "hf/dataset",
             "hub_create_command_template": (
-                f"hf repos create {DEFAULT_PRIVATE_SPACE_ID} --type=space "
-                "--space-sdk gradio --private --exist-ok"
+                f"hf repo create {DEFAULT_PRIVATE_SPACE_ID} --repo-type=space "
+                "--space_sdk gradio --private --exist-ok"
             ),
             "hub_upload_command_template": (
                 f"hf upload {DEFAULT_PRIVATE_SPACE_ID} hf "
@@ -94,6 +115,7 @@ def build_huggingface_space_manifest(root: Path | None = None) -> dict[str, Any]
                     project_root / "hf" / "requirements.txt"
                 )
             ),
+            "formal_runtime_bundle": _space_formal_runtime_bundle(project_root),
         },
         "agent_environment_contract": {
             "environment_class": (
@@ -102,12 +124,17 @@ def build_huggingface_space_manifest(root: Path | None = None) -> dict[str, Any]
             "observation_schema": OBSERVATION_SCHEMA,
             "reward_report_schema": RL_REWARD_REPORT_SCHEMA,
             "rollout_trace_schema": ROLLOUT_TRACE_SCHEMA,
+            "formal_artifact_binding_schema": FORMAL_ARTIFACT_BINDING_SCHEMA,
+            "review_governance_binding_schema": (
+                "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+            ),
             "task_dataset": "hf/dataset/task_metadata.jsonl",
             "rollout_examples": "hf/dataset/rl_rollouts.jsonl",
             "scoring_function": (
                 "agades_pqc_gym.rl.environment.score_attack_plan_candidate"
             ),
             "task_interface": "single_turn_attackplan_json",
+            "reviewer_quality_requires_governance": True,
             "public_track_only": True,
             "private_trace_publication_allowed": False,
             "claims_pqc_breaks": False,
@@ -183,7 +210,7 @@ def verify_huggingface_space_manifest(
         failures.append("Hugging Face Space manifest is not in sync.")
 
     _verify_project_metadata(manifest, failures)
-    _verify_space_contract(manifest, expected, failures)
+    _verify_space_contract(project_root, manifest, expected, failures)
     _verify_runtime(project_root, manifest, failures)
     _verify_agent_environment_contract(project_root, manifest, failures)
     _verify_example_manifest(project_root, manifest, failures)
@@ -243,6 +270,7 @@ def _verify_project_metadata(
 
 
 def _verify_space_contract(
+    root: Path,
     manifest: dict[str, Any],
     expected: dict[str, Any],
     failures: list[str],
@@ -256,6 +284,9 @@ def _verify_space_contract(
         "suggested_space_id",
         "sdk",
         "app_file",
+        "space_readme_file",
+        "space_readme_sha256",
+        "space_readme_metadata",
         "requirements_file",
         "dataset_bundle",
         "hub_create_command_template",
@@ -267,6 +298,88 @@ def _verify_space_contract(
         failures.append("Hugging Face Space manifest is not an Agent Environment.")
     if space.get("public_push_requires_review") is not True:
         failures.append("Hugging Face Space manifest lacks public push review gate.")
+    _verify_space_readme(root, space, failures)
+
+
+def _space_readme_binding(root: Path) -> dict[str, Any]:
+    path = root / SPACE_README_PATH
+    raw = path.read_bytes()
+    return {
+        "sha256": hashlib.sha256(raw).hexdigest(),
+        "metadata": _parse_space_readme_metadata(raw.decode("utf-8")),
+    }
+
+
+def _verify_space_readme(
+    root: Path,
+    space: dict[str, Any],
+    failures: list[str],
+) -> None:
+    if space.get("space_readme_file") != SPACE_README_PATH.as_posix():
+        failures.append("Hugging Face Space manifest README path is incorrect.")
+        return
+    try:
+        expected = _space_readme_binding(root)
+    except FileNotFoundError:
+        failures.append("Hugging Face Space root README is missing.")
+        return
+    except ValueError as exc:
+        failures.append(f"Hugging Face Space root README metadata is invalid: {exc}")
+        return
+
+    if space.get("space_readme_sha256") != expected["sha256"]:
+        failures.append("Hugging Face Space root README hash drifted.")
+    metadata = space.get("space_readme_metadata")
+    if metadata != expected["metadata"]:
+        failures.append("Hugging Face Space root README metadata drifted.")
+        metadata = metadata if isinstance(metadata, dict) else {}
+
+    for field, required_value in SPACE_README_METADATA.items():
+        actual_value = metadata.get(field) if isinstance(metadata, dict) else None
+        if field == "tags":
+            actual_tags = actual_value if isinstance(actual_value, list) else []
+            missing_tags = [
+                tag for tag in required_value if tag not in actual_tags
+            ]
+            if missing_tags:
+                failures.append(
+                    "Hugging Face Space root README is missing required tags: "
+                    + ", ".join(missing_tags)
+                    + "."
+                )
+        elif actual_value != required_value:
+            failures.append(
+                "Hugging Face Space root README metadata field is incorrect: "
+                f"{field}."
+            )
+
+    readme_text = (root / SPACE_README_PATH).read_text(encoding="utf-8")
+    for required_phrase in (
+        "Agent Environment",
+        "not security claims",
+        "does not publish private RL traces",
+        "Public publication requires release review",
+    ):
+        if required_phrase not in readme_text:
+            failures.append(
+                "Hugging Face Space root README is missing required boundary "
+                f"phrase: {required_phrase}."
+            )
+
+
+def _parse_space_readme_metadata(text: str) -> dict[str, Any]:
+    lines = text.splitlines()
+    if not lines or lines[0].strip() != "---":
+        raise ValueError("missing opening YAML front matter marker")
+    try:
+        closing_index = lines[1:].index("---") + 1
+    except ValueError as exc:
+        raise ValueError("missing closing YAML front matter marker") from exc
+
+    metadata = yaml.safe_load("\n".join(lines[1:closing_index]))
+    if not isinstance(metadata, dict):
+        raise ValueError("YAML front matter must be an object")
+    return metadata
 
 
 def _verify_runtime(
@@ -288,6 +401,14 @@ def _verify_runtime(
         failures.append(
             "Hugging Face Space requirements conflict with the Gradio version "
             "injected by HF Spaces."
+        )
+    expected_bundle = _space_formal_runtime_bundle(root)
+    if runtime.get("formal_runtime_bundle") != expected_bundle:
+        failures.append("Hugging Face Space formal runtime bundle drifted.")
+    bundle = _dict_or_empty(runtime.get("formal_runtime_bundle"))
+    if bundle.get("required_files_present") is not True:
+        failures.append(
+            "Hugging Face Space formal runtime bundle is missing required files."
         )
     if runtime.get("dataset_source") != "hf/dataset/attack_plans.jsonl":
         failures.append("Hugging Face Space manifest dataset_source is incorrect.")
@@ -330,10 +451,15 @@ def _verify_agent_environment_contract(
         "observation_schema": OBSERVATION_SCHEMA,
         "reward_report_schema": RL_REWARD_REPORT_SCHEMA,
         "rollout_trace_schema": ROLLOUT_TRACE_SCHEMA,
+        "formal_artifact_binding_schema": FORMAL_ARTIFACT_BINDING_SCHEMA,
+        "review_governance_binding_schema": (
+            "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+        ),
         "task_dataset": "hf/dataset/task_metadata.jsonl",
         "rollout_examples": "hf/dataset/rl_rollouts.jsonl",
         "scoring_function": "agades_pqc_gym.rl.environment.score_attack_plan_candidate",
         "task_interface": "single_turn_attackplan_json",
+        "reviewer_quality_requires_governance": True,
         "public_track_only": True,
         "private_trace_publication_allowed": False,
         "claims_pqc_breaks": False,
@@ -384,6 +510,26 @@ def _verify_agent_environment_contract(
         failures.append("Hugging Face Space Agent Environment reward schema drifted.")
     if rollout.get("schema_version") != ROLLOUT_TRACE_SCHEMA:
         failures.append("Hugging Face Space Agent Environment trace schema drifted.")
+    formal_binding = _dict_or_empty(rollout.get("formal_artifact_binding"))
+    review_governance = _dict_or_empty(formal_binding.get("review_governance"))
+    if formal_binding.get("schema_version") != FORMAL_ARTIFACT_BINDING_SCHEMA:
+        failures.append(
+            "Hugging Face Space Agent Environment formal binding schema drifted."
+        )
+    if formal_binding.get("review_governance_ok") is not True:
+        failures.append(
+            "Hugging Face Space Agent Environment lacks reviewer governance."
+        )
+    if review_governance.get("schema_version") != (
+        "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
+    ):
+        failures.append(
+            "Hugging Face Space Agent Environment reviewer governance schema drifted."
+        )
+    if reward.get("terms", {}).get("reviewer_quality") != 1.0:
+        failures.append(
+            "Hugging Face Space Agent Environment reviewer quality is not backed."
+        )
     if rollout.get("private_fields_present") is not False:
         failures.append("Hugging Face Space Agent Environment exposes private fields.")
 
@@ -599,6 +745,14 @@ def _verification_result(
             "default_label": examples.get("default_label"),
             "example_count": examples.get("example_count"),
             "failure_count": len(failures),
+            "has_space_readme_metadata": (
+                isinstance(space.get("space_readme_metadata"), dict)
+                and space.get("space_readme_metadata", {}).get("sdk") == "gradio"
+                and space.get("space_readme_metadata", {}).get("app_file")
+                == "app.py"
+                and "agent-environment"
+                in space.get("space_readme_metadata", {}).get("tags", [])
+            ),
             "is_agent_environment": (
                 space.get("category") == "agent-environment"
                 and agent_environment.get("observation_schema") == OBSERVATION_SCHEMA
@@ -610,6 +764,9 @@ def _verification_result(
             "requires_gradio_to_import_for_audit": runtime.get(
                 "requires_gradio_to_import_for_audit"
             ),
+            "formal_runtime_bundle_ready": _dict_or_empty(
+                runtime.get("formal_runtime_bundle")
+            ).get("required_files_present"),
             "uses_shared_verifier": verifier_contract.get("uses_shared_verifier"),
         },
         "failures": failures,
@@ -683,3 +840,47 @@ def _requirements_allow_injected_gradio(path: Path) -> bool:
         if "<6" in normalized or "<=5" in normalized:
             return False
     return True
+
+
+def _space_formal_runtime_bundle(root: Path) -> dict[str, Any]:
+    docs_dir = root / SPACE_FORMAL_DOCS_PATH
+    lean_dir = root / SPACE_FORMAL_LEAN_PATH
+    workflow_path = root / SPACE_CI_WORKFLOW_PATH
+    required_paths = (
+        docs_dir / "formal_attackplan_semantics.json",
+        docs_dir / "formal_operator_semantics.json",
+        docs_dir / "formal_estimator_model.json",
+        docs_dir / "reviewer_governance.json",
+        lean_dir / "AgadesPQC" / "AttackPlan.lean",
+        lean_dir / "AgadesPQC" / "ProofObligation.lean",
+        workflow_path,
+    )
+    docs = sorted(path for path in docs_dir.glob("*.json") if path.is_file())
+    lean_files = sorted(path for path in lean_dir.rglob("*") if path.is_file())
+    bundle_files = [*docs, *lean_files]
+    if workflow_path.is_file():
+        bundle_files.append(workflow_path)
+    return {
+        "docs_path": SPACE_FORMAL_DOCS_PATH.as_posix(),
+        "docs_json_count": len(docs),
+        "lean_path": SPACE_FORMAL_LEAN_PATH.as_posix(),
+        "lean_file_count": len(lean_files),
+        "ci_workflow_path": SPACE_CI_WORKFLOW_PATH.as_posix(),
+        "required_files_present": all(path.is_file() for path in required_paths),
+        "bundle_sha256": _bundle_sha256(root, bundle_files),
+    }
+
+
+def _bundle_sha256(root: Path, files: list[Path]) -> str:
+    digest = hashlib.sha256()
+    for path in sorted(files):
+        relative = path.relative_to(root).as_posix()
+        digest.update(relative.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(hashlib.sha256(path.read_bytes()).hexdigest().encode("ascii"))
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def _dict_or_empty(value: object) -> dict[str, Any]:
+    return dict(value) if isinstance(value, dict) else {}

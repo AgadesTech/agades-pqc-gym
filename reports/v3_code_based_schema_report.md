@@ -12,7 +12,7 @@ This report summarizes toy/downscaled AttackPlan evaluations.
 
 ## Results
 
-| Candidate | Family | Target | Status | Reproduction | Valid | Score | Time Bits | Memory Bits | Estimator |
+| Candidate | Family | Target | Status | Reproduction | Accepted | Score | Time Bits | Memory Bits | Estimator |
 | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | --- |
 | hqc_like_toy_schema_schema_placeholder_seed-0 | CODE_BASED | hqc_like_toy_schema | unsupported | not_requested | False | -1000000000.0 | unknown | unknown | code-based-placeholder-estimator |
 | hqc_like_toy_schema_schema_placeholder_seed-0 | CODE_BASED | hqc_like_toy_schema | unsupported | not_requested | False | -1000000000.0 | unknown | unknown | code-based-placeholder-estimator |

@@ -200,3 +200,42 @@ def test_report_contains_unsupported_status() -> None:
 
     assert "unsupported" in report
     assert "No cryptanalytic estimate" in report
+
+
+def test_report_labels_unsupported_acceptance_without_implying_invalid_json() -> None:
+    report = render_report(
+        title="Unsupported Report",
+        records=[
+            {
+                "candidate_id": "code-based-placeholder",
+                "accepted": False,
+                "attack_plan": {
+                    "target": {
+                        "family": "CODE_BASED",
+                        "name": "hqc_like_toy_schema",
+                    },
+                },
+                "evaluation": {
+                    "valid": False,
+                    "evaluation_status": "unsupported",
+                    "combined_score": -1e9,
+                    "estimated_time_bits": None,
+                    "estimated_memory_bits": None,
+                    "estimator_name": "code-based-placeholder-estimator",
+                    "feature_family": "CODE_BASED",
+                    "reproduction_status": "not_applicable",
+                },
+            }
+        ],
+    )
+
+    assert (
+        "| Candidate | Family | Target | Status | Reproduction | Accepted |"
+        in report
+    )
+    assert (
+        "| code-based-placeholder | CODE_BASED | hqc_like_toy_schema | "
+        "unsupported | not_applicable | False |"
+        in report
+    )
+    assert "Valid | Score" not in report

@@ -106,7 +106,6 @@ from agades_pqc_gym.integrations.huggingface_space_manifest import (
     verify_huggingface_space_manifest,
 )
 from agades_pqc_gym.integrations.huggingface_space_smoke import (
-    verify_huggingface_space_launch_smoke_report,
     verify_huggingface_space_smoke_report,
 )
 from agades_pqc_gym.integrations.lattice_estimator_baseline_contracts import (
@@ -378,45 +377,75 @@ GITHUB_ACTIONS_LEAN_GATE_REQUIRED_INPUTS: dict[str, Any] = {
     "auto-config": False,
     "use-mathlib-cache": True,
 }
+GITHUB_ACTIONS_ARTIFACT_DIFF_PATHS = (
+    "docs/benchmark_source_contracts.json",
+    "docs/source_catalog.json",
+    "docs/deepevolve_research_hooks_manifest.json",
+    "docs/family_registry_manifest.json",
+    "docs/family_plugin_manifest.json",
+    "docs/family_support_matrix.json",
+    "docs/ecosystem_source_graph.json",
+    "docs/family_operator_catalog.json",
+    "docs/formal_lean_backend.json",
+    "docs/formal_operator_semantics.json",
+    "docs/formal_attackplan_semantics.json",
+    "docs/formal_lattice_primal_usvp_evaluator_result.json",
+    "docs/formal_lattice_mlwe_module_hypothesis_evaluator_result.json",
+    "docs/formal_lattice_primal_usvp_proof_artifact.json",
+    "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
+    "docs/formal_family_coverage.json",
+    "docs/formal_estimator_model.json",
+    "docs/formal_obligation_ledger.json",
+    "docs/formal_smt_assist_contract.json",
+    "docs/lattice_estimator_manifest.json",
+    "docs/lattice_estimator_baseline_contracts.json",
+    "docs/runbook_input_manifest.json",
+    "docs/public_benchmark_manifest.json",
+    "public/run_export",
+    "hf/dataset",
+    "hf/dataset/MANIFEST.sha256",
+    "hf/space_manifest.json",
+    "hf/collection_manifest.json",
+    "docs/huggingface_publication_handoff.json",
+    "nvidia/accelerator_manifest.json",
+    "docs/nvidia_publication_handoff.json",
+    "docs/publication_manifest.json",
+    "docs/external_publication_review_packet.json",
+    "docs/private_run_policy.json",
+    "docs/private_dataset_curation.json",
+    "docs/pedagogical_rl_method.json",
+    "prime_intellect/training/private_qwen_prime_rl.template.toml",
+    "docs/private_training_config_manifest.json",
+    "docs/private_training_readiness.json",
+    "examples/openevolve/config.yaml",
+    "docs/prime_publication_handoff.json",
+    "docs/prime_speedrun_handoff.json",
+    "docs/prime_eval_config_manifest.json",
+    "prime_intellect/evals/agades_pqc_eval.template.toml",
+    "prime_intellect/verifiers_environment/prime_manifest.json",
+    "prime_intellect/schemas/attack_plan.schema.json",
+    "prime_intellect/schemas/verifier_result.schema.json",
+    "prime_intellect/schemas/schema_manifest.json",
+    "prime_intellect/schemas/task_metadata.schema.json",
+    "public/runbook_audit.json",
+    "public/release_audit.json",
+    "docs/release_status.json",
+    "public/publication_preflight.json",
+    "reports/formal_lean_build_smoke.json",
+    "reports/ecosystem_smoke.json",
+    "reports/hf_space_smoke.json",
+    "reports/openevolve_smoke.json",
+    "reports/prime_environment_smoke.json",
+    "reports/nvidia_manifest_safety.json",
+    "docs/reviewer_governance.json",
+    "docs/rl_environment_contract.json",
+)
 GITHUB_ACTIONS_REQUIRED_COMMANDS = (
     ("build-package", "uv build"),
     ("build-prime-environment", "uv build prime_intellect/verifiers_environment"),
     (
         "check-artifact-diff",
-        "git diff --exit-code -- docs/benchmark_source_contracts.json "
-        "docs/source_catalog.json docs/deepevolve_research_hooks_manifest.json "
-        "docs/family_registry_manifest.json "
-        "docs/family_plugin_manifest.json "
-        "docs/family_support_matrix.json "
-        "docs/ecosystem_source_graph.json "
-        "docs/family_operator_catalog.json "
-        "docs/formal_lean_backend.json "
-        "docs/lattice_estimator_manifest.json "
-        "docs/lattice_estimator_baseline_contracts.json "
-        "docs/runbook_input_manifest.json "
-        "docs/public_benchmark_manifest.json public/run_export "
-        "hf/dataset hf/space_manifest.json hf/collection_manifest.json "
-        "docs/huggingface_publication_handoff.json "
-        "nvidia/accelerator_manifest.json "
-        "docs/nvidia_publication_handoff.json "
-        "docs/publication_manifest.json "
-        "docs/external_publication_review_packet.json "
-        "docs/private_run_policy.json docs/private_dataset_curation.json "
-        "docs/pedagogical_rl_method.json "
-        "docs/prime_publication_handoff.json docs/prime_speedrun_handoff.json "
-        "docs/prime_eval_config_manifest.json "
-        "prime_intellect/evals/agades_pqc_eval.template.toml "
-        "prime_intellect/verifiers_environment/prime_manifest.json "
-        "prime_intellect/schemas/attack_plan.schema.json "
-        "prime_intellect/schemas/verifier_result.schema.json "
-        "prime_intellect/schemas/schema_manifest.json "
-        "prime_intellect/schemas/task_metadata.schema.json "
-        "public/runbook_audit.json public/release_audit.json "
-        "docs/release_status.json public/publication_preflight.json "
-        "reports/ecosystem_smoke.json reports/hf_space_smoke.json "
-        "reports/hf_space_launch_smoke.json "
-        "reports/openevolve_smoke.json reports/prime_environment_smoke.json "
-        "reports/nvidia_manifest_safety.json",
+        "git diff --exit-code -- " + " ".join(GITHUB_ACTIONS_ARTIFACT_DIFF_PATHS),
     ),
     ("check-whitespace", "git diff --check"),
     (
@@ -522,6 +551,16 @@ GITHUB_ACTIONS_REQUIRED_COMMANDS = (
         "docs/formal_lean_backend.json",
     ),
     (
+        "smoke-build-formal-lean",
+        "uv run agades-pqc formal-lean-build-smoke --out "
+        "reports/formal_lean_build_smoke.json",
+    ),
+    (
+        "verify-formal-lean-build-smoke",
+        "uv run agades-pqc formal-lean-build-smoke-verify --report "
+        "reports/formal_lean_build_smoke.json",
+    ),
+    (
         "generate-hf-dataset",
         "uv run agades-pqc hf-dataset --out hf/dataset",
     ),
@@ -544,16 +583,6 @@ GITHUB_ACTIONS_REQUIRED_COMMANDS = (
     (
         "verify-hf-space-smoke",
         "uv run agades-pqc hf-space-smoke-verify --report reports/hf_space_smoke.json",
-    ),
-    (
-        "generate-hf-space-launch-smoke",
-        "uv run agades-pqc hf-space-launch-smoke --out "
-        "reports/hf_space_launch_smoke.json",
-    ),
-    (
-        "verify-hf-space-launch-smoke",
-        "uv run agades-pqc hf-space-launch-smoke-verify --report "
-        "reports/hf_space_launch_smoke.json",
     ),
     (
         "generate-hf-collection-manifest",
@@ -761,7 +790,6 @@ def build_release_audit(root: Path | None = None) -> dict[str, Any]:
         _runbook_deliverables(project_root),
         _github_actions_ci(project_root),
         _hf_space_smoke(project_root),
-        _hf_space_launch_smoke(project_root),
         _hf_space_manifest(project_root),
         _hf_collection_manifest(project_root),
         _hf_publication_handoff(project_root),
@@ -966,37 +994,6 @@ def _hf_space_smoke(root: Path) -> dict[str, Any]:
                 "summary_contains_not_security_claim"
             ],
             "uses_shared_verifier": summary["uses_shared_verifier"],
-        },
-        failures=failures,
-    )
-
-
-def _hf_space_launch_smoke(root: Path) -> dict[str, Any]:
-    verification = verify_huggingface_space_launch_smoke_report(
-        Path("reports/hf_space_launch_smoke.json"),
-        root=root,
-    )
-    summary = verification["summary"]
-    failures = list(verification["failures"])
-
-    return _check(
-        check_id="hf-space-launch-smoke",
-        status="failed" if failures else "passed",
-        blocking=True,
-        artifact="reports/hf_space_launch_smoke.json",
-        detail=(
-            "Hugging Face Space launch smoke builds the Gradio Blocks UI and "
-            "verifies the public Agent Environment API endpoints."
-        ),
-        evidence={
-            "agent_environment_api_names_present": summary[
-                "agent_environment_api_names_present"
-            ],
-            "component_count": summary["component_count"],
-            "demo_class": summary["demo_class"],
-            "gradio_available": summary["gradio_available"],
-            "required_api_names_present": summary["required_api_names_present"],
-            "title": summary["title"],
         },
         failures=failures,
     )
@@ -4538,11 +4535,14 @@ def _deepevolve_research_hooks(root: Path) -> dict[str, Any]:
             failures.append(f"DeepEvolve research hook manifest is invalid JSON: {exc}")
 
         if isinstance(committed, dict):
-            expected = build_deepevolve_research_hooks_manifest()
+            expected = build_deepevolve_research_hooks_manifest(root=root)
             if committed != expected:
                 failures.append("DeepEvolve research hook manifest is not in sync.")
 
-            verification = verify_deepevolve_research_hooks_manifest(manifest_path)
+            verification = verify_deepevolve_research_hooks_manifest(
+                manifest_path,
+                root=root,
+            )
             failures.extend(verification["failures"])
             evidence["private_qwen_bound"] = verification["summary"][
                 "private_qwen_bound"
@@ -5301,6 +5301,8 @@ def _release_gate_closure(root: Path) -> dict[str, Any]:
 
     for path in _release_gate_artifact_paths(root):
         data = _read_json(path)
+        if not isinstance(data, dict):
+            continue
         release_gates = data.get("release_gates")
         if not isinstance(release_gates, list):
             continue
@@ -5357,22 +5359,64 @@ def _release_gate_closure(root: Path) -> dict[str, Any]:
 
 
 def _release_gate_artifact_paths(root: Path) -> list[Path]:
-    paths = [
-        *root.joinpath("docs").glob("*.json"),
-        *root.joinpath("hf").rglob("*.json"),
-        *root.joinpath("nvidia").glob("*.json"),
-        *root.joinpath("prime_intellect").glob("**/*.json"),
-        *root.joinpath("public").glob("*.json"),
-        *root.joinpath("reports").glob("*.json"),
-    ]
+    candidates = _git_tracked_json_paths(root)
+    if candidates is None:
+        candidates = [
+            *root.joinpath("docs").glob("*.json"),
+            *root.joinpath("hf").rglob("*.json"),
+            *root.joinpath("nvidia").glob("*.json"),
+            *root.joinpath("prime_intellect").glob("**/*.json"),
+            *root.joinpath("public").glob("*.json"),
+            *root.joinpath("reports").glob("*.json"),
+        ]
     return sorted(
-        (path for path in paths if not _is_local_smoke_report(path)),
+        (
+            path
+            for path in candidates
+            if path.is_file()
+            and not _contains_generated_or_hidden_part(path.relative_to(root))
+        ),
         key=lambda path: path.relative_to(root).as_posix(),
     )
 
 
-def _is_local_smoke_report(path: Path) -> bool:
-    return path.name.endswith((".current.local.json", ".local.json"))
+def _git_tracked_json_paths(root: Path) -> list[Path] | None:
+    result = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(root),
+            "ls-files",
+            "-z",
+            "--",
+            "docs",
+            "hf",
+            "nvidia",
+            "prime_intellect",
+            "public",
+            "reports",
+        ],
+        check=False,
+        capture_output=True,
+        text=False,
+    )
+    if result.returncode != 0:
+        return None
+    paths: list[Path] = []
+    for raw_path in result.stdout.split(b"\0"):
+        if not raw_path:
+            continue
+        relative_path = Path(raw_path.decode("utf-8"))
+        if relative_path.suffix == ".json":
+            paths.append(root / relative_path)
+    return paths
+
+
+def _contains_generated_or_hidden_part(path: Path) -> bool:
+    return any(
+        part.startswith(".") or part in {"__pycache__", "site-packages"}
+        for part in path.parts
+    )
 
 
 def _release_gate_indices(release_gates: list[Any], gate_id: str) -> list[int]:
@@ -5692,11 +5736,25 @@ def _workflow_steps(jobs: dict[str, Any]) -> list[dict[str, Any]]:
 
 
 def _normalized_run_commands(run: str) -> list[str]:
-    return [
-        " ".join(line.strip().split())
-        for line in run.splitlines()
-        if line.strip() and not line.strip().startswith("#")
-    ]
+    commands: list[str] = []
+    continued_parts: list[str] = []
+    for raw_line in run.splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+
+        continues = line.endswith("\\")
+        if continues:
+            line = line[:-1].strip()
+        continued_parts.append(line)
+
+        if not continues:
+            commands.append(" ".join(" ".join(continued_parts).split()))
+            continued_parts = []
+
+    if continued_parts:
+        commands.append(" ".join(" ".join(continued_parts).split()))
+    return commands
 
 
 def _valid_public_example_families(root: Path) -> tuple[set[str], list[str]]:

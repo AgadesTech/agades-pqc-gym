@@ -1,0 +1,1454 @@
+{
+  "families": [
+    {
+      "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+      "family": "LWE",
+      "operator_entry_count": 5,
+      "operators": [
+        {
+          "default_estimator": "mock-lattice-estimator",
+          "operator_type": "bounded_distance_decoding",
+          "optional_external_estimator": {
+            "algorithm_key": "bdd",
+            "name": "lattice-estimator",
+            "scope": "reviewed_lwe_mapping"
+          },
+          "reproduction_fixture_roots": [
+            "benchmarks/lattice_downscaled_lwe_instances"
+          ],
+          "required_assumptions": [
+            "lattice_estimator_default_cost_model"
+          ],
+          "required_parameters": [
+            "beta"
+          ],
+          "review_gate": "reviewed_lwe_mapping",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_mvp",
+          "target_constraints": [
+            "family=LWE",
+            "support_level=implemented",
+            "public toy/downscaled reproduction only"
+          ],
+          "variant": null
+        },
+        {
+          "default_estimator": "mock-lattice-estimator",
+          "operator_type": "bkw",
+          "optional_external_estimator": {
+            "algorithm_key": "bkw",
+            "name": "lattice-estimator",
+            "scope": "reviewed_lwe_mapping"
+          },
+          "reproduction_fixture_roots": [
+            "benchmarks/lattice_downscaled_lwe_instances"
+          ],
+          "required_assumptions": [
+            "lattice_estimator_default_cost_model"
+          ],
+          "required_parameters": [
+            "block_size"
+          ],
+          "review_gate": "reviewed_lwe_mapping",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_mvp",
+          "target_constraints": [
+            "family=LWE",
+            "support_level=implemented",
+            "public toy/downscaled reproduction only"
+          ],
+          "variant": null
+        },
+        {
+          "default_estimator": "mock-lattice-estimator",
+          "operator_type": "dual_attack",
+          "optional_external_estimator": {
+            "algorithm_key": "dual",
+            "name": "lattice-estimator",
+            "scope": "reviewed_lwe_mapping"
+          },
+          "reproduction_fixture_roots": [
+            "benchmarks/lattice_downscaled_lwe_instances"
+          ],
+          "required_assumptions": [
+            "lattice_estimator_default_cost_model"
+          ],
+          "required_parameters": [
+            "beta"
+          ],
+          "review_gate": "reviewed_lwe_mapping",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_mvp",
+          "target_constraints": [
+            "family=LWE",
+            "support_level=implemented",
+            "public toy/downscaled reproduction only"
+          ],
+          "variant": null
+        },
+        {
+          "default_estimator": "mock-lattice-estimator",
+          "operator_type": "dual_hybrid",
+          "optional_external_estimator": {
+            "algorithm_key": "dual_hybrid",
+            "name": "lattice-estimator",
+            "scope": "reviewed_lwe_mapping"
+          },
+          "reproduction_fixture_roots": [
+            "benchmarks/lattice_downscaled_lwe_instances"
+          ],
+          "required_assumptions": [
+            "lattice_estimator_default_cost_model"
+          ],
+          "required_parameters": [
+            "beta",
+            "zeta"
+          ],
+          "review_gate": "reviewed_lwe_mapping",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_mvp",
+          "target_constraints": [
+            "family=LWE",
+            "support_level=implemented",
+            "public toy/downscaled reproduction only"
+          ],
+          "variant": null
+        },
+        {
+          "default_estimator": "mock-lattice-estimator",
+          "operator_type": "primal_usvp",
+          "optional_external_estimator": {
+            "algorithm_key": "usvp",
+            "name": "lattice-estimator",
+            "scope": "reviewed_lwe_mapping"
+          },
+          "reproduction_fixture_roots": [
+            "benchmarks/lattice_downscaled_lwe_instances"
+          ],
+          "required_assumptions": [
+            "lattice_estimator_default_cost_model"
+          ],
+          "required_parameters": [
+            "beta"
+          ],
+          "review_gate": "reviewed_lwe_mapping",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_mvp",
+          "target_constraints": [
+            "family=LWE",
+            "support_level=implemented",
+            "public toy/downscaled reproduction only"
+          ],
+          "variant": null
+        }
+      ],
+      "plugin": "lattice",
+      "support_level": "implemented"
+    },
+    {
+      "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+      "family": "MLWE",
+      "operator_entry_count": 2,
+      "operators": [
+        {
+          "default_estimator": "mock-lattice-estimator",
+          "operator_type": "bkz_parameter_sweep",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [],
+          "required_assumptions": [
+            "lattice_estimator_default_cost_model"
+          ],
+          "required_parameters": [
+            "beta_max",
+            "beta_min"
+          ],
+          "review_gate": "mlwe_warning_gated_flattening",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_mvp",
+          "target_constraints": [
+            "family=MLWE",
+            "support_level=implemented",
+            "module rank k required",
+            "optional Lattice Estimator use requires expert review"
+          ],
+          "variant": null
+        },
+        {
+          "default_estimator": "mock-lattice-estimator",
+          "operator_type": "module_lattice_reduction_hypothesis",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [],
+          "required_assumptions": [
+            "requires_expert_review"
+          ],
+          "required_parameters": [
+            "model"
+          ],
+          "review_gate": "mlwe_warning_gated_flattening",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_mvp",
+          "target_constraints": [
+            "family=MLWE",
+            "support_level=implemented",
+            "module rank k required",
+            "not a direct Lattice Estimator mapping"
+          ],
+          "variant": null
+        }
+      ],
+      "plugin": "lattice",
+      "support_level": "implemented"
+    },
+    {
+      "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+      "family": "NTRU",
+      "operator_entry_count": 0,
+      "operators": [],
+      "plugin": "lattice",
+      "support_level": "schema_only"
+    },
+    {
+      "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+      "family": "SIS",
+      "operator_entry_count": 0,
+      "operators": [],
+      "plugin": "lattice",
+      "support_level": "schema_only"
+    },
+    {
+      "applicability_validator": "agades_pqc_gym.families.code_based.validators.validate_code_based_plan",
+      "family": "CODE_BASED",
+      "operator_entry_count": 17,
+      "operators": [
+        {
+          "default_estimator": "toy-code-based-isd-estimator",
+          "operator_type": "information_set_decoding",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/code_based_toy_isd/fixtures"
+          ],
+          "required_assumptions": [
+            "prange_isd_combinatorial_cost_model"
+          ],
+          "required_parameters": [
+            "variant"
+          ],
+          "review_gate": "bounded_code_based_toy_isd_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_",
+            "n <= 256",
+            "w <= 32"
+          ],
+          "variant": "prange_toy"
+        },
+        {
+          "default_estimator": "toy-code-based-isd-estimator",
+          "operator_type": "information_set_decoding",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/code_based_toy_isd/fixtures"
+          ],
+          "required_assumptions": [
+            "lee_brickell_isd_partial_enumeration_model"
+          ],
+          "required_parameters": [
+            "p",
+            "variant"
+          ],
+          "review_gate": "bounded_code_based_toy_isd_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "1 <= p <= w",
+            "p <= k",
+            "w-p <= n-k"
+          ],
+          "variant": "lee_brickell_toy"
+        },
+        {
+          "default_estimator": "toy-code-based-isd-estimator",
+          "operator_type": "information_set_decoding",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/code_based_toy_isd/fixtures"
+          ],
+          "required_assumptions": [
+            "stern_isd_partition_collision_cost_model"
+          ],
+          "required_parameters": [
+            "p",
+            "variant"
+          ],
+          "review_gate": "bounded_code_based_toy_isd_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "2p <= w",
+            "p <= floor(k/2)",
+            "w-2p <= n-k"
+          ],
+          "variant": "stern_toy"
+        },
+        {
+          "default_estimator": "toy-code-based-isd-estimator",
+          "operator_type": "information_set_decoding",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/code_based_toy_isd/fixtures"
+          ],
+          "required_assumptions": [
+            "dumer_isd_list_merging_cost_model"
+          ],
+          "required_parameters": [
+            "ell",
+            "p",
+            "variant"
+          ],
+          "review_gate": "bounded_code_based_toy_isd_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "2p <= w",
+            "p <= floor(k/2)",
+            "ell <= n-k",
+            "w-2p <= n-k-ell"
+          ],
+          "variant": "dumer_toy"
+        },
+        {
+          "default_estimator": "toy-code-based-isd-estimator",
+          "operator_type": "information_set_decoding",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/code_based_toy_isd/fixtures"
+          ],
+          "required_assumptions": [
+            "bjmm_isd_representation_merge_model"
+          ],
+          "required_parameters": [
+            "ell",
+            "p",
+            "representation_count",
+            "variant"
+          ],
+          "review_gate": "bounded_code_based_toy_isd_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "2p <= w",
+            "p <= floor(k/2)",
+            "ell <= n-k",
+            "representation_count <= 64",
+            "w-2p <= n-k-ell"
+          ],
+          "variant": "bjmm_toy"
+        },
+        {
+          "default_estimator": "toy-code-based-isd-estimator",
+          "operator_type": "information_set_decoding",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/code_based_toy_isd/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_qc_syndrome_rotation_model"
+          ],
+          "required_parameters": [
+            "block_count",
+            "block_size",
+            "variant"
+          ],
+          "review_gate": "bounded_code_based_toy_qc_rotation_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_qc_",
+            "n == block_size * block_count",
+            "block_size <= 64",
+            "block_count <= 16"
+          ],
+          "variant": "qc_rotation_toy"
+        },
+        {
+          "default_estimator": "toy-code-based-repetition-decoder-estimator",
+          "operator_type": "decoding_fixture_check",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/code_based_toy_hqc/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_hqc_repetition_decoder_model"
+          ],
+          "required_parameters": [
+            "repetition_factor",
+            "variant"
+          ],
+          "review_gate": "bounded_hqc_inspired_repetition_fixture_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_hqc_",
+            "n == k * repetition_factor",
+            "repetition_factor odd and <= 16"
+          ],
+          "variant": "hqc_repetition_toy"
+        },
+        {
+          "default_estimator": "toy-code-based-weighted-repetition-decoder-estimator",
+          "operator_type": "decoding_fixture_check",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/code_based_toy_hqc/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_hqc_weighted_repetition_decoder_model"
+          ],
+          "required_parameters": [
+            "max_reliability_weight",
+            "repetition_factor",
+            "variant"
+          ],
+          "review_gate": "bounded_hqc_inspired_weighted_repetition_fixture_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_hqc_",
+            "n == k * repetition_factor",
+            "repetition_factor odd and <= 16",
+            "max_reliability_weight <= 16",
+            "not an HQC result"
+          ],
+          "variant": "hqc_weighted_repetition_toy"
+        },
+        {
+          "default_estimator": "toy-code-based-parity-check-decoder-estimator",
+          "operator_type": "decoding_fixture_check",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/code_based_toy_hqc/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_hqc_parity_check_decoder_model"
+          ],
+          "required_parameters": [
+            "max_error_weight",
+            "variant"
+          ],
+          "review_gate": "bounded_hqc_inspired_parity_check_fixture_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_hqc_",
+            "k < n",
+            "max_error_weight == w",
+            "w <= n-k"
+          ],
+          "variant": "hqc_parity_check_toy"
+        },
+        {
+          "default_estimator": "toy-code-based-circulant-syndrome-decoder-estimator",
+          "operator_type": "decoding_fixture_check",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/code_based_toy_hqc/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_hqc_circulant_syndrome_decoder_model"
+          ],
+          "required_parameters": [
+            "block_size",
+            "max_error_weight",
+            "variant"
+          ],
+          "review_gate": "bounded_hqc_inspired_circulant_syndrome_fixture_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_hqc_",
+            "n == 2 * block_size",
+            "k == block_size",
+            "max_error_weight == w",
+            "w <= block_size",
+            "not an HQC result"
+          ],
+          "variant": "hqc_circulant_syndrome_toy"
+        },
+        {
+          "default_estimator": "toy-code-based-circulant-erasure-decoder-estimator",
+          "operator_type": "decoding_fixture_check",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/code_based_toy_hqc/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_hqc_circulant_erasure_decoder_model"
+          ],
+          "required_parameters": [
+            "block_size",
+            "first_block_erasure_count",
+            "max_error_weight",
+            "second_block_erasure_count",
+            "variant"
+          ],
+          "review_gate": "bounded_hqc_inspired_circulant_erasure_fixture_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_hqc_",
+            "n == 2 * block_size",
+            "k == block_size",
+            "max_error_weight == w",
+            "total erasure count >= max_error_weight",
+            "total erasure count <= 64",
+            "not an HQC result"
+          ],
+          "variant": "hqc_circulant_erasure_toy"
+        },
+        {
+          "default_estimator": "toy-code-based-erasure-syndrome-decoder-estimator",
+          "operator_type": "decoding_fixture_check",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/code_based_toy_hqc/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_hqc_erasure_syndrome_decoder_model"
+          ],
+          "required_parameters": [
+            "erasure_count",
+            "max_error_weight",
+            "variant"
+          ],
+          "review_gate": "bounded_hqc_inspired_erasure_syndrome_fixture_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_hqc_",
+            "k < n",
+            "max_error_weight == w",
+            "erasure_count >= max_error_weight",
+            "erasure_count <= n",
+            "not an HQC result"
+          ],
+          "variant": "hqc_erasure_syndrome_toy"
+        },
+        {
+          "default_estimator": "toy-code-based-bit-flip-decoder-estimator",
+          "operator_type": "decoding_fixture_check",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/code_based_toy_mdpc/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_mdpc_bit_flip_decoder_model"
+          ],
+          "required_parameters": [
+            "max_iterations",
+            "threshold",
+            "variant"
+          ],
+          "review_gate": "bounded_mdpc_bit_flip_fixture_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_mdpc_",
+            "k < n",
+            "threshold <= n-k",
+            "max_iterations <= 32",
+            "not a BIKE result"
+          ],
+          "variant": "mdpc_bit_flip_toy"
+        },
+        {
+          "default_estimator": "toy-code-based-bit-flip-decoder-estimator",
+          "operator_type": "decoding_fixture_check",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/code_based_toy_mdpc/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_mdpc_black_gray_bit_flip_decoder_model"
+          ],
+          "required_parameters": [
+            "black_threshold",
+            "gray_threshold",
+            "max_iterations",
+            "variant"
+          ],
+          "review_gate": "bounded_mdpc_black_gray_bit_flip_fixture_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_mdpc_",
+            "k < n",
+            "gray_threshold <= black_threshold <= n-k",
+            "max_iterations <= 32",
+            "not a BIKE result"
+          ],
+          "variant": "mdpc_black_gray_bit_flip_toy"
+        },
+        {
+          "default_estimator": "toy-code-based-bit-flip-decoder-estimator",
+          "operator_type": "decoding_fixture_check",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/code_based_toy_mdpc/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_mdpc_syndrome_weight_bit_flip_decoder_model"
+          ],
+          "required_parameters": [
+            "max_iterations",
+            "min_syndrome_weight_drop",
+            "variant"
+          ],
+          "review_gate": "bounded_mdpc_syndrome_weight_bit_flip_fixture_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_mdpc_",
+            "k < n",
+            "min_syndrome_weight_drop <= n-k",
+            "max_iterations <= 32",
+            "not a BIKE result"
+          ],
+          "variant": "mdpc_syndrome_weight_bit_flip_toy"
+        },
+        {
+          "default_estimator": "toy-code-based-classic-mceliece-syndrome-estimator",
+          "operator_type": "decoding_fixture_check",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/code_based_toy_classic_mceliece/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_classic_mceliece_syndrome_decoder_model"
+          ],
+          "required_parameters": [
+            "max_error_weight",
+            "variant"
+          ],
+          "review_gate": "bounded_classic_mceliece_inspired_syndrome_fixture_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_classic_mceliece_",
+            "k < n",
+            "max_error_weight == w",
+            "w <= n-k",
+            "comb(n, w) <= 100000",
+            "not a Classic McEliece result"
+          ],
+          "variant": "classic_mceliece_syndrome_toy"
+        },
+        {
+          "default_estimator": "toy-code-based-classic-mceliece-support-syndrome-estimator",
+          "operator_type": "decoding_fixture_check",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/code_based_toy_classic_mceliece/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_classic_mceliece_support_syndrome_decoder_model"
+          ],
+          "required_parameters": [
+            "max_error_weight",
+            "support_size",
+            "variant"
+          ],
+          "review_gate": "bounded_classic_mceliece_inspired_public_support_fixture_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_classic_mceliece_",
+            "k < n",
+            "max_error_weight == w",
+            "support_size >= max_error_weight",
+            "support_size <= n",
+            "not a Classic McEliece result"
+          ],
+          "variant": "classic_mceliece_support_syndrome_toy"
+        }
+      ],
+      "plugin": "code_based",
+      "support_level": "toy_evaluator"
+    },
+    {
+      "applicability_validator": "agades_pqc_gym.families.multivariate.validators.validate_multivariate_plan",
+      "family": "MULTIVARIATE",
+      "operator_entry_count": 5,
+      "operators": [
+        {
+          "default_estimator": "toy-multivariate-estimator",
+          "operator_type": "groebner_basis",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/multivariate_toy_mq/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_mq_exhaustive_search_model"
+          ],
+          "required_parameters": [
+            "model"
+          ],
+          "review_gate": "bounded_multivariate_toy_mq_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "variables <= 16",
+            "equations <= 16",
+            "GF(q) q <= 256"
+          ],
+          "variant": "toy_mq_search"
+        },
+        {
+          "default_estimator": "toy-multivariate-estimator",
+          "operator_type": "groebner_basis",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/multivariate_toy_mq/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_mq_hybrid_linearization_model"
+          ],
+          "required_parameters": [
+            "guessed_variables",
+            "model"
+          ],
+          "review_gate": "bounded_multivariate_toy_mq_hybrid_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "variables <= 16",
+            "1 <= guessed_variables < variables",
+            "GF(2) fixture reproduction only"
+          ],
+          "variant": "toy_mq_hybrid_search"
+        },
+        {
+          "default_estimator": "toy-multivariate-estimator",
+          "operator_type": "groebner_basis",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [],
+          "required_assumptions": [
+            "toy_mq_degree_bound_model"
+          ],
+          "required_parameters": [
+            "degree_bound",
+            "linear_algebra_omega",
+            "model"
+          ],
+          "review_gate": "bounded_multivariate_toy_degree_bound_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "variables <= 16",
+            "equations <= 16",
+            "GF(q) q <= 256",
+            "2 <= degree_bound <= variables",
+            "2.0 <= linear_algebra_omega <= 3.0",
+            "degree-bound output is not a Groebner proof"
+          ],
+          "variant": "toy_mq_degree_bound"
+        },
+        {
+          "default_estimator": "toy-multivariate-estimator",
+          "operator_type": "minrank_attack",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/multivariate_toy_minrank/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_minrank_exhaustive_search_model"
+          ],
+          "required_parameters": [
+            "matrix_cols",
+            "matrix_rows",
+            "model",
+            "target_rank"
+          ],
+          "review_gate": "bounded_multivariate_toy_minrank_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target_rank < min(matrix_rows, matrix_cols)",
+            "GF(2) fixture reproduction only"
+          ],
+          "variant": "toy_minrank_search"
+        },
+        {
+          "default_estimator": "toy-multivariate-estimator",
+          "operator_type": "signature_fixture_check",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/multivariate_toy_uov/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_uov_public_map_verification_model"
+          ],
+          "required_parameters": [
+            "oil_variables",
+            "signature_model",
+            "vinegar_variables"
+          ],
+          "review_gate": "bounded_multivariate_toy_uov_public_map_fixture_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_uov_",
+            "field == GF(2)",
+            "oil_variables + vinegar_variables == variables",
+            "not a UOV, MAYO, or Rainbow result"
+          ],
+          "variant": "toy_uov_public_map_verify"
+        }
+      ],
+      "plugin": "multivariate",
+      "support_level": "toy_evaluator"
+    },
+    {
+      "applicability_validator": "agades_pqc_gym.families.hash_based.validators.validate_hash_based_plan",
+      "family": "HASH_BASED",
+      "operator_entry_count": 7,
+      "operators": [
+        {
+          "default_estimator": "toy-hash-bound-estimator",
+          "operator_type": "security_bound_check",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/hash_based_toy_bound/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_hash_preimage_bound_model"
+          ],
+          "required_parameters": [
+            "bound_model"
+          ],
+          "review_gate": "bounded_hash_preimage_bound_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_",
+            "digest bits n <= 64"
+          ],
+          "variant": "toy_preimage_bound"
+        },
+        {
+          "default_estimator": "toy-hash-bound-estimator",
+          "operator_type": "security_bound_check",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/hash_based_toy_bound/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_hash_collision_bound_model"
+          ],
+          "required_parameters": [
+            "bound_model"
+          ],
+          "review_gate": "bounded_hash_collision_bound_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_",
+            "digest bits n <= 64"
+          ],
+          "variant": "toy_collision_bound"
+        },
+        {
+          "default_estimator": "toy-hash-bound-estimator",
+          "operator_type": "hash_signature_verification",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/hash_based_toy_signature/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_hash_signature_chain_model"
+          ],
+          "required_parameters": [
+            "chain_count",
+            "max_chain_steps",
+            "signature_model"
+          ],
+          "review_gate": "bounded_hash_signature_chain_fixture_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "chain_count > 0",
+            "max_chain_steps > 0"
+          ],
+          "variant": "toy_wots_chain_verify"
+        },
+        {
+          "default_estimator": "toy-hash-bound-estimator",
+          "operator_type": "hash_signature_verification",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/hash_based_toy_signature/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_hash_merkle_auth_path_model"
+          ],
+          "required_parameters": [
+            "leaf_index",
+            "signature_model",
+            "tree_height"
+          ],
+          "review_gate": "bounded_hash_merkle_auth_path_fixture_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "tree_height <= 16",
+            "leaf_index < 2**tree_height"
+          ],
+          "variant": "toy_merkle_auth_path_verify"
+        },
+        {
+          "default_estimator": "toy-hash-bound-estimator",
+          "operator_type": "hash_signature_verification",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/hash_based_toy_signature/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_hash_fors_auth_path_model"
+          ],
+          "required_parameters": [
+            "selected_indices",
+            "signature_model",
+            "tree_count",
+            "tree_height"
+          ],
+          "review_gate": "bounded_hash_fors_auth_path_fixture_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "tree_count <= 16",
+            "tree_height <= 16",
+            "selected_indices length == tree_count",
+            "not an SLH-DSA result"
+          ],
+          "variant": "toy_fors_auth_path_verify"
+        },
+        {
+          "default_estimator": "toy-hash-bound-estimator",
+          "operator_type": "hash_signature_verification",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/hash_based_toy_signature/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_hash_slh_dsa_hypertree_model"
+          ],
+          "required_parameters": [
+            "fors_selected_indices",
+            "fors_tree_count",
+            "fors_tree_height",
+            "hypertree_height",
+            "hypertree_leaf_index",
+            "signature_model",
+            "wots_chain_count",
+            "wots_max_chain_steps"
+          ],
+          "review_gate": "bounded_hash_slh_dsa_hypertree_fixture_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "fors_tree_count <= 16",
+            "fors_tree_height <= 16",
+            "wots_chain_count <= 16",
+            "wots_max_chain_steps <= 64",
+            "hypertree_height <= 16",
+            "not an SLH-DSA result"
+          ],
+          "variant": "toy_slh_dsa_hypertree_verify"
+        },
+        {
+          "default_estimator": "toy-hash-bound-estimator",
+          "operator_type": "misuse_check",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/hash_based_toy_misuse/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_hash_misuse_fixture_model"
+          ],
+          "required_parameters": [
+            "expected_reuse_groups",
+            "fixture",
+            "record_count",
+            "salt_bytes"
+          ],
+          "review_gate": "json_only_hash_reused_salt_misuse_fixture_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "fixture=toy_hash_reused_salt",
+            "record_count > 0",
+            "expected_reuse_groups > 0",
+            "no exploit or security claim"
+          ],
+          "variant": "toy_hash_reused_salt"
+        }
+      ],
+      "plugin": "hash_based",
+      "support_level": "toy_evaluator"
+    },
+    {
+      "applicability_validator": "agades_pqc_gym.families.isogeny_historical.validators.validate_isogeny_historical_plan",
+      "family": "ISOGENY_HISTORICAL",
+      "operator_entry_count": 3,
+      "operators": [
+        {
+          "default_estimator": "toy-isogeny-historical-path-estimator",
+          "operator_type": "historical_isogeny_reconstruction",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/isogeny_historical_toy_path/fixtures"
+          ],
+          "required_assumptions": [
+            "historical_not_current_standard",
+            "historical_toy_isogeny_path_model"
+          ],
+          "required_parameters": [
+            "branching_factor",
+            "case",
+            "walk_length"
+          ],
+          "review_gate": "historical_toy_path_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_",
+            "not current-standard",
+            "walk_length <= 32"
+          ],
+          "variant": "toy_sidh_path_search"
+        },
+        {
+          "default_estimator": "toy-isogeny-historical-path-estimator",
+          "operator_type": "historical_isogeny_reconstruction",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/isogeny_historical_toy_path/fixtures"
+          ],
+          "required_assumptions": [
+            "historical_not_current_standard",
+            "historical_toy_commutative_walk_model"
+          ],
+          "required_parameters": [
+            "branching_factor",
+            "case",
+            "walk_length"
+          ],
+          "review_gate": "historical_commutative_walk_toy_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_",
+            "not current-standard",
+            "branching_factor <= 8"
+          ],
+          "variant": "toy_commutative_walk_search"
+        },
+        {
+          "default_estimator": "toy-isogeny-historical-path-estimator",
+          "operator_type": "historical_isogeny_reconstruction",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/isogeny_historical_toy_path/fixtures"
+          ],
+          "required_assumptions": [
+            "historical_not_current_standard",
+            "historical_toy_volcano_walk_model"
+          ],
+          "required_parameters": [
+            "branching_factor",
+            "case",
+            "volcano_height",
+            "walk_length"
+          ],
+          "review_gate": "historical_volcano_walk_toy_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "target name starts with toy_",
+            "not current-standard",
+            "branching_factor <= 8",
+            "volcano_height <= 8",
+            "fixture graph levels move by at most one"
+          ],
+          "variant": "toy_volcano_walk_search"
+        }
+      ],
+      "plugin": "isogeny_historical",
+      "support_level": "toy_evaluator"
+    },
+    {
+      "applicability_validator": "agades_pqc_gym.families.implementation_security.validators.validate_implementation_security_plan",
+      "family": "IMPLEMENTATION_SECURITY",
+      "operator_entry_count": 9,
+      "operators": [
+        {
+          "default_estimator": "toy-implementation-security-estimator",
+          "operator_type": "kat_conformance",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/implementation_security_toy_kat/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_kat_digest_manifest_model"
+          ],
+          "required_parameters": [
+            "expected_sha256",
+            "model",
+            "payload",
+            "suite",
+            "vector_count"
+          ],
+          "review_gate": "json_only_toy_kat_digest_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "payload <= 512 bytes",
+            "vector_count <= 16"
+          ],
+          "variant": "toy_kat_digest_match"
+        },
+        {
+          "default_estimator": "toy-implementation-security-estimator",
+          "operator_type": "kat_conformance",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/implementation_security_toy_kat/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_acvp_json_vector_set_model"
+          ],
+          "required_parameters": [
+            "expected_vector_set_sha256",
+            "model",
+            "suite",
+            "test_count",
+            "vector_set"
+          ],
+          "review_gate": "json_only_toy_acvp_vector_set_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "no ACVP certificate claim",
+            "test_count <= 16"
+          ],
+          "variant": "toy_acvp_vector_set_match"
+        },
+        {
+          "default_estimator": "toy-implementation-security-estimator",
+          "operator_type": "constant_time_check",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/implementation_security_toy_timing/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_timing_leakage_model"
+          ],
+          "required_parameters": [
+            "fixed_cycles",
+            "max_abs_t",
+            "model",
+            "random_cycles",
+            "tool"
+          ],
+          "review_gate": "json_only_toy_timing_summary_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "tool=toy_welch_timing_check",
+            "no live traces or binaries",
+            "no constant-time claim"
+          ],
+          "variant": "toy_timing_welch_t_check"
+        },
+        {
+          "default_estimator": "toy-implementation-security-estimator",
+          "operator_type": "constant_time_check",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/implementation_security_toy_timing/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_dudect_summary_model"
+          ],
+          "required_parameters": [
+            "dudect_version",
+            "fixed_cycles",
+            "max_abs_t",
+            "model",
+            "random_cycles",
+            "tool"
+          ],
+          "review_gate": "json_only_toy_dudect_summary_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "tool=toy_dudect_summary_check",
+            "does not execute dudect",
+            "no live traces or binaries",
+            "no constant-time claim"
+          ],
+          "variant": "toy_dudect_summary_threshold_check"
+        },
+        {
+          "default_estimator": "toy-implementation-security-estimator",
+          "operator_type": "constant_time_check",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/implementation_security_toy_timing/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_ctgrind_secret_taint_summary_model"
+          ],
+          "required_parameters": [
+            "checked_blocks",
+            "ctgrind_version",
+            "max_secret_dependent_branch_count",
+            "max_secret_dependent_memory_access_count",
+            "model",
+            "secret_dependent_branch_count",
+            "secret_dependent_memory_access_count",
+            "tool"
+          ],
+          "review_gate": "json_only_toy_ctgrind_secret_taint_summary_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "tool=toy_ctgrind_secret_taint_summary_check",
+            "does not execute ctgrind",
+            "no live traces or binaries",
+            "no constant-time claim"
+          ],
+          "variant": "toy_ctgrind_secret_taint_summary_check"
+        },
+        {
+          "default_estimator": "toy-implementation-security-estimator",
+          "operator_type": "benchmark_harness",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/implementation_security_toy_benchmark/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_benchmark_summary_model"
+          ],
+          "required_parameters": [
+            "max_median_cycles",
+            "metric",
+            "model",
+            "samples",
+            "suite"
+          ],
+          "review_gate": "json_only_toy_benchmark_summary_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "metric=toy_cycles_per_operation",
+            "no live devices or binaries",
+            "no performance claim"
+          ],
+          "variant": "toy_benchmark_summary_check"
+        },
+        {
+          "default_estimator": "toy-implementation-security-estimator",
+          "operator_type": "benchmark_harness",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/implementation_security_toy_benchmark/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_binary_size_model"
+          ],
+          "required_parameters": [
+            "bss_bytes",
+            "data_bytes",
+            "max_total_bytes",
+            "metric",
+            "model",
+            "rodata_bytes",
+            "suite",
+            "text_bytes"
+          ],
+          "review_gate": "json_only_toy_binary_size_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "metric=toy_binary_size_bytes",
+            "no live devices or binaries",
+            "no binary-size claim",
+            "no performance claim"
+          ],
+          "variant": "toy_binary_size_check"
+        },
+        {
+          "default_estimator": "toy-implementation-security-estimator",
+          "operator_type": "benchmark_harness",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/implementation_security_toy_benchmark/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_memory_footprint_model"
+          ],
+          "required_parameters": [
+            "code_bytes",
+            "heap_bytes",
+            "max_code_bytes",
+            "max_heap_bytes",
+            "max_stack_bytes",
+            "metric",
+            "model",
+            "stack_bytes",
+            "suite"
+          ],
+          "review_gate": "json_only_toy_memory_footprint_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "metric=toy_memory_footprint_bytes",
+            "no live devices or binaries",
+            "no memory-usage claim",
+            "no performance claim"
+          ],
+          "variant": "toy_memory_footprint_check"
+        },
+        {
+          "default_estimator": "toy-implementation-security-estimator",
+          "operator_type": "benchmark_harness",
+          "optional_external_estimator": null,
+          "reproduction_fixture_roots": [
+            "benchmarks/implementation_security_toy_benchmark/fixtures"
+          ],
+          "required_assumptions": [
+            "toy_stack_usage_model"
+          ],
+          "required_parameters": [
+            "max_stack_bytes",
+            "metric",
+            "model",
+            "stack_samples",
+            "suite"
+          ],
+          "review_gate": "json_only_toy_stack_usage_only",
+          "review_required_before_claims": true,
+          "security_claim": false,
+          "support_status": "implemented_toy",
+          "target_constraints": [
+            "metric=toy_stack_usage_bytes",
+            "no live devices or binaries",
+            "no stack-usage claim",
+            "no performance claim"
+          ],
+          "variant": "toy_stack_usage_check"
+        }
+      ],
+      "plugin": "implementation_security",
+      "support_level": "toy_evaluator"
+    }
+  ],
+  "project": {
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "release_gates": [
+    "uv run pytest tests/test_family_operator_catalog.py -q",
+    "uv run agades-pqc family-operator-catalog --out docs/family_operator_catalog.json",
+    "uv run agades-pqc family-operator-catalog-verify --catalog docs/family_operator_catalog.json"
+  ],
+  "safety": {
+    "lattice_estimator_is_universal_pqc_oracle": false,
+    "non_lattice_entries_use_lattice_estimator": false,
+    "schema_only_families_have_runtime_estimators": false,
+    "security_claim": false
+  },
+  "schema_version": "agades.pqc.family_operator_catalog.v1",
+  "summary": {
+    "applicability_validator_count": 6,
+    "families": 9,
+    "families_with_operator_entries": [
+      "CODE_BASED",
+      "HASH_BASED",
+      "IMPLEMENTATION_SECURITY",
+      "ISOGENY_HISTORICAL",
+      "LWE",
+      "MLWE",
+      "MULTIVARIATE"
+    ],
+    "lattice_estimator_operator_entries": 5,
+    "non_lattice_lattice_estimator_operator_entries": 0,
+    "operator_entries": 48,
+    "schema_only_families": [
+      "NTRU",
+      "SIS"
+    ],
+    "schema_only_operator_entries": 0,
+    "support_level_counts": {
+      "implemented": 2,
+      "schema_only": 2,
+      "toy_evaluator": 5
+    },
+    "toy_evaluator_families": [
+      "CODE_BASED",
+      "HASH_BASED",
+      "IMPLEMENTATION_SECURITY",
+      "ISOGENY_HISTORICAL",
+      "MULTIVARIATE"
+    ]
+  }
+}

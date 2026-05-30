@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import json
 from pathlib import Path
 from typing import Any
@@ -11,13 +12,24 @@ from agades_pqc_gym.deepevolve_hooks.operator_proposals import (
     proposals_from_paper_card,
 )
 from agades_pqc_gym.deepevolve_hooks.paper_card import PaperCard, load_paper_cards
+from agades_pqc_gym.integrations.private_qwen_artifacts import (
+    PRIVATE_QWEN_ARTIFACT_PLAN_ENV,
+    PRIVATE_QWEN_ARTIFACT_PLAN_SCHEMA,
+    PRIVATE_QWEN_ARTIFACT_PLAN_TEMPLATE,
+    PRIVATE_QWEN_ARTIFACT_VERIFICATION_COMMAND,
+    PRIVATE_QWEN_ARTIFACT_VERIFICATION_SCHEMA,
+)
+from agades_pqc_gym.integrations.private_training_config import (
+    PRIVATE_TRAINING_REQUIRED_ENV_VARS,
+)
 
 DEEPEVOLVE_RESEARCH_HOOKS_SCHEMA = "agades.pqc.deepevolve_research_hooks.v1"
 DEEPEVOLVE_RESEARCH_HOOKS_VERIFICATION_SCHEMA = (
     "agades.pqc.deepevolve_research_hooks_verification.v1"
 )
 ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_PAPER_CARD_DIR = ROOT / "examples" / "paper_cards"
+DEFAULT_MANIFEST_PATH = Path("docs/deepevolve_research_hooks_manifest.json")
+DEFAULT_PAPER_CARD_DIR = Path("examples/paper_cards")
 _REQUIRED_FAMILIES = {
     "CODE_BASED",
     "HASH_BASED",
@@ -45,13 +57,25 @@ PRIVATE_QWEN_PROPOSAL_ROLES = [
 ]
 PRIVATE_QWEN_RESEARCH_BINDING = {
     "model": "Qwen3.6-27B-private",
+    "base_model_env": "AGADES_QWEN_BASE_MODEL",
+    "lora_adapter_env": "AGADES_QWEN_LORA_ADAPTER_PATH",
+    "gguf_otq_5bit_env": "AGADES_QWEN_GGUF_OTQ_5BIT_PATH",
+    "artifact_plan_env": PRIVATE_QWEN_ARTIFACT_PLAN_ENV,
+    "artifact_plan_template": PRIVATE_QWEN_ARTIFACT_PLAN_TEMPLATE,
+    "artifact_plan_schema": PRIVATE_QWEN_ARTIFACT_PLAN_SCHEMA,
+    "artifact_verification_schema": PRIVATE_QWEN_ARTIFACT_VERIFICATION_SCHEMA,
+    "artifact_verification_command": PRIVATE_QWEN_ARTIFACT_VERIFICATION_COMMAND,
+    "required_env_vars": list(PRIVATE_TRAINING_REQUIRED_ENV_VARS),
     "training_manifest": "docs/private_training_config_manifest.json",
+    "training_readiness": "docs/private_training_readiness.json",
     "pedagogical_rl_method": "docs/pedagogical_rl_method.json",
     "dataset_curation_manifest": "docs/private_dataset_curation.json",
+    "public_model_id_allowed": False,
     "proposal_roles": list(PRIVATE_QWEN_PROPOSAL_ROLES),
     "proposal_gate": {
         "attackplan_validation_required": True,
         "proof_obligation_generation_required": True,
+        "private_qwen_artifact_verification_required": True,
         "estimator_compatibility_required": True,
         "human_review_required_before_claim": True,
     },
@@ -61,8 +85,11 @@ PRIVATE_QWEN_RESEARCH_BINDING = {
 
 def build_deepevolve_research_hooks_manifest(
     paper_card_dir: Path | None = None,
+    *,
+    root: Path | None = None,
 ) -> dict[str, Any]:
-    source_dir = (paper_card_dir or DEFAULT_PAPER_CARD_DIR).resolve()
+    project_root = (root or ROOT).resolve()
+    source_dir = _resolve_path(paper_card_dir or DEFAULT_PAPER_CARD_DIR, project_root)
     cards = load_paper_cards(source_dir)
     proposals = [
         proposal
@@ -102,7 +129,9 @@ def build_deepevolve_research_hooks_manifest(
             "research_claim": False,
             "review_required_before_implementation": True,
         },
-        "private_qwen_research_binding": PRIVATE_QWEN_RESEARCH_BINDING,
+        "private_qwen_research_binding": copy.deepcopy(
+            PRIVATE_QWEN_RESEARCH_BINDING
+        ),
         "paper_cards": [_paper_card_entry(card) for card in cards],
         "hypothesis_proposals": [
             proposal.model_dump(mode="json") for proposal in proposals
@@ -111,15 +140,19 @@ def build_deepevolve_research_hooks_manifest(
 
 
 def write_deepevolve_research_hooks_manifest(
-    out: Path,
+    out: Path = DEFAULT_MANIFEST_PATH,
     *,
     paper_card_dir: Path | None = None,
+    root: Path | None = None,
 ) -> dict[str, Any]:
+    project_root = (root or ROOT).resolve()
     manifest = build_deepevolve_research_hooks_manifest(
         paper_card_dir=paper_card_dir,
+        root=project_root,
     )
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(
+    resolved_out = _resolve_path(out, project_root)
+    resolved_out.parent.mkdir(parents=True, exist_ok=True)
+    resolved_out.write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
@@ -127,13 +160,16 @@ def write_deepevolve_research_hooks_manifest(
 
 
 def verify_deepevolve_research_hooks_manifest(
-    manifest_path: Path,
+    manifest_path: Path = DEFAULT_MANIFEST_PATH,
     *,
     paper_card_dir: Path | None = None,
+    root: Path | None = None,
 ) -> dict[str, Any]:
+    project_root = (root or ROOT).resolve()
+    resolved_manifest_path = _resolve_path(manifest_path, project_root)
     failures: list[str] = []
     try:
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest = json.loads(resolved_manifest_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         return _verification_result(
             manifest_path=manifest_path,
@@ -143,6 +179,7 @@ def verify_deepevolve_research_hooks_manifest(
 
     expected = build_deepevolve_research_hooks_manifest(
         paper_card_dir=paper_card_dir,
+        root=project_root,
     )
     if manifest != expected:
         failures.append("DeepEvolve research hook manifest is not in sync.")
@@ -203,6 +240,12 @@ def verify_deepevolve_research_hooks_manifest(
     )
 
 
+def _resolve_path(path: Path, root: Path) -> Path:
+    if path.is_absolute():
+        return path
+    return root / path
+
+
 def _validate_private_qwen_binding(
     binding: object,
     *,
@@ -211,9 +254,26 @@ def _validate_private_qwen_binding(
     if not isinstance(binding, dict):
         failures.append("private_qwen_research_binding must be a mapping.")
         return
+    runtime_contract_ok = True
     for key, expected_value in PRIVATE_QWEN_RESEARCH_BINDING.items():
         if binding.get(key) != expected_value:
+            if key in {
+                "base_model_env",
+                "lora_adapter_env",
+                "gguf_otq_5bit_env",
+                "artifact_plan_env",
+                "artifact_plan_template",
+                "artifact_plan_schema",
+                "artifact_verification_schema",
+                "artifact_verification_command",
+                "required_env_vars",
+                "training_readiness",
+                "public_model_id_allowed",
+            }:
+                runtime_contract_ok = False
             failures.append(f"private_qwen_research_binding.{key} is not synchronized.")
+    if not runtime_contract_ok:
+        failures.append("DeepEvolve private Qwen runtime contract is incomplete.")
 
     proposal_gate = binding.get("proposal_gate")
     if not isinstance(proposal_gate, dict):
@@ -224,6 +284,7 @@ def _validate_private_qwen_binding(
         for key in (
             "attackplan_validation_required",
             "proof_obligation_generation_required",
+            "private_qwen_artifact_verification_required",
             "estimator_compatibility_required",
             "human_review_required_before_claim",
         ):
