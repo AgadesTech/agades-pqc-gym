@@ -82,8 +82,8 @@
       "docs/HUGGINGFACE_RELEASE_PLAN.md": "adbdf3bd304a1a1859c9f65ce424c964bff60457cd0edcd5fb1d06453d9f49e3",
       "docs/public_benchmark_manifest.json": "c45741efde84f27edfd6feab0e3217f68c88a5be4d56a038b2973ea2296722f7",
       "docs/source_catalog.json": "9648bc812ae0465cf9bf28e410d3fcbdc63ec6d17060c35b4e05e98ea55dc058",
-      "hf/README.md": "294b96a0450bf866034e5908feaf44a9e4d69d758c2b3910a36a04920ced9896",
-      "hf/app.py": "48ebb4ad6d861956a770587c2e39497a46eae098f513451a92912f000ebeec5b",
+      "hf/README.md": "6c354fa49a0dd0ce9bbca467b37c1f7897dd3244dd66c30d30394ca8db0baa16",
+      "hf/app.py": "8ff6f135a2353d2ad40202c81b17a9e112ad561812b17eced8177193f2453a1f",
       "hf/benchmark_card.md": "e29827f9fe4e8bd4c45bab2a7238b6029a589aac9eda1701e43086c2e0fdbdef",
       "hf/collection_manifest.json": "b3ddafd0f3c1b78f443851a2069f5cedddd3e0d8c97f499e6c1f7ee1000eacbe",
       "hf/dataset/MANIFEST.sha256": "23f362bad82b19ed2749592214fa0b61751f7a3c975babe413f04c9992b4bcdc",
@@ -95,7 +95,7 @@
       "hf/dataset_card.md": "e8e354eccacc48786080acf98b788eaea6670802617489bc55d3b7826cefb92d",
       "hf/requirements.txt": "a1161753e498c0569be2677a964d752b861f4923318bcadec273a446b8baf313",
       "hf/space_README.md": "d92415466aa201830b32042baf4628367bd7e3880884d80f74b29ae985e1b89e",
-      "hf/space_manifest.json": "7ebe3351f6bee78d7e20d1b061354a96673cf298e557800e1a25d12d807984a5",
+      "hf/space_manifest.json": "d0d3a03c0fb33f74370b62b9dfd793483cc1edbb58b0d0048559a192c84de2c0",
       "public/run_export/manifest.json": "333ad57c7b04eec2e3a20c6e190fc74bdf01c4a84d9d8e57f01c5118e832dadb"
     }
   },

@@ -39,6 +39,20 @@ reviewer annotations, prompts, model weights, or serious-research rollouts.
 - `space_manifest.json` records the audited Agent Environment contract.
 - `collection_manifest.json` records the related public Hugging Face surfaces.
 
+## Local Validation
+
+Run the Space checks through the project environment, not an arbitrary system
+Python:
+
+```bash
+uv sync --extra space
+uv run agades-pqc hf-space-launch-smoke --out reports/hf_space_launch_smoke.json
+uv run agades-pqc hf-space-launch-smoke-verify --report reports/hf_space_launch_smoke.json
+```
+
+If the launch smoke says Gradio is missing, the active interpreter is outside
+the project environment or the Space extra was not installed.
+
 ## Guardrails
 
 - Outputs are toy/demo verifier and reward signals, not security claims.

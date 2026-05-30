@@ -153,6 +153,21 @@ def test_huggingface_space_launch_smoke_report_exercises_gradio_contract(
     assert report["failures"] == []
 
 
+def test_huggingface_space_build_demo_missing_gradio_error_is_actionable(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _load_space_module()
+    monkeypatch.setattr(module, "gr", None)
+
+    with pytest.raises(RuntimeError) as exc_info:
+        module.build_demo()
+
+    message = str(exc_info.value)
+    assert "Gradio is required" in message
+    assert "uv sync --extra space" in message
+    assert "uv run agades-pqc hf-space-launch-smoke" in message
+
+
 def test_huggingface_space_agent_env_explains_invalid_json() -> None:
     module = _load_space_module()
 
