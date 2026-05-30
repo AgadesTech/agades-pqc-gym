@@ -128,7 +128,7 @@ def score_attack_plan_for_task(label: str, raw_plan: str) -> tuple[str, str, str
 
 def build_demo() -> Any:
     if gr is None:
-        raise RuntimeError("gradio is required to launch the Hugging Face Space")
+        raise RuntimeError(_missing_gradio_message())
     with gr.Blocks(title="Agades PQC Gym") as demo:
         gr.Markdown("# Agades PQC Gym")
         gr.Markdown(
@@ -189,6 +189,17 @@ def build_demo() -> Any:
                     outputs=[reward_summary, reward_payload, trace_payload],
                 )
     return demo
+
+
+def _missing_gradio_message() -> str:
+    return (
+        "Gradio is required to launch the Hugging Face Space. "
+        "From the repository root, install the Space dependencies with "
+        "`uv sync --extra space` and validate with "
+        "`uv run agades-pqc hf-space-launch-smoke --out "
+        "reports/hf_space_launch_smoke.json`. "
+        "On Hugging Face Spaces, `hf/requirements.txt` provides this dependency."
+    )
 
 
 def _environment_for_raw_plan(
