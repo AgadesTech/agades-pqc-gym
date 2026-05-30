@@ -12,6 +12,7 @@ from agades_pqc_gym.evaluators.cascade import CascadeEvaluator, CascadeResult
 from agades_pqc_gym.evaluators.fitness import compute_fitness
 from agades_pqc_gym.evaluators.lattice_estimator import LatticeEstimatorAdapter
 from agades_pqc_gym.evaluators.mock_estimator import MockEstimatorAdapter
+from agades_pqc_gym.utils.validation_errors import stable_validation_error_messages
 from agades_pqc_gym.validators.static import ValidationResult
 
 EstimatorChoice = Literal["mock", "lattice"]
@@ -109,7 +110,10 @@ def verify_attack_plan_json(
     try:
         plan = AttackPlan.model_validate_json(raw_json)
     except ValidationError as exc:
-        validation = ValidationResult(valid=False, errors=[str(exc)])
+        validation = ValidationResult(
+            valid=False,
+            errors=stable_validation_error_messages(exc),
+        )
         metrics = compute_fitness(validation, None).as_metrics()
         metrics["evaluation_status"] = "invalid"
         return _public_response(

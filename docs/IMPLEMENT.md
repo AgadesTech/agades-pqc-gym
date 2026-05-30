@@ -37,6 +37,10 @@ uv run agades-pqc hf-space-manifest --out hf/space_manifest.json
 uv run agades-pqc hf-space-manifest-verify --manifest hf/space_manifest.json
 uv run agades-pqc hf-space-smoke --out reports/hf_space_smoke.json
 uv run agades-pqc hf-space-smoke-verify --report reports/hf_space_smoke.json
+uv run agades-pqc hf-space-launch-smoke --out reports/hf_space_launch_smoke.json
+uv run agades-pqc hf-space-launch-smoke-verify --report reports/hf_space_launch_smoke.json
+uv run agades-pqc hf-space-remote-smoke --space-id agades/agades-pqc-gym-agent-env --out reports/hf_space_remote_smoke.json
+uv run agades-pqc hf-space-remote-smoke-verify --report reports/hf_space_remote_smoke.json
 uv run agades-pqc hf-collection-manifest --out hf/collection_manifest.json
 uv run agades-pqc hf-collection-manifest-verify --manifest hf/collection_manifest.json
 uv run agades-pqc nvidia-manifest --out nvidia/accelerator_manifest.json
@@ -72,7 +76,7 @@ uv run agades-pqc release-artifacts --max-passes 6
 uv run agades-pqc runbook-audit --out /tmp/agades_runbook_audit.json
 uv run agades-pqc runbook-audit --brief /path/to/brief.md --out /tmp/agades_runbook_audit_with_brief.json
 uv run agades-pqc runbook-audit --brief /path/to/brief.md --context /path/to/context.md --out /tmp/agades_runbook_audit_with_inputs.json
-git diff --exit-code -- docs/source_catalog.json docs/family_registry_manifest.json docs/family_support_matrix.json docs/family_operator_catalog.json docs/private_run_policy.json public/run_export docs/publication_manifest.json docs/external_publication_review_packet.json examples/openevolve/config.yaml nvidia/accelerator_manifest.json reports/hf_space_smoke.json reports/nvidia_manifest_safety.json reports/openevolve_smoke.json reports/prime_environment_smoke.json reports/ecosystem_smoke.json public/release_audit.json docs/release_status.json public/publication_preflight.json
+git diff --exit-code -- docs/source_catalog.json docs/family_registry_manifest.json docs/family_support_matrix.json docs/family_operator_catalog.json docs/private_run_policy.json public/run_export docs/publication_manifest.json docs/external_publication_review_packet.json examples/openevolve/config.yaml nvidia/accelerator_manifest.json reports/hf_space_smoke.json reports/hf_space_remote_smoke.json reports/nvidia_manifest_safety.json reports/openevolve_smoke.json reports/prime_environment_smoke.json reports/ecosystem_smoke.json public/release_audit.json docs/release_status.json public/publication_preflight.json
 uv run agades-pqc benchmark benchmarks/lattice_toy_lwe --out runs/toy_benchmark.jsonl
 uv run agades-pqc deepevolve-injections --out private/candidates/paper_card_injections.json --policy docs/private_run_policy.json --paper-card-dir examples/paper_cards
 uv run agades-pqc mutate-candidates benchmarks/lattice_toy_lwe/lwe_n64_q257.json --out runs/candidate_mutations

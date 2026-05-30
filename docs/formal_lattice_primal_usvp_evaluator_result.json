@@ -1,0 +1,24 @@
+{
+  "attack_type": "primal_usvp",
+  "evaluation_status": "ok",
+  "evaluator_commit": null,
+  "evaluator_name": "mock-lattice-estimator",
+  "evaluator_version": "0.1.0",
+  "memory_bits": 25.04,
+  "raw_output": {
+    "attack_plan_id": "lattice_primal_usvp_toy_v1",
+    "claim_allowed": false,
+    "dimension": 64,
+    "operator_adjustment": 0.0,
+    "public_interpretation": "reproducibility_and_reviewer_binding_only",
+    "q_bits": 8.0056,
+    "source": "agades_pqc_gym.evaluators.cascade.CascadeEvaluator"
+  },
+  "schema_version": "agades.pqc.evaluator_result.v1",
+  "success_probability": 0.69,
+  "time_bits": 75.0496,
+  "warnings": [
+    "Mock estimator output is for plumbing tests only; it is not cryptanalytic evidence.",
+    "Evaluator result is bound for reproducibility and reviewer inspection; it is not cryptanalytic evidence."
+  ]
+}

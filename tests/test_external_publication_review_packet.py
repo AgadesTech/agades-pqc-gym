@@ -82,7 +82,7 @@ EXPECTED_PRIME_HUB_WARNING_EVIDENCE = {
     "external_publication_requires_review": True,
     "local_package_ready": True,
     "prime_hub_publication_performed": False,
-    "publication_artifact_count": 10,
+    "publication_artifact_count": 12,
     "publication_family_count": 9,
     "publication_task_count": 79,
     "requires_credentials": True,
@@ -132,7 +132,7 @@ EXPECTED_CREDENTIAL_REVIEW_QUEUE = [
         "smoke_gate": "hf-dataset-safety",
     },
     {
-        "artifact_count": 4,
+        "artifact_count": 5,
         "credential_material_included": False,
         "first_publication_target": "private_or_draft_review_surface",
         "id": "huggingface-space",
@@ -193,15 +193,16 @@ EXPECTED_PUBLICATION_DRY_RUN_PLAN = [
         "source_manifest": "hf/dataset/dataset_info.json",
     },
     {
-        "artifact_count": 4,
+        "artifact_count": 5,
         "command_templates": [
             (
-                "hf repos create <owner>/pqc-gym --type=space --space-sdk "
-                "gradio --private --exist-ok"
+                "hf repos create agades/agades-pqc-gym-agent-env "
+                "--type=space --space-sdk gradio --private --exist-ok"
             ),
             (
-                "hf upload <owner>/pqc-gym hf . --repo-type=space "
-                '--commit-message "Sync Agades PQC Gym Space"'
+                "hf upload agades/agades-pqc-gym-agent-env hf "
+                ". --repo-type=space --commit-message "
+                '"Sync Agades PQC Gym Agent Environment"'
             ),
         ],
         "contains_credentials": False,
@@ -246,7 +247,7 @@ EXPECTED_PLATFORM_REVIEW_MATRIX = {
         "surface_ids": ["github-repository"],
     },
     "hugging_face": {
-        "artifact_count": 17,
+        "artifact_count": 18,
         "credentialed_surface_count": 3,
         "publication_statuses": [
             "local_artifact_ready",

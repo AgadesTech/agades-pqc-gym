@@ -1,0 +1,169 @@
+{
+  "datasets": {
+    "curation_manifest_path": "docs/private_dataset_curation.json",
+    "private_roots": [
+      "private/datasets"
+    ],
+    "publication_allowed": false,
+    "required_controls": [
+      "license_review",
+      "provenance_tracking",
+      "deduplication",
+      "redaction",
+      "contamination_audit"
+    ],
+    "reviewer_annotations_publication_allowed": false,
+    "sources": [
+      "facebookresearch/LWE-benchmarking",
+      "facebook/TAPAS",
+      "pq-code-package"
+    ],
+    "train_traces_publication_allowed": false
+  },
+  "linked_artifacts": {
+    "formal_lean_backend": {
+      "path": "docs/formal_lean_backend.json",
+      "sha256": "e06c1d1107a57abb6203f8343e7135f2e9931a2ff7affbd2738b1bc6025ea8aa"
+    },
+    "formal_lwe_proof_artifact": {
+      "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+      "sha256": "fc87c4ccd8afcc308bd847020dfdc44a2ddd42398febeb21f30451e61d9ae004"
+    },
+    "formal_mlwe_proof_artifact": {
+      "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
+      "sha256": "8ae91212c526a1e77b86f6d28dd1a90631d6186a30e589135a269cb7c642a0dd"
+    },
+    "formal_obligation_ledger": {
+      "path": "docs/formal_obligation_ledger.json",
+      "sha256": "4599de5b004e29f8122237b7f726e3a725e1fd1685039b23717e6ed0da4e4185"
+    },
+    "hf_rl_rollout_examples": {
+      "path": "hf/dataset/rl_rollouts.jsonl",
+      "sha256": "f86ba527102140e3023c9d58931d4a1c4595982ff67fee32be09a126697b2749"
+    },
+    "pedagogical_rl_method": {
+      "path": "docs/pedagogical_rl_method.json",
+      "sha256": "2bc9d13876553faf994706896ff2b8a4c518a0b286da4521d8e4169b35ebf34f"
+    },
+    "prime_environment_manifest": {
+      "path": "prime_intellect/verifiers_environment/prime_manifest.json",
+      "sha256": "12c27d7254504526062db94d9cf128d9fdee8b59a0712a4efb456e3957f56bd4"
+    },
+    "prime_eval_config_manifest": {
+      "path": "docs/prime_eval_config_manifest.json",
+      "sha256": "ecaa5ee01641f6b59e9255626dedb7914c0d8eb6ede3a29cfc750676a62e0013"
+    },
+    "prime_eval_template": {
+      "path": "prime_intellect/evals/agades_pqc_eval.template.toml",
+      "sha256": "8a653d4d2258e3e51561676c479edd30ef756b4f66c09ef24f3be1b461e4e152"
+    },
+    "private_dataset_curation": {
+      "path": "docs/private_dataset_curation.json",
+      "sha256": "68b6deaa764fa827b36d4b73b5d40eaf51aca89ccb8d7fbe01a4e7f15f44509f"
+    },
+    "private_run_policy": {
+      "path": "docs/private_run_policy.json",
+      "sha256": "a0992031eb7a4268e4813b4d5f02a9ca4dda078972c935ef829c8e981259d86a"
+    },
+    "rl_pedagogy_runtime": {
+      "path": "src/agades_pqc_gym/rl/pedagogy.py",
+      "sha256": "4d3a2f5ef7f12eaa06977cba10901e169ec8eb9584b7e982e7709af36dfaaa6c"
+    }
+  },
+  "model_consumers": {
+    "deepevolve": {
+      "private_dataset_allowed": true,
+      "private_qwen_allowed": true,
+      "public_publication_allowed": false
+    },
+    "openevolve": {
+      "private_dataset_allowed": true,
+      "private_qwen_allowed": true,
+      "public_publication_allowed": false
+    }
+  },
+  "pedagogical_rl": {
+    "assimilation_objective": "surprisal_gated_imitation",
+    "assimilation_weight_function": "agades_pqc_gym.rl.pedagogy.surprisal_gated_token_weights",
+    "formal_obligation_ledger_path": "docs/formal_obligation_ledger.json",
+    "learnability_function": "agades_pqc_gym.rl.pedagogy.spike_aware_learnability_score",
+    "learnability_score": "spike_aware_logsumexp_surprise_gap",
+    "method": "pedagogical_rl",
+    "method_manifest_path": "docs/pedagogical_rl_method.json",
+    "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
+    "raw_private_signals_publication_allowed": false,
+    "requires_no_security_overclaim": true,
+    "requires_reviewer_quality_signal": true,
+    "reward_function": "agades_pqc_gym.rl.pedagogy.build_pedagogical_reward_report",
+    "reward_terms": [
+      "formal_validity",
+      "cryptographic_applicability",
+      "no_security_overclaim",
+      "student_readability",
+      "reproducibility",
+      "reviewer_quality",
+      "task_match",
+      "proof_obligation_coverage"
+    ],
+    "spike_aware_pedagogy_reward": true,
+    "stage_sequence": [
+      "privileged_self_teacher_grpo",
+      "spike_aware_trajectory_filter",
+      "surprisal_gated_student_assimilation",
+      "optional_private_grpo_refinement"
+    ],
+    "surprisal_gated_imitation": true,
+    "teacher_student_pattern": "privileged_self_teacher_student"
+  },
+  "prime_training": {
+    "config_path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
+    "config_sha256": "b3dadf71ff5a729b7eb27fcf80107e7db1687f9fa196d0521193332bbba1d4c2",
+    "dataset_curation_manifest_path": "docs/private_dataset_curation.json",
+    "eval_command": "prime eval run agades-pqc-verifier-env",
+    "eval_config_manifest_path": "docs/prime_eval_config_manifest.json",
+    "launch_command_template": "prime train prime_intellect/training/private_qwen_prime_rl.template.toml --env-var HF_TOKEN --env-var WANDB_API_KEY",
+    "launch_readiness": "blocked_until_private_model_and_dataset_review",
+    "rl_environment_contract_path": "docs/rl_environment_contract.json",
+    "training_stack": "prime-rl"
+  },
+  "privacy_controls": {
+    "allowed_env_vars": [
+      "HF_TOKEN",
+      "WANDB_API_KEY"
+    ],
+    "env_file_upload_allowed": false,
+    "private_roots": [
+      "private/datasets",
+      "private/models",
+      "private/reports",
+      "private/runs",
+      "private/traces"
+    ],
+    "public_adapters_allowed": false,
+    "public_trace_corpora_allowed": false,
+    "public_train_dataset_allowed": false,
+    "public_weights_allowed": false
+  },
+  "project": {
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "qwen": {
+    "base_model_env": "AGADES_QWEN_BASE_MODEL",
+    "gguf_direct_training_allowed": false,
+    "preferred_user_artifact": "private GGUF OTQ 5-bit",
+    "publish_adapters_publicly": false,
+    "publish_trace_corpora_publicly": false,
+    "publish_weights_publicly": false,
+    "target_model": "Qwen3.6-27B-private",
+    "training_path": "LoRA_or_QLoRA_on_trainable_weights_then_private_GGUF_OTQ_quantization"
+  },
+  "release_gates": [
+    "uv run pytest tests/test_private_training_config.py -q",
+    "uv run agades-pqc private-training-config --config prime_intellect/training/private_qwen_prime_rl.template.toml --manifest docs/private_training_config_manifest.json",
+    "uv run agades-pqc private-training-config-verify --config prime_intellect/training/private_qwen_prime_rl.template.toml --manifest docs/private_training_config_manifest.json",
+    "uv run agades-pqc private-dataset-curation-verify --curation docs/private_dataset_curation.json"
+  ],
+  "schema_version": "agades.pqc.private_training_config.v1"
+}

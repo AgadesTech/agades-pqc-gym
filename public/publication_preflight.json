@@ -2,8 +2,8 @@
   "audit": {
     "accepted": true,
     "failed": 0,
-    "passed": 57,
-    "total": 58,
+    "passed": 61,
+    "total": 62,
     "warning": 1,
     "warning_check_ids": [
       "prime-hub-publication"
@@ -41,7 +41,7 @@
       "smoke_gate": "hf-dataset-safety"
     },
     {
-      "artifact_count": 4,
+      "artifact_count": 5,
       "credential_material_included": false,
       "first_publication_target": "private_or_draft_review_surface",
       "id": "huggingface-space",
@@ -278,7 +278,7 @@
       ]
     },
     "hugging_face": {
-      "artifact_count": 17,
+      "artifact_count": 18,
       "credentialed_surface_count": 3,
       "publication_statuses": [
         "local_artifact_ready",
@@ -444,7 +444,7 @@
       "smoke_gate": "hf-dataset-safety"
     },
     {
-      "artifact_count": 4,
+      "artifact_count": 5,
       "id": "huggingface-space",
       "platform": "hugging_face",
       "publication_status": "local_artifact_ready",
@@ -480,7 +480,7 @@
         "external_publication_requires_review": true,
         "local_package_ready": true,
         "prime_hub_publication_performed": false,
-        "publication_artifact_count": 10,
+        "publication_artifact_count": 12,
         "publication_family_count": 9,
         "publication_task_count": 79,
         "requires_credentials": true,

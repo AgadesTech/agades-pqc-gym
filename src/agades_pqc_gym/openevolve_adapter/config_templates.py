@@ -62,11 +62,44 @@ _SCHEMA_SYNC_KEYS = (
     "heldout_cron_plan_schema",
     "heldout_rescore_schema",
 )
+PRIVATE_QWEN_RESEARCH_ROLES = [
+    "generate_attackplan",
+    "mutate_attackplan",
+    "critique_attackplan",
+    "repair_attackplan",
+    "draft_proof_obligations",
+    "draft_family_invariants",
+    "propose_evaluation_strategy",
+]
+PRIVATE_QWEN_RESEARCH_ENGINE = {
+    "model": "Qwen3.6-27B-private",
+    "model_artifact_env": "AGADES_QWEN_BASE_MODEL",
+    "training_manifest": "docs/private_training_config_manifest.json",
+    "pedagogical_rl_method": "docs/pedagogical_rl_method.json",
+    "dataset_curation_manifest": "docs/private_dataset_curation.json",
+    "consumers": ["openevolve", "deepevolve"],
+    "research_roles": list(PRIVATE_QWEN_RESEARCH_ROLES),
+    "tracks": {
+        "public_toy_eval": {
+            "private_qwen_allowed": False,
+            "private_data_allowed": False,
+            "security_claims_allowed": False,
+        },
+        "private_serious_research": {
+            "private_qwen_allowed": True,
+            "publication_allowed": False,
+            "requires_formal_validation": True,
+            "requires_estimator_compatibility": True,
+            "requires_human_review_before_claim": True,
+        },
+    },
+}
 
 DEFAULT_CONFIG_TEMPLATE = {
     "program_type": "json_attack_plan",
     "evaluator": "examples/openevolve/evaluator.py",
     "primary_metric": "combined_score",
+    "private_qwen_research_engine": PRIVATE_QWEN_RESEARCH_ENGINE,
     "candidate_roots": [
         "benchmarks/lattice_toy_lwe/lwe_n64_q257.json",
         "benchmarks/code_based_toy_isd",
@@ -332,6 +365,17 @@ def _verify_config_contract(config: dict[str, Any], failures: list[str]) -> None
         if DEFAULT_CONFIG_TEMPLATE.get(key) != config.get(key):
             failures.append(f"OpenEvolve config {key} is not synchronized.")
 
+    _verify_private_qwen_research_engine(
+        DEFAULT_CONFIG_TEMPLATE.get("private_qwen_research_engine"),
+        label="OpenEvolve template private Qwen research engine",
+        failures=failures,
+    )
+    _verify_private_qwen_research_engine(
+        config.get("private_qwen_research_engine"),
+        label="OpenEvolve private Qwen research engine",
+        failures=failures,
+    )
+
     safety = config.get("safety", {})
     if not isinstance(safety, dict):
         failures.append("OpenEvolve config safety block must be a mapping.")
@@ -366,6 +410,83 @@ def _verify_config_contract(config: dict[str, Any], failures: list[str]) -> None
             failures.append("OpenEvolve template must not make security claims.")
 
 
+def _verify_private_qwen_research_engine(
+    engine: object,
+    *,
+    label: str,
+    failures: list[str],
+) -> None:
+    if not isinstance(engine, dict):
+        failures.append(f"{label} must be a mapping.")
+        return
+    expected = PRIVATE_QWEN_RESEARCH_ENGINE
+    for key in (
+        "model",
+        "model_artifact_env",
+        "training_manifest",
+        "pedagogical_rl_method",
+        "dataset_curation_manifest",
+        "consumers",
+        "research_roles",
+    ):
+        if engine.get(key) != expected[key]:
+            failures.append(f"{label} {key} is not synchronized.")
+
+    tracks = engine.get("tracks")
+    if not isinstance(tracks, dict):
+        failures.append(f"{label} tracks must be a mapping.")
+        return
+    public_track = tracks.get("public_toy_eval")
+    if not isinstance(public_track, dict):
+        failures.append(f"{label} public_toy_eval track must be a mapping.")
+    else:
+        if public_track.get("private_qwen_allowed") is not False:
+            failures.append(
+                "OpenEvolve public toy track must not use the private Qwen model."
+            )
+        if public_track.get("private_data_allowed") is not False:
+            failures.append(
+                "OpenEvolve public toy track must not use private data."
+            )
+        if public_track.get("security_claims_allowed") is not False:
+            failures.append(
+                "OpenEvolve public toy track must not allow security claims."
+            )
+    private_track = tracks.get("private_serious_research")
+    if not isinstance(private_track, dict):
+        failures.append(f"{label} private_serious_research track must be a mapping.")
+        return
+    if private_track.get("private_qwen_allowed") is not True:
+        failures.append("OpenEvolve private research track must allow private Qwen.")
+    if private_track.get("publication_allowed") is not False:
+        failures.append(
+            "OpenEvolve private Qwen research track must not be publishable."
+        )
+    if private_track.get("requires_formal_validation") is not True:
+        failures.append("OpenEvolve private Qwen track must require formal validation.")
+    if private_track.get("requires_estimator_compatibility") is not True:
+        failures.append(
+            "OpenEvolve private Qwen track must require estimator compatibility."
+        )
+    if private_track.get("requires_human_review_before_claim") is not True:
+        failures.append(
+            "OpenEvolve private Qwen track must require human review before claims."
+        )
+
+
+def _private_qwen_enabled(config: dict[str, Any]) -> bool:
+    engine = config.get("private_qwen_research_engine")
+    if not isinstance(engine, dict):
+        return False
+    tracks = engine.get("tracks")
+    if not isinstance(tracks, dict):
+        return False
+    private_track = tracks.get("private_serious_research")
+    if not isinstance(private_track, dict):
+        return False
+    return private_track.get("private_qwen_allowed") is True
+
+
 def _verification_summary(
     config: dict[str, Any],
     failures: list[str],
@@ -377,6 +498,7 @@ def _verification_summary(
         "archive_loop_key_count": len(OPENEVOLVE_CONFIG_ARCHIVE_LOOP_KEYS),
         "checked_config_synced": checked_config_synced,
         "failure_count": len(failures),
+        "private_qwen_enabled": _private_qwen_enabled(config),
         "program_type": config.get("program_type"),
         "publishes_private_candidates": safety.get("publishes_private_candidates"),
         "python_candidates_executed": safety.get("arbitrary_code_execution"),

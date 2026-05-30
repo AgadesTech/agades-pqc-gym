@@ -60,6 +60,7 @@
   "local_package": {
     "artifact_paths": [
       "prime_intellect/environment_card.md",
+      "prime_intellect/evals/agades_pqc_eval.template.toml",
       "prime_intellect/verifier_spec.md",
       "prime_intellect/verifiers_environment/README.md",
       "prime_intellect/verifiers_environment/pyproject.toml",
@@ -68,21 +69,25 @@
       "prime_intellect/schemas/attack_plan.schema.json",
       "prime_intellect/schemas/verifier_result.schema.json",
       "prime_intellect/schemas/task_metadata.schema.json",
-      "prime_intellect/schemas/schema_manifest.json"
+      "prime_intellect/schemas/schema_manifest.json",
+      "docs/prime_eval_config_manifest.json"
     ],
     "artifact_sha256": {
-      "prime_intellect/environment_card.md": "d81e6b2148ebac63041aae1ac58e241ba84c5a433fabd78d19f333614d47e99b",
+      "docs/prime_eval_config_manifest.json": "ecaa5ee01641f6b59e9255626dedb7914c0d8eb6ede3a29cfc750676a62e0013",
+      "prime_intellect/environment_card.md": "e7476a86add4e7464636565db91e83dcfab57488ed2d48a18157e0ce52163011",
+      "prime_intellect/evals/agades_pqc_eval.template.toml": "8a653d4d2258e3e51561676c479edd30ef756b4f66c09ef24f3be1b461e4e152",
       "prime_intellect/schemas/attack_plan.schema.json": "4d8a4e49974d6c0df0d466f5ee3b488e54893af4ef23e61e00af4a0cbb7ea592",
       "prime_intellect/schemas/schema_manifest.json": "f448d41c640e6dc02a462af1bf695a93045676a191cee53403a121cab833fbeb",
       "prime_intellect/schemas/task_metadata.schema.json": "95ee9534b21fce15122c5d65aafcaa181210a0e898c284b5b8b46a0cdcbd3e07",
       "prime_intellect/schemas/verifier_result.schema.json": "dca189a653db3cfc7b70ad099ba8a627f7940402ffc3846b10ec33989cb468a4",
       "prime_intellect/verifier_spec.md": "90ef567a4f2421b5468a88669413bb0004134c7ac9fc3869037a02e7860f7131",
-      "prime_intellect/verifiers_environment/README.md": "7f8bf07a93968f5bbd986c89cd770d3253d6bff2a26cae9906094a1076c3043e",
-      "prime_intellect/verifiers_environment/agades_pqc_verifier_env.py": "939b099630167472ab4553e63c4134cd67ed38fa7ebc9636332c395b26b7e6c0",
-      "prime_intellect/verifiers_environment/prime_manifest.json": "b4a421a2179773908e18b8a52a91fb17cd35dc826fa9a7a4ecdb8afffb15ebbf",
+      "prime_intellect/verifiers_environment/README.md": "39ec4ff9d9d609ab1e2533d08a623b8ccfd7a6dca086f000bc5e9a6de15ea662",
+      "prime_intellect/verifiers_environment/agades_pqc_verifier_env.py": "7ad25dc54dc84ad3e4de283f6bc6b880bfec08cb96bb159c8011a9c1026e1f52",
+      "prime_intellect/verifiers_environment/prime_manifest.json": "12c27d7254504526062db94d9cf128d9fdee8b59a0712a4efb456e3957f56bd4",
       "prime_intellect/verifiers_environment/pyproject.toml": "f3a01ff6dde5b20ace513244eefa6f00831fbd5636f362f5f0e615bd4cc6a6a5"
     },
     "build_command": "uv build prime_intellect/verifiers_environment",
+    "eval_config_verify_command": "uv run agades-pqc prime-eval-config-verify --config prime_intellect/evals/agades_pqc_eval.template.toml --manifest docs/prime_eval_config_manifest.json",
     "manifest_verify_command": "uv run agades-pqc prime-manifest-verify --manifest prime_intellect/verifiers_environment/prime_manifest.json",
     "schemas_verify_command": "uv run agades-pqc prime-schemas-verify --schemas prime_intellect/schemas"
   },
@@ -143,6 +148,7 @@
     "credentials_checked_at_generation": false,
     "credentials_present_in_artifact": false,
     "environment_manifest_accepted": true,
+    "eval_config_accepted": true,
     "external_publication_requires_review": true,
     "family_count": 9,
     "json_only_scoring": true,
@@ -159,6 +165,7 @@
     "uv run agades-pqc prime-publication-handoff-verify --handoff docs/prime_publication_handoff.json",
     "uv run agades-pqc prime-manifest-verify --manifest prime_intellect/verifiers_environment/prime_manifest.json",
     "uv run agades-pqc prime-schemas-verify --schemas prime_intellect/schemas",
+    "uv run agades-pqc prime-eval-config-verify --config prime_intellect/evals/agades_pqc_eval.template.toml --manifest docs/prime_eval_config_manifest.json",
     "uv build prime_intellect/verifiers_environment",
     "uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json",
     "uv run agades-pqc release-audit --out public/release_audit.json"
@@ -166,6 +173,7 @@
   "review_required_before_publish": [
     "Confirm Prime account, organization, and target namespace.",
     "Run the local Prime environment build and verifier smoke gates.",
+    "Review the Prime eval config before any credentialed eval run.",
     "Review all public cards for no private traces and no security claims.",
     "Publish first as private/unlisted if Prime Hub supports the target workflow.",
     "Record external Prime Hub URL only after credentialed review."

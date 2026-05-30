@@ -100,8 +100,14 @@ def test_ecosystem_release_plans_preserve_public_safety_boundaries() -> None:
 def test_huggingface_release_plan_documents_space_hub_workflow() -> None:
     plan = PLAN_PATHS["huggingface"].read_text(encoding="utf-8")
 
-    assert "hf repos create <owner>/pqc-gym --type=space" in plan
-    assert "hf upload <owner>/pqc-gym hf . --repo-type=space" in plan
+    assert (
+        "hf repos create agades/agades-pqc-gym-agent-env --type=space"
+        in plan
+    )
+    assert (
+        "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space"
+        in plan
+    )
     assert "HF_TOKEN" in plan
     assert "Use a private Space first" in plan
 

@@ -1,0 +1,2073 @@
+{
+  "backend": {
+    "library": "mathlib",
+    "primary": "lean4",
+    "smt_assist": "z3_optional_finite_decidable_obligations_only"
+  },
+  "claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+  "linked_artifacts": {
+    "family_operator_catalog": {
+      "path": "docs/family_operator_catalog.json",
+      "sha256": "37594fa76194d271d80e7f2d227179feb0dc207ca0db135f451e1a29bae12d32"
+    },
+    "family_plugin_manifest": {
+      "path": "docs/family_plugin_manifest.json",
+      "sha256": "c6fca7e84e9abcb06772f866e47f7b19dc0713e3a8b2dbdbea26dc97a2386745"
+    }
+  },
+  "operators": [
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "a5aa1d103ca86734bf26856bd5530360bc4ef8daf073734c0e0d688afa7b9b3b",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_mvp"
+          ],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.Lattice.PrimalUSVP",
+      "operator": "primal_usvp",
+      "required_params": {
+        "beta": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.primal_usvp.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "1d7c25b100b688c351646b0aa09dcbae479cbf3e8c02008af2e7e07f68dfbeb2",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_mvp"
+          ],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.Lattice.BDD",
+      "operator": "bounded_distance_decoding",
+      "required_params": {
+        "beta": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.bdd.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "6657cae4fbb9cffa56d36b0285e51ec1845c447b1e340ddf2dd12c2c55046ebc",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_mvp"
+          ],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.Lattice.DualAttack",
+      "operator": "dual_attack",
+      "required_params": {
+        "beta": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.dual_attack.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "9dd458fc30ad494e97ec3b6c98649d985455af4103693e98457d815a7ace8b01",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_mvp"
+          ],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.Lattice.DualHybrid",
+      "operator": "dual_hybrid",
+      "required_params": {
+        "beta": "int",
+        "zeta": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.dual_hybrid.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "bb316f372cc7ff187a8fc8230792eba6c90d2332b0ad476f42f58920a2e962e6",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_mvp"
+          ],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.Lattice.BKW",
+      "operator": "bkw",
+      "required_params": {
+        "block_size": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.bkw.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "843e3d0f20d75112d40d945d27ac95ac5f0eaf92c30c9d7223cdb6420109b35a",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.Lattice.ModulusSwitching",
+      "operator": "modulus_switching",
+      "required_params": {
+        "q_prime": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.modulus_switching.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "f39258e04a9049d757dd153aa98a644b15f6f4c93d229ee9b4c879bd5fe80134",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.Lattice.SampleSelection",
+      "operator": "sample_selection",
+      "required_params": {
+        "sample_count": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.sample_selection.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "ecf87f4b63955e4745d9402b243efa1f3c2a521ec2239a759b9c0f53a9b2d60e",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.Lattice.SecretGuessing",
+      "operator": "secret_guessing",
+      "required_params": {
+        "guess_dimension": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.secret_guessing.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "adb5f225bf5913762433a7ff5716ed160c3880121cfdac0ae2b28f5577b2e1e7",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.Lattice.MeetInTheMiddle",
+      "operator": "meet_in_the_middle",
+      "required_params": {
+        "split_dimension": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.meet_in_the_middle.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "784ed702470d59cac37a1bc8eb9d56e16813cde58f0cc45b0712fef0aacab1e4",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.Lattice.NormalFormTransform",
+      "operator": "normal_form_transform",
+      "required_params": {},
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.normal_form_transform.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "787753750a9e8d28e3704ccd6f34b39493d567d6af8e0969e6946e2cddc72717",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_mvp"
+          ],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.Lattice.BKZParameterSweep",
+      "operator": "bkz_parameter_sweep",
+      "required_params": {
+        "beta_max": "int",
+        "beta_min": "int"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.bkz_parameter_sweep.v1"
+    },
+    {
+      "attackplan_families": [
+        "LWE",
+        "MLWE",
+        "NTRU",
+        "SIS"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "ab3bccba7a9c6afdc150efaea65b6297c2bddaf14a5aa45636aab39c3b7f4f2c",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "LWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_mvp"
+          ],
+          "family": "MLWE",
+          "plugin": "lattice",
+          "schema_only": false,
+          "support_level": "implemented"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "NTRU",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        },
+        {
+          "applicability_validator": "agades_pqc_gym.families.lattice.validators.validate_lattice_plan",
+          "catalog_operator_entry_count": 0,
+          "catalog_support_statuses": [],
+          "family": "SIS",
+          "plugin": "lattice",
+          "schema_only": true,
+          "support_level": "schema_only"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.Lattice.ModuleReductionHypothesis",
+      "operator": "module_lattice_reduction_hypothesis",
+      "required_params": {
+        "model": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.lattice.module_reduction_hypothesis.v1"
+    },
+    {
+      "attackplan_families": [
+        "CODE_BASED"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "dbb243c39c8dc849aab4a11450e27ef3eb04c08416299d8134e907c2086ce05e",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.code_based.validators.validate_code_based_plan",
+          "catalog_operator_entry_count": 11,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "CODE_BASED",
+          "plugin": "code_based",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.CodeBased.DecodingFixtureCheck",
+      "operator": "decoding_fixture_check",
+      "required_params": {
+        "variant": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.code_based.decoding_fixture_check.v1"
+    },
+    {
+      "attackplan_families": [
+        "CODE_BASED"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "b7033aca7cfcc050ac58bfedf5614b587af16823bd0c6512b2371ffc30619083",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.code_based.validators.validate_code_based_plan",
+          "catalog_operator_entry_count": 6,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "CODE_BASED",
+          "plugin": "code_based",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.CodeBased.ISD",
+      "operator": "information_set_decoding",
+      "required_params": {
+        "variant": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.code_based.isd.v1"
+    },
+    {
+      "attackplan_families": [
+        "MULTIVARIATE"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "87c2811997d5fd6966bdae52ddde3ff3488ac7429cbbc54461ccab977c1e9bce",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.multivariate.validators.validate_multivariate_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "MULTIVARIATE",
+          "plugin": "multivariate",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.Multivariate.MinRank",
+      "operator": "minrank_attack",
+      "required_params": {
+        "model": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.multivariate.minrank_attack.v1"
+    },
+    {
+      "attackplan_families": [
+        "MULTIVARIATE"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "cc0b7293008c042228c1dd00580ec9dbd8c34a79dce62706eaa2e09cb489fc89",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.multivariate.validators.validate_multivariate_plan",
+          "catalog_operator_entry_count": 3,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "MULTIVARIATE",
+          "plugin": "multivariate",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.Multivariate.GroebnerBasis",
+      "operator": "groebner_basis",
+      "required_params": {
+        "model": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.multivariate.groebner_basis.v1"
+    },
+    {
+      "attackplan_families": [
+        "MULTIVARIATE"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "65edb88372140b46cb740e5b6465d7fec4bba86b47abb7e5145056d6603f30c5",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.multivariate.validators.validate_multivariate_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "MULTIVARIATE",
+          "plugin": "multivariate",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.Multivariate.SignatureFixtureCheck",
+      "operator": "signature_fixture_check",
+      "required_params": {
+        "signature_model": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.multivariate.signature_fixture_check.v1"
+    },
+    {
+      "attackplan_families": [
+        "HASH_BASED"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "01d25b7c0e5c5adf8d1bf4208419bfe6046aca10a076d6041366769733d90b57",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.hash_based.validators.validate_hash_based_plan",
+          "catalog_operator_entry_count": 2,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "HASH_BASED",
+          "plugin": "hash_based",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.HashBased.SecurityBoundCheck",
+      "operator": "security_bound_check",
+      "required_params": {
+        "bound_model": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.hash_based.security_bound_check.v1"
+    },
+    {
+      "attackplan_families": [
+        "HASH_BASED"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "b4e5b941465269bda659872c83ef4a0d4ed5888853147aef9b915fd72141c2b5",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.hash_based.validators.validate_hash_based_plan",
+          "catalog_operator_entry_count": 4,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "HASH_BASED",
+          "plugin": "hash_based",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.HashBased.SignatureVerification",
+      "operator": "hash_signature_verification",
+      "required_params": {
+        "signature_model": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.hash_based.signature_verification.v1"
+    },
+    {
+      "attackplan_families": [
+        "HASH_BASED"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "d6d07187deda52df4fae189d443ec50dae2b916fb2304f8d3c71b41f55dea93f",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.hash_based.validators.validate_hash_based_plan",
+          "catalog_operator_entry_count": 1,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "HASH_BASED",
+          "plugin": "hash_based",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.HashBased.MisuseCheck",
+      "operator": "misuse_check",
+      "required_params": {
+        "fixture": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.hash_based.misuse_check.v1"
+    },
+    {
+      "attackplan_families": [
+        "ISOGENY_HISTORICAL"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "d9b9feaa3b737707342fad6d7963cce75cc216b0dc8d3b1411d4c040e696998a",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.isogeny_historical.validators.validate_isogeny_historical_plan",
+          "catalog_operator_entry_count": 3,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "ISOGENY_HISTORICAL",
+          "plugin": "isogeny_historical",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.IsogenyHistorical.Reconstruction",
+      "operator": "historical_isogeny_reconstruction",
+      "required_params": {
+        "case": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.isogeny_historical.reconstruction.v1"
+    },
+    {
+      "attackplan_families": [
+        "IMPLEMENTATION_SECURITY"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "ad0e64ba27a4c5c9c336c52230ac62c1b948aceecb2aeafdbe56fa2914bcaad2",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.implementation_security.validators.validate_implementation_security_plan",
+          "catalog_operator_entry_count": 2,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "IMPLEMENTATION_SECURITY",
+          "plugin": "implementation_security",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.ImplementationSecurity.KATConformance",
+      "operator": "kat_conformance",
+      "required_params": {
+        "suite": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.implementation_security.kat_conformance.v1"
+    },
+    {
+      "attackplan_families": [
+        "IMPLEMENTATION_SECURITY"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "36bc6d7000111332b95bd3c33a13dc95351fe24c4fc4cb3ee4f0d776ee0723e5",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.implementation_security.validators.validate_implementation_security_plan",
+          "catalog_operator_entry_count": 3,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "IMPLEMENTATION_SECURITY",
+          "plugin": "implementation_security",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.ImplementationSecurity.ConstantTimeCheck",
+      "operator": "constant_time_check",
+      "required_params": {
+        "tool": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.implementation_security.constant_time_check.v1"
+    },
+    {
+      "attackplan_families": [
+        "IMPLEMENTATION_SECURITY"
+      ],
+      "claim_policy": {
+        "estimator_result_required_before_claim": true,
+        "human_review_required_before_claim": true,
+        "proof_obligation_required_before_claim": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "7feb1954af49a4e09c1998d4348f5336f8980b6f088486498b877da54149c84f",
+      "family_bindings": [
+        {
+          "applicability_validator": "agades_pqc_gym.families.implementation_security.validators.validate_implementation_security_plan",
+          "catalog_operator_entry_count": 4,
+          "catalog_support_statuses": [
+            "implemented_toy"
+          ],
+          "family": "IMPLEMENTATION_SECURITY",
+          "plugin": "implementation_security",
+          "schema_only": false,
+          "support_level": "toy_evaluator"
+        }
+      ],
+      "formal_rules": [
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.required_parameter_bound",
+          "rule_id": "operator.required_params_present",
+          "statement": "The AttackPlan operator is only applicable when every required parameter declared by the operator schema is present."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_binding_valid",
+          "rule_id": "operator.family_binding_valid",
+          "statement": "The operator may only be routed through families listed in its AttackPlan family binding."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.family_validator_binding_valid",
+          "rule_id": "operator.family_validator_binding_valid",
+          "statement": "Every AttackPlan family route declared by the operator semantics must be bound to the corresponding runtime family applicability validator."
+        },
+        {
+          "lean_source": {
+            "path": "formal/lean/AgadesPQC/OperatorSemantics.lean",
+            "sha256": "cd86d8caf8748aa2d32130704b9aa7fad36d1214b28346ee9f6aee8e2b968347"
+          },
+          "lean_theorem": "AgadesPQC.OperatorSemantics.unreviewed_security_claim_forbidden",
+          "rule_id": "operator.unreviewed_security_claim_forbidden",
+          "statement": "Unreviewed operator semantics may support applicability and routing checks, but cannot authorize a cryptographic security claim."
+        }
+      ],
+      "lean_namespace": "AgadesPQC.ImplementationSecurity.BenchmarkHarness",
+      "operator": "benchmark_harness",
+      "required_params": {
+        "metric": "str"
+      },
+      "runtime_claim_boundary": "operator semantics define AttackPlan applicability and routing, not cryptographic break evidence",
+      "semantics_id": "agades.pqc.operator_semantics.implementation_security.benchmark_harness.v1"
+    }
+  ],
+  "project": {
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "release_gates": [
+    "uv run pytest tests/test_formal_operator_semantics.py -q",
+    "uv run agades-pqc formal-operator-semantics --out docs/formal_operator_semantics.json",
+    "uv run agades-pqc formal-operator-semantics-verify --semantics docs/formal_operator_semantics.json",
+    "uv run agades-pqc family-operator-catalog-verify --catalog docs/family_operator_catalog.json"
+  ],
+  "schema_version": "agades.pqc.formal.operator_semantics.v1",
+  "semantics_sha256": "51e5268e95519ee3f48806fe343e6c9b986b46b0c8b7ad7a16b8e54b0a633740",
+  "summary": {
+    "applicability_validator_bindings": 60,
+    "attackplan_family_bindings": 60,
+    "lattice_operators": 12,
+    "non_lattice_operators": 12,
+    "operators": 24,
+    "required_param_fields": 25,
+    "schema_only_family_bindings": 24,
+    "security_claim_allowed_without_review": 0
+  }
+}

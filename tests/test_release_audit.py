@@ -44,19 +44,19 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert audit["schema_version"] == "agades.pqc.release_audit.v1"
     assert audit["accepted"] is True
     assert audit["summary"] == {
-        "passed": 57,
+        "passed": 61,
         "failed": 0,
         "warning": 1,
-        "total": 58,
+        "total": 62,
     }
 
     checks = {check["id"]: check for check in audit["checks"]}
     assert checks["release-gate-closure"]["status"] == "passed"
     assert checks["release-gate-closure"]["blocking"] is True
     assert checks["release-gate-closure"]["evidence"] == {
-        "checked_release_gate_artifacts": 29,
-        "release_audit_gate_artifacts": 22,
-        "ecosystem_smoke_gate_artifacts": 24,
+        "checked_release_gate_artifacts": 40,
+        "release_audit_gate_artifacts": 25,
+        "ecosystem_smoke_gate_artifacts": 27,
         "missing_ecosystem_smoke_gate": [],
         "late_ecosystem_smoke_gate": [],
     }
@@ -237,7 +237,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "review_required_before_claims": True,
         "review_required_surfaces": 6,
         "surface_artifact_digest_exclusions": 3,
-        "surface_artifact_digests": 63,
+        "surface_artifact_digests": 64,
         "surfaces": 6,
     }
     assert checks["external-publication-review-packet"]["status"] == "passed"
@@ -663,6 +663,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "hub_install_command_template": (
             "prime env install <owner>/agades-pqc-verifier-env"
         ),
+        "eval_config_path": "prime_intellect/evals/agades_pqc_eval.template.toml",
         "local_eval_command": (
             "cd prime_intellect/verifiers_environment && "
             "uv run vf-eval agades-pqc-verifier-env"
@@ -670,6 +671,34 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "mirrored_public_examples": 79,
         "mirrors_public_examples": True,
         "task_count": 79,
+    }
+    assert checks["prime-eval-config"]["status"] == "passed"
+    assert checks["prime-eval-config"]["blocking"] is True
+    assert checks["prime-eval-config"]["evidence"] == {
+        "family_count": 9,
+        "num_examples": 32,
+        "rollouts_per_example": 2,
+        "task_count": 79,
+    }
+    assert checks["pedagogical-rl-method"]["status"] == "passed"
+    assert checks["pedagogical-rl-method"]["blocking"] is True
+    assert checks["pedagogical-rl-method"]["evidence"] == {
+        "stages": 4,
+        "reward_terms": 8,
+        "linked_artifacts": 10,
+        "teacher_student_pattern": "privileged_self_teacher_student",
+        "pedagogy_reward": "R_agades(x,c,tau) * G_spike_student(tau|x)",
+        "privacy_preserving": True,
+    }
+    assert checks["private-dataset-curation"]["status"] == "passed"
+    assert checks["private-dataset-curation"]["blocking"] is True
+    assert checks["private-dataset-curation"]["evidence"] == {
+        "sources": 3,
+        "pipeline_stages": 7,
+        "required_controls": 5,
+        "linked_artifacts": 3,
+        "public_rows_allowed": False,
+        "license_review_required": True,
     }
     assert checks["hf-space-smoke"]["status"] == "passed"
     assert checks["hf-space-smoke"]["blocking"] is True
@@ -679,6 +708,16 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "imports_without_gradio": True,
         "summary_contains_not_security_claim": True,
         "uses_shared_verifier": True,
+    }
+    assert checks["hf-space-launch-smoke"]["status"] == "passed"
+    assert checks["hf-space-launch-smoke"]["blocking"] is True
+    assert checks["hf-space-launch-smoke"]["evidence"] == {
+        "agent_environment_api_names_present": True,
+        "component_count": 22,
+        "demo_class": "Blocks",
+        "gradio_available": True,
+        "required_api_names_present": True,
+        "title": "Agades PQC Gym",
     }
     assert checks["hf-space-manifest"]["status"] == "passed"
     assert checks["hf-space-manifest"]["blocking"] is True
@@ -701,12 +740,12 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
             "SIS",
         ],
         "hub_create_command_template": (
-            "hf repos create <owner>/pqc-gym --type=space "
+            "hf repos create agades/agades-pqc-gym-agent-env --type=space "
             "--space-sdk gradio --private --exist-ok"
         ),
         "hub_upload_command_template": (
-            "hf upload <owner>/pqc-gym hf . --repo-type=space "
-            '--commit-message "Sync Agades PQC Gym Space"'
+            "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space "
+            '--commit-message "Sync Agades PQC Gym Agent Environment"'
         ),
         "labels_match_valid_dataset_rows": True,
     }
@@ -739,7 +778,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert checks["hf-publication-handoff"]["status"] == "passed"
     assert checks["hf-publication-handoff"]["blocking"] is True
     assert checks["hf-publication-handoff"]["evidence"] == {
-        "artifact_count": 17,
+        "artifact_count": 18,
         "attack_plan_count": 80,
         "collection_entry_count": 7,
         "external_publication_requires_review": True,
@@ -790,11 +829,32 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
             "hf/dataset/public_runs/multivariate_toy_mq_v0/MANIFEST.sha256",
             "hf/dataset/public_runs/multivariate_toy_uov_v0/MANIFEST.sha256",
             "public/run_export/MANIFEST.sha256",
-        ],
-        "verified_entries": 188,
-    }
+            ],
+            "verified_entries": 189,
+        }
     assert checks["github-actions-ci"]["status"] == "passed"
     assert checks["github-actions-ci"]["blocking"] is True
+    assert checks["github-actions-ci"]["evidence"]["required_actions"] == [
+        "actions/checkout@",
+        "leanprover/lean-action@",
+        "astral-sh/setup-uv@",
+    ]
+    assert checks["github-actions-ci"]["evidence"]["lean_gate_required_inputs"] == {
+        "lake-package-directory": "formal/lean",
+        "build": True,
+        "test": False,
+        "lint": False,
+        "auto-config": False,
+        "use-mathlib-cache": True,
+    }
+    assert checks["github-actions-ci"]["evidence"]["lean_gate_inputs"] == {
+        "lake-package-directory": "formal/lean",
+        "build": True,
+        "test": False,
+        "lint": False,
+        "auto-config": False,
+        "use-mathlib-cache": True,
+    }
     assert checks["github-actions-ci"]["evidence"]["required_commands"] == [
         "build-package",
         "build-prime-environment",
@@ -802,6 +862,8 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "check-whitespace",
         "generate-private-run-policy",
         "verify-private-run-policy",
+        "generate-private-dataset-curation",
+        "verify-private-dataset-curation",
         "verify-runbook-input-manifest",
         "generate-deepevolve-manifest",
         "verify-deepevolve-manifest",
@@ -817,12 +879,16 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "verify-ecosystem-source-graph",
         "generate-family-operator-catalog",
         "verify-family-operator-catalog",
+        "generate-formal-lean-backend",
+        "verify-formal-lean-backend",
         "generate-hf-dataset",
         "verify-hf-dataset",
         "generate-hf-space-manifest",
         "verify-hf-space-manifest",
         "generate-hf-space-smoke",
         "verify-hf-space-smoke",
+        "generate-hf-space-launch-smoke",
+        "verify-hf-space-launch-smoke",
         "generate-hf-collection-manifest",
         "verify-hf-collection-manifest",
         "generate-hf-publication-handoff",
@@ -845,6 +911,10 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "verify-prime-manifest",
         "generate-prime-environment-smoke",
         "verify-prime-environment-smoke",
+        "generate-prime-eval-config",
+        "verify-prime-eval-config",
+        "generate-pedagogical-rl-method",
+        "verify-pedagogical-rl-method",
         "generate-prime-schemas",
         "verify-prime-schemas",
         "generate-prime-publication-handoff",
@@ -884,10 +954,19 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "uv run agades-pqc openevolve-smoke-verify --report "
         "reports/openevolve_smoke.json" in workflow
     )
+    assert (
+        "uv run agades-pqc formal-lean-backend --out "
+        "docs/formal_lean_backend.json" in workflow
+    )
+    assert (
+        "uv run agades-pqc formal-lean-backend-verify --backend "
+        "docs/formal_lean_backend.json" in workflow
+    )
     artifact_diff_line = next(
         line for line in workflow.splitlines() if "git diff --exit-code --" in line
     )
     assert "docs/external_publication_review_packet.json" in artifact_diff_line
+    assert "docs/formal_lean_backend.json" in artifact_diff_line
     assert "reports/openevolve_smoke.json" in artifact_diff_line
     assert checks["openevolve-config-template"]["status"] == "passed"
     assert checks["openevolve-config-template"]["blocking"] is True
@@ -910,9 +989,10 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "checked_config_synced": True,
         "config_path": "examples/openevolve/config.yaml",
         "example_config_synced": True,
+        "private_qwen_enabled": True,
         "python_candidates_executed": False,
         "security_claim": False,
-        "template_keys": 29,
+        "template_keys": 30,
     }
     assert checks["openevolve-evaluator-smoke"]["status"] == "passed"
     assert checks["openevolve-evaluator-smoke"]["blocking"] is True
@@ -950,6 +1030,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "arbitrary_code_execution": False,
         "card_count": 8,
         "modifies_estimator_scores": False,
+        "private_qwen_bound": True,
         "proposal_count": 13,
         "research_claim": False,
         "review_required_before_implementation": True,
@@ -1381,8 +1462,10 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert checks["private-run-policy"]["blocking"] is True
     assert checks["private-run-policy"]["evidence"] == {
         "allowed_private_commands": 16,
-        "allowed_private_roots": 4,
+        "allowed_private_roots": 6,
         "forbidden_public_roots": 5,
+        "private_dataset_sources": 3,
+        "private_rl_reward_terms": 6,
         "required_publication_controls": 5,
         "scheduler_allowed_triggers": 2,
         "scheduler_approval_gates": 4,
@@ -1392,7 +1475,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert checks["prime-publication-handoff"]["status"] == "passed"
     assert checks["prime-publication-handoff"]["blocking"] is True
     assert checks["prime-publication-handoff"]["evidence"] == {
-        "artifact_count": 10,
+        "artifact_count": 12,
         "external_publication_requires_review": True,
         "family_count": 9,
         "local_package_ready": True,
@@ -1417,7 +1500,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "external_publication_requires_review": True,
         "local_package_ready": True,
         "prime_hub_publication_performed": False,
-        "publication_artifact_count": 10,
+        "publication_artifact_count": 12,
         "publication_family_count": 9,
         "publication_task_count": 79,
         "requires_credentials": True,
@@ -1850,6 +1933,45 @@ def test_release_audit_rejects_ci_release_artifacts_without_explicit_max_passes(
     assert any(
         "converge-release-artifacts" in failure
         and "release-artifacts --max-passes 6" in failure
+        for failure in checks["github-actions-ci"]["failures"]
+    )
+
+
+def test_release_audit_rejects_ci_lean_gate_with_wrong_project_dir(
+    tmp_path: Path,
+) -> None:
+    copied_root = tmp_path / "repo"
+    shutil.copytree(
+        Path.cwd(),
+        copied_root,
+        ignore=shutil.ignore_patterns(
+            ".git",
+            ".venv",
+            ".pytest_cache",
+            ".ruff_cache",
+            "build",
+            "dist",
+            "*.egg-info",
+            "__pycache__",
+        ),
+    )
+    workflow_path = copied_root / ".github" / "workflows" / "ci.yml"
+    workflow_path.write_text(
+        workflow_path.read_text(encoding="utf-8").replace(
+            "lake-package-directory: formal/lean",
+            "lake-package-directory: formal",
+        ),
+        encoding="utf-8",
+    )
+
+    audit = build_release_audit(copied_root)
+
+    checks = {check["id"]: check for check in audit["checks"]}
+    assert audit["accepted"] is False
+    assert checks["github-actions-ci"]["status"] == "failed"
+    assert any(
+        "Lean build gate has invalid input lake-package-directory" in failure
+        and "'formal/lean'" in failure
         for failure in checks["github-actions-ci"]["failures"]
     )
 

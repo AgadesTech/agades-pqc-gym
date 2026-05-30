@@ -16,6 +16,7 @@ from agades_pqc_gym.integrations.huggingface_dataset import (
     verify_huggingface_dataset_bundle,
 )
 from agades_pqc_gym.integrations.huggingface_space_manifest import (
+    DEFAULT_PRIVATE_SPACE_ID,
     verify_huggingface_space_manifest,
 )
 from agades_pqc_gym.integrations.source_catalog import (
@@ -42,6 +43,7 @@ LOCAL_ARTIFACT_PATHS = [
     "hf/dataset/task_metadata.jsonl",
     "hf/dataset/verifier_outputs.jsonl",
     "hf/dataset/MANIFEST.sha256",
+    "hf/README.md",
     "hf/app.py",
     "hf/requirements.txt",
     "hf/space_README.md",
@@ -63,12 +65,13 @@ PUBLICATION_COMMANDS = {
         '--commit-message "Sync Agades PQC Gym dataset"'
     ),
     "space_private_create": (
-        "hf repos create <owner>/pqc-gym --type=space --space-sdk gradio "
+        f"hf repos create {DEFAULT_PRIVATE_SPACE_ID} --type=space "
+        "--space-sdk gradio "
         "--private --exist-ok"
     ),
     "space_upload": (
-        "hf upload <owner>/pqc-gym hf . --repo-type=space "
-        '--commit-message "Sync Agades PQC Gym Space"'
+        f"hf upload {DEFAULT_PRIVATE_SPACE_ID} hf . --repo-type=space "
+        '--commit-message "Sync Agades PQC Gym Agent Environment"'
     ),
     "collection_manual_review_required": True,
 }
@@ -173,7 +176,7 @@ def build_huggingface_publication_handoff(root: Path | None = None) -> dict[str,
             "dataset_repo_type": "dataset",
             "dataset_suggested_repo_id": "agades/pqc-gym-toy",
             "space_repo_type": "space",
-            "space_suggested_repo_id": "agades/pqc-gym",
+            "space_suggested_repo_id": DEFAULT_PRIVATE_SPACE_ID,
             "collection_suggested_slug": "agades/pqc-gym",
             "release_plan": RELEASE_PLAN_PATH.as_posix(),
         },
@@ -299,7 +302,7 @@ def _verify_platform(handoff: dict[str, Any], failures: list[str]) -> None:
         "dataset_repo_type": "dataset",
         "dataset_suggested_repo_id": "agades/pqc-gym-toy",
         "space_repo_type": "space",
-        "space_suggested_repo_id": "agades/pqc-gym",
+        "space_suggested_repo_id": DEFAULT_PRIVATE_SPACE_ID,
         "collection_suggested_slug": "agades/pqc-gym",
         "release_plan": RELEASE_PLAN_PATH.as_posix(),
     }

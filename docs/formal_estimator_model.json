@@ -1,0 +1,498 @@
+{
+  "backend": {
+    "library": "mathlib",
+    "primary": "lean4",
+    "smt_assist": "z3_optional_finite_decidable_obligations_only"
+  },
+  "claim_boundary": "estimator outputs are reproducibility or toy-evaluation bindings, not PQC break claims",
+  "estimator_formal_rules": [
+    {
+      "lean_source": {
+        "path": "formal/lean/AgadesPQC/EstimatorModel.lean",
+        "sha256": "dbd283b471d5babbe14f8b050d48bc78e29285ccbab670a583621ca09b40be50"
+      },
+      "lean_theorem": "AgadesPQC.EstimatorModel.operator_compatibility_declared",
+      "rule_id": "estimator.operator_compatibility_declared",
+      "statement": "A runtime estimator result is applicable only when its attack type is explicitly compatible with the AttackPlan operator."
+    },
+    {
+      "lean_source": {
+        "path": "formal/lean/AgadesPQC/EstimatorModel.lean",
+        "sha256": "dbd283b471d5babbe14f8b050d48bc78e29285ccbab670a583621ca09b40be50"
+      },
+      "lean_theorem": "AgadesPQC.EstimatorModel.result_binding_required_before_claim",
+      "rule_id": "estimator.result_binding_required_before_claim",
+      "statement": "Toy or mock estimator output must be bound into a proof artifact before any reviewed claim can be considered."
+    },
+    {
+      "lean_source": {
+        "path": "formal/lean/AgadesPQC/EstimatorModel.lean",
+        "sha256": "dbd283b471d5babbe14f8b050d48bc78e29285ccbab670a583621ca09b40be50"
+      },
+      "lean_theorem": "AgadesPQC.EstimatorModel.schema_only_no_estimator",
+      "rule_id": "estimator.schema_only_no_estimator",
+      "statement": "Schema-only families must remain explicitly marked as having no runtime estimator."
+    }
+  ],
+  "estimator_result_contract": {
+    "claim_allowed_before_review": false,
+    "hash_binding_fields": [
+      "path",
+      "sha256",
+      "canonical_sha256"
+    ],
+    "required_fields": [
+      "estimator_name",
+      "estimator_version",
+      "evaluation_status",
+      "attack_type",
+      "time_bits",
+      "memory_bits",
+      "warnings"
+    ]
+  },
+  "families": [
+    {
+      "adapter_class": "agades_pqc_gym.families.lattice.adapter.LatticeFamilyAdapter",
+      "adapter_support_level": "implemented",
+      "claim_policy": {
+        "estimator_output_is_security_proof": false,
+        "human_review_required_before_security_claim": true,
+        "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+        "proof_artifact_binding_required": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "f224ade96f82e246f23bda05c71d84faf0a663ccc7b41d519883d1ef180b67bc",
+      "estimator_model": {
+        "model_id": "mock-lattice-estimator",
+        "result_binding_required_before_claim": true,
+        "security_claim_allowed_without_review": false,
+        "status": "result_binding_required_before_claim",
+        "toy_or_mock_result": true
+      },
+      "family": "LWE",
+      "formal_rule_ids": [
+        "estimator.operator_compatibility_declared",
+        "estimator.result_binding_required_before_claim",
+        "estimator.schema_only_no_estimator"
+      ],
+      "plugin": "lattice",
+      "plugin_support_level": "implemented",
+      "required_reviewers": [
+        "lattice_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "runtime_operator_count": 12,
+      "supported_operators": [
+        "bkw",
+        "bkz_parameter_sweep",
+        "bounded_distance_decoding",
+        "dual_attack",
+        "dual_hybrid",
+        "meet_in_the_middle",
+        "module_lattice_reduction_hypothesis",
+        "modulus_switching",
+        "normal_form_transform",
+        "primal_usvp",
+        "sample_selection",
+        "secret_guessing"
+      ]
+    },
+    {
+      "adapter_class": "agades_pqc_gym.families.lattice.adapter.LatticeFamilyAdapter",
+      "adapter_support_level": "implemented",
+      "claim_policy": {
+        "estimator_output_is_security_proof": false,
+        "human_review_required_before_security_claim": true,
+        "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+        "proof_artifact_binding_required": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "a15d30db6dd14c66a405f7952e256ec9242c2de9008ecfba294894889c056a6a",
+      "estimator_model": {
+        "model_id": "mock-lattice-estimator",
+        "result_binding_required_before_claim": true,
+        "security_claim_allowed_without_review": false,
+        "status": "result_binding_required_before_claim",
+        "toy_or_mock_result": true
+      },
+      "family": "MLWE",
+      "formal_rule_ids": [
+        "estimator.operator_compatibility_declared",
+        "estimator.result_binding_required_before_claim",
+        "estimator.schema_only_no_estimator"
+      ],
+      "plugin": "lattice",
+      "plugin_support_level": "implemented",
+      "required_reviewers": [
+        "lattice_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "runtime_operator_count": 12,
+      "supported_operators": [
+        "bkw",
+        "bkz_parameter_sweep",
+        "bounded_distance_decoding",
+        "dual_attack",
+        "dual_hybrid",
+        "meet_in_the_middle",
+        "module_lattice_reduction_hypothesis",
+        "modulus_switching",
+        "normal_form_transform",
+        "primal_usvp",
+        "sample_selection",
+        "secret_guessing"
+      ]
+    },
+    {
+      "adapter_class": "agades_pqc_gym.families.lattice.adapter.LatticeFamilyAdapter",
+      "adapter_support_level": "schema_only",
+      "claim_policy": {
+        "estimator_output_is_security_proof": false,
+        "human_review_required_before_security_claim": true,
+        "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+        "proof_artifact_binding_required": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "2714875e3f2bb5e7415ee8d283faf674a2aa5940d9c8d0dc7708bb989674d54b",
+      "estimator_model": {
+        "model_id": "schema_only_no_estimator",
+        "result_binding_required_before_claim": false,
+        "security_claim_allowed_without_review": false,
+        "status": "schema_only_no_estimator",
+        "toy_or_mock_result": false
+      },
+      "family": "NTRU",
+      "formal_rule_ids": [
+        "estimator.operator_compatibility_declared",
+        "estimator.result_binding_required_before_claim",
+        "estimator.schema_only_no_estimator"
+      ],
+      "plugin": "lattice",
+      "plugin_support_level": "schema_only",
+      "required_reviewers": [
+        "lattice_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "runtime_operator_count": 0,
+      "supported_operators": []
+    },
+    {
+      "adapter_class": "agades_pqc_gym.families.lattice.adapter.LatticeFamilyAdapter",
+      "adapter_support_level": "schema_only",
+      "claim_policy": {
+        "estimator_output_is_security_proof": false,
+        "human_review_required_before_security_claim": true,
+        "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+        "proof_artifact_binding_required": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "148d350299fabca24d30f27f419f396945296a2d9b41cb0629e8dab66169689e",
+      "estimator_model": {
+        "model_id": "schema_only_no_estimator",
+        "result_binding_required_before_claim": false,
+        "security_claim_allowed_without_review": false,
+        "status": "schema_only_no_estimator",
+        "toy_or_mock_result": false
+      },
+      "family": "SIS",
+      "formal_rule_ids": [
+        "estimator.operator_compatibility_declared",
+        "estimator.result_binding_required_before_claim",
+        "estimator.schema_only_no_estimator"
+      ],
+      "plugin": "lattice",
+      "plugin_support_level": "schema_only",
+      "required_reviewers": [
+        "lattice_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "runtime_operator_count": 0,
+      "supported_operators": []
+    },
+    {
+      "adapter_class": "agades_pqc_gym.families.code_based.adapter.CodeBasedFamilyAdapter",
+      "adapter_support_level": "toy_evaluator",
+      "claim_policy": {
+        "estimator_output_is_security_proof": false,
+        "human_review_required_before_security_claim": true,
+        "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+        "proof_artifact_binding_required": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "5c0db96099691785ab00b61a4e4d07550ef10d05bf00f263eddbdbbf66e00755",
+      "estimator_model": {
+        "model_id": "toy-code-based-isd-estimator",
+        "result_binding_required_before_claim": true,
+        "security_claim_allowed_without_review": false,
+        "status": "result_binding_required_before_claim",
+        "toy_or_mock_result": true
+      },
+      "family": "CODE_BASED",
+      "formal_rule_ids": [
+        "estimator.operator_compatibility_declared",
+        "estimator.result_binding_required_before_claim",
+        "estimator.schema_only_no_estimator"
+      ],
+      "plugin": "code_based",
+      "plugin_support_level": "toy_evaluator",
+      "required_reviewers": [
+        "code_based_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "runtime_operator_count": 2,
+      "supported_operators": [
+        "decoding_fixture_check",
+        "information_set_decoding"
+      ]
+    },
+    {
+      "adapter_class": "agades_pqc_gym.families.multivariate.adapter.MultivariateFamilyAdapter",
+      "adapter_support_level": "toy_evaluator",
+      "claim_policy": {
+        "estimator_output_is_security_proof": false,
+        "human_review_required_before_security_claim": true,
+        "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+        "proof_artifact_binding_required": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "ec2a7d12d411f0573e46b27d0782dd88659981cd155ab8547c2bfe48d05682c3",
+      "estimator_model": {
+        "model_id": "toy-multivariate-estimator",
+        "result_binding_required_before_claim": true,
+        "security_claim_allowed_without_review": false,
+        "status": "result_binding_required_before_claim",
+        "toy_or_mock_result": true
+      },
+      "family": "MULTIVARIATE",
+      "formal_rule_ids": [
+        "estimator.operator_compatibility_declared",
+        "estimator.result_binding_required_before_claim",
+        "estimator.schema_only_no_estimator"
+      ],
+      "plugin": "multivariate",
+      "plugin_support_level": "toy_evaluator",
+      "required_reviewers": [
+        "multivariate_cryptographer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "runtime_operator_count": 3,
+      "supported_operators": [
+        "groebner_basis",
+        "minrank_attack",
+        "signature_fixture_check"
+      ]
+    },
+    {
+      "adapter_class": "agades_pqc_gym.families.hash_based.adapter.HashBasedFamilyAdapter",
+      "adapter_support_level": "toy_evaluator",
+      "claim_policy": {
+        "estimator_output_is_security_proof": false,
+        "human_review_required_before_security_claim": true,
+        "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+        "proof_artifact_binding_required": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "1473eb954f2159714dc0c06742ae5a135498eb349bc61c31dd4f652ec8da9fe8",
+      "estimator_model": {
+        "model_id": "toy-hash-bound-estimator",
+        "result_binding_required_before_claim": true,
+        "security_claim_allowed_without_review": false,
+        "status": "result_binding_required_before_claim",
+        "toy_or_mock_result": true
+      },
+      "family": "HASH_BASED",
+      "formal_rule_ids": [
+        "estimator.operator_compatibility_declared",
+        "estimator.result_binding_required_before_claim",
+        "estimator.schema_only_no_estimator"
+      ],
+      "plugin": "hash_based",
+      "plugin_support_level": "toy_evaluator",
+      "required_reviewers": [
+        "hash_based_signature_reviewer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "runtime_operator_count": 3,
+      "supported_operators": [
+        "hash_signature_verification",
+        "misuse_check",
+        "security_bound_check"
+      ]
+    },
+    {
+      "adapter_class": "agades_pqc_gym.families.isogeny_historical.adapter.IsogenyHistoricalFamilyAdapter",
+      "adapter_support_level": "toy_evaluator",
+      "claim_policy": {
+        "estimator_output_is_security_proof": false,
+        "human_review_required_before_security_claim": true,
+        "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+        "proof_artifact_binding_required": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "e24f60935579350ea356a0239674ebf8152ff390c74fad11b9f8e7533ac53146",
+      "estimator_model": {
+        "model_id": "toy-isogeny-historical-path-estimator",
+        "result_binding_required_before_claim": true,
+        "security_claim_allowed_without_review": false,
+        "status": "result_binding_required_before_claim",
+        "toy_or_mock_result": true
+      },
+      "family": "ISOGENY_HISTORICAL",
+      "formal_rule_ids": [
+        "estimator.operator_compatibility_declared",
+        "estimator.result_binding_required_before_claim",
+        "estimator.schema_only_no_estimator"
+      ],
+      "plugin": "isogeny_historical",
+      "plugin_support_level": "toy_evaluator",
+      "required_reviewers": [
+        "isogeny_historical_reviewer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "runtime_operator_count": 1,
+      "supported_operators": [
+        "historical_isogeny_reconstruction"
+      ]
+    },
+    {
+      "adapter_class": "agades_pqc_gym.families.implementation_security.adapter.ImplementationSecurityFamilyAdapter",
+      "adapter_support_level": "toy_evaluator",
+      "claim_policy": {
+        "estimator_output_is_security_proof": false,
+        "human_review_required_before_security_claim": true,
+        "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+        "proof_artifact_binding_required": true,
+        "security_claim_allowed_without_review": false
+      },
+      "entry_sha256": "d91aa6adac979765505a61551adda13ab488b27af724290b7ac781c5c9f84e72",
+      "estimator_model": {
+        "model_id": "toy-implementation-security-estimator",
+        "result_binding_required_before_claim": true,
+        "security_claim_allowed_without_review": false,
+        "status": "result_binding_required_before_claim",
+        "toy_or_mock_result": true
+      },
+      "family": "IMPLEMENTATION_SECURITY",
+      "formal_rule_ids": [
+        "estimator.operator_compatibility_declared",
+        "estimator.result_binding_required_before_claim",
+        "estimator.schema_only_no_estimator"
+      ],
+      "plugin": "implementation_security",
+      "plugin_support_level": "toy_evaluator",
+      "required_reviewers": [
+        "implementation_security_reviewer",
+        "formal_methods_reviewer",
+        "release_boundary_reviewer"
+      ],
+      "runtime_operator_count": 3,
+      "supported_operators": [
+        "benchmark_harness",
+        "constant_time_check",
+        "kat_conformance"
+      ]
+    }
+  ],
+  "lean_bindings": [
+    {
+      "declaration": "attached_unreviewed_no_security_claim",
+      "lean_theorem": "AgadesPQC.Evaluator.attached_unreviewed_no_security_claim",
+      "path": "formal/lean/AgadesPQC/Evaluator.lean",
+      "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
+    },
+    {
+      "declaration": "no_security_claim",
+      "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+      "path": "formal/lean/AgadesPQC/Evaluator.lean",
+      "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
+    },
+    {
+      "declaration": "schema_only_no_estimator_no_security_claim",
+      "lean_theorem": "AgadesPQC.Evaluator.schema_only_no_estimator_no_security_claim",
+      "path": "formal/lean/AgadesPQC/Evaluator.lean",
+      "sha256": "28993a101420e2bfe0582e7032fcb75dfef4be04cf076a91b14c73a9d01354aa"
+    },
+    {
+      "declaration": "operator_compatibility_declared",
+      "lean_theorem": "AgadesPQC.EstimatorModel.operator_compatibility_declared",
+      "path": "formal/lean/AgadesPQC/EstimatorModel.lean",
+      "sha256": "dbd283b471d5babbe14f8b050d48bc78e29285ccbab670a583621ca09b40be50"
+    },
+    {
+      "declaration": "result_binding_required_before_claim",
+      "lean_theorem": "AgadesPQC.EstimatorModel.result_binding_required_before_claim",
+      "path": "formal/lean/AgadesPQC/EstimatorModel.lean",
+      "sha256": "dbd283b471d5babbe14f8b050d48bc78e29285ccbab670a583621ca09b40be50"
+    },
+    {
+      "declaration": "schema_only_no_estimator",
+      "lean_theorem": "AgadesPQC.EstimatorModel.schema_only_no_estimator",
+      "path": "formal/lean/AgadesPQC/EstimatorModel.lean",
+      "sha256": "dbd283b471d5babbe14f8b050d48bc78e29285ccbab670a583621ca09b40be50"
+    }
+  ],
+  "linked_artifacts": {
+    "family_plugin_manifest": {
+      "path": "docs/family_plugin_manifest.json",
+      "sha256": "c6fca7e84e9abcb06772f866e47f7b19dc0713e3a8b2dbdbea26dc97a2386745"
+    },
+    "formal_family_coverage": {
+      "path": "docs/formal_family_coverage.json",
+      "sha256": "244aece8209436e7113279d8d63b9266b8f2e7502852e0adfb2ecced15e11333"
+    },
+    "formal_lean_backend": {
+      "path": "docs/formal_lean_backend.json",
+      "sha256": "e06c1d1107a57abb6203f8343e7135f2e9931a2ff7affbd2738b1bc6025ea8aa"
+    },
+    "formal_lwe_proof_artifact": {
+      "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+      "sha256": "fc87c4ccd8afcc308bd847020dfdc44a2ddd42398febeb21f30451e61d9ae004"
+    },
+    "formal_mlwe_proof_artifact": {
+      "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
+      "sha256": "8ae91212c526a1e77b86f6d28dd1a90631d6186a30e589135a269cb7c642a0dd"
+    }
+  },
+  "model_sha256": "e6c3cc4b5328ba552048db5c91a276d960a26f9850b06f2c122b56559aabc6c5",
+  "project": {
+    "name": "Agades PQC Gym",
+    "package": "agades_pqc_gym",
+    "repository": "https://github.com/AgadesTech/agades-pqc-gym"
+  },
+  "proof_artifact_binding": {
+    "accepted_public_binding_statuses": [
+      "not_attached",
+      "attached_unreviewed"
+    ],
+    "estimator_result_binding_required_before_claim": true,
+    "lean_theorem": "AgadesPQC.Evaluator.no_security_claim",
+    "mvp_vertical_proof_artifacts": {
+      "LWE": "docs/formal_lattice_primal_usvp_proof_artifact.json",
+      "MLWE": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json"
+    },
+    "security_claim_status_without_review": "disallowed"
+  },
+  "release_gates": [
+    "uv run pytest tests/test_formal_estimator_model.py -q",
+    "uv run agades-pqc formal-estimator-model --out docs/formal_estimator_model.json",
+    "uv run agades-pqc formal-estimator-model-verify --model docs/formal_estimator_model.json",
+    "uv run agades-pqc formal-family-coverage-verify --coverage docs/formal_family_coverage.json"
+  ],
+  "schema_version": "agades.pqc.formal.estimator_model.v1",
+  "summary": {
+    "families": 9,
+    "result_binding_required_before_claim": 7,
+    "runtime_operator_count": 36,
+    "schema_only_no_estimator": 2,
+    "security_claim_allowed_without_review": 0
+  }
+}

@@ -40,6 +40,19 @@ cd prime_intellect/verifiers_environment
 uv run vf-eval agades-pqc-verifier-env
 ```
 
+The credentialed Prime eval template is generated and verified from the repo
+root:
+
+```bash
+uv run agades-pqc prime-eval-config --config prime_intellect/evals/agades_pqc_eval.template.toml --manifest docs/prime_eval_config_manifest.json
+uv run agades-pqc prime-eval-config-verify --config prime_intellect/evals/agades_pqc_eval.template.toml --manifest docs/prime_eval_config_manifest.json
+```
+
+It uses `AGADES_PRIME_ENV_REF` for the owner-qualified Prime environment and
+`AGADES_EVAL_MODEL` for the reviewed model id. The template is intentionally
+blocked until Prime credentials, organization/namespace, billing, and model
+choice have been reviewed.
+
 ## Publish
 
 ```bash

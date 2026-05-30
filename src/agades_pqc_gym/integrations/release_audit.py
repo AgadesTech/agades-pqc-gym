@@ -106,6 +106,7 @@ from agades_pqc_gym.integrations.huggingface_space_manifest import (
     verify_huggingface_space_manifest,
 )
 from agades_pqc_gym.integrations.huggingface_space_smoke import (
+    verify_huggingface_space_launch_smoke_report,
     verify_huggingface_space_smoke_report,
 )
 from agades_pqc_gym.integrations.lattice_estimator_baseline_contracts import (
@@ -139,12 +140,16 @@ from agades_pqc_gym.integrations.nvidia_manifest_safety import (
 from agades_pqc_gym.integrations.nvidia_publication_handoff import (
     verify_nvidia_publication_handoff,
 )
+from agades_pqc_gym.integrations.pedagogical_rl_method import (
+    verify_pedagogical_rl_method,
+)
 from agades_pqc_gym.integrations.prime_environment_manifest import (
     verify_prime_environment_manifest,
 )
 from agades_pqc_gym.integrations.prime_environment_smoke import (
     verify_prime_environment_smoke_report,
 )
+from agades_pqc_gym.integrations.prime_eval_config import verify_prime_eval_config
 from agades_pqc_gym.integrations.prime_publication_handoff import (
     verify_prime_publication_handoff,
 )
@@ -153,6 +158,9 @@ from agades_pqc_gym.integrations.prime_speedrun_handoff import (
 )
 from agades_pqc_gym.integrations.prime_verifier_schemas import (
     verify_prime_verifier_schemas,
+)
+from agades_pqc_gym.integrations.private_dataset_curation import (
+    verify_private_dataset_curation,
 )
 from agades_pqc_gym.integrations.private_run_policy import (
     build_private_run_policy,
@@ -359,8 +367,17 @@ FAMILY_READINESS_REQUIREMENTS = {
 }
 GITHUB_ACTIONS_REQUIRED_ACTIONS = (
     "actions/checkout@",
+    "leanprover/lean-action@",
     "astral-sh/setup-uv@",
 )
+GITHUB_ACTIONS_LEAN_GATE_REQUIRED_INPUTS: dict[str, Any] = {
+    "lake-package-directory": "formal/lean",
+    "build": True,
+    "test": False,
+    "lint": False,
+    "auto-config": False,
+    "use-mathlib-cache": True,
+}
 GITHUB_ACTIONS_REQUIRED_COMMANDS = (
     ("build-package", "uv build"),
     ("build-prime-environment", "uv build prime_intellect/verifiers_environment"),
@@ -373,6 +390,7 @@ GITHUB_ACTIONS_REQUIRED_COMMANDS = (
         "docs/family_support_matrix.json "
         "docs/ecosystem_source_graph.json "
         "docs/family_operator_catalog.json "
+        "docs/formal_lean_backend.json "
         "docs/lattice_estimator_manifest.json "
         "docs/lattice_estimator_baseline_contracts.json "
         "docs/runbook_input_manifest.json "
@@ -383,8 +401,11 @@ GITHUB_ACTIONS_REQUIRED_COMMANDS = (
         "docs/nvidia_publication_handoff.json "
         "docs/publication_manifest.json "
         "docs/external_publication_review_packet.json "
-        "docs/private_run_policy.json "
+        "docs/private_run_policy.json docs/private_dataset_curation.json "
+        "docs/pedagogical_rl_method.json "
         "docs/prime_publication_handoff.json docs/prime_speedrun_handoff.json "
+        "docs/prime_eval_config_manifest.json "
+        "prime_intellect/evals/agades_pqc_eval.template.toml "
         "prime_intellect/verifiers_environment/prime_manifest.json "
         "prime_intellect/schemas/attack_plan.schema.json "
         "prime_intellect/schemas/verifier_result.schema.json "
@@ -393,6 +414,7 @@ GITHUB_ACTIONS_REQUIRED_COMMANDS = (
         "public/runbook_audit.json public/release_audit.json "
         "docs/release_status.json public/publication_preflight.json "
         "reports/ecosystem_smoke.json reports/hf_space_smoke.json "
+        "reports/hf_space_launch_smoke.json "
         "reports/openevolve_smoke.json reports/prime_environment_smoke.json "
         "reports/nvidia_manifest_safety.json",
     ),
@@ -405,6 +427,16 @@ GITHUB_ACTIONS_REQUIRED_COMMANDS = (
         "verify-private-run-policy",
         "uv run agades-pqc private-run-policy-verify --policy "
         "docs/private_run_policy.json",
+    ),
+    (
+        "generate-private-dataset-curation",
+        "uv run agades-pqc private-dataset-curation --out "
+        "docs/private_dataset_curation.json",
+    ),
+    (
+        "verify-private-dataset-curation",
+        "uv run agades-pqc private-dataset-curation-verify --curation "
+        "docs/private_dataset_curation.json",
     ),
     (
         "verify-runbook-input-manifest",
@@ -481,6 +513,15 @@ GITHUB_ACTIONS_REQUIRED_COMMANDS = (
         "docs/family_operator_catalog.json",
     ),
     (
+        "generate-formal-lean-backend",
+        "uv run agades-pqc formal-lean-backend --out docs/formal_lean_backend.json",
+    ),
+    (
+        "verify-formal-lean-backend",
+        "uv run agades-pqc formal-lean-backend-verify --backend "
+        "docs/formal_lean_backend.json",
+    ),
+    (
         "generate-hf-dataset",
         "uv run agades-pqc hf-dataset --out hf/dataset",
     ),
@@ -503,6 +544,16 @@ GITHUB_ACTIONS_REQUIRED_COMMANDS = (
     (
         "verify-hf-space-smoke",
         "uv run agades-pqc hf-space-smoke-verify --report reports/hf_space_smoke.json",
+    ),
+    (
+        "generate-hf-space-launch-smoke",
+        "uv run agades-pqc hf-space-launch-smoke --out "
+        "reports/hf_space_launch_smoke.json",
+    ),
+    (
+        "verify-hf-space-launch-smoke",
+        "uv run agades-pqc hf-space-launch-smoke-verify --report "
+        "reports/hf_space_launch_smoke.json",
     ),
     (
         "generate-hf-collection-manifest",
@@ -611,6 +662,28 @@ GITHUB_ACTIONS_REQUIRED_COMMANDS = (
         "reports/prime_environment_smoke.json",
     ),
     (
+        "generate-prime-eval-config",
+        "uv run agades-pqc prime-eval-config --config "
+        "prime_intellect/evals/agades_pqc_eval.template.toml --manifest "
+        "docs/prime_eval_config_manifest.json",
+    ),
+    (
+        "verify-prime-eval-config",
+        "uv run agades-pqc prime-eval-config-verify --config "
+        "prime_intellect/evals/agades_pqc_eval.template.toml --manifest "
+        "docs/prime_eval_config_manifest.json",
+    ),
+    (
+        "generate-pedagogical-rl-method",
+        "uv run agades-pqc pedagogical-rl-method --out "
+        "docs/pedagogical_rl_method.json",
+    ),
+    (
+        "verify-pedagogical-rl-method",
+        "uv run agades-pqc pedagogical-rl-method-verify --method "
+        "docs/pedagogical_rl_method.json",
+    ),
+    (
         "generate-prime-schemas",
         "uv run agades-pqc prime-schemas --out prime_intellect/schemas",
     ),
@@ -688,6 +761,7 @@ def build_release_audit(root: Path | None = None) -> dict[str, Any]:
         _runbook_deliverables(project_root),
         _github_actions_ci(project_root),
         _hf_space_smoke(project_root),
+        _hf_space_launch_smoke(project_root),
         _hf_space_manifest(project_root),
         _hf_collection_manifest(project_root),
         _hf_publication_handoff(project_root),
@@ -734,6 +808,9 @@ def build_release_audit(root: Path | None = None) -> dict[str, Any]:
         _ecosystem_release_plans(project_root),
         _prime_environment_smoke(project_root),
         _prime_environment_manifest(project_root),
+        _prime_eval_config(project_root),
+        _pedagogical_rl_method(project_root),
+        _private_dataset_curation(project_root),
         _prime_verifier_schemas(project_root),
         _prime_publication_handoff(project_root),
         _prime_speedrun_handoff(project_root),
@@ -889,6 +966,37 @@ def _hf_space_smoke(root: Path) -> dict[str, Any]:
                 "summary_contains_not_security_claim"
             ],
             "uses_shared_verifier": summary["uses_shared_verifier"],
+        },
+        failures=failures,
+    )
+
+
+def _hf_space_launch_smoke(root: Path) -> dict[str, Any]:
+    verification = verify_huggingface_space_launch_smoke_report(
+        Path("reports/hf_space_launch_smoke.json"),
+        root=root,
+    )
+    summary = verification["summary"]
+    failures = list(verification["failures"])
+
+    return _check(
+        check_id="hf-space-launch-smoke",
+        status="failed" if failures else "passed",
+        blocking=True,
+        artifact="reports/hf_space_launch_smoke.json",
+        detail=(
+            "Hugging Face Space launch smoke builds the Gradio Blocks UI and "
+            "verifies the public Agent Environment API endpoints."
+        ),
+        evidence={
+            "agent_environment_api_names_present": summary[
+                "agent_environment_api_names_present"
+            ],
+            "component_count": summary["component_count"],
+            "demo_class": summary["demo_class"],
+            "gradio_available": summary["gradio_available"],
+            "required_api_names_present": summary["required_api_names_present"],
+            "title": summary["title"],
         },
         failures=failures,
     )
@@ -1134,6 +1242,7 @@ def _github_actions_ci(root: Path) -> dict[str, Any]:
     failures: list[str] = []
     run_commands: list[str] = []
     used_actions: list[str] = []
+    lean_gate_inputs: dict[str, Any] | None = None
     jobs: dict[str, Any] = {}
     triggers: Any = None
 
@@ -1168,10 +1277,28 @@ def _github_actions_ci(root: Path) -> dict[str, Any]:
                 uses = step.get("uses")
                 if isinstance(uses, str):
                     used_actions.append(uses)
+                    if uses.startswith("leanprover/lean-action@"):
+                        step_inputs = step.get("with", {})
+                        lean_gate_inputs = (
+                            dict(step_inputs) if isinstance(step_inputs, dict) else {}
+                        )
 
     for action in GITHUB_ACTIONS_REQUIRED_ACTIONS:
         if not any(used_action.startswith(action) for used_action in used_actions):
             failures.append(f"GitHub Actions CI workflow does not use {action}.")
+
+    if lean_gate_inputs is None:
+        failures.append("GitHub Actions CI workflow is missing the Lean build gate.")
+    else:
+        for input_name, expected_value in (
+            GITHUB_ACTIONS_LEAN_GATE_REQUIRED_INPUTS.items()
+        ):
+            actual_value = lean_gate_inputs.get(input_name)
+            if actual_value != expected_value:
+                failures.append(
+                    "GitHub Actions CI Lean build gate has invalid input "
+                    f"{input_name}: expected {expected_value!r}, got {actual_value!r}."
+                )
 
     for command_id, required_command in GITHUB_ACTIONS_REQUIRED_COMMANDS:
         normalized = " ".join(required_command.split())
@@ -1193,6 +1320,8 @@ def _github_actions_ci(root: Path) -> dict[str, Any]:
         evidence={
             "jobs": sorted(jobs) if isinstance(jobs, dict) else [],
             "required_actions": list(GITHUB_ACTIONS_REQUIRED_ACTIONS),
+            "lean_gate_required_inputs": dict(GITHUB_ACTIONS_LEAN_GATE_REQUIRED_INPUTS),
+            "lean_gate_inputs": lean_gate_inputs or {},
             "required_commands": [
                 command_id for command_id, _ in GITHUB_ACTIONS_REQUIRED_COMMANDS
             ],
@@ -4224,6 +4353,7 @@ def _openevolve_config_template(root: Path) -> dict[str, Any]:
         "checked_config_synced": summary["checked_config_synced"],
         "config_path": config_path.as_posix(),
         "example_config_synced": summary["checked_config_synced"],
+        "private_qwen_enabled": summary["private_qwen_enabled"],
         "python_candidates_executed": summary["python_candidates_executed"],
         "security_claim": summary["security_claim"],
         "template_keys": len(DEFAULT_CONFIG_TEMPLATE),
@@ -4392,6 +4522,7 @@ def _deepevolve_research_hooks(root: Path) -> dict[str, Any]:
         "arbitrary_code_execution": True,
         "card_count": 0,
         "modifies_estimator_scores": True,
+        "private_qwen_bound": False,
         "proposal_count": 0,
         "research_claim": True,
         "review_required_before_implementation": False,
@@ -4413,6 +4544,9 @@ def _deepevolve_research_hooks(root: Path) -> dict[str, Any]:
 
             verification = verify_deepevolve_research_hooks_manifest(manifest_path)
             failures.extend(verification["failures"])
+            evidence["private_qwen_bound"] = verification["summary"][
+                "private_qwen_bound"
+            ]
             summary = committed.get("summary", {})
             safety = committed.get("safety", {})
             if isinstance(summary, dict):
@@ -4449,6 +4583,8 @@ def _deepevolve_research_hooks(root: Path) -> dict[str, Any]:
         failures.append("DeepEvolve paper card count drifted.")
     if evidence["proposal_count"] != 13:
         failures.append("DeepEvolve proposal count drifted.")
+    if evidence["private_qwen_bound"] is not True:
+        failures.append("DeepEvolve hooks are not bound to private Qwen.")
     if evidence["arbitrary_code_execution"] is not False:
         failures.append("DeepEvolve hooks allow arbitrary code execution.")
     if evidence["modifies_estimator_scores"] is not False:
@@ -4740,6 +4876,7 @@ def _prime_environment_manifest(root: Path) -> dict[str, Any]:
         evidence={
             "families": task_manifest.get("families", []),
             "hub_install_command_template": prime.get("hub_install_command_template"),
+            "eval_config_path": prime.get("eval_config_path"),
             "local_eval_command": prime.get("local_eval_command"),
             "mirrored_public_examples": source_mirror.get("valid_public_example_count"),
             "mirrors_public_examples": source_mirror.get(
@@ -4748,6 +4885,133 @@ def _prime_environment_manifest(root: Path) -> dict[str, Any]:
             "task_count": task_manifest.get("task_count"),
         },
         failures=failures,
+    )
+
+
+def _prime_eval_config(root: Path) -> dict[str, Any]:
+    verification = verify_prime_eval_config(
+        Path("prime_intellect/evals/agades_pqc_eval.template.toml"),
+        Path("docs/prime_eval_config_manifest.json"),
+        root=root,
+    )
+    summary = verification["summary"]
+
+    return _check(
+        check_id="prime-eval-config",
+        status="failed" if verification["failures"] else "passed",
+        blocking=True,
+        artifact="docs/prime_eval_config_manifest.json",
+        detail=(
+            "Prime eval config template is checked in, synchronized with the "
+            "Verifiers environment, and blocks credentialed eval runs until "
+            "Prime namespace, billing, and model review."
+        ),
+        evidence={
+            "family_count": summary["family_count"],
+            "num_examples": summary["num_examples"],
+            "rollouts_per_example": summary["rollouts_per_example"],
+            "task_count": summary["task_count"],
+        },
+        failures=list(verification["failures"]),
+    )
+
+
+def _pedagogical_rl_method(root: Path) -> dict[str, Any]:
+    verification = verify_pedagogical_rl_method(
+        Path("docs/pedagogical_rl_method.json"),
+        root=root,
+    )
+    summary = verification["summary"]
+    artifact = _read_json(root / "docs" / "pedagogical_rl_method.json")
+    reward_contract = artifact.get("reward_contract", {})
+    if not isinstance(reward_contract, dict):
+        reward_contract = {}
+    roles = artifact.get("roles", {})
+    if not isinstance(roles, dict):
+        roles = {}
+    teacher = roles.get("self_teacher", {})
+    if not isinstance(teacher, dict):
+        teacher = {}
+    privacy = artifact.get("privacy", {})
+    if not isinstance(privacy, dict):
+        privacy = {}
+
+    privacy_preserving = all(
+        privacy.get(key) is False
+        for key in (
+            "raw_rollouts_publication_allowed",
+            "teacher_prompts_publication_allowed",
+            "student_logprobs_publication_allowed",
+            "reviewer_annotations_publication_allowed",
+            "fine_tuned_weights_publication_allowed",
+        )
+    )
+
+    return _check(
+        check_id="pedagogical-rl-method",
+        status="failed" if verification["failures"] else "passed",
+        blocking=True,
+        artifact="docs/pedagogical_rl_method.json",
+        detail=(
+            "Pedagogical RL is captured as a verifiable private method "
+            "contract with teacher/student roles, spike-aware reward, "
+            "surprisal-gated assimilation, and publication boundaries."
+        ),
+        evidence={
+            "stages": summary["stages"],
+            "reward_terms": summary["reward_terms"],
+            "linked_artifacts": summary["linked_artifacts"],
+            "teacher_student_pattern": (
+                "privileged_self_teacher_student"
+                if teacher.get("privileged_context_visible") is True
+                else None
+            ),
+            "pedagogy_reward": reward_contract.get("pedagogy_reward"),
+            "privacy_preserving": privacy_preserving,
+        },
+        failures=list(verification["failures"]),
+    )
+
+
+def _private_dataset_curation(root: Path) -> dict[str, Any]:
+    path = root / "docs" / "private_dataset_curation.json"
+    verification = verify_private_dataset_curation(path, root=root)
+    summary = verification["summary"]
+    artifact = _read_optional_json(path)
+    outputs = artifact.get("outputs", {})
+    if not isinstance(outputs, dict):
+        outputs = {}
+    sources = artifact.get("sources", {})
+    if not isinstance(sources, dict):
+        sources = {}
+
+    license_review_required = all(
+        isinstance(source, dict)
+        and source.get("license_review_status") == "required_unverified"
+        and source.get("ingestion_allowed_before_license_review") is False
+        for source in sources.values()
+    )
+
+    return _check(
+        check_id="private-dataset-curation",
+        status="failed" if verification["failures"] else "passed",
+        blocking=True,
+        artifact="docs/private_dataset_curation.json",
+        detail=(
+            "Private RL dataset curation is represented by a public manifest "
+            "only: sources require license review, provenance, deduplication, "
+            "redaction, contamination audit, and no private rows or prompts "
+            "may be published."
+        ),
+        evidence={
+            "sources": summary["sources"],
+            "pipeline_stages": summary["pipeline_stages"],
+            "required_controls": summary["required_controls"],
+            "linked_artifacts": summary["linked_artifacts"],
+            "public_rows_allowed": outputs.get("public_rows_allowed"),
+            "license_review_required": license_review_required,
+        },
+        failures=list(verification["failures"]),
     )
 
 

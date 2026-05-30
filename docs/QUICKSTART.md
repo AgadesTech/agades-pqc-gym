@@ -33,11 +33,11 @@ For a family route that is intentionally not implemented yet, the gym says so
 explicitly:
 
 ```text
-status=unsupported ... valid=False ... reason=CODE_BASED evaluator is not implemented
+status=unsupported score=n/a accepted=False unsupported_route=True ... reason=CODE_BASED evaluator is not implemented
 ```
 
-`unsupported` means the JSON shape was understood, but the gym refused to invent
-an estimate for a family route that has no reviewed evaluator.
+`unsupported_route=True` means the JSON shape was understood, but the gym
+refused to invent an estimate for a family route that has no reviewed evaluator.
 
 ## 3. Run The Core Loop Manually
 
@@ -65,9 +65,9 @@ uv run agades-pqc report runs/demo_trace.jsonl --out reports/demo_report.md
 uv run agades-pqc evaluate examples/attack_plans/code_based_isd_placeholder.json --out runs/code_based_placeholder.jsonl
 ```
 
-This should exit successfully as a CLI command but report `status=unsupported`
-and `valid=False` for the evaluated plan. That distinction is deliberate: the
-tool can record unsupported routes without pretending they are valid
+This should exit successfully as a CLI command but report `status=unsupported`,
+`score=n/a`, `accepted=False`, and `unsupported_route=True`. That distinction is
+deliberate: the tool can record unsupported routes without pretending they are
 cryptanalytic results.
 
 ## CLI Surface

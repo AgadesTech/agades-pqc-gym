@@ -20,6 +20,7 @@ EXPECTED_HF_ARTIFACT_PATHS = [
     "hf/dataset/task_metadata.jsonl",
     "hf/dataset/verifier_outputs.jsonl",
     "hf/dataset/MANIFEST.sha256",
+    "hf/README.md",
     "hf/app.py",
     "hf/requirements.txt",
     "hf/space_README.md",
@@ -69,7 +70,7 @@ def test_huggingface_publication_handoff_records_review_boundaries(
         "dataset_repo_type": "dataset",
         "dataset_suggested_repo_id": "agades/pqc-gym-toy",
         "space_repo_type": "space",
-        "space_suggested_repo_id": "agades/pqc-gym",
+        "space_suggested_repo_id": "agades/agades-pqc-gym-agent-env",
         "collection_suggested_slug": "agades/pqc-gym",
         "release_plan": "docs/HUGGINGFACE_RELEASE_PLAN.md",
     }
@@ -100,12 +101,13 @@ def test_huggingface_publication_handoff_records_review_boundaries(
             '--commit-message "Sync Agades PQC Gym dataset"'
         ),
         "space_private_create": (
-            "hf repos create <owner>/pqc-gym --type=space --space-sdk gradio "
+            "hf repos create agades/agades-pqc-gym-agent-env --type=space "
+            "--space-sdk gradio "
             "--private --exist-ok"
         ),
         "space_upload": (
-            "hf upload <owner>/pqc-gym hf . --repo-type=space "
-            '--commit-message "Sync Agades PQC Gym Space"'
+            "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space "
+            '--commit-message "Sync Agades PQC Gym Agent Environment"'
         ),
         "collection_manual_review_required": True,
     }
@@ -213,7 +215,7 @@ def test_huggingface_publication_handoff_verify_accepts_committed_handoff() -> N
         "handoff_path": "docs/huggingface_publication_handoff.json",
         "accepted": True,
         "summary": {
-            "artifact_count": 17,
+            "artifact_count": 18,
             "attack_plan_count": 80,
             "collection_entry_count": 7,
             "external_publication_requires_review": True,

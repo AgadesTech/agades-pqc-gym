@@ -120,7 +120,9 @@ def test_evaluate_command_explains_unsupported_results(tmp_path: Path) -> None:
 
     assert result.exit_code == 0, result.output
     assert "status=unsupported" in result.output
-    assert "valid=False" in result.output
+    assert "accepted=False" in result.output
+    assert "valid=False" not in result.output
+    assert "unsupported_route=True" in result.output
     assert "CODE_BASED evaluator is not implemented" in result.output
     assert trace_path.exists()
 

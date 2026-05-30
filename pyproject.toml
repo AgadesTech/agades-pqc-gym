@@ -15,8 +15,12 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "gradio>=4,<7",
     "pytest>=8,<9",
     "ruff>=0.15,<1",
+]
+space = [
+    "gradio>=4,<7",
 ]
 
 [project.scripts]
