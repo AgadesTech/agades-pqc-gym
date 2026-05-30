@@ -145,6 +145,26 @@ def test_huggingface_space_agent_env_explains_schema_only_family() -> None:
     assert trace["claim_boundary"]["claims_pqc_break"] is False
 
 
+def test_huggingface_space_verifier_summary_hides_unsupported_sentinel() -> None:
+    module = _load_space_module()
+    ntru_label = next(
+        choice
+        for choice in module.example_plan_choices()
+        if choice.startswith("NTRU / ")
+    )
+
+    summary, verifier_payload = module.evaluate_attack_plan_json(
+        module.load_example_plan(ntru_label),
+    )
+
+    verifier = json.loads(verifier_payload)
+    assert verifier["evaluation_status"] == "unsupported"
+    assert "NTRU: unsupported" in summary
+    assert "score=n/a" in summary
+    assert "score=-1000000000.0" not in summary
+    assert "not a security claim" in summary
+
+
 def test_huggingface_space_agent_env_falls_back_on_runtime_error(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
