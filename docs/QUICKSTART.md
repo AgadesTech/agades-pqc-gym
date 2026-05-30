@@ -91,7 +91,7 @@ uv run agades-pqc evaluate examples/attack_plans/invalid_plan_should_fail.json -
 Expected shape:
 
 ```text
-status=invalid ... trace=not_written reason=...
+status=invalid score=n/a ... trace=not_written reason=... next=...
 ```
 
 ## 5. List Guided Examples
