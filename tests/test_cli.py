@@ -34,6 +34,20 @@ def test_validate_command_accepts_valid_plan() -> None:
     assert "valid" in result.output.lower()
 
 
+def test_validate_command_reports_stable_attackplan_errors() -> None:
+    result = CliRunner().invoke(
+        app,
+        ["validate", "examples/attack_plans/invalid_plan_should_fail.json"],
+    )
+
+    assert result.exit_code == 1
+    assert "invalid AttackPlan" in result.output
+    assert "module_lattice_reduction_hypothesis requires an MLWE target" in (
+        result.output
+    )
+    assert "errors.pydantic.dev" not in result.output
+
+
 def test_help_prioritizes_core_gym_commands() -> None:
     result = CliRunner().invoke(app, ["--help"])
 
@@ -125,6 +139,29 @@ def test_evaluate_command_explains_unsupported_results(tmp_path: Path) -> None:
     assert "unsupported_route=True" in result.output
     assert "CODE_BASED evaluator is not implemented" in result.output
     assert trace_path.exists()
+
+
+def test_evaluate_command_does_not_claim_invalid_trace_written(
+    tmp_path: Path,
+) -> None:
+    trace_path = tmp_path / "invalid.jsonl"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "evaluate",
+            "examples/attack_plans/invalid_plan_should_fail.json",
+            "--out",
+            str(trace_path),
+        ],
+    )
+
+    assert result.exit_code == 1
+    assert "status=invalid" in result.output
+    assert "trace=not_written" in result.output
+    assert str(trace_path) not in result.output
+    assert "errors.pydantic.dev" not in result.output
+    assert not trace_path.exists()
 
 
 def test_verify_command_outputs_public_verifier_json() -> None:

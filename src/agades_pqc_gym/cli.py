@@ -270,6 +270,7 @@ from agades_pqc_gym.traces.public_ledger import (
     render_public_trace_jsonl,
 )
 from agades_pqc_gym.traces.writer import JsonlTraceWriter
+from agades_pqc_gym.utils.validation_errors import stable_validation_error_messages
 from agades_pqc_gym.validators.static import validate_attack_plan
 from agades_pqc_gym.verifier import EstimatorChoice, verify_attack_plan_path
 
@@ -381,8 +382,14 @@ def validate(plan_path: Path) -> None:
     """Validate an AttackPlan JSON file."""
     try:
         plan = AttackPlan.model_validate_json(plan_path.read_text())
-    except (OSError, ValidationError) as exc:
-        console.print(f"[red]invalid[/red]: {exc}")
+    except OSError as exc:
+        typer.echo(f"invalid AttackPlan: {plan_path}")
+        typer.echo(f"- {exc}")
+        raise typer.Exit(1) from exc
+    except ValidationError as exc:
+        typer.echo(f"invalid AttackPlan: {plan_path}")
+        for error in stable_validation_error_messages(exc):
+            typer.echo(f"- {error}")
         raise typer.Exit(1) from exc
 
     result = validate_attack_plan(plan)
@@ -3074,6 +3081,11 @@ def format_evaluation_summary(result: CascadeResult, out: Path) -> str:
         summary = (
             f"status=unsupported score=n/a accepted=False "
             f"unsupported_route=True trace={out}"
+        )
+    elif result.plan is None:
+        summary = (
+            f"status={status} score={score} "
+            f"valid={result.valid} trace=not_written"
         )
     else:
         summary = f"status={status} score={score} valid={result.valid} trace={out}"
