@@ -24,7 +24,7 @@ def test_private_qwen_artifact_plan_accepts_lora_then_private_gguf(
         "plan_path": plan_path.as_posix(),
         "accepted": True,
         "summary": {
-            "target_model": "Qwen3.6-27B-private",
+            "target_model": "Qwen/Qwen3.6-35B-A3B",
             "trainable_base_present": True,
             "adapter_present": True,
             "private_quantization_present": True,
@@ -143,7 +143,7 @@ def _write_plan(tmp_path: Path, payload: dict[str, object]) -> Path:
 def _valid_plan() -> dict[str, object]:
     return {
         "schema_version": "agades.pqc.private_qwen_artifact_plan.v1",
-        "target_model": "Qwen3.6-27B-private",
+        "target_model": "Qwen/Qwen3.6-35B-A3B",
         "training_path": (
             "LoRA_or_QLoRA_on_trainable_weights_then_private_GGUF_OTQ_"
             "quantization"
@@ -152,20 +152,23 @@ def _valid_plan() -> dict[str, object]:
         "artifacts": {
             "trainable_base": {
                 "kind": "trainable_weights",
-                "path": "private/models/qwen3_6_27b/base",
+                "path": "private/models/qwen3_6_35b_a3b/base",
                 "sha256": "1" * 64,
                 "public_release_allowed": False,
             },
             "lora_adapter": {
                 "kind": "lora_or_qlora_adapter",
-                "path": "private/models/qwen3_6_27b/adapters/agades-lora",
+                "path": "private/models/qwen3_6_35b_a3b/adapters/agades-lora",
                 "sha256": "2" * 64,
                 "public_release_allowed": False,
                 "derived_from_trainable_base": True,
             },
             "gguf_otq_5bit": {
                 "kind": "private_quantized_gguf_otq_5bit",
-                "path": "private/models/qwen3_6_27b/quantized/agades-qwen.otq5.gguf",
+                "path": (
+                    "private/models/qwen3_6_35b_a3b/quantized/"
+                    "agades-qwen.otq5.gguf"
+                ),
                 "sha256": "3" * 64,
                 "public_release_allowed": False,
                 "derived_from_lora_adapter": True,

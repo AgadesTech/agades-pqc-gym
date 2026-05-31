@@ -43,7 +43,7 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "7652f6b27dfe9516a9df2ebfce5f513a58092e174d49689e37fb634998a7bba7"
+      "sha256": "af2db43c67a87d5f4ac52b1d0fad40b67c113ad4bf4c38cc2d9eb9029481c7bf"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
@@ -59,15 +59,15 @@
     },
     "private_dataset_curation": {
       "path": "docs/private_dataset_curation.json",
-      "sha256": "67b62b02e4f45acd8c717e0feef593a80e2f012363952a12fabf57ccd641df8a"
+      "sha256": "a19daa9fbdd4e7adba018274b5d09e5e299e69af4f395c2716c6d756714ddbfe"
     },
     "private_qwen_artifact_verifier": {
       "path": "src/agades_pqc_gym/integrations/private_qwen_artifacts.py",
-      "sha256": "7594f1d0ecfe2aa22e86a02b19503c26362c710113480dba35e3de7c8f02919d"
+      "sha256": "170199861a59dcddcf7ad9b3de8eda845dbe8fe6c7418babe8e2083f5d7c46f2"
     },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
-      "sha256": "08c0adb2e5b3cb0407d6c16e93f0eac8f636cb8b0dc8a53570b1cc18583f24f6"
+      "sha256": "1a4982fbe9428d3dcda52637bff9f47fb49f43df99ca4a46091e650bfde0b0b4"
     },
     "rl_pedagogy_runtime": {
       "path": "src/agades_pqc_gym/rl/pedagogy.py",
@@ -121,7 +121,7 @@
   },
   "prime_training": {
     "config_path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
-    "config_sha256": "6044580bb49bc2e0762f74b2f70984f13ec1320fab48a6a0b1f8337eb828f1f3",
+    "config_sha256": "a8dcfe83c529116ab7c4199c840ac6a2b240b18c234def037bfe1a33c83e886a",
     "dataset_curation_manifest_path": "docs/private_dataset_curation.json",
     "eval_command": "prime eval run agades-pqc-verifier-env",
     "eval_config_manifest_path": "docs/prime_eval_config_manifest.json",
@@ -189,7 +189,7 @@
     "publish_adapters_publicly": false,
     "publish_trace_corpora_publicly": false,
     "publish_weights_publicly": false,
-    "target_model": "Qwen3.6-27B-private",
+    "target_model": "Qwen/Qwen3.6-35B-A3B",
     "training_path": "LoRA_or_QLoRA_on_trainable_weights_then_private_GGUF_OTQ_quantization"
   },
   "release_gates": [

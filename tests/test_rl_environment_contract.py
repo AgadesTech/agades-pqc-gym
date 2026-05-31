@@ -73,7 +73,7 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
         "optional_private_grpo_refinement",
     ]
     assert contract["private_track"]["qwen_training"]["target_model"] == (
-        "Qwen3.6-27B-private"
+        "Qwen/Qwen3.6-35B-A3B"
     )
     assert (
         contract["private_track"]["qwen_training"]["publish_weights_publicly"]

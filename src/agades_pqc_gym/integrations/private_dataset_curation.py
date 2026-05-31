@@ -180,7 +180,7 @@ def build_private_dataset_curation(root: Path | None = None) -> dict[str, Any]:
         },
         "purpose": {
             "method": "pedagogical_rl",
-            "target": "private_qwen3_6_27b_attackplan_trace_quality",
+            "target": "private_qwen3_6_35b_a3b_attackplan_trace_quality",
             "claim_boundary": (
                 "curates private training traces for AttackPlan generation, "
                 "validation, proof-obligation review, and critique; it does "

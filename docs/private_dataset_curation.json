@@ -123,7 +123,7 @@
     },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
-      "sha256": "08c0adb2e5b3cb0407d6c16e93f0eac8f636cb8b0dc8a53570b1cc18583f24f6"
+      "sha256": "1a4982fbe9428d3dcda52637bff9f47fb49f43df99ca4a46091e650bfde0b0b4"
     },
     "source_catalog": {
       "path": "docs/source_catalog.json",
@@ -231,7 +231,7 @@
   "purpose": {
     "claim_boundary": "curates private training traces for AttackPlan generation, validation, proof-obligation review, and critique; it does not publish data rows or assert cryptographic breaks",
     "method": "pedagogical_rl",
-    "target": "private_qwen3_6_27b_attackplan_trace_quality"
+    "target": "private_qwen3_6_35b_a3b_attackplan_trace_quality"
   },
   "redaction": {
     "remove_credentials": true,

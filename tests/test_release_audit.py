@@ -54,9 +54,9 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert checks["release-gate-closure"]["status"] == "passed"
     assert checks["release-gate-closure"]["blocking"] is True
     assert checks["release-gate-closure"]["evidence"] == {
-        "checked_release_gate_artifacts": 107,
-        "release_audit_gate_artifacts": 55,
-        "ecosystem_smoke_gate_artifacts": 59,
+        "checked_release_gate_artifacts": 85,
+        "release_audit_gate_artifacts": 41,
+        "ecosystem_smoke_gate_artifacts": 44,
         "missing_ecosystem_smoke_gate": [],
         "late_ecosystem_smoke_gate": [],
     }

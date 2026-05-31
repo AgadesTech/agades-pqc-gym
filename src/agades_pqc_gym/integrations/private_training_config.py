@@ -138,7 +138,7 @@ def build_prime_rl_training_template() -> str:
         "publish_to_prime_public = false\n"
         f"required_env_vars = {_toml_string_list(PRIVATE_TRAINING_REQUIRED_ENV_VARS)}\n"
         f'dataset_curation_manifest = "{PRIVATE_DATASET_CURATION_MANIFEST_PATH}"\n'
-        'student_model = "Qwen3.6-27B-private"\n'
+        f'student_model = "{PRIVATE_QWEN_TARGET_MODEL}"\n'
         'preferred_user_artifact = "private GGUF OTQ 5-bit"\n'
         "gguf_direct_training_allowed = false\n"
         "spike_aware_pedagogy_reward = true\n"
@@ -202,7 +202,7 @@ def build_prime_rl_training_template() -> str:
         "publish_publicly = false\n"
         "\n"
         "[checkpoints]\n"
-        'root = "private/models/qwen3_6_27b_pedagogical_rl"\n'
+        'root = "private/models/qwen3_6_35b_a3b_pedagogical_rl"\n'
         "save_interval = 100\n"
         "publish_publicly = false\n"
         "\n"

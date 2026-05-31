@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import shutil
 from pathlib import Path
 from typing import Any
 
@@ -19,9 +20,7 @@ from agades_pqc_gym.rl.environment import (
 from agades_pqc_gym.verifier import PUBLIC_VERIFIER_SCHEMA
 
 HF_SPACE_MANIFEST_SCHEMA = "agades.pqc.hf_space_manifest.v1"
-HF_SPACE_MANIFEST_VERIFICATION_SCHEMA = (
-    "agades.pqc.hf_space_manifest_verification.v1"
-)
+HF_SPACE_MANIFEST_VERIFICATION_SCHEMA = "agades.pqc.hf_space_manifest_verification.v1"
 ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_LABEL = "LWE / lattice_primal_usvp_toy_v1"
 DEFAULT_PRIVATE_SPACE_ID = "agades/agades-pqc-gym-agent-env"
@@ -30,6 +29,24 @@ SPACE_README_PATH = Path("hf/README.md")
 SPACE_FORMAL_DOCS_PATH = Path("hf/docs")
 SPACE_FORMAL_LEAN_PATH = Path("hf/formal/lean")
 SPACE_CI_WORKFLOW_PATH = Path("hf/.github/workflows/ci.yml")
+SPACE_RUNTIME_DOC_FILES = frozenset(
+    {
+        "family_operator_catalog.json",
+        "family_plugin_manifest.json",
+        "formal_attackplan_semantics.json",
+        "formal_estimator_model.json",
+        "formal_family_coverage.json",
+        "formal_lean_backend.json",
+        "formal_lattice_mlwe_module_hypothesis_evaluator_result.json",
+        "formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
+        "formal_lattice_primal_usvp_evaluator_result.json",
+        "formal_lattice_primal_usvp_proof_artifact.json",
+        "formal_obligation_ledger.json",
+        "formal_operator_semantics.json",
+        "formal_smt_assist_contract.json",
+        "reviewer_governance.json",
+    }
+)
 SPACE_README_METADATA = {
     "title": "Agades PQC Gym Agent Environment",
     "sdk": "gradio",
@@ -59,8 +76,7 @@ _REQUIRED_RELEASE_GATES = (
     "uv run agades-pqc hf-space-manifest-verify --manifest hf/space_manifest.json",
     "uv run agades-pqc hf-space-smoke --out reports/hf_space_smoke.json",
     "uv run agades-pqc hf-space-smoke-verify --report reports/hf_space_smoke.json",
-    "uv run agades-pqc ecosystem-smoke-verify --report "
-    "reports/ecosystem_smoke.json",
+    "uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json",
     "uv run agades-pqc release-audit --out public/release_audit.json",
 )
 
@@ -187,7 +203,9 @@ def write_huggingface_space_manifest(
     *,
     root: Path | None = None,
 ) -> dict[str, Any]:
-    manifest = build_huggingface_space_manifest(root=root)
+    project_root = (root or ROOT).resolve()
+    _sync_space_runtime_assets(project_root)
+    manifest = build_huggingface_space_manifest(root=project_root)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n",
@@ -338,9 +356,7 @@ def _verify_space_readme(
         actual_value = metadata.get(field) if isinstance(metadata, dict) else None
         if field == "tags":
             actual_tags = actual_value if isinstance(actual_value, list) else []
-            missing_tags = [
-                tag for tag in required_value if tag not in actual_tags
-            ]
+            missing_tags = [tag for tag in required_value if tag not in actual_tags]
             if missing_tags:
                 failures.append(
                     "Hugging Face Space root README is missing required tags: "
@@ -349,8 +365,7 @@ def _verify_space_readme(
                 )
         elif actual_value != required_value:
             failures.append(
-                "Hugging Face Space root README metadata field is incorrect: "
-                f"{field}."
+                f"Hugging Face Space root README metadata field is incorrect: {field}."
             )
 
     readme_text = (root / SPACE_README_PATH).read_text(encoding="utf-8")
@@ -394,9 +409,7 @@ def _verify_runtime(
     if runtime.get("requirements") != _requirements(root / "hf" / "requirements.txt"):
         failures.append("Hugging Face Space manifest requirements are not in sync.")
     if runtime.get("hf_spaces_injected_gradio") != HF_SPACES_INJECTED_GRADIO:
-        failures.append(
-            "Hugging Face Space manifest injected Gradio runtime drifted."
-        )
+        failures.append("Hugging Face Space manifest injected Gradio runtime drifted.")
     if runtime.get("requirements_compatible_with_injected_gradio") is not True:
         failures.append(
             "Hugging Face Space requirements conflict with the Gradio version "
@@ -424,8 +437,7 @@ def _verify_runtime(
         path = runtime.get(field)
         if isinstance(path, str) and not (root / path).is_file():
             failures.append(
-                "Hugging Face Space manifest runtime file is missing: "
-                f"{path}."
+                f"Hugging Face Space manifest runtime file is missing: {path}."
             )
     if runtime.get("fallback_source") != "examples/attack_plans":
         failures.append("Hugging Face Space manifest fallback_source is incorrect.")
@@ -500,8 +512,7 @@ def _verify_agent_environment_contract(
         rollout = json.loads(trace)
     except Exception as exc:  # noqa: BLE001 - verifier must report app issues.
         failures.append(
-            "Hugging Face Space Agent Environment app comparison failed: "
-            f"{exc}"
+            f"Hugging Face Space Agent Environment app comparison failed: {exc}"
         )
         return
     if observation.get("schema_version") != OBSERVATION_SCHEMA:
@@ -583,9 +594,7 @@ def _verify_example_manifest(
         failures.append(
             "Hugging Face Space manifest labels do not match valid dataset rows."
         )
-    if examples.get("example_count") != examples.get(
-        "dataset_valid_attack_plan_count"
-    ):
+    if examples.get("example_count") != examples.get("dataset_valid_attack_plan_count"):
         failures.append(
             "Hugging Face Space selector count differs from valid dataset rows."
         )
@@ -748,8 +757,7 @@ def _verification_result(
             "has_space_readme_metadata": (
                 isinstance(space.get("space_readme_metadata"), dict)
                 and space.get("space_readme_metadata", {}).get("sdk") == "gradio"
-                and space.get("space_readme_metadata", {}).get("app_file")
-                == "app.py"
+                and space.get("space_readme_metadata", {}).get("app_file") == "app.py"
                 and "agent-environment"
                 in space.get("space_readme_metadata", {}).get("tags", [])
             ),
@@ -869,6 +877,83 @@ def _space_formal_runtime_bundle(root: Path) -> dict[str, Any]:
         "required_files_present": all(path.is_file() for path in required_paths),
         "bundle_sha256": _bundle_sha256(root, bundle_files),
     }
+
+
+def _sync_space_runtime_assets(project_root: Path) -> None:
+    _sync_space_runtime_docs(
+        source_dir=project_root / "docs",
+        target_dir=project_root / SPACE_FORMAL_DOCS_PATH,
+    )
+    _sync_directory(
+        source_dir=project_root / "formal" / "lean",
+        target_dir=project_root / SPACE_FORMAL_LEAN_PATH,
+        ignored_parts=frozenset({".lake"}),
+    )
+
+
+def _sync_space_runtime_docs(*, source_dir: Path, target_dir: Path) -> None:
+    target_dir.mkdir(parents=True, exist_ok=True)
+    for stale_path in sorted(target_dir.glob("*.json")):
+        if stale_path.name not in SPACE_RUNTIME_DOC_FILES:
+            stale_path.unlink()
+
+    for file_name in sorted(SPACE_RUNTIME_DOC_FILES):
+        source_path = source_dir / file_name
+        target_path = target_dir / file_name
+        if file_name == "reviewer_governance.json":
+            content = _space_runtime_reviewer_governance(source_path)
+        else:
+            content = source_path.read_bytes()
+        if not target_path.is_file() or target_path.read_bytes() != content:
+            target_path.write_bytes(content)
+
+
+def _space_runtime_reviewer_governance(source_path: Path) -> bytes:
+    payload = json.loads(source_path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise TypeError("reviewer_governance.json must contain a JSON object")
+    runtime_payload = dict(payload)
+    runtime_payload.pop("linked_artifacts", None)
+    return (json.dumps(runtime_payload, indent=2, sort_keys=True) + "\n").encode(
+        "utf-8"
+    )
+
+
+def _sync_directory(
+    *,
+    source_dir: Path,
+    target_dir: Path,
+    suffix: str | None = None,
+    ignored_parts: frozenset[str] = frozenset(),
+) -> None:
+    source_files = {
+        path.relative_to(source_dir): path
+        for path in sorted(source_dir.rglob("*"))
+        if path.is_file()
+        and not ignored_parts.intersection(path.relative_to(source_dir).parts)
+        and (suffix is None or path.suffix == suffix)
+    }
+    target_files = {
+        path.relative_to(target_dir): path
+        for path in sorted(target_dir.rglob("*"))
+        if path.is_file()
+        and not ignored_parts.intersection(path.relative_to(target_dir).parts)
+        and (suffix is None or path.suffix == suffix)
+    }
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    for relative_path, target_path in target_files.items():
+        if relative_path not in source_files:
+            target_path.unlink()
+
+    for relative_path, source_path in source_files.items():
+        target_path = target_dir / relative_path
+        target_path.parent.mkdir(parents=True, exist_ok=True)
+        if (
+            not target_path.is_file()
+            or target_path.read_bytes() != source_path.read_bytes()
+        ):
+            shutil.copyfile(source_path, target_path)
 
 
 def _bundle_sha256(root: Path, files: list[Path]) -> str:

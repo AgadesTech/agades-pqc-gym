@@ -326,7 +326,7 @@
     "dataset_curation_manifest": "docs/private_dataset_curation.json",
     "gguf_otq_5bit_env": "AGADES_QWEN_GGUF_OTQ_5BIT_PATH",
     "lora_adapter_env": "AGADES_QWEN_LORA_ADAPTER_PATH",
-    "model": "Qwen3.6-27B-private",
+    "model": "Qwen/Qwen3.6-35B-A3B",
     "pedagogical_rl_method": "docs/pedagogical_rl_method.json",
     "proposal_gate": {
       "attackplan_validation_required": true,

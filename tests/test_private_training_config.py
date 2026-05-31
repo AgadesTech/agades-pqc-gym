@@ -50,7 +50,7 @@ def test_private_training_manifest_defines_prime_rl_qwen_and_dataset_controls(
         "launch_readiness": "blocked_until_private_model_and_dataset_review",
     }
     assert payload["qwen"] == {
-        "target_model": "Qwen3.6-27B-private",
+        "target_model": "Qwen/Qwen3.6-35B-A3B",
         "base_model_env": "AGADES_QWEN_BASE_MODEL",
         "preferred_user_artifact": "private GGUF OTQ 5-bit",
         "gguf_direct_training_allowed": False,

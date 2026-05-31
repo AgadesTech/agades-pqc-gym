@@ -7,7 +7,9 @@ from typer.testing import CliRunner
 
 from agades_pqc_gym.cli import app
 from agades_pqc_gym.integrations.huggingface_space_manifest import (
+    SPACE_RUNTIME_DOC_FILES,
     _requirements_allow_injected_gradio,
+    _sync_space_runtime_assets,
     build_huggingface_space_manifest,
     verify_huggingface_space_manifest,
     write_huggingface_space_manifest,
@@ -64,7 +66,7 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
             "--space_sdk gradio --private --exist-ok"
         ),
         "hub_upload_command_template": (
-            'hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space '
+            "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space "
             '--commit-message "Sync Agades PQC Gym Agent Environment"'
         ),
         "public_push_requires_review": True,
@@ -92,9 +94,7 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "observation_schema": "agades.pqc.rl.observation.v1",
         "reward_report_schema": "agades.pqc.rl.reward_report.v1",
         "rollout_trace_schema": "agades.pqc.rl.rollout_trace.v1",
-        "formal_artifact_binding_schema": (
-            "agades.pqc.rl.formal_artifact_binding.v1"
-        ),
+        "formal_artifact_binding_schema": ("agades.pqc.rl.formal_artifact_binding.v1"),
         "review_governance_binding_schema": (
             "agades.pqc.formal.proof_artifact.reviewer_governance_binding.v1"
         ),
@@ -129,12 +129,11 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "NTRU",
         "SIS",
     ]
-    assert "LWE / lattice_primal_usvp_toy_v1" in manifest["example_manifest"][
-        "labels"
-    ]
-    assert "LWE / lattice_lwe_modulus_switching_primary_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
+    assert "LWE / lattice_primal_usvp_toy_v1" in manifest["example_manifest"]["labels"]
+    assert (
+        "LWE / lattice_lwe_modulus_switching_primary_v1"
+        in manifest["example_manifest"]["labels"]
+    )
     assert (
         "LWE / lattice_downscaled_lwe_instance_solve_n6_q23_ternary_v1"
         in manifest["example_manifest"]["labels"]
@@ -143,15 +142,18 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "MLWE / lattice_downscaled_mlwe_instance_solve_v1"
         in manifest["example_manifest"]["labels"]
     )
-    assert "CODE_BASED / code_based_qc_rotation_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "CODE_BASED / code_based_bike_placeholder_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "CODE_BASED / code_based_classic_mceliece_placeholder_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
+    assert (
+        "CODE_BASED / code_based_qc_rotation_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "CODE_BASED / code_based_bike_placeholder_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "CODE_BASED / code_based_classic_mceliece_placeholder_v1"
+        in manifest["example_manifest"]["labels"]
+    )
     assert (
         "CODE_BASED / code_based_classic_mceliece_support_syndrome_toy_v1"
         in manifest["example_manifest"]["labels"]
@@ -160,27 +162,34 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "CODE_BASED / code_based_classic_mceliece_syndrome_toy_v1"
         in manifest["example_manifest"]["labels"]
     )
-    assert "CODE_BASED / code_based_hqc_repetition_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "CODE_BASED / code_based_hqc_weighted_repetition_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "CODE_BASED / code_based_hqc_parity_check_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "CODE_BASED / code_based_hqc_circulant_syndrome_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "CODE_BASED / code_based_hqc_erasure_syndrome_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "CODE_BASED / code_based_mdpc_bit_flip_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "CODE_BASED / code_based_mdpc_black_gray_bit_flip_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
+    assert (
+        "CODE_BASED / code_based_hqc_repetition_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "CODE_BASED / code_based_hqc_weighted_repetition_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "CODE_BASED / code_based_hqc_parity_check_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "CODE_BASED / code_based_hqc_circulant_syndrome_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "CODE_BASED / code_based_hqc_erasure_syndrome_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "CODE_BASED / code_based_mdpc_bit_flip_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "CODE_BASED / code_based_mdpc_black_gray_bit_flip_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
     assert (
         "CODE_BASED / code_based_mdpc_syndrome_weight_bit_flip_toy_v1"
         in manifest["example_manifest"]["labels"]
@@ -193,33 +202,40 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "ISOGENY_HISTORICAL / isogeny_historical_volcano_walk_toy_v1"
         in manifest["example_manifest"]["labels"]
     )
-    assert "CODE_BASED / code_based_lee_brickell_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "CODE_BASED / code_based_dumer_toy_v1" in manifest["example_manifest"][
-        "labels"
-    ]
-    assert "CODE_BASED / code_based_bjmm_toy_v1" in manifest["example_manifest"][
-        "labels"
-    ]
-    assert "HASH_BASED / hash_based_collision_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "HASH_BASED / hash_based_merkle_auth_path_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "HASH_BASED / hash_based_fors_auth_path_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "HASH_BASED / hash_based_slh_dsa_hypertree_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "HASH_BASED / hash_based_misuse_reused_salt_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "IMPLEMENTATION_SECURITY / implementation_security_acvp_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
+    assert (
+        "CODE_BASED / code_based_lee_brickell_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "CODE_BASED / code_based_dumer_toy_v1" in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "CODE_BASED / code_based_bjmm_toy_v1" in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "HASH_BASED / hash_based_collision_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "HASH_BASED / hash_based_merkle_auth_path_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "HASH_BASED / hash_based_fors_auth_path_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "HASH_BASED / hash_based_slh_dsa_hypertree_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "HASH_BASED / hash_based_misuse_reused_salt_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "IMPLEMENTATION_SECURITY / implementation_security_acvp_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
     assert (
         "IMPLEMENTATION_SECURITY / implementation_security_mldsa_kat_toy_v1"
         in manifest["example_manifest"]["labels"]
@@ -260,24 +276,30 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "IMPLEMENTATION_SECURITY / implementation_security_timecop_schema_v1"
         in manifest["example_manifest"]["labels"]
     )
-    assert "MULTIVARIATE / multivariate_mq_hybrid_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "MULTIVARIATE / multivariate_mq_hybrid_gf2_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "MULTIVARIATE / multivariate_mq_degree_bound_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "MULTIVARIATE / multivariate_mq_degree_bound_gf2_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "MULTIVARIATE / multivariate_minrank_rank_one_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
-    assert "MULTIVARIATE / multivariate_uov_public_map_toy_v1" in manifest[
-        "example_manifest"
-    ]["labels"]
+    assert (
+        "MULTIVARIATE / multivariate_mq_hybrid_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "MULTIVARIATE / multivariate_mq_hybrid_gf2_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "MULTIVARIATE / multivariate_mq_degree_bound_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "MULTIVARIATE / multivariate_mq_degree_bound_gf2_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "MULTIVARIATE / multivariate_minrank_rank_one_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
+    assert (
+        "MULTIVARIATE / multivariate_uov_public_map_toy_v1"
+        in manifest["example_manifest"]["labels"]
+    )
     assert manifest["verifier_contract"] == {
         "verifier_schema": "agades.pqc.verifier.v1",
         "uses_shared_verifier": True,
@@ -310,14 +332,8 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
 def test_huggingface_space_readme_matches_hub_workflow_contract() -> None:
     readme = Path("hf/space_README.md").read_text(encoding="utf-8")
 
-    assert (
-        "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space"
-        in readme
-    )
-    assert (
-        "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space"
-        in readme
-    )
+    assert "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space" in readme
+    assert "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space" in readme
     assert "HF_TOKEN" in readme
     assert "Agent Environment" in readme
     assert "rl_rollouts.jsonl" in readme
@@ -343,6 +359,57 @@ def test_committed_huggingface_space_manifest_is_in_sync(tmp_path: Path) -> None
     write_huggingface_space_manifest(generated)
 
     assert committed.read_bytes() == generated.read_bytes()
+
+
+def test_hf_space_manifest_syncs_runtime_docs_and_lean_sources(tmp_path: Path) -> None:
+    (tmp_path / "docs").mkdir()
+    for file_name in SPACE_RUNTIME_DOC_FILES:
+        (tmp_path / "docs" / file_name).write_text("{}\n")
+    (tmp_path / "docs" / "formal_attackplan_semantics.json").write_text(
+        '{"ok": true}\n'
+    )
+    (tmp_path / "docs" / "reviewer_governance.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "agades.pqc.reviewer_governance.v1",
+                "role_groups": {},
+                "linked_artifacts": {"volatile": {"sha256": "0" * 64}},
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n"
+    )
+    (tmp_path / "hf" / "docs").mkdir(parents=True)
+    (tmp_path / "hf" / "docs" / "stale.json").write_text("{}\n")
+    (tmp_path / "formal" / "lean" / "AgadesPQC").mkdir(parents=True)
+    (tmp_path / "formal" / "lean" / "AgadesPQC" / "AttackPlan.lean").write_text(
+        "def synced := True\n"
+    )
+    (tmp_path / "formal" / "lean" / ".lake").mkdir(parents=True)
+    (tmp_path / "formal" / "lean" / ".lake" / "ignored.olean").write_text("cached\n")
+    (tmp_path / "hf" / "formal" / "lean").mkdir(parents=True)
+    (tmp_path / "hf" / "formal" / "lean" / "stale.lean").write_text(
+        "def stale := True\n"
+    )
+
+    _sync_space_runtime_assets(tmp_path)
+
+    assert (tmp_path / "hf" / "docs" / "family_operator_catalog.json").is_file()
+    assert (tmp_path / "hf" / "docs" / "family_plugin_manifest.json").is_file()
+    assert (
+        tmp_path / "hf" / "docs" / "formal_attackplan_semantics.json"
+    ).read_text() == '{"ok": true}\n'
+    synced_governance = json.loads(
+        (tmp_path / "hf" / "docs" / "reviewer_governance.json").read_text()
+    )
+    assert "linked_artifacts" not in synced_governance
+    assert not (tmp_path / "hf" / "docs" / "stale.json").exists()
+    assert (
+        tmp_path / "hf" / "formal" / "lean" / "AgadesPQC" / "AttackPlan.lean"
+    ).read_text() == "def synced := True\n"
+    assert not (tmp_path / "hf" / "formal" / "lean" / "stale.lean").exists()
+    assert not (tmp_path / "hf" / "formal" / "lean" / ".lake").exists()
 
 
 def test_hf_space_manifest_verify_accepts_committed_manifest() -> None:
@@ -396,9 +463,7 @@ def test_hf_space_manifest_verify_rejects_space_readme_metadata_drift(
 ) -> None:
     out = tmp_path / "space_manifest.json"
     manifest = build_huggingface_space_manifest()
-    manifest["space"]["space_readme_metadata"]["tags"] = [
-        "post-quantum-cryptography"
-    ]
+    manifest["space"]["space_readme_metadata"]["tags"] = ["post-quantum-cryptography"]
     out.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
 
     result = verify_huggingface_space_manifest(out)
@@ -426,8 +491,7 @@ def test_hf_space_manifest_verify_rejects_empty_json_object(tmp_path: Path) -> N
     assert result["accepted"] is False
     assert "Hugging Face Space manifest is not in sync." in result["failures"]
     assert (
-        "Hugging Face Space manifest project must be an object."
-        in result["failures"]
+        "Hugging Face Space manifest project must be an object." in result["failures"]
     )
 
 

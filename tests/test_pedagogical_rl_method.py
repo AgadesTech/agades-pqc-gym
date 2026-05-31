@@ -32,7 +32,7 @@ def test_pedagogical_rl_method_defines_agades_teacher_student_pipeline(
         "citation_key": "chakraborty_ziems_2026_pedagogical_rl",
     }
     assert payload["roles"]["student"] == {
-        "model": "Qwen3.6-27B-private",
+        "model": "Qwen/Qwen3.6-35B-A3B",
         "conditioning": "attackplan_prompt_without_privileged_context",
         "privileged_context_visible": False,
         "private_outputs_only": True,
