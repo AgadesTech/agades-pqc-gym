@@ -24,7 +24,7 @@ def test_default_config_template_exposes_archive_driven_private_loop() -> None:
 
     assert template["program_type"] == "json_attack_plan"
     assert template["private_qwen_research_engine"] == {
-        "model": "Qwen3.6-27B-private",
+        "model": "Qwen/Qwen3.6-35B-A3B",
         "model_artifact_env": "AGADES_QWEN_BASE_MODEL",
         "lora_adapter_env": "AGADES_QWEN_LORA_ADAPTER_PATH",
         "gguf_otq_5bit_env": "AGADES_QWEN_GGUF_OTQ_5BIT_PATH",

@@ -78,7 +78,7 @@ def test_private_run_policy_defines_private_moat_boundaries() -> None:
             "reproducibility",
             "reviewer_quality",
         ],
-        "student_model": "private_qwen3_6_27b",
+        "student_model": "private_qwen3_6_35b_a3b",
         "preferred_private_quantization": "gguf_otq_5bit",
         "training_path": "lora_or_qlora_then_private_gguf_otq_quantization",
         "publish_finetuned_model_publicly": False,

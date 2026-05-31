@@ -14,6 +14,7 @@ from agades_pqc_gym.integrations.pedagogical_rl_method import (
     STAGE_SEQUENCE,
     TEACHER_STUDENT_PATTERN,
 )
+from agades_pqc_gym.integrations.private_qwen_artifacts import PRIVATE_QWEN_TARGET_MODEL
 
 RL_ENVIRONMENT_CONTRACT_SCHEMA = "agades.pqc.rl_environment_contract.v1"
 RL_ENVIRONMENT_CONTRACT_VERIFICATION_SCHEMA = (
@@ -139,7 +140,7 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
                 "publication_allowed": False,
             },
             "qwen_training": {
-                "target_model": "Qwen3.6-27B-private",
+                "target_model": PRIVATE_QWEN_TARGET_MODEL,
                 "preferred_user_artifact": "private GGUF OTQ 5-bit",
                 "training_path": (
                     "lora_or_qlora_on_trainable_weights_then_private_"
@@ -252,9 +253,7 @@ def verify_rl_environment_contract(
         "surfaces": len(contract.get("surfaces", {})),
         "reward_terms": len(contract.get("reward_model", {}).get("terms", [])),
         "private_dataset_sources": len(
-            contract.get("private_track", {})
-            .get("datasets", {})
-            .get("sources", [])
+            contract.get("private_track", {}).get("datasets", {}).get("sources", [])
         ),
         "linked_artifacts": len(contract.get("linked_artifacts", {})),
         "failure_count": len(failures),
@@ -384,7 +383,7 @@ def _verify_private_track(contract: dict[str, Any], failures: list[str]) -> None
     if datasets.get("publication_allowed") is not False:
         failures.append("Private RL datasets must not be publishable.")
     qwen = private_track.get("qwen_training", {})
-    if qwen.get("target_model") != "Qwen3.6-27B-private":
+    if qwen.get("target_model") != PRIVATE_QWEN_TARGET_MODEL:
         failures.append("Private RL Qwen target model is incorrect.")
     if qwen.get("gguf_direct_training_allowed") is not False:
         failures.append("GGUF direct training must not be treated as robust.")

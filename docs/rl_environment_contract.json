@@ -61,11 +61,11 @@
     },
     "hf_space_manifest": {
       "path": "hf/space_manifest.json",
-      "sha256": "d0d3a03c0fb33f74370b62b9dfd793483cc1edbb58b0d0048559a192c84de2c0"
+      "sha256": "77f96f95710b07e0e284aeb80be0a500548c8d91aa0c7a3b8fe7a9389388afd1"
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "7652f6b27dfe9516a9df2ebfce5f513a58092e174d49689e37fb634998a7bba7"
+      "sha256": "af2db43c67a87d5f4ac52b1d0fad40b67c113ad4bf4c38cc2d9eb9029481c7bf"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
@@ -81,7 +81,7 @@
     },
     "prime_rl_training_template": {
       "path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
-      "sha256": "6044580bb49bc2e0762f74b2f70984f13ec1320fab48a6a0b1f8337eb828f1f3"
+      "sha256": "a8dcfe83c529116ab7c4199c840ac6a2b240b18c234def037bfe1a33c83e886a"
     },
     "prime_schema_manifest": {
       "path": "prime_intellect/schemas/schema_manifest.json",
@@ -89,15 +89,15 @@
     },
     "private_dataset_curation": {
       "path": "docs/private_dataset_curation.json",
-      "sha256": "67b62b02e4f45acd8c717e0feef593a80e2f012363952a12fabf57ccd641df8a"
+      "sha256": "a19daa9fbdd4e7adba018274b5d09e5e299e69af4f395c2716c6d756714ddbfe"
     },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
-      "sha256": "08c0adb2e5b3cb0407d6c16e93f0eac8f636cb8b0dc8a53570b1cc18583f24f6"
+      "sha256": "1a4982fbe9428d3dcda52637bff9f47fb49f43df99ca4a46091e650bfde0b0b4"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "c9c868b23fc44e2a3d99d84f8a0c7f9bdf44fc311cbeae873df4ded2038352f1"
+      "sha256": "eb06b60bc4182ad62a4220bdf5a8dafa2e1b68766f03e9e75325a0a4332c8e6b"
     }
   },
   "private_track": {
@@ -134,7 +134,7 @@
       "public_card_metadata_only": true,
       "publish_trace_corpora_publicly": false,
       "publish_weights_publicly": false,
-      "target_model": "Qwen3.6-27B-private",
+      "target_model": "Qwen/Qwen3.6-35B-A3B",
       "training_path": "lora_or_qlora_on_trainable_weights_then_private_gguf_otq_quantization"
     },
     "spike_aware_pedagogy_reward": true,

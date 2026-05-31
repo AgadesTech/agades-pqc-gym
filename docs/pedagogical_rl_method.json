@@ -71,7 +71,7 @@
     },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",
-      "sha256": "08c0adb2e5b3cb0407d6c16e93f0eac8f636cb8b0dc8a53570b1cc18583f24f6"
+      "sha256": "1a4982fbe9428d3dcda52637bff9f47fb49f43df99ca4a46091e650bfde0b0b4"
     },
     "private_trace_runtime": {
       "path": "src/agades_pqc_gym/rl/private_trace.py",
@@ -229,7 +229,7 @@
   "roles": {
     "self_teacher": {
       "conditioning": "attackplan_prompt_with_privileged_context",
-      "model": "Qwen3.6-27B-private",
+      "model": "Qwen/Qwen3.6-35B-A3B",
       "must_remain_student_learnable": true,
       "privileged_context": [
         "formal_obligations",
@@ -242,7 +242,7 @@
     },
     "student": {
       "conditioning": "attackplan_prompt_without_privileged_context",
-      "model": "Qwen3.6-27B-private",
+      "model": "Qwen/Qwen3.6-35B-A3B",
       "private_outputs_only": true,
       "privileged_context_visible": false
     }

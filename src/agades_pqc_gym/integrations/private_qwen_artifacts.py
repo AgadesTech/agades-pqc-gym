@@ -19,7 +19,9 @@ PRIVATE_QWEN_ARTIFACT_VERIFIER = (
     "agades_pqc_gym.integrations.private_qwen_artifacts."
     "verify_private_qwen_artifact_plan"
 )
-PRIVATE_QWEN_TARGET_MODEL = "Qwen3.6-27B-private"
+PRIVATE_QWEN_TARGET_MODEL = "Qwen/Qwen3.6-35B-A3B"
+PRIVATE_QWEN_PRIME_INFERENCE_MODEL = "qwen/qwen3.6-35b-a3b"
+PRIVATE_QWEN_MODEL_LABEL = "Qwen3.6-35B-A3B MoE"
 PRIVATE_QWEN_TRAINING_PATH = (
     "LoRA_or_QLoRA_on_trainable_weights_then_private_GGUF_OTQ_quantization"
 )

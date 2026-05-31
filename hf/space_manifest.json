@@ -146,9 +146,9 @@
     "dataset_source": "hf/dataset/attack_plans.jsonl",
     "fallback_source": "examples/attack_plans",
     "formal_runtime_bundle": {
-      "bundle_sha256": "834ae0acd847027ff337307e52dc9ed68c21096f80650aedc5ee0c4f66da1cac",
+      "bundle_sha256": "1d0454c1767f90ef9eb547fbefc50e626321de903839ac445ad3c35bffd2a62e",
       "ci_workflow_path": "hf/.github/workflows/ci.yml",
-      "docs_json_count": 38,
+      "docs_json_count": 14,
       "docs_path": "hf/docs",
       "lean_file_count": 18,
       "lean_path": "hf/formal/lean",

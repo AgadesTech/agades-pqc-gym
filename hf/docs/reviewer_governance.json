@@ -236,60 +236,6 @@
       "scope": "optional_finite_decidable_obligations_only"
     }
   },
-  "linked_artifacts": {
-    "external_publication_review_packet": {
-      "path": "docs/external_publication_review_packet.json",
-      "sha256": "ab76475bcac1b6e829f19004fe514fa9ddc84ca73206bba78db713c2c5a65cec"
-    },
-    "formal_attackplan_semantics": {
-      "path": "docs/formal_attackplan_semantics.json",
-      "sha256": "7ad2cc549f65109a06d662d550d13ff985f9e9aec8ca0284eadc5397f279580e"
-    },
-    "formal_estimator_model": {
-      "path": "docs/formal_estimator_model.json",
-      "sha256": "9f617361ad810ee3a2351e46631f4965a62bfc28a28413b870e07933ac55519b"
-    },
-    "formal_family_coverage": {
-      "path": "docs/formal_family_coverage.json",
-      "sha256": "1b251f77b15dd11cdc5256ed81c1cd6fcb1575d848ee503f9cb682f8abe9363a"
-    },
-    "formal_lean_backend": {
-      "path": "docs/formal_lean_backend.json",
-      "sha256": "36793f0ba088ef4e4d692616b119bbff6f3e3653923aea3ebe39ceec6595d526"
-    },
-    "formal_lwe_proof_artifact": {
-      "path": "docs/formal_lattice_primal_usvp_proof_artifact.json",
-      "sha256": "a16cf84f3f2e1de0f25ad85c9180b33aafcdd481797350173ddb6727a7714e29"
-    },
-    "formal_mlwe_proof_artifact": {
-      "path": "docs/formal_lattice_mlwe_module_hypothesis_proof_artifact.json",
-      "sha256": "062c0adeff2a340e1b5e9f5d7bff6e6ec546ec7915b463a3eee10426476bbbe9"
-    },
-    "formal_obligation_ledger": {
-      "path": "docs/formal_obligation_ledger.json",
-      "sha256": "049658dfe84d435de2486edf9045ec3c5e2477832c5c952363f579cdca2045e7"
-    },
-    "formal_operator_semantics": {
-      "path": "docs/formal_operator_semantics.json",
-      "sha256": "9fa0bc4ee4cd2f5229d9352a2e9e490df323819bbfea5c6cf446a34fab2d231c"
-    },
-    "formal_smt_assist_contract": {
-      "path": "docs/formal_smt_assist_contract.json",
-      "sha256": "c959f940a3286e73cec7b1c462c795651c950f137ec49e0ab2d9b5749f6c216c"
-    },
-    "private_run_policy": {
-      "path": "docs/private_run_policy.json",
-      "sha256": "08c0adb2e5b3cb0407d6c16e93f0eac8f636cb8b0dc8a53570b1cc18583f24f6"
-    },
-    "publication_manifest": {
-      "path": "docs/publication_manifest.json",
-      "sha256": "9c11770976bd3e3bb9541319acd12650a2666c86070d1c9a3e59cd38b8734ad4"
-    },
-    "release_audit": {
-      "path": "public/release_audit.json",
-      "sha256": "f98329602a2954c5414bf0d09a089bce3885e26a4f758f6119fdd7b651399275"
-    }
-  },
   "private_training_review": {
     "finetuned_qwen_publication_allowed": false,
     "publication_allowed": false,

@@ -294,7 +294,7 @@ def _readiness_gates() -> list[dict[str, Any]]:
     evidence = {
         "private_qwen_base_model_review": (
             "AGADES_QWEN_BASE_MODEL must reference a private, reviewed, "
-            "trainable Qwen3.6-27B source."
+            f"trainable {PRIVATE_QWEN_TARGET_MODEL} source."
         ),
         "private_qwen_trainable_weights_available": (
             "GGUF OTQ 5-bit is a private target artifact; training must use "

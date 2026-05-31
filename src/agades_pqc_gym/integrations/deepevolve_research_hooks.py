@@ -18,6 +18,7 @@ from agades_pqc_gym.integrations.private_qwen_artifacts import (
     PRIVATE_QWEN_ARTIFACT_PLAN_TEMPLATE,
     PRIVATE_QWEN_ARTIFACT_VERIFICATION_COMMAND,
     PRIVATE_QWEN_ARTIFACT_VERIFICATION_SCHEMA,
+    PRIVATE_QWEN_TARGET_MODEL,
 )
 from agades_pqc_gym.integrations.private_training_config import (
     PRIVATE_TRAINING_REQUIRED_ENV_VARS,
@@ -56,7 +57,7 @@ PRIVATE_QWEN_PROPOSAL_ROLES = [
     "propose_evaluation_strategy",
 ]
 PRIVATE_QWEN_RESEARCH_BINDING = {
-    "model": "Qwen3.6-27B-private",
+    "model": PRIVATE_QWEN_TARGET_MODEL,
     "base_model_env": "AGADES_QWEN_BASE_MODEL",
     "lora_adapter_env": "AGADES_QWEN_LORA_ADAPTER_PATH",
     "gguf_otq_5bit_env": "AGADES_QWEN_GGUF_OTQ_5BIT_PATH",

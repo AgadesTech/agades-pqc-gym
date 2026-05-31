@@ -37,7 +37,7 @@ def test_deepevolve_manifest_describes_review_gated_paper_cards(
         "review_required_before_implementation": True,
     }
     assert manifest["private_qwen_research_binding"] == {
-        "model": "Qwen3.6-27B-private",
+        "model": "Qwen/Qwen3.6-35B-A3B",
         "base_model_env": "AGADES_QWEN_BASE_MODEL",
         "lora_adapter_env": "AGADES_QWEN_LORA_ADAPTER_PATH",
         "gguf_otq_5bit_env": "AGADES_QWEN_GGUF_OTQ_5BIT_PATH",

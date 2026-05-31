@@ -7,6 +7,7 @@ from typing import Any
 
 from agades_pqc_gym.core.target import TargetFamily
 from agades_pqc_gym.formal.artifacts import MVP_VERTICAL_PROOF_ARTIFACT_PATHS
+from agades_pqc_gym.integrations.private_qwen_artifacts import PRIVATE_QWEN_TARGET_MODEL
 from agades_pqc_gym.rl.pedagogy import PEDAGOGICAL_REWARD_REPORT_SCHEMA
 from agades_pqc_gym.rl.private_trace import (
     PRIVATE_PEDAGOGICAL_TRACE_SCHEMA,
@@ -153,13 +154,13 @@ def build_pedagogical_rl_method(root: Path | None = None) -> dict[str, Any]:
         },
         "roles": {
             "student": {
-                "model": "Qwen3.6-27B-private",
+                "model": PRIVATE_QWEN_TARGET_MODEL,
                 "conditioning": "attackplan_prompt_without_privileged_context",
                 "privileged_context_visible": False,
                 "private_outputs_only": True,
             },
             "self_teacher": {
-                "model": "Qwen3.6-27B-private",
+                "model": PRIVATE_QWEN_TARGET_MODEL,
                 "conditioning": "attackplan_prompt_with_privileged_context",
                 "privileged_context_visible": True,
                 "privileged_context": [
@@ -216,30 +217,23 @@ def build_pedagogical_rl_method(root: Path | None = None) -> dict[str, Any]:
             "learnability_score": {
                 "type": LEARNABILITY_SCORE,
                 "surprise_gap": (
-                    "log p_student(a_max|x,prefix) - "
-                    "log p_student(a_t|x,prefix)"
+                    "log p_student(a_max|x,prefix) - log p_student(a_t|x,prefix)"
                 ),
                 "beta": 5.0,
                 "lambda": 1.0,
-                "formula": (
-                    "exp(-(lambda/beta) * log(mean_t(exp(beta * d_t))))"
-                ),
+                "formula": ("exp(-(lambda/beta) * log(mean_t(exp(beta * d_t))))"),
             },
             "runtime_binding": dict(RUNTIME_BINDING),
             "claim_boundary": {
                 "allows_security_claims": False,
                 "requires_formal_obligations": True,
-                "formal_obligation_ledger_path": (
-                    "docs/formal_obligation_ledger.json"
-                ),
+                "formal_obligation_ledger_path": ("docs/formal_obligation_ledger.json"),
                 "requires_human_crypto_review": True,
             },
         },
         "assimilation": {
             "objective": ASSIMILATION_OBJECTIVE,
-            "token_weight": (
-                "sigmoid(kappa * (logp_student(a_t|x,prefix) - gamma))"
-            ),
+            "token_weight": ("sigmoid(kappa * (logp_student(a_t|x,prefix) - gamma))"),
             "kappa": 2.0,
             "gamma": -4.0,
             "recompute_weights_after_student_update": True,
