@@ -784,7 +784,9 @@ def _challenge_question_for_seed_attack_plan(
                 *_strict_json_output_rules("valid AttackPlan"),
                 "The returned operators array must match the target task "
                 "operator_types exactly.",
-                "Preserve the target and conservative claim boundary.",
+                "Repair only the wrong operator type. Preserve the operator "
+                "params, operator assumptions, target, constraints, claims, "
+                "metadata, and conservative claim boundary.",
                 "Toy/demo verifier output only; do not claim real-world PQC breaks.",
                 "",
                 "Broken AttackPlan JSON:",
@@ -1237,10 +1239,6 @@ def _operator_mismatch_invalid_output(
         else "primal_usvp"
     )
     operators[0]["type"] = replacement
-    operators[0]["params"] = {}
-    operators[0]["assumptions"] = [
-        "intentionally wrong operator for Prime challenge repair"
-    ]
     return json.dumps(payload, indent=2)
 
 

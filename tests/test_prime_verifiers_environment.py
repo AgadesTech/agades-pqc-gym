@@ -495,6 +495,8 @@ def test_prime_verifiers_environment_scores_challenge_against_target_metadata() 
         raw_plan,
         task_info=task_metadata,
     )
+    original_operator = json.loads(raw_plan)["operators"][0]
+    broken_operator = json.loads(broken_plan)["operators"][0]
 
     broken_report = module.score_attack_plan_completion_report(
         _assistant_completion(broken_plan),
@@ -507,6 +509,10 @@ def test_prime_verifiers_environment_scores_challenge_against_target_metadata() 
         require_info=True,
     )
 
+    assert broken_operator["type"] != original_operator["type"]
+    assert broken_operator["params"] == original_operator["params"]
+    assert broken_operator["assumptions"] == original_operator["assumptions"]
+    assert "Repair only the wrong operator type" in row["prompt"][0]["content"]
     assert broken_report["accepted"] is False
     assert broken_report["aggregate_reward"] == 0.0
     assert repaired_report["accepted"] is True
