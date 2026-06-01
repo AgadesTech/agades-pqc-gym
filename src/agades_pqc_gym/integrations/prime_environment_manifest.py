@@ -163,6 +163,22 @@ def build_prime_environment_manifest(root: Path | None = None) -> dict[str, Any]
                 "target_family, target_name, support_level, and ordered "
                 "operator_types; attack_plan_id may change"
             ),
+            "challenge_suite_contract": {
+                "challenge_types": [
+                    "claims_guard_repair",
+                    "wrong_family_decoy_repair",
+                    "operator_mismatch_repair",
+                    "unsupported_refusal",
+                ],
+                "balanced_heldout_parameter": "min_challenge_examples_per_type",
+                "balanced_heldout_policy": "balanced_min_per_type_v1",
+                "recommended_min_examples_per_type": 8,
+                "claim_boundary": (
+                    "adapter-improvement claims require a held-out broad "
+                    "challenge suite with sufficient examples for every "
+                    "required challenge type"
+                ),
+            },
             "prompt_profiles": {
                 "attackplan_json": {
                     "intended_use": "private_training_or_eval",

@@ -82,6 +82,13 @@ sets `claims_pqc_break=false`, and requires human review.
 Use `challenge_split="heldout"` for base-model vs adapted-model comparisons;
 the train split is only for curriculum work. The held-out split is deterministic
 from `(attack_plan_id, challenge_type)` and stays public-safe.
+For a broad eval that cannot pass by overfitting one trap type, use
+`min_challenge_examples_per_type=8` together with
+`challenge_suite=True` and `challenge_split="heldout"`. This builds a stable
+balanced held-out suite with the same minimum count for
+`claims_guard_repair`, `wrong_family_decoy_repair`,
+`operator_mismatch_repair`, and `unsupported_refusal`; it fails instead of
+duplicating prompts if the public corpus cannot satisfy the requested minimum.
 `build_challenge_scorecard()` summarizes these rows by challenge type, verifies
 that broken submissions score `0.0`, and verifies that the repaired public seed
 or strict unsupported refusal scores `1.0`. Use that scorecard as a local
