@@ -294,6 +294,10 @@ def score_attack_plan_completion_report(
             rubric_scores["student_readability"],
             _completion_readability_score(completion),
         )
+    rubric_scores = _task_mismatch_capped_rubric_scores(
+        rubric_scores,
+        normalized_info,
+    )
     return _prime_reward_report(
         aggregate_reward=_weighted_reward(rubric_scores, weights),
         accepted=bool(reward_report["accepted"]),
@@ -1010,6 +1014,18 @@ def _weighted_reward(
     )
 
 
+def _task_mismatch_capped_rubric_scores(
+    rubric_scores: dict[str, float],
+    task_info: dict[str, Any] | None,
+) -> dict[str, float]:
+    if task_info is None or float(rubric_scores.get("task_match", 0.0)) == 1.0:
+        return rubric_scores
+    return {
+        term: float(score) if term == "single_json_object" else 0.0
+        for term, score in rubric_scores.items()
+    }
+
+
 def _format_repair_reward_report(
     text: str,
     *,
@@ -1017,9 +1033,9 @@ def _format_repair_reward_report(
     project_root: Path | str | None,
     reward_profile: str,
 ) -> dict[str, Any]:
-    embedded_json = _embedded_json_object_text(text)
     root = _project_root(project_root)
     normalized_info = _task_metadata_for_scoring(info)
+    embedded_json = _embedded_json_object_text(text, task_info=normalized_info)
     challenge_info = _challenge_info_from_scoring_info(info)
     rubric_scores = dict.fromkeys(PRIME_RUBRIC_TERMS, 0.0)
     rubric_scores["no_security_overclaim"] = _no_security_overclaim_score(text)
@@ -1071,6 +1087,10 @@ def _format_repair_reward_report(
             blocking_reasons.extend(reward_report["blocking_reasons"])
 
     weights = _weights_by_term(reward_profile)
+    rubric_scores = _task_mismatch_capped_rubric_scores(
+        rubric_scores,
+        normalized_info,
+    )
     return _prime_reward_report(
         aggregate_reward=_weighted_reward(rubric_scores, weights),
         accepted=False,
@@ -1194,8 +1214,13 @@ def _unsupported_refusal_for_task(task_metadata: dict[str, Any]) -> dict[str, An
     }
 
 
-def _embedded_json_object_text(text: str) -> str | None:
+def _embedded_json_object_text(
+    text: str,
+    *,
+    task_info: dict[str, Any] | None = None,
+) -> str | None:
     decoder = json.JSONDecoder()
+    fallback: str | None = None
     for index, character in enumerate(text):
         if character != "{":
             continue
@@ -1204,8 +1229,35 @@ def _embedded_json_object_text(text: str) -> str | None:
         except json.JSONDecodeError:
             continue
         if isinstance(value, dict):
-            return text[index : index + end]
-    return None
+            candidate = text[index : index + end]
+            if fallback is None:
+                fallback = candidate
+            if _json_object_matches_task_metadata(value, task_info):
+                return candidate
+    return fallback
+
+
+def _json_object_matches_task_metadata(
+    payload: dict[str, Any],
+    task_info: dict[str, Any] | None,
+) -> bool:
+    if task_info is None:
+        return False
+    target = payload.get("target")
+    if not isinstance(target, dict):
+        return False
+    expected_attack_plan_id = task_info.get("attack_plan_id")
+    candidate_attack_plan_id = payload.get("attack_plan_id")
+    if (
+        isinstance(expected_attack_plan_id, str)
+        and isinstance(candidate_attack_plan_id, str)
+        and candidate_attack_plan_id != expected_attack_plan_id
+    ):
+        return False
+    return (
+        target.get("family") == task_info.get("target_family")
+        and target.get("name") == task_info.get("target_name")
+    )
 
 
 def _claims_guard_invalid_output(raw_json: str) -> str:
