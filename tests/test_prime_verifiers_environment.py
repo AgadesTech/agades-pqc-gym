@@ -643,6 +643,30 @@ def test_prime_verifiers_environment_builds_heldout_challenge_scorecard() -> Non
     assert {result["heldout_split"] for result in scorecard["results"]} == {"heldout"}
 
 
+def test_prime_scorecard_global_heldout_covers_unsupported_refusal() -> None:
+    module = _load_environment_module()
+
+    scorecard = module.build_challenge_scorecard(
+        attack_plan_id=None,
+        challenge_split="heldout",
+    )
+
+    assert scorecard["accepted"] is True
+    assert scorecard["summary"]["challenge_type_counts"]["unsupported_refusal"] > 0
+    assert scorecard["summary"]["broken_accept_count"] == 0
+    stern_decoy_results = [
+        result
+        for result in scorecard["results"]
+        if result["challenge_type"] == "wrong_family_decoy_repair"
+        and result["attack_plan_id"] == "code_based_stern_toy_v1"
+    ]
+    assert stern_decoy_results
+    assert all(
+        result["broken_score"] == 0.0 and result["broken_accepted"] is False
+        for result in stern_decoy_results
+    )
+
+
 def test_prime_verifiers_environment_rejects_empty_dataset_filter() -> None:
     module = _load_environment_module()
 

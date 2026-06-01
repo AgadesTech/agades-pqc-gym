@@ -182,7 +182,11 @@ def build_challenge_scorecard(
     challenge_split: str | None = None,
     reward_profile: str = STRICT_REWARD_PROFILE,
 ) -> dict[str, Any]:
-    seed_accepted = challenge_type != "unsupported_refusal"
+    seed_accepted = None
+    if challenge_type == "unsupported_refusal":
+        seed_accepted = False
+    elif challenge_type is not None:
+        seed_accepted = True
     rows = build_dataset_rows(
         attack_plan_id=attack_plan_id,
         target_family=target_family,
@@ -1261,15 +1265,29 @@ def _claims_guard_decoy_wrapped_invalid_output(raw_json: str) -> str:
 def _task_mismatch_decoy_attack_plan(raw_json: str) -> dict[str, Any]:
     current = json.loads(raw_json)
     current_attack_plan_id = current.get("attack_plan_id")
+    current_family = _target_family(current)
     preferred_decoy = DATA_DIR / "code_based_prange_toy.json"
     decoy_paths = [preferred_decoy, *TASK_PLAN_PATHS]
     for path in decoy_paths:
         if not path.is_file():
             continue
         decoy = json.loads(path.read_text(encoding="utf-8"))
-        if decoy.get("attack_plan_id") != current_attack_plan_id:
+        if (
+            decoy.get("attack_plan_id") != current_attack_plan_id
+            and _target_family(decoy) != current_family
+        ):
             return decoy
-    raise RuntimeError("Prime decoy prompt profile could not find a decoy plan")
+    raise RuntimeError(
+        "Prime decoy prompt profile could not find a cross-family decoy plan"
+    )
+
+
+def _target_family(plan: dict[str, Any]) -> str | None:
+    target = plan.get("target")
+    if not isinstance(target, dict):
+        return None
+    family = target.get("family")
+    return family if isinstance(family, str) else None
 
 
 def _no_security_overclaim_score(text: str) -> float:
