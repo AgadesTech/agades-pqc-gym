@@ -5,6 +5,8 @@ import importlib.util
 from pathlib import Path
 from types import ModuleType
 
+import pytest
+
 SOURCE_DOCS = Path("docs")
 SOURCE_LEAN = Path("formal/lean")
 ENV_MODULE = Path(
@@ -371,6 +373,174 @@ def test_prime_verifiers_environment_filters_dataset_rows() -> None:
         row["info"]["attack_plan_id"]
         for row in unsupported_lwe_rows
     } >= {"lattice_lwe_modulus_switching_primary_v1"}
+
+
+def test_prime_verifiers_environment_builds_discriminating_challenge_rows() -> None:
+    module = _load_environment_module()
+
+    rows = module.build_dataset_rows(
+        attack_plan_id="lattice_bdd_toy_v1",
+        challenge_suite=True,
+    )
+
+    assert [row["info"]["challenge_type"] for row in rows] == [
+        "claims_guard_repair",
+        "wrong_family_decoy_repair",
+        "operator_mismatch_repair",
+    ]
+    for row in rows:
+        info = row["info"]
+        prompt = row["prompt"][0]["content"]
+        task_metadata = info["task_metadata"]
+        assert info["schema_version"] == "agades.pqc.prime.challenge_info.v1"
+        assert info["expected_behavior"] == "repair_attackplan"
+        assert info["private_data_allowed"] is False
+        assert info["security_claims_allowed"] is False
+        assert info["heldout_split"] in {"train", "heldout"}
+        assert row["answer"] == "repair_attackplan"
+        assert task_metadata["attack_plan_id"] == "lattice_bdd_toy_v1"
+        assert "Return" in prompt
+        assert "Toy/demo verifier output only" in prompt
+
+
+def test_prime_verifiers_environment_filters_challenge_rows_by_split() -> None:
+    module = _load_environment_module()
+
+    heldout_rows = module.build_dataset_rows(
+        target_family="LWE",
+        seed_accepted=True,
+        challenge_suite=True,
+        challenge_split="heldout",
+    )
+    train_rows = module.build_dataset_rows(
+        target_family="LWE",
+        seed_accepted=True,
+        challenge_suite=True,
+        challenge_split="train",
+    )
+
+    assert heldout_rows
+    assert train_rows
+    assert all(row["info"]["heldout_split"] == "heldout" for row in heldout_rows)
+    assert all(row["info"]["heldout_split"] == "train" for row in train_rows)
+    assert len(heldout_rows) + len(train_rows) == len(
+        module.build_dataset_rows(
+            target_family="LWE",
+            seed_accepted=True,
+            challenge_suite=True,
+        )
+    )
+
+
+def test_prime_verifiers_environment_rejects_challenge_split_without_suite() -> None:
+    module = _load_environment_module()
+
+    with pytest.raises(
+        ValueError,
+        match="challenge_split requires challenge_suite=True",
+    ):
+        module.build_dataset_rows(challenge_split="heldout")
+
+
+def test_prime_verifiers_environment_rejects_unknown_challenge_split() -> None:
+    module = _load_environment_module()
+
+    with pytest.raises(ValueError, match="unsupported Prime challenge_split"):
+        module.build_dataset_rows(
+            target_family="LWE",
+            seed_accepted=True,
+            challenge_suite=True,
+            challenge_split="validation",
+        )
+
+
+def test_prime_verifiers_environment_scores_challenge_against_target_metadata() -> None:
+    module = _load_environment_module()
+    raw_plan = Path(
+        "prime_intellect/verifiers_environment/data/lattice_bdd_toy.json"
+    ).read_text(encoding="utf-8")
+    row = module.build_dataset_rows(
+        attack_plan_id="lattice_bdd_toy_v1",
+        challenge_suite=True,
+        challenge_type="operator_mismatch_repair",
+    )[0]
+    task_metadata = row["info"]["task_metadata"]
+    broken_plan = module._operator_mismatch_invalid_output(
+        raw_plan,
+        task_info=task_metadata,
+    )
+
+    broken_report = module.score_attack_plan_completion_report(
+        _assistant_completion(broken_plan),
+        info=row["info"],
+        require_info=True,
+    )
+    repaired_report = module.score_attack_plan_completion_report(
+        _assistant_completion(raw_plan),
+        info=row["info"],
+        require_info=True,
+    )
+
+    assert broken_report["accepted"] is False
+    assert broken_report["aggregate_reward"] == 0.0
+    assert repaired_report["accepted"] is True
+    assert repaired_report["aggregate_reward"] == 1.0
+    assert repaired_report["challenge"]["challenge_type"] == "operator_mismatch_repair"
+    assert repaired_report["challenge"]["task_metadata"]["attack_plan_id"] == (
+        "lattice_bdd_toy_v1"
+    )
+
+
+def test_prime_verifiers_environment_builds_challenge_scorecard() -> None:
+    module = _load_environment_module()
+
+    scorecard = module.build_challenge_scorecard(
+        attack_plan_id="lattice_bdd_toy_v1"
+    )
+
+    assert scorecard["schema_version"] == "agades.pqc.prime.challenge_scorecard.v1"
+    assert scorecard["accepted"] is True
+    assert scorecard["scope"] == {
+        "attack_plan_id": "lattice_bdd_toy_v1",
+        "target_family": None,
+        "challenge_type": None,
+        "challenge_split": None,
+        "public_only": True,
+        "private_data_allowed": False,
+        "security_claims_allowed": False,
+    }
+    assert scorecard["summary"]["challenge_rows"] == 3
+    assert scorecard["summary"]["challenge_type_counts"] == {
+        "claims_guard_repair": 1,
+        "operator_mismatch_repair": 1,
+        "wrong_family_decoy_repair": 1,
+    }
+    assert scorecard["summary"]["broken_accept_count"] == 0
+    assert scorecard["summary"]["repaired_accept_count"] == 3
+    assert scorecard["summary"]["broken_score_max"] == 0.0
+    assert scorecard["summary"]["repaired_score_min"] == 1.0
+    assert {
+        result["broken_failure_mode"] for result in scorecard["results"]
+    } == {
+        "task_mismatch_decoy",
+        "unreviewed_pre_evaluation_claims",
+        "operator_sequence_mismatch",
+    }
+
+
+def test_prime_verifiers_environment_builds_heldout_challenge_scorecard() -> None:
+    module = _load_environment_module()
+
+    scorecard = module.build_challenge_scorecard(
+        attack_plan_id=None,
+        target_family="LWE",
+        challenge_split="heldout",
+    )
+
+    assert scorecard["accepted"] is True
+    assert scorecard["scope"]["challenge_split"] == "heldout"
+    assert scorecard["summary"]["heldout_split_counts"] == {"heldout": 7}
+    assert {result["heldout_split"] for result in scorecard["results"]} == {"heldout"}
 
 
 def test_prime_verifiers_environment_rejects_empty_dataset_filter() -> None:
