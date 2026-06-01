@@ -63,6 +63,11 @@ def build_prime_environment_smoke_report(
     scoring = {
         "accepted_score": None,
         "accepted_rubric_scores": {},
+        "challenge_broken_score": None,
+        "challenge_repaired_score": None,
+        "challenge_schema": None,
+        "challenge_types": [],
+        "challenge_rows": 0,
         "invalid_json_score": None,
         "formal_artifact_binding_schema": None,
         "prefixed_json_score": None,
@@ -105,6 +110,9 @@ def build_prime_environment_smoke_report(
         prefixed_json_score = module.score_attack_plan_completion(
             _assistant_completion(f"candidate:\n{accepted_json}")
         )
+        challenge_scorecard = module.build_challenge_scorecard(
+            attack_plan_id="lattice_bdd_toy_v1",
+        )
         formal_binding = _dict_or_empty(
             accepted_report.get("formal_artifact_binding")
         )
@@ -131,6 +139,21 @@ def build_prime_environment_smoke_report(
         scoring = {
             "accepted_score": accepted_report["aggregate_reward"],
             "accepted_rubric_scores": accepted_report["rubric_scores"],
+            "challenge_broken_score": challenge_scorecard["summary"][
+                "broken_score_max"
+            ],
+            "challenge_repaired_score": challenge_scorecard["summary"][
+                "repaired_score_min"
+            ],
+            "challenge_schema": challenge_scorecard["schema_version"],
+            "challenge_rows": challenge_scorecard["summary"]["challenge_rows"],
+            "challenge_types": sorted(
+                {
+                    result["challenge_type"]
+                    for result in challenge_scorecard["results"]
+                },
+                key=list(module.CHALLENGE_TYPES).index,
+            ),
             "formal_artifact_binding_schema": formal_binding.get("schema_version"),
             "invalid_json_score": invalid_json_score,
             "prefixed_json_score": prefixed_json_score,
@@ -235,6 +258,20 @@ def _validate_smoke_contract(
         failures.append("Prime environment default AttackPlan id drifted.")
     if scoring["accepted_score"] != 1.0:
         failures.append("Prime environment rejects accepted toy plan.")
+    if scoring["challenge_rows"] < 3:
+        failures.append("Prime environment challenge suite is too small.")
+    if scoring["challenge_types"] != [
+        "claims_guard_repair",
+        "wrong_family_decoy_repair",
+        "operator_mismatch_repair",
+    ]:
+        failures.append("Prime environment challenge types drifted.")
+    if scoring["challenge_schema"] != "agades.pqc.prime.challenge_scorecard.v1":
+        failures.append("Prime environment challenge schema drifted.")
+    if scoring["challenge_repaired_score"] != 1.0:
+        failures.append("Prime environment rejects repaired challenge plan.")
+    if scoring["challenge_broken_score"] != 0.0:
+        failures.append("Prime environment accepts broken challenge plan.")
     if scoring["formal_artifact_binding_schema"] != FORMAL_ARTIFACT_BINDING_SCHEMA:
         failures.append("Prime environment formal artifact binding schema drifted.")
     if (
@@ -388,6 +425,20 @@ def _verify_scoring(report: dict[str, Any], failures: list[str]) -> None:
         return
     if scoring.get("accepted_score") != 1.0:
         failures.append("Prime environment smoke report accepted score is wrong.")
+    if scoring.get("challenge_rows") != 3:
+        failures.append("Prime environment smoke report challenge rows are wrong.")
+    if scoring.get("challenge_types") != [
+        "claims_guard_repair",
+        "wrong_family_decoy_repair",
+        "operator_mismatch_repair",
+    ]:
+        failures.append("Prime environment smoke report challenge types are wrong.")
+    if scoring.get("challenge_schema") != "agades.pqc.prime.challenge_scorecard.v1":
+        failures.append("Prime environment smoke report challenge schema is wrong.")
+    if scoring.get("challenge_repaired_score") != 1.0:
+        failures.append("Prime environment smoke report challenge repair is wrong.")
+    if scoring.get("challenge_broken_score") != 0.0:
+        failures.append("Prime environment smoke report broken challenge scores.")
     if scoring.get("formal_artifact_binding_schema") != FORMAL_ARTIFACT_BINDING_SCHEMA:
         failures.append(
             "Prime environment smoke report formal artifact binding schema is wrong."
@@ -503,6 +554,9 @@ def _verification_summary(
     )
     return {
         "accepted_score": scoring.get("accepted_score"),
+        "challenge_broken_score": scoring.get("challenge_broken_score"),
+        "challenge_repaired_score": scoring.get("challenge_repaired_score"),
+        "challenge_rows": scoring.get("challenge_rows"),
         "dataset_rows": dataset.get("dataset_rows"),
         "failure_count": len(failures),
         "formal_artifact_binding_schema": scoring.get(

@@ -640,6 +640,9 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert checks["prime-environment-smoke"]["blocking"] is True
     assert checks["prime-environment-smoke"]["evidence"] == {
         "accepted_score": 1.0,
+        "challenge_broken_score": 0.0,
+        "challenge_repaired_score": 1.0,
+        "challenge_rows": 3,
         "dataset_rows": 79,
         "imports_without_verifiers": True,
         "optional_dependency_boundary": True,

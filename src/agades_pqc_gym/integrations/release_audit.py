@@ -4828,11 +4828,15 @@ def _prime_environment_smoke(root: Path) -> dict[str, Any]:
         detail=(
             "Prime verifier environment smoke report proves the package "
             "imports without Verifiers, builds packaged task rows, scores "
-            "accepted JSON, rejects unsupported/prefixed submissions, and "
-            "reports optional dependency boundaries cleanly."
+            "accepted JSON, rejects unsupported/prefixed submissions, checks "
+            "the discriminating challenge suite, and reports optional "
+            "dependency boundaries cleanly."
         ),
         evidence={
             "accepted_score": summary["accepted_score"],
+            "challenge_broken_score": summary["challenge_broken_score"],
+            "challenge_repaired_score": summary["challenge_repaired_score"],
+            "challenge_rows": summary["challenge_rows"],
             "dataset_rows": summary["dataset_rows"],
             "imports_without_verifiers": summary["imports_without_verifiers"],
             "optional_dependency_boundary": summary["load_environment_boundary_ok"],

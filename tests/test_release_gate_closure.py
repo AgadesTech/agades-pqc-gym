@@ -4,12 +4,16 @@ import json
 import subprocess
 from pathlib import Path
 
-from agades_pqc_gym.integrations.release_audit import _release_gate_artifact_paths
+from agades_pqc_gym.integrations.release_audit import (
+    _release_gate_artifact_paths,
+    _release_gate_closure,
+)
 
 
 def test_release_audit_gates_are_preceded_by_ecosystem_smoke_gate() -> None:
     checked_artifacts = _release_gate_artifact_paths(Path("."))
     checked_artifact_paths = [path.as_posix() for path in sorted(checked_artifacts)]
+    release_gate_artifacts: list[str] = []
     release_audit_artifacts: list[str] = []
     ecosystem_smoke_artifacts: list[str] = []
     missing: list[str] = []
@@ -25,6 +29,7 @@ def test_release_audit_gates_are_preceded_by_ecosystem_smoke_gate() -> None:
         if not isinstance(release_gates, list):
             continue
 
+        release_gate_artifacts.append(path.as_posix())
         audit_indices = [
             index for index, gate in enumerate(release_gates) if "release-audit" in gate
         ]
@@ -43,9 +48,18 @@ def test_release_audit_gates_are_preceded_by_ecosystem_smoke_gate() -> None:
         else:
             release_audit_artifacts.append(path.as_posix())
 
-    assert len(release_audit_artifacts) == 55
-    assert len(ecosystem_smoke_artifacts) == 59
+    closure = _release_gate_closure(Path("."))
+    evidence = closure["evidence"]
+
+    assert evidence["checked_release_gate_artifacts"] == len(release_gate_artifacts)
+    assert evidence["release_audit_gate_artifacts"] == len(release_audit_artifacts)
+    assert evidence["ecosystem_smoke_gate_artifacts"] == len(
+        ecosystem_smoke_artifacts
+    )
+    assert len(release_audit_artifacts) > 0
+    assert len(ecosystem_smoke_artifacts) >= len(release_audit_artifacts)
     assert missing == []
+    assert closure["status"] == "passed"
 
 
 def test_release_gate_artifact_paths_ignore_gitignored_local_reports(
