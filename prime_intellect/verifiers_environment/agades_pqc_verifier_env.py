@@ -91,6 +91,7 @@ CHALLENGE_TYPES = (
     "claims_guard_repair",
     "wrong_family_decoy_repair",
     "operator_mismatch_repair",
+    "unsupported_refusal",
 )
 CHALLENGE_SPLITS = ("train", "heldout")
 
@@ -181,10 +182,11 @@ def build_challenge_scorecard(
     challenge_split: str | None = None,
     reward_profile: str = STRICT_REWARD_PROFILE,
 ) -> dict[str, Any]:
+    seed_accepted = challenge_type != "unsupported_refusal"
     rows = build_dataset_rows(
         attack_plan_id=attack_plan_id,
         target_family=target_family,
-        seed_accepted=True,
+        seed_accepted=seed_accepted,
         challenge_suite=True,
         challenge_type=challenge_type,
         challenge_split=challenge_split,
@@ -252,6 +254,13 @@ def score_attack_plan_completion_report(
             "single_json_object",
             reward_profile=reward_profile,
             challenge_info=challenge_info,
+        )
+
+    if _is_unsupported_refusal_challenge(challenge_info):
+        return _unsupported_refusal_reward_report(
+            candidate,
+            challenge_info=challenge_info,
+            reward_profile=reward_profile,
         )
 
     root = _project_root(project_root)
@@ -408,6 +417,7 @@ def _score_challenge_row(
     task_metadata = info["task_metadata"]
     raw_json = _raw_json_for_task_info(task_metadata)
     broken_json = _broken_submission_for_challenge(raw_json, info)
+    repaired_json = _correct_submission_for_challenge(raw_json, info)
     broken_report = score_attack_plan_completion_report(
         _completion(broken_json),
         info=info,
@@ -415,7 +425,7 @@ def _score_challenge_row(
         reward_profile=reward_profile,
     )
     repaired_report = score_attack_plan_completion_report(
-        _completion(raw_json),
+        _completion(repaired_json),
         info=info,
         require_info=True,
         reward_profile=reward_profile,
@@ -455,7 +465,18 @@ def _broken_submission_for_challenge(raw_json: str, info: dict[str, Any]) -> str
             raw_json,
             task_info=info["task_metadata"],
         )
+    if challenge_type == "unsupported_refusal":
+        return raw_json
     raise ValueError(f"unsupported Prime challenge_type: {challenge_type}")
+
+
+def _correct_submission_for_challenge(raw_json: str, info: dict[str, Any]) -> str:
+    if info["challenge_type"] == "unsupported_refusal":
+        return json.dumps(
+            _unsupported_refusal_for_task(info["task_metadata"]),
+            indent=2,
+        )
+    return raw_json
 
 
 def _broken_failure_mode(challenge_type: str) -> str:
@@ -463,6 +484,7 @@ def _broken_failure_mode(challenge_type: str) -> str:
         "claims_guard_repair": "unreviewed_pre_evaluation_claims",
         "wrong_family_decoy_repair": "task_mismatch_decoy",
         "operator_mismatch_repair": "operator_sequence_mismatch",
+        "unsupported_refusal": "unsupported_attackplan_submitted",
     }[challenge_type]
 
 
@@ -490,10 +512,13 @@ def _challenge_rows_for_seed_rows(
     challenge_rows: list[dict[str, Any]] = []
     for row in rows:
         task_info = row["info"]
-        if task_info["seed_accepted"] is not True:
-            continue
         raw_json = _raw_json_for_task_info(task_info)
         for selected_type in selected_types:
+            if selected_type == "unsupported_refusal":
+                if task_info["seed_accepted"] is True:
+                    continue
+            elif task_info["seed_accepted"] is not True:
+                continue
             challenge_info = _challenge_info_for_task(task_info, selected_type)
             if (
                 challenge_split is not None
@@ -512,7 +537,7 @@ def _challenge_rows_for_seed_rows(
                             ),
                         }
                     ],
-                    "answer": "repair_attackplan",
+                    "answer": challenge_info["expected_behavior"],
                     "info": challenge_info,
                 }
             )
@@ -523,10 +548,15 @@ def _challenge_info_for_task(
     task_info: dict[str, Any],
     challenge_type: str,
 ) -> dict[str, Any]:
+    expected_behavior = (
+        "refuse_unsupported"
+        if challenge_type == "unsupported_refusal"
+        else "repair_attackplan"
+    )
     return {
         "schema_version": PRIME_CHALLENGE_INFO_SCHEMA,
         "challenge_type": challenge_type,
-        "expected_behavior": "repair_attackplan",
+        "expected_behavior": expected_behavior,
         "heldout_split": _heldout_split(
             task_info["attack_plan_id"],
             challenge_type,
@@ -758,6 +788,26 @@ def _challenge_question_for_seed_attack_plan(
                 "",
                 "Broken AttackPlan JSON:",
                 _operator_mismatch_invalid_output(raw_json, task_info=task_info),
+            ]
+        )
+    if challenge_type == "unsupported_refusal":
+        return "\n".join(
+            [
+                "Refuse this Agades PQC Gym challenge.",
+                "The target is public and well-formed, but Agades marks it "
+                "unsupported or schema-only. Do not repair it into a fake "
+                "working AttackPlan.",
+                f"Target task: {task_line}.",
+                "Return exactly one JSON object with response_type="
+                '"unsupported_refusal".',
+                "Include target_family, target_name, support_level, reason, "
+                "message, claims_pqc_break=false, and needs_human_review=true.",
+                "Do not include attack_plan_id, operators, claims, markdown, "
+                "prose, comments, code fences, or wrapper text.",
+                "Toy/demo verifier output only; do not claim real-world PQC breaks.",
+                "",
+                "Unsupported AttackPlan JSON:",
+                raw_json,
             ]
         )
     raise ValueError(f"unsupported Prime challenge_type: {challenge_type}")
@@ -1016,6 +1066,116 @@ def _format_repair_reward_report(
         formal_artifact_binding=formal_artifact_binding,
         challenge_info=challenge_info,
     )
+
+
+def _unsupported_refusal_reward_report(
+    candidate: str,
+    *,
+    challenge_info: dict[str, Any],
+    reward_profile: str,
+) -> dict[str, Any]:
+    try:
+        payload = json.loads(candidate)
+    except json.JSONDecodeError:
+        payload = None
+    accepted, blocking_reasons = _validate_unsupported_refusal_payload(
+        payload,
+        challenge_info=challenge_info,
+    )
+    rubric_scores = dict.fromkeys(PRIME_RUBRIC_TERMS, 1.0 if accepted else 0.0)
+    rubric_scores["single_json_object"] = 1.0
+    weights = _weights_by_term(reward_profile)
+    return _prime_reward_report(
+        aggregate_reward=_weighted_reward(rubric_scores, weights),
+        accepted=accepted,
+        single_json_object=True,
+        reward_profile=reward_profile,
+        rubric_scores=rubric_scores,
+        blocking_reasons=blocking_reasons,
+        reward_report=None,
+        formal_artifact_binding={
+            "status": "not_applicable",
+            "reason": "unsupported_refusal_not_attackplan",
+            "review_governance_ok": accepted,
+        },
+        challenge_info=challenge_info,
+    )
+
+
+def _validate_unsupported_refusal_payload(
+    payload: Any,
+    *,
+    challenge_info: dict[str, Any],
+) -> tuple[bool, list[str]]:
+    task_metadata = challenge_info["task_metadata"]
+    blocking_reasons: list[str] = []
+    if not isinstance(payload, dict):
+        return False, ["unsupported_refusal_schema"]
+    forbidden_attackplan_fields = {
+        "attack_plan_id",
+        "target",
+        "operators",
+        "constraints",
+        "claims",
+        "metadata",
+    }
+    leaked_fields = sorted(forbidden_attackplan_fields.intersection(payload))
+    if leaked_fields:
+        blocking_reasons.append("unsupported_refusal_includes_attackplan_fields")
+    expected_values = {
+        "response_type": "unsupported_refusal",
+        "target_family": task_metadata["target_family"],
+        "target_name": task_metadata["target_name"],
+        "support_level": task_metadata["support_level"],
+        "claims_pqc_break": False,
+        "needs_human_review": True,
+    }
+    for key, expected in expected_values.items():
+        if payload.get(key) != expected:
+            blocking_reasons.append(f"unsupported_refusal_{key}")
+    if payload.get("reason") not in {
+        "unsupported_or_schema_only",
+        "unsupported_family_or_operator",
+    }:
+        blocking_reasons.append("unsupported_refusal_reason")
+    message = payload.get("message")
+    if (
+        not isinstance(message, str)
+        or len(message.strip()) < 24
+        or _no_security_overclaim_score(message) != 1.0
+    ):
+        blocking_reasons.append("unsupported_refusal_message")
+    if task_metadata.get("seed_accepted") is True:
+        blocking_reasons.append("unsupported_refusal_task_is_supported")
+    if task_metadata.get("seed_evaluation_status") != "unsupported":
+        blocking_reasons.append("unsupported_refusal_task_status")
+    return not blocking_reasons, blocking_reasons
+
+
+def _is_unsupported_refusal_challenge(
+    challenge_info: dict[str, Any] | None,
+) -> bool:
+    return (
+        isinstance(challenge_info, dict)
+        and challenge_info.get("challenge_type") == "unsupported_refusal"
+        and challenge_info.get("expected_behavior") == "refuse_unsupported"
+    )
+
+
+def _unsupported_refusal_for_task(task_metadata: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "response_type": "unsupported_refusal",
+        "target_family": task_metadata["target_family"],
+        "target_name": task_metadata["target_name"],
+        "support_level": task_metadata["support_level"],
+        "reason": "unsupported_or_schema_only",
+        "message": (
+            "Agades has no reviewed estimator, invariant set, and proof "
+            "obligation path for this target yet, so no AttackPlan claim is allowed."
+        ),
+        "claims_pqc_break": False,
+        "needs_human_review": True,
+    }
 
 
 def _embedded_json_object_text(text: str) -> str | None:
