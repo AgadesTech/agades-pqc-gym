@@ -425,6 +425,7 @@ def test_prime_verifiers_environment_builds_unsupported_refusal_rows() -> None:
     assert task_metadata["seed_evaluation_status"] == "unsupported"
     assert "Do not repair it into a fake working AttackPlan" in prompt
     assert '"unsupported_refusal"' in prompt
+    assert 'reason="unsupported_or_schema_only"' in prompt
     assert "Do not include attack_plan_id" in prompt
 
 
