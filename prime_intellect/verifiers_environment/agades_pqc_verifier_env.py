@@ -801,6 +801,8 @@ def _challenge_question_for_seed_attack_plan(
                 f"Target task: {task_line}.",
                 *_strict_json_output_rules("unsupported_refusal"),
                 'Set response_type="unsupported_refusal".',
+                'Set reason="unsupported_or_schema_only"; reason is a stable '
+                "enum, not free-form prose.",
                 "Include target_family, target_name, support_level, reason, "
                 "message, claims_pqc_break=false, and needs_human_review=true.",
                 "Do not include attack_plan_id, operators, claims, or any "
