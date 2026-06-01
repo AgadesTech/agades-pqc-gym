@@ -287,8 +287,37 @@ def test_prime_verifiers_environment_decoy_output_is_not_accepted() -> None:
     assert report["single_json_object"] is True
     assert report["rubric_scores"]["single_json_object"] == 1.0
     assert report["rubric_scores"]["accepted_attack_plan"] == 0.0
+    assert report["rubric_scores"]["formal_validity"] == 0.0
+    assert report["rubric_scores"]["cryptographic_applicability"] == 0.0
+    assert report["rubric_scores"]["no_security_overclaim"] == 0.0
     assert report["rubric_scores"]["task_match"] == 0.0
-    assert 0.0 < report["aggregate_reward"] < 1.0
+    assert "task_match" in report["blocking_reasons"]
+    assert report["aggregate_reward"] <= 0.25
+
+
+def test_prime_verifiers_environment_scores_embedded_target_match_over_decoy() -> None:
+    module = _load_environment_module()
+    row = module.build_dataset_rows(
+        attack_plan_id="lattice_bdd_toy_v1",
+        challenge_suite=True,
+        challenge_type="wrong_family_decoy_repair",
+    )[0]
+    raw_plan = module._raw_json_for_task_info(row["info"]["task_metadata"])
+    broken_output = module._claims_guard_decoy_wrapped_invalid_output(raw_plan)
+
+    report = module.score_attack_plan_completion_report(
+        _assistant_completion(broken_output),
+        info=row["info"],
+        require_info=True,
+        reward_profile="format_repair_dense",
+    )
+
+    assert report["accepted"] is False
+    assert report["single_json_object"] is False
+    assert report["rubric_scores"]["formal_validity"] == 0.0
+    assert report["rubric_scores"]["no_security_overclaim"] == 0.0
+    assert "no_security_overclaim" in report["blocking_reasons"]
+    assert report["aggregate_reward"] < 0.455
 
 
 def test_prime_verifiers_environment_rejects_pre_evaluation_claim_estimates() -> None:
