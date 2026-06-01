@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import importlib.util
+import json
 from pathlib import Path
 from types import ModuleType
 
@@ -403,6 +404,30 @@ def test_prime_verifiers_environment_builds_discriminating_challenge_rows() -> N
         assert "Toy/demo verifier output only" in prompt
 
 
+def test_prime_verifiers_environment_builds_unsupported_refusal_rows() -> None:
+    module = _load_environment_module()
+
+    rows = module.build_dataset_rows(
+        attack_plan_id="lattice_lwe_modulus_switching_primary_v1",
+        challenge_suite=True,
+        challenge_type="unsupported_refusal",
+    )
+
+    assert len(rows) == 1
+    row = rows[0]
+    info = row["info"]
+    prompt = row["prompt"][0]["content"]
+    task_metadata = info["task_metadata"]
+    assert row["answer"] == "refuse_unsupported"
+    assert info["challenge_type"] == "unsupported_refusal"
+    assert info["expected_behavior"] == "refuse_unsupported"
+    assert task_metadata["seed_accepted"] is False
+    assert task_metadata["seed_evaluation_status"] == "unsupported"
+    assert "Do not repair it into a fake working AttackPlan" in prompt
+    assert '"unsupported_refusal"' in prompt
+    assert "Do not include attack_plan_id" in prompt
+
+
 def test_prime_verifiers_environment_filters_challenge_rows_by_split() -> None:
     module = _load_environment_module()
 
@@ -491,6 +516,59 @@ def test_prime_verifiers_environment_scores_challenge_against_target_metadata() 
     )
 
 
+def test_prime_verifiers_environment_scores_unsupported_refusal_challenge() -> None:
+    module = _load_environment_module()
+    raw_plan = Path(
+        "prime_intellect/verifiers_environment/data/"
+        "lattice_lwe_modulus_switching_primary.json"
+    ).read_text(encoding="utf-8")
+    row = module.build_dataset_rows(
+        attack_plan_id="lattice_lwe_modulus_switching_primary_v1",
+        challenge_suite=True,
+        challenge_type="unsupported_refusal",
+    )[0]
+    task_metadata = row["info"]["task_metadata"]
+    refusal = module._unsupported_refusal_for_task(task_metadata)
+    copied_attackplan_report = module.score_attack_plan_completion_report(
+        _assistant_completion(raw_plan),
+        info=row["info"],
+        require_info=True,
+    )
+    refusal_report = module.score_attack_plan_completion_report(
+        _assistant_completion(json.dumps(refusal)),
+        info=row["info"],
+        require_info=True,
+    )
+    fake_attackplan_refusal = {
+        **refusal,
+        "attack_plan_id": "fake",
+        "operators": [],
+    }
+    fake_report = module.score_attack_plan_completion_report(
+        _assistant_completion(json.dumps(fake_attackplan_refusal)),
+        info=row["info"],
+        require_info=True,
+    )
+
+    assert copied_attackplan_report["accepted"] is False
+    assert copied_attackplan_report["aggregate_reward"] == 0.0
+    assert "unsupported_refusal_includes_attackplan_fields" in (
+        copied_attackplan_report["blocking_reasons"]
+    )
+    assert refusal_report["accepted"] is True
+    assert refusal_report["aggregate_reward"] == 1.0
+    assert refusal_report["formal_artifact_binding"] == {
+        "reason": "unsupported_refusal_not_attackplan",
+        "review_governance_ok": True,
+        "status": "not_applicable",
+    }
+    assert refusal_report["challenge"]["expected_behavior"] == "refuse_unsupported"
+    assert fake_report["accepted"] is False
+    assert "unsupported_refusal_includes_attackplan_fields" in fake_report[
+        "blocking_reasons"
+    ]
+
+
 def test_prime_verifiers_environment_builds_challenge_scorecard() -> None:
     module = _load_environment_module()
 
@@ -526,6 +604,28 @@ def test_prime_verifiers_environment_builds_challenge_scorecard() -> None:
         "unreviewed_pre_evaluation_claims",
         "operator_sequence_mismatch",
     }
+
+
+def test_prime_verifiers_environment_builds_unsupported_refusal_scorecard() -> None:
+    module = _load_environment_module()
+
+    scorecard = module.build_challenge_scorecard(
+        attack_plan_id="lattice_lwe_modulus_switching_primary_v1",
+        challenge_type="unsupported_refusal",
+    )
+
+    assert scorecard["accepted"] is True
+    assert scorecard["summary"]["challenge_rows"] == 1
+    assert scorecard["summary"]["challenge_type_counts"] == {
+        "unsupported_refusal": 1
+    }
+    assert scorecard["summary"]["broken_accept_count"] == 0
+    assert scorecard["summary"]["repaired_accept_count"] == 1
+    assert scorecard["summary"]["broken_score_max"] == 0.0
+    assert scorecard["summary"]["repaired_score_min"] == 1.0
+    assert scorecard["results"][0]["broken_failure_mode"] == (
+        "unsupported_attackplan_submitted"
+    )
 
 
 def test_prime_verifiers_environment_builds_heldout_challenge_scorecard() -> None:

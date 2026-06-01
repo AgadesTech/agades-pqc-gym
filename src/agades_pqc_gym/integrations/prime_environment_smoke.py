@@ -77,6 +77,9 @@ def build_prime_environment_smoke_report(
         "reviewer_quality": None,
         "rubric_terms": [],
         "unsupported_score": None,
+        "unsupported_refusal_broken_score": None,
+        "unsupported_refusal_rows": 0,
+        "unsupported_refusal_score": None,
     }
     optional_dependencies = {
         "load_environment_boundary_ok": False,
@@ -112,6 +115,10 @@ def build_prime_environment_smoke_report(
         )
         challenge_scorecard = module.build_challenge_scorecard(
             attack_plan_id="lattice_bdd_toy_v1",
+        )
+        unsupported_refusal_scorecard = module.build_challenge_scorecard(
+            attack_plan_id="lattice_lwe_modulus_switching_primary_v1",
+            challenge_type="unsupported_refusal",
         )
         formal_binding = _dict_or_empty(
             accepted_report.get("formal_artifact_binding")
@@ -167,6 +174,15 @@ def build_prime_environment_smoke_report(
             ),
             "rubric_terms": list(module.PRIME_RUBRIC_TERMS),
             "unsupported_score": unsupported_score,
+            "unsupported_refusal_broken_score": (
+                unsupported_refusal_scorecard["summary"]["broken_score_max"]
+            ),
+            "unsupported_refusal_rows": (
+                unsupported_refusal_scorecard["summary"]["challenge_rows"]
+            ),
+            "unsupported_refusal_score": (
+                unsupported_refusal_scorecard["summary"]["repaired_score_min"]
+            ),
         }
         optional_dependencies = {
             "load_environment_boundary_ok": _optional_dependency_boundary(module),
@@ -305,6 +321,12 @@ def _validate_smoke_contract(
         failures.append("Prime environment accepted rubric scores are incomplete.")
     if scoring["unsupported_score"] != 0.0:
         failures.append("Prime environment accepts unsupported plan.")
+    if scoring["unsupported_refusal_rows"] != 1:
+        failures.append("Prime environment unsupported refusal row is missing.")
+    if scoring["unsupported_refusal_broken_score"] != 0.0:
+        failures.append("Prime environment accepts unsupported AttackPlan copy.")
+    if scoring["unsupported_refusal_score"] != 1.0:
+        failures.append("Prime environment rejects correct unsupported refusal.")
     if scoring["invalid_json_score"] != 0.0:
         failures.append("Prime environment accepts invalid JSON.")
     if scoring["prefixed_json_score"] != 0.0:
@@ -486,6 +508,18 @@ def _verify_scoring(report: dict[str, Any], failures: list[str]) -> None:
     for key in ("unsupported_score", "invalid_json_score", "prefixed_json_score"):
         if scoring.get(key) != 0.0:
             failures.append(f"Prime environment smoke report {key} is wrong.")
+    if scoring.get("unsupported_refusal_rows") != 1:
+        failures.append(
+            "Prime environment smoke report unsupported refusal rows are wrong."
+        )
+    if scoring.get("unsupported_refusal_broken_score") != 0.0:
+        failures.append(
+            "Prime environment smoke report unsupported AttackPlan copy scores."
+        )
+    if scoring.get("unsupported_refusal_score") != 1.0:
+        failures.append(
+            "Prime environment smoke report unsupported refusal score is wrong."
+        )
     if scoring.get("requires_single_json_object") is not True:
         failures.append(
             "Prime environment smoke report does not require single JSON."
@@ -570,6 +604,7 @@ def _verification_summary(
         "review_governance_ok": scoring.get("review_governance_ok"),
         "reviewer_quality": scoring.get("reviewer_quality"),
         "rubric_terms": len(scoring.get("rubric_terms", [])),
+        "unsupported_refusal_score": scoring.get("unsupported_refusal_score"),
         "unsupported_score": scoring.get("unsupported_score"),
     }
 

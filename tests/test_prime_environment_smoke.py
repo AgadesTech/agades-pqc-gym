@@ -95,6 +95,9 @@ def test_prime_environment_smoke_report_exercises_packaged_verifier(
             "task_match",
             "proof_obligation_coverage",
         ],
+        "unsupported_refusal_broken_score": 0.0,
+        "unsupported_refusal_rows": 1,
+        "unsupported_refusal_score": 1.0,
         "unsupported_score": 0.0,
     }
     assert report["optional_dependencies"] == {
@@ -158,6 +161,7 @@ def test_prime_environment_smoke_verify_accepts_committed_report() -> None:
             "review_governance_ok": True,
             "reviewer_quality": 1.0,
             "rubric_terms": 10,
+            "unsupported_refusal_score": 1.0,
             "unsupported_score": 0.0,
         },
         "failures": [],

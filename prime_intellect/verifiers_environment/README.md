@@ -71,16 +71,20 @@ This does not add private data. It rewrites public seed rows into task-aware
 repair challenges and stores the real scoring target under
 `info["task_metadata"]`. The current challenge types are
 `claims_guard_repair`, `wrong_family_decoy_repair`, and
-`operator_mismatch_repair`. Copying the broken or decoy object from the prompt
-does not score; the submitted AttackPlan must satisfy the nested target
-metadata, the verifier, the formal bindings, and the no-claim gate.
+`operator_mismatch_repair` for supported AttackPlans, plus
+`unsupported_refusal` for schema-only or unsupported targets. Copying the broken
+or decoy object from the prompt does not score; the submitted AttackPlan must
+satisfy the nested target metadata, the verifier, the formal bindings, and the
+no-claim gate. For `unsupported_refusal`, the correct output is not an
+AttackPlan: it is a conservative JSON refusal that names the unsupported target,
+sets `claims_pqc_break=false`, and requires human review.
 Use `challenge_split="heldout"` for base-model vs adapted-model comparisons;
 the train split is only for curriculum work. The held-out split is deterministic
 from `(attack_plan_id, challenge_type)` and stays public-safe.
 `build_challenge_scorecard()` summarizes these rows by challenge type, verifies
 that broken submissions score `0.0`, and verifies that the repaired public seed
-scores `1.0`. Use that scorecard as a local preflight before spending Prime
-training budget.
+or strict unsupported refusal scores `1.0`. Use that scorecard as a local
+preflight before spending Prime training budget.
 
 Dataset rows can be filtered with `attack_plan_id`, `target_family`, and
 `seed_accepted`. Use `seed_accepted=true` for supported-only strict quality

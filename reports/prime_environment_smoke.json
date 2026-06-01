@@ -89,6 +89,9 @@
       "task_match",
       "proof_obligation_coverage"
     ],
+    "unsupported_refusal_broken_score": 0.0,
+    "unsupported_refusal_rows": 1,
+    "unsupported_refusal_score": 1.0,
     "unsupported_score": 0.0
   }
 }
