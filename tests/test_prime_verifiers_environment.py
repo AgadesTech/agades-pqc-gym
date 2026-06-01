@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+from collections import Counter
 from pathlib import Path
 from types import ModuleType
 
@@ -641,6 +642,7 @@ def test_prime_verifiers_environment_builds_challenge_scorecard() -> None:
         "target_family": None,
         "challenge_type": None,
         "challenge_split": None,
+        "min_challenge_examples_per_type": None,
         "public_only": True,
         "private_data_allowed": False,
         "security_claims_allowed": False,
@@ -723,6 +725,81 @@ def test_prime_scorecard_global_heldout_covers_unsupported_refusal() -> None:
         result["broken_score"] == 0.0 and result["broken_accepted"] is False
         for result in stern_decoy_results
     )
+
+
+def test_prime_verifiers_environment_builds_balanced_heldout_challenge_rows() -> None:
+    module = _load_environment_module()
+
+    rows = module.build_dataset_rows(
+        challenge_suite=True,
+        challenge_split="heldout",
+        min_challenge_examples_per_type=8,
+    )
+
+    challenge_counts = Counter(row["info"]["challenge_type"] for row in rows)
+    assert len(rows) == 32
+    assert challenge_counts == {
+        "claims_guard_repair": 8,
+        "operator_mismatch_repair": 8,
+        "unsupported_refusal": 8,
+        "wrong_family_decoy_repair": 8,
+    }
+    assert {row["info"]["heldout_split"] for row in rows} == {"heldout"}
+    assert {
+        row["info"]["split_policy"] for row in rows
+    } == {"balanced_min_per_type_v1"}
+    assert len(
+        {
+            (
+                row["info"]["challenge_type"],
+                row["info"]["task_metadata"]["attack_plan_id"],
+            )
+            for row in rows
+        }
+    ) == len(rows)
+    report = module.score_attack_plan_completion_report(
+        _assistant_completion(
+            module._correct_submission_for_challenge(
+                module._raw_json_for_task_info(rows[0]["info"]["task_metadata"]),
+                rows[0]["info"],
+            )
+        ),
+        info=rows[0]["info"],
+        require_info=True,
+    )
+    assert report["challenge"]["split_policy"] == "balanced_min_per_type_v1"
+
+
+def test_prime_verifiers_environment_rejects_too_small_balanced_num_examples() -> None:
+    module = _load_environment_module()
+
+    with pytest.raises(ValueError, match="balanced challenge suite size"):
+        module.build_dataset_rows(
+            num_examples=16,
+            challenge_suite=True,
+            challenge_split="heldout",
+            min_challenge_examples_per_type=8,
+        )
+
+
+def test_prime_verifiers_environment_builds_balanced_heldout_scorecard() -> None:
+    module = _load_environment_module()
+
+    scorecard = module.build_challenge_scorecard(
+        attack_plan_id=None,
+        challenge_split="heldout",
+        min_challenge_examples_per_type=8,
+    )
+
+    assert scorecard["accepted"] is True
+    assert scorecard["scope"]["min_challenge_examples_per_type"] == 8
+    assert scorecard["summary"]["challenge_rows"] == 32
+    assert scorecard["summary"]["challenge_type_counts"] == {
+        "claims_guard_repair": 8,
+        "operator_mismatch_repair": 8,
+        "unsupported_refusal": 8,
+        "wrong_family_decoy_repair": 8,
+    }
 
 
 def test_prime_verifiers_environment_rejects_empty_dataset_filter() -> None:

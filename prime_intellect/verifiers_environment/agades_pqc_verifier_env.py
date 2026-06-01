@@ -98,6 +98,7 @@ CHALLENGE_TYPES = (
     "unsupported_refusal",
 )
 CHALLENGE_SPLITS = ("train", "heldout")
+BALANCED_HELDOUT_CHALLENGE_POLICY = "balanced_min_per_type_v1"
 
 
 def build_dataset_rows(
@@ -110,8 +111,10 @@ def build_dataset_rows(
     challenge_suite: bool = False,
     challenge_type: str | None = None,
     challenge_split: str | None = None,
+    min_challenge_examples_per_type: int | None = None,
 ) -> list[dict[str, Any]]:
     _validate_prompt_profile(prompt_profile)
+    _validate_min_challenge_examples_per_type(min_challenge_examples_per_type)
     rows = [
         _row_for_plan(path, prompt_profile=prompt_profile)
         for path in TASK_PLAN_PATHS
@@ -139,11 +142,16 @@ def build_dataset_rows(
             rows,
             challenge_type=challenge_type,
             challenge_split=challenge_split,
+            min_challenge_examples_per_type=min_challenge_examples_per_type,
         )
     elif challenge_type is not None:
         raise ValueError("challenge_type requires challenge_suite=True")
     elif challenge_split is not None:
         raise ValueError("challenge_split requires challenge_suite=True")
+    elif min_challenge_examples_per_type is not None:
+        raise ValueError(
+            "min_challenge_examples_per_type requires challenge_suite=True"
+        )
     if not rows:
         filters = {
             "attack_plan_id": attack_plan_id,
@@ -156,6 +164,15 @@ def build_dataset_rows(
         raise ValueError(f"Prime environment task filter matched no rows: {filters}")
     if num_examples is None or num_examples < 0:
         return rows
+    if (
+        min_challenge_examples_per_type is not None
+        and challenge_suite
+        and num_examples < len(rows)
+    ):
+        raise ValueError(
+            "num_examples is smaller than the balanced challenge suite size; "
+            "increase num_examples or leave it unset"
+        )
     return rows[:num_examples]
 
 
@@ -184,8 +201,10 @@ def build_challenge_scorecard(
     target_family: str | None = None,
     challenge_type: str | None = None,
     challenge_split: str | None = None,
+    min_challenge_examples_per_type: int | None = None,
     reward_profile: str = STRICT_REWARD_PROFILE,
 ) -> dict[str, Any]:
+    _validate_min_challenge_examples_per_type(min_challenge_examples_per_type)
     seed_accepted = None
     if challenge_type == "unsupported_refusal":
         seed_accepted = False
@@ -198,6 +217,7 @@ def build_challenge_scorecard(
         challenge_suite=True,
         challenge_type=challenge_type,
         challenge_split=challenge_split,
+        min_challenge_examples_per_type=min_challenge_examples_per_type,
     )
     results = [_score_challenge_row(row, reward_profile=reward_profile) for row in rows]
     repaired_scores = [float(row["repaired_score"]) for row in results]
@@ -220,6 +240,7 @@ def build_challenge_scorecard(
             "target_family": target_family,
             "challenge_type": challenge_type,
             "challenge_split": challenge_split,
+            "min_challenge_examples_per_type": min_challenge_examples_per_type,
             "public_only": True,
             "private_data_allowed": False,
             "security_claims_allowed": False,
@@ -362,6 +383,7 @@ def load_environment(
     challenge_suite: bool = False,
     challenge_type: str | None = None,
     challenge_split: str | None = None,
+    min_challenge_examples_per_type: int | None = None,
     reward_profile: str = STRICT_REWARD_PROFILE,
     **kwargs: Any,
 ) -> Any:
@@ -385,6 +407,7 @@ def load_environment(
             challenge_suite=challenge_suite,
             challenge_type=challenge_type,
             challenge_split=challenge_split,
+            min_challenge_examples_per_type=min_challenge_examples_per_type,
         )
     )
     rubric = vf.Rubric(
@@ -505,6 +528,7 @@ def _challenge_rows_for_seed_rows(
     *,
     challenge_type: str | None,
     challenge_split: str | None,
+    min_challenge_examples_per_type: int | None,
 ) -> list[dict[str, Any]]:
     if challenge_type is not None and challenge_type not in CHALLENGE_TYPES:
         expected = ", ".join(CHALLENGE_TYPES)
@@ -521,6 +545,16 @@ def _challenge_rows_for_seed_rows(
     selected_types = (
         (challenge_type,) if challenge_type is not None else CHALLENGE_TYPES
     )
+    if min_challenge_examples_per_type is not None:
+        if challenge_split != "heldout":
+            raise ValueError(
+                "min_challenge_examples_per_type requires challenge_split='heldout'"
+            )
+        return _balanced_heldout_challenge_rows(
+            rows,
+            selected_types=selected_types,
+            min_challenge_examples_per_type=min_challenge_examples_per_type,
+        )
     challenge_rows: list[dict[str, Any]] = []
     for row in rows:
         task_info = row["info"]
@@ -556,9 +590,83 @@ def _challenge_rows_for_seed_rows(
     return challenge_rows
 
 
+def _balanced_heldout_challenge_rows(
+    rows: list[dict[str, Any]],
+    *,
+    selected_types: tuple[str, ...],
+    min_challenge_examples_per_type: int,
+) -> list[dict[str, Any]]:
+    candidates_by_type: dict[str, list[dict[str, Any]]] = {
+        selected_type: [] for selected_type in selected_types
+    }
+    for row in rows:
+        task_info = row["info"]
+        raw_json = _raw_json_for_task_info(task_info)
+        for selected_type in selected_types:
+            if selected_type == "unsupported_refusal":
+                if task_info["seed_accepted"] is True:
+                    continue
+            elif task_info["seed_accepted"] is not True:
+                continue
+            challenge_info = _challenge_info_for_task(
+                task_info,
+                selected_type,
+                heldout_split="heldout",
+                split_policy=BALANCED_HELDOUT_CHALLENGE_POLICY,
+            )
+            candidates_by_type[selected_type].append(
+                {
+                    "prompt": [
+                        {
+                            "role": "user",
+                            "content": _challenge_question_for_seed_attack_plan(
+                                raw_json,
+                                task_info=task_info,
+                                challenge_type=selected_type,
+                            ),
+                        }
+                    ],
+                    "answer": challenge_info["expected_behavior"],
+                    "info": challenge_info,
+                }
+            )
+
+    balanced_rows: list[dict[str, Any]] = []
+    for selected_type in selected_types:
+        candidates = sorted(
+            candidates_by_type[selected_type],
+            key=_balanced_challenge_row_key,
+        )
+        if len(candidates) < min_challenge_examples_per_type:
+            raise ValueError(
+                "balanced heldout challenge suite cannot provide "
+                f"{min_challenge_examples_per_type} examples for "
+                f"{selected_type!r}; only {len(candidates)} available"
+            )
+        balanced_rows.extend(candidates[:min_challenge_examples_per_type])
+    return balanced_rows
+
+
+def _balanced_challenge_row_key(row: dict[str, Any]) -> str:
+    info = row["info"]
+    task_info = info["task_metadata"]
+    key = ":".join(
+        (
+            BALANCED_HELDOUT_CHALLENGE_POLICY,
+            str(info["challenge_type"]),
+            str(task_info["attack_plan_id"]),
+            str(task_info["target_family"]),
+        )
+    )
+    return hashlib.sha256(key.encode()).hexdigest()
+
+
 def _challenge_info_for_task(
     task_info: dict[str, Any],
     challenge_type: str,
+    *,
+    heldout_split: str | None = None,
+    split_policy: str = "hash_mod_5_v1",
 ) -> dict[str, Any]:
     expected_behavior = (
         "refuse_unsupported"
@@ -569,10 +677,9 @@ def _challenge_info_for_task(
         "schema_version": PRIME_CHALLENGE_INFO_SCHEMA,
         "challenge_type": challenge_type,
         "expected_behavior": expected_behavior,
-        "heldout_split": _heldout_split(
-            task_info["attack_plan_id"],
-            challenge_type,
-        ),
+        "heldout_split": heldout_split
+        or _heldout_split(task_info["attack_plan_id"], challenge_type),
+        "split_policy": split_policy,
         "task_metadata": task_info,
         "scoring_rule": (
             "score the submitted AttackPlan against task_metadata; the broken "
@@ -586,6 +693,13 @@ def _challenge_info_for_task(
 def _heldout_split(attack_plan_id: str, challenge_type: str) -> str:
     digest = hashlib.sha256(f"{attack_plan_id}:{challenge_type}".encode()).hexdigest()
     return "heldout" if int(digest[:2], 16) % 5 == 0 else "train"
+
+
+def _validate_min_challenge_examples_per_type(value: int | None) -> None:
+    if value is None:
+        return
+    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+        raise ValueError("min_challenge_examples_per_type must be a positive integer")
 
 
 def _raw_json_for_task_info(task_info: dict[str, Any]) -> str:
@@ -943,6 +1057,7 @@ def _challenge_info_from_scoring_info(
         "challenge_type": info.get("challenge_type"),
         "expected_behavior": info.get("expected_behavior"),
         "heldout_split": info.get("heldout_split"),
+        "split_policy": info.get("split_policy"),
         "task_metadata": task_metadata,
         "scoring_rule": info.get("scoring_rule"),
         "private_data_allowed": info.get("private_data_allowed"),
