@@ -253,20 +253,21 @@ def build_prime_environment_manifest(root: Path | None = None) -> dict[str, Any]
                         "weighted format-repair signal; exact valid concise "
                         "JSON can receive full reward, wrapped JSON can "
                         "receive partial non-accepted reward, and hidden "
-                        "reasoning bloat lowers student_readability"
+                        "reasoning bloat is strongly penalized through "
+                        "student_readability"
                     ),
                     "accepted_candidates_still_require_strict_acceptance": True,
                     "rubric_weights": {
-                        "accepted_attack_plan": 0.20,
-                        "single_json_object": 0.20,
+                        "accepted_attack_plan": 0.22,
+                        "single_json_object": 0.16,
                         "formal_validity": 0.20,
-                        "cryptographic_applicability": 0.05,
+                        "cryptographic_applicability": 0.04,
                         "no_security_overclaim": 0.15,
-                        "student_readability": 0.08,
-                        "reproducibility": 0.03,
-                        "reviewer_quality": 0.03,
-                        "task_match": 0.04,
-                        "proof_obligation_coverage": 0.02,
+                        "student_readability": 0.15,
+                        "reproducibility": 0.02,
+                        "reviewer_quality": 0.02,
+                        "task_match": 0.03,
+                        "proof_obligation_coverage": 0.01,
                     },
                 },
             },

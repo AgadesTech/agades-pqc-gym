@@ -32,6 +32,7 @@ PRIME_REWARD_PROFILES = (
     PEDAGOGICAL_DENSE_REWARD_PROFILE,
     FORMAT_REPAIR_DENSE_REWARD_PROFILE,
 )
+FORMAT_REPAIR_REASONING_CHAR_BUDGET = 12_000
 _STRICT_RUBRIC_WEIGHTS = {
     "accepted_attack_plan": 1.0,
     "single_json_object": 0.0,
@@ -50,16 +51,16 @@ _PEDAGOGICAL_DENSE_RUBRIC_WEIGHTS = {
     "proof_obligation_coverage": 0.04,
 }
 _FORMAT_REPAIR_DENSE_RUBRIC_WEIGHTS = {
-    "accepted_attack_plan": 0.20,
-    "single_json_object": 0.20,
+    "accepted_attack_plan": 0.22,
+    "single_json_object": 0.16,
     "formal_validity": 0.20,
-    "cryptographic_applicability": 0.05,
+    "cryptographic_applicability": 0.04,
     "no_security_overclaim": 0.15,
-    "student_readability": 0.08,
-    "reproducibility": 0.03,
-    "reviewer_quality": 0.03,
-    "task_match": 0.04,
-    "proof_obligation_coverage": 0.02,
+    "student_readability": 0.15,
+    "reproducibility": 0.02,
+    "reviewer_quality": 0.02,
+    "task_match": 0.03,
+    "proof_obligation_coverage": 0.01,
 }
 _RUBRIC_WEIGHTS_BY_PROFILE = {
     STRICT_REWARD_PROFILE: _STRICT_RUBRIC_WEIGHTS,
@@ -1381,7 +1382,10 @@ def _completion_readability_score(completion: list[dict[str, Any]]) -> float:
     reasoning_char_count = _reasoning_char_count(completion)
     if reasoning_char_count == 0:
         return 1.0
-    return max(0.0, 1.0 - (reasoning_char_count / 50_000.0))
+    return max(
+        0.0,
+        1.0 - (reasoning_char_count / FORMAT_REPAIR_REASONING_CHAR_BUDGET),
+    )
 
 
 def _reasoning_char_count(completion: list[dict[str, Any]]) -> int:
