@@ -67,9 +67,12 @@ _RUBRIC_WEIGHTS_BY_PROFILE = {
     FORMAT_REPAIR_DENSE_REWARD_PROFILE: _FORMAT_REPAIR_DENSE_RUBRIC_WEIGHTS,
 }
 SYSTEM_PROMPT = (
-    "You submit JSON AttackPlan candidates for Agades PQC Gym. "
-    "Return only a single AttackPlan JSON object. Do not submit Python, shell, "
-    "network requests, exploit chains, or live-target instructions."
+    "You answer Agades PQC Gym tasks with exactly one JSON object and nothing "
+    "else. For repair tasks, return one AttackPlan JSON object. For unsupported "
+    "or schema-only tasks, return the requested unsupported_refusal JSON object. "
+    "Do not include reasoning, analysis, markdown, code fences, prose outside "
+    "JSON, prefixes, suffixes, Python, shell, network requests, exploit chains, "
+    "or live-target instructions."
 )
 DEFAULT_PROMPT_PROFILE = "attackplan_json"
 FORMAT_FIRST_PROMPT_PROFILE = "format_first_copy_seed"
@@ -744,13 +747,10 @@ def _challenge_question_for_seed_attack_plan(
                 "pre-evaluation claim estimates without reviewed external "
                 "claim evidence.",
                 f"Target task: {task_line}.",
-                "Return exactly one valid AttackPlan JSON object for the "
-                "target task.",
+                *_strict_json_output_rules("valid AttackPlan"),
                 "Set estimated_time_bits=null, estimated_memory_bits=null, "
                 "and success_probability=null.",
                 "Do not add external_claim or source.",
-                "Do not include markdown, prose, comments, code fences, or "
-                "wrapper text.",
                 "Toy/demo verifier output only; do not claim real-world PQC breaks.",
                 "",
                 "Broken AttackPlan JSON:",
@@ -766,10 +766,8 @@ def _challenge_question_for_seed_attack_plan(
                 "Candidate object 2 is the right public toy AttackPlan, but it "
                 "is wrapped in markdown and has invalid pre-evaluation claims.",
                 f"Target task: {task_line}.",
-                "Return only the repaired Candidate object 2 as one valid "
-                "AttackPlan JSON object.",
-                "Do not include markdown, prose, comments, code fences, or "
-                "wrapper text.",
+                "Ignore Candidate object 1 completely.",
+                *_strict_json_output_rules("repaired Candidate object 2 AttackPlan"),
                 "Toy/demo verifier output only; do not claim real-world PQC breaks.",
                 "",
                 "Broken model output:",
@@ -783,11 +781,10 @@ def _challenge_question_for_seed_attack_plan(
                 "The AttackPlan below targets the right family and target name, "
                 "but its operator is inconsistent with the target task.",
                 f"Target task: {task_line}.",
-                "Return exactly one valid AttackPlan JSON object matching the "
-                "target task operator_types.",
+                *_strict_json_output_rules("valid AttackPlan"),
+                "The returned operators array must match the target task "
+                "operator_types exactly.",
                 "Preserve the target and conservative claim boundary.",
-                "Do not include markdown, prose, comments, code fences, or "
-                "wrapper text.",
                 "Toy/demo verifier output only; do not claim real-world PQC breaks.",
                 "",
                 "Broken AttackPlan JSON:",
@@ -802,12 +799,12 @@ def _challenge_question_for_seed_attack_plan(
                 "unsupported or schema-only. Do not repair it into a fake "
                 "working AttackPlan.",
                 f"Target task: {task_line}.",
-                "Return exactly one JSON object with response_type="
-                '"unsupported_refusal".',
+                *_strict_json_output_rules("unsupported_refusal"),
+                'Set response_type="unsupported_refusal".',
                 "Include target_family, target_name, support_level, reason, "
                 "message, claims_pqc_break=false, and needs_human_review=true.",
-                "Do not include attack_plan_id, operators, claims, markdown, "
-                "prose, comments, code fences, or wrapper text.",
+                "Do not include attack_plan_id, operators, claims, or any "
+                "AttackPlan-only fields.",
                 "Toy/demo verifier output only; do not claim real-world PQC breaks.",
                 "",
                 "Unsupported AttackPlan JSON:",
@@ -815,6 +812,17 @@ def _challenge_question_for_seed_attack_plan(
             ]
         )
     raise ValueError(f"unsupported Prime challenge_type: {challenge_type}")
+
+
+def _strict_json_output_rules(object_name: str) -> list[str]:
+    return [
+        f"Return exactly one {object_name} JSON object.",
+        "Your entire answer must be parseable as that one JSON object.",
+        "Do not include reasoning, analysis, markdown, prose outside JSON, "
+        "comments, code fences, prefixes, suffixes, or wrapper text.",
+        "The first non-whitespace character must be { and the final "
+        "non-whitespace character must be }.",
+    ]
 
 
 def _validate_prompt_profile(prompt_profile: str) -> None:
