@@ -453,6 +453,7 @@ def test_prime_verifiers_environment_builds_discriminating_challenge_rows() -> N
 
     assert [row["info"]["challenge_type"] for row in rows] == [
         "claims_guard_repair",
+        "semantic_mutation_repair",
         "wrong_family_decoy_repair",
         "operator_mismatch_repair",
     ]
@@ -461,11 +462,14 @@ def test_prime_verifiers_environment_builds_discriminating_challenge_rows() -> N
         prompt = row["prompt"][0]["content"]
         task_metadata = info["task_metadata"]
         assert info["schema_version"] == "agades.pqc.prime.challenge_info.v1"
-        assert info["expected_behavior"] == "repair_attackplan"
+        assert info["expected_behavior"] in {
+            "mutate_attackplan",
+            "repair_attackplan",
+        }
         assert info["private_data_allowed"] is False
         assert info["security_claims_allowed"] is False
         assert info["heldout_split"] in {"train", "heldout"}
-        assert row["answer"] == "repair_attackplan"
+        assert row["answer"] in {"repair_attackplan", "mutate_attackplan"}
         assert task_metadata["attack_plan_id"] == "lattice_bdd_toy_v1"
         assert "Return" in prompt
         assert "Toy/demo verifier output only" in prompt
@@ -590,6 +594,48 @@ def test_prime_verifiers_environment_scores_challenge_against_target_metadata() 
     )
 
 
+def test_prime_verifiers_environment_scores_semantic_mutation_challenge() -> None:
+    module = _load_environment_module()
+    raw_plan = Path(
+        "prime_intellect/verifiers_environment/data/lattice_bdd_toy.json"
+    ).read_text(encoding="utf-8")
+    row = module.build_dataset_rows(
+        attack_plan_id="lattice_bdd_toy_v1",
+        challenge_suite=True,
+        challenge_type="semantic_mutation_repair",
+    )[0]
+    mutated_plan = module._correct_submission_for_challenge(raw_plan, row["info"])
+
+    copied_report = module.score_attack_plan_completion_report(
+        _assistant_completion(raw_plan),
+        info=row["info"],
+        require_info=True,
+    )
+    mutated_report = module.score_attack_plan_completion_report(
+        _assistant_completion(mutated_plan),
+        info=row["info"],
+        require_info=True,
+    )
+
+    assert row["answer"] == "mutate_attackplan"
+    assert row["info"]["expected_behavior"] == "mutate_attackplan"
+    assert "Do not copy the Seed AttackPlan" in row["prompt"][0]["content"]
+    assert copied_report["accepted"] is False
+    assert copied_report["aggregate_reward"] == 0.0
+    assert "semantic_mutation" in copied_report["blocking_reasons"]
+    assert copied_report["benchmark_constraints"][
+        "semantic_mutation_required"
+    ] is True
+    assert copied_report["benchmark_constraints"][
+        "semantic_mutation_present"
+    ] is False
+    assert mutated_report["accepted"] is True
+    assert mutated_report["aggregate_reward"] == 1.0
+    assert mutated_report["benchmark_constraints"][
+        "semantic_mutation_present"
+    ] is True
+
+
 def test_prime_verifiers_environment_scores_unsupported_refusal_challenge() -> None:
     module = _load_environment_module()
     raw_plan = Path(
@@ -662,14 +708,15 @@ def test_prime_verifiers_environment_builds_challenge_scorecard() -> None:
         "private_data_allowed": False,
         "security_claims_allowed": False,
     }
-    assert scorecard["summary"]["challenge_rows"] == 3
+    assert scorecard["summary"]["challenge_rows"] == 4
     assert scorecard["summary"]["challenge_type_counts"] == {
         "claims_guard_repair": 1,
         "operator_mismatch_repair": 1,
+        "semantic_mutation_repair": 1,
         "wrong_family_decoy_repair": 1,
     }
     assert scorecard["summary"]["broken_accept_count"] == 0
-    assert scorecard["summary"]["repaired_accept_count"] == 3
+    assert scorecard["summary"]["repaired_accept_count"] == 4
     assert scorecard["summary"]["broken_score_max"] == 0.0
     assert scorecard["summary"]["repaired_score_min"] == 1.0
     assert {
@@ -678,6 +725,7 @@ def test_prime_verifiers_environment_builds_challenge_scorecard() -> None:
         "task_mismatch_decoy",
         "unreviewed_pre_evaluation_claims",
         "operator_sequence_mismatch",
+        "seed_semantic_copy",
     }
 
 
@@ -752,10 +800,11 @@ def test_prime_verifiers_environment_builds_balanced_heldout_challenge_rows() ->
     )
 
     challenge_counts = Counter(row["info"]["challenge_type"] for row in rows)
-    assert len(rows) == 32
+    assert len(rows) == 40
     assert challenge_counts == {
         "claims_guard_repair": 8,
         "operator_mismatch_repair": 8,
+        "semantic_mutation_repair": 8,
         "unsupported_refusal": 8,
         "wrong_family_decoy_repair": 8,
     }
@@ -808,10 +857,11 @@ def test_prime_verifiers_environment_builds_balanced_heldout_scorecard() -> None
 
     assert scorecard["accepted"] is True
     assert scorecard["scope"]["min_challenge_examples_per_type"] == 8
-    assert scorecard["summary"]["challenge_rows"] == 32
+    assert scorecard["summary"]["challenge_rows"] == 40
     assert scorecard["summary"]["challenge_type_counts"] == {
         "claims_guard_repair": 8,
         "operator_mismatch_repair": 8,
+        "semantic_mutation_repair": 8,
         "unsupported_refusal": 8,
         "wrong_family_decoy_repair": 8,
     }

@@ -92,6 +92,7 @@ PROMPT_PROFILES = (
 )
 CHALLENGE_TYPES = (
     "claims_guard_repair",
+    "semantic_mutation_repair",
     "wrong_family_decoy_repair",
     "operator_mismatch_repair",
     "unsupported_refusal",
@@ -296,6 +297,7 @@ def score_attack_plan_completion_report(
         candidate,
         task_info=normalized_info,
         require_task_match=require_info or info is not None,
+        require_semantic_mutation=_requires_semantic_mutation(challenge_info),
         root=root,
     )
     formal_artifact_binding = build_formal_artifact_binding(
@@ -487,6 +489,8 @@ def _broken_submission_for_challenge(raw_json: str, info: dict[str, Any]) -> str
     challenge_type = info["challenge_type"]
     if challenge_type == "claims_guard_repair":
         return _claims_guard_invalid_output(raw_json)
+    if challenge_type == "semantic_mutation_repair":
+        return raw_json
     if challenge_type == "wrong_family_decoy_repair":
         return json.dumps(_task_mismatch_decoy_attack_plan(raw_json), indent=2)
     if challenge_type == "operator_mismatch_repair":
@@ -505,12 +509,15 @@ def _correct_submission_for_challenge(raw_json: str, info: dict[str, Any]) -> st
             _unsupported_refusal_for_task(info["task_metadata"]),
             indent=2,
         )
+    if info["challenge_type"] == "semantic_mutation_repair":
+        return _semantic_mutation_valid_output(raw_json)
     return raw_json
 
 
 def _broken_failure_mode(challenge_type: str) -> str:
     return {
         "claims_guard_repair": "unreviewed_pre_evaluation_claims",
+        "semantic_mutation_repair": "seed_semantic_copy",
         "wrong_family_decoy_repair": "task_mismatch_decoy",
         "operator_mismatch_repair": "operator_sequence_mismatch",
         "unsupported_refusal": "unsupported_attackplan_submitted",
@@ -554,10 +561,7 @@ def _challenge_rows_for_seed_rows(
         task_info = row["info"]
         raw_json = _raw_json_for_task_info(task_info)
         for selected_type in selected_types:
-            if selected_type == "unsupported_refusal":
-                if task_info["seed_accepted"] is True:
-                    continue
-            elif task_info["seed_accepted"] is not True:
+            if not _challenge_type_applies_to_task(task_info, selected_type):
                 continue
             challenge_info = _challenge_info_for_task(task_info, selected_type)
             if (
@@ -597,10 +601,7 @@ def _balanced_heldout_challenge_rows(
         task_info = row["info"]
         raw_json = _raw_json_for_task_info(task_info)
         for selected_type in selected_types:
-            if selected_type == "unsupported_refusal":
-                if task_info["seed_accepted"] is True:
-                    continue
-            elif task_info["seed_accepted"] is not True:
+            if not _challenge_type_applies_to_task(task_info, selected_type):
                 continue
             challenge_info = _challenge_info_for_task(
                 task_info,
@@ -655,6 +656,19 @@ def _balanced_challenge_row_key(row: dict[str, Any]) -> str:
     return hashlib.sha256(key.encode()).hexdigest()
 
 
+def _challenge_type_applies_to_task(
+    task_info: dict[str, Any],
+    challenge_type: str,
+) -> bool:
+    if challenge_type == "unsupported_refusal":
+        return task_info["seed_accepted"] is False
+    if task_info["seed_accepted"] is not True:
+        return False
+    if challenge_type == "semantic_mutation_repair":
+        return task_info.get("requires_reproducibility") is not True
+    return True
+
+
 def _challenge_info_for_task(
     task_info: dict[str, Any],
     challenge_type: str,
@@ -662,11 +676,12 @@ def _challenge_info_for_task(
     heldout_split: str | None = None,
     split_policy: str = "hash_mod_5_v1",
 ) -> dict[str, Any]:
-    expected_behavior = (
-        "refuse_unsupported"
-        if challenge_type == "unsupported_refusal"
-        else "repair_attackplan"
-    )
+    if challenge_type == "unsupported_refusal":
+        expected_behavior = "refuse_unsupported"
+    elif challenge_type == "semantic_mutation_repair":
+        expected_behavior = "mutate_attackplan"
+    else:
+        expected_behavior = "repair_attackplan"
     return {
         "schema_version": PRIME_CHALLENGE_INFO_SCHEMA,
         "challenge_type": challenge_type,
@@ -704,6 +719,79 @@ def _raw_json_for_task_info(task_info: dict[str, Any]) -> str:
     if not path.is_file():
         raise ValueError(f"Prime challenge source path is missing: {source_path}")
     return path.read_text(encoding="utf-8")
+
+
+def _requires_semantic_mutation(challenge_info: dict[str, Any] | None) -> bool:
+    return (
+        isinstance(challenge_info, dict)
+        and challenge_info.get("challenge_type") == "semantic_mutation_repair"
+        and challenge_info.get("expected_behavior") == "mutate_attackplan"
+    )
+
+
+def _semantic_mutation_valid_output(raw_json: str) -> str:
+    payload = json.loads(raw_json)
+    if not isinstance(payload, dict):
+        raise ValueError("AttackPlan challenge seed must be a JSON object.")
+    attack_plan_id = payload.get("attack_plan_id")
+    if isinstance(attack_plan_id, str):
+        payload["attack_plan_id"] = f"{attack_plan_id}__semantic_variant"
+    operators = payload.get("operators")
+    if not isinstance(operators, list) or not operators:
+        raise ValueError("AttackPlan challenge seed lacks operators.")
+    if not _mutate_first_numeric_operator_param(operators):
+        _mutate_constraint_budget(payload)
+    metadata = payload.get("metadata")
+    if isinstance(metadata, dict):
+        metadata["notes"] = (
+            "Semantic benchmark variant for Prime challenge. Not a security claim."
+        )
+    return json.dumps(payload, indent=2, sort_keys=True)
+
+
+def _mutate_first_numeric_operator_param(operators: list[Any]) -> bool:
+    preferred_param_names = (
+        "beta",
+        "beta_max",
+        "block_size",
+        "sample_count",
+        "q_prime",
+        "guess_dimension",
+        "split_dimension",
+        "zeta",
+    )
+    for operator in operators:
+        if not isinstance(operator, dict):
+            continue
+        params = operator.get("params")
+        if not isinstance(params, dict):
+            continue
+        for param_name in preferred_param_names:
+            if _increment_int_param(params, param_name):
+                return True
+    return False
+
+
+def _increment_int_param(params: dict[str, Any], param_name: str) -> bool:
+    value = params.get(param_name)
+    if isinstance(value, int) and not isinstance(value, bool):
+        params[param_name] = value + 1
+        return True
+    return False
+
+
+def _mutate_constraint_budget(payload: dict[str, Any]) -> None:
+    constraints = payload.setdefault("constraints", {})
+    if not isinstance(constraints, dict):
+        raise ValueError("AttackPlan challenge constraints must be a JSON object.")
+    max_time_bits = constraints.get("max_time_bits")
+    if isinstance(max_time_bits, (int, float)) and not isinstance(
+        max_time_bits,
+        bool,
+    ):
+        constraints["max_time_bits"] = float(max_time_bits) + 1.0
+    else:
+        constraints["max_time_bits"] = 128.0
 
 
 def _question_for_seed_attack_plan(raw_json: str, *, prompt_profile: str) -> str:
@@ -868,6 +956,29 @@ def _challenge_question_for_seed_attack_plan(
                 "",
                 "Broken AttackPlan JSON:",
                 _claims_guard_invalid_output(raw_json),
+            ]
+        )
+    if challenge_type == "semantic_mutation_repair":
+        return "\n".join(
+            [
+                "Mutate this Agades PQC Gym challenge.",
+                "The Seed AttackPlan is valid, but this is a benchmark task: "
+                "a verbatim or metadata-only copy must not receive credit.",
+                f"Target task: {task_line}.",
+                *_strict_json_output_rules("valid AttackPlan"),
+                "Do not copy the Seed AttackPlan.",
+                "Return a semantically changed AttackPlan that still matches "
+                "the target task, operator_types, conservative claims, and "
+                "review boundary.",
+                "Change at least one operator parameter when possible; if no "
+                "operator has a safe numeric attack parameter, change one "
+                "non-claim constraint budget.",
+                "Keep estimated_time_bits=null, estimated_memory_bits=null, "
+                "success_probability=null, external_claim=false, and source=null.",
+                "Toy/demo verifier output only; do not claim real-world PQC breaks.",
+                "",
+                "Seed AttackPlan JSON:",
+                raw_json,
             ]
         )
     if challenge_type == "wrong_family_decoy_repair":
@@ -1165,6 +1276,9 @@ def _format_repair_reward_report(
             embedded_json,
             task_info=normalized_info,
             require_task_match=info is not None,
+            require_semantic_mutation=_requires_semantic_mutation(
+                challenge_info
+            ),
             root=root,
         )
         formal_artifact_binding = build_formal_artifact_binding(
@@ -1538,5 +1652,8 @@ def _prime_reward_report(
         ),
         "formal_artifact_binding": binding,
         "review_governance_ok": binding.get("review_governance_ok") is True,
+        "benchmark_constraints": (
+            reward_report.get("benchmark_constraints", {}) if reward_report else {}
+        ),
         "challenge": challenge_info or {},
     }
