@@ -37,6 +37,12 @@ _FALSE_SAFETY_FLAGS = (
 )
 _REQUIRED_OPTIONAL_PACKAGES = ("datasets", "verifiers")
 _DEFAULT_ATTACK_PLAN_ID = "lattice_primal_usvp_toy_v1"
+_EXPECTED_SMOKE_CHALLENGE_TYPES = [
+    "claims_guard_repair",
+    "semantic_mutation_repair",
+    "wrong_family_decoy_repair",
+    "operator_mismatch_repair",
+]
 
 
 def build_prime_environment_smoke_report(
@@ -274,13 +280,9 @@ def _validate_smoke_contract(
         failures.append("Prime environment default AttackPlan id drifted.")
     if scoring["accepted_score"] != 1.0:
         failures.append("Prime environment rejects accepted toy plan.")
-    if scoring["challenge_rows"] < 3:
+    if scoring["challenge_rows"] < len(_EXPECTED_SMOKE_CHALLENGE_TYPES):
         failures.append("Prime environment challenge suite is too small.")
-    if scoring["challenge_types"] != [
-        "claims_guard_repair",
-        "wrong_family_decoy_repair",
-        "operator_mismatch_repair",
-    ]:
+    if scoring["challenge_types"] != _EXPECTED_SMOKE_CHALLENGE_TYPES:
         failures.append("Prime environment challenge types drifted.")
     if scoring["challenge_schema"] != "agades.pqc.prime.challenge_scorecard.v1":
         failures.append("Prime environment challenge schema drifted.")
@@ -447,13 +449,9 @@ def _verify_scoring(report: dict[str, Any], failures: list[str]) -> None:
         return
     if scoring.get("accepted_score") != 1.0:
         failures.append("Prime environment smoke report accepted score is wrong.")
-    if scoring.get("challenge_rows") != 3:
+    if scoring.get("challenge_rows") != len(_EXPECTED_SMOKE_CHALLENGE_TYPES):
         failures.append("Prime environment smoke report challenge rows are wrong.")
-    if scoring.get("challenge_types") != [
-        "claims_guard_repair",
-        "wrong_family_decoy_repair",
-        "operator_mismatch_repair",
-    ]:
+    if scoring.get("challenge_types") != _EXPECTED_SMOKE_CHALLENGE_TYPES:
         failures.append("Prime environment smoke report challenge types are wrong.")
     if scoring.get("challenge_schema") != "agades.pqc.prime.challenge_scorecard.v1":
         failures.append("Prime environment smoke report challenge schema is wrong.")

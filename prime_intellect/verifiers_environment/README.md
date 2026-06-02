@@ -71,12 +71,16 @@ For stricter private evals, call `load_environment(..., challenge_suite=True)`.
 This does not add private data. It rewrites public seed rows into task-aware
 repair challenges and stores the real scoring target under
 `info["task_metadata"]`. The current challenge types are
-`claims_guard_repair`, `wrong_family_decoy_repair`, and
-`operator_mismatch_repair` for supported AttackPlans, plus
+`claims_guard_repair`, `semantic_mutation_repair`,
+`wrong_family_decoy_repair`, and `operator_mismatch_repair` for supported
+AttackPlans, plus
 `unsupported_refusal` for schema-only or unsupported targets. Copying the broken
 or decoy object from the prompt does not score; the submitted AttackPlan must
 satisfy the nested target metadata, the verifier, the formal bindings, and the
-no-claim gate. For `unsupported_refusal`, the correct output is not an
+no-claim gate. For `semantic_mutation_repair`, copying the seed or changing only
+metadata does not score; the submitted AttackPlan must make a valid semantic
+change while preserving the target and conservative claim boundary. For
+`unsupported_refusal`, the correct output is not an
 AttackPlan: it is a conservative JSON refusal that names the unsupported target,
 sets `claims_pqc_break=false`, and requires human review.
 Use `challenge_split="heldout"` for base-model vs adapted-model comparisons;
@@ -86,9 +90,10 @@ For a broad eval that cannot pass by overfitting one trap type, use
 `min_challenge_examples_per_type=8` together with
 `challenge_suite=True` and `challenge_split="heldout"`. This builds a stable
 balanced held-out suite with the same minimum count for
-`claims_guard_repair`, `wrong_family_decoy_repair`,
-`operator_mismatch_repair`, and `unsupported_refusal`; it fails instead of
-duplicating prompts if the public corpus cannot satisfy the requested minimum.
+`claims_guard_repair`, `semantic_mutation_repair`,
+`wrong_family_decoy_repair`, `operator_mismatch_repair`, and
+`unsupported_refusal`; it fails instead of duplicating prompts if the public
+corpus cannot satisfy the requested minimum.
 `build_challenge_scorecard()` summarizes these rows by challenge type, verifies
 that broken submissions score `0.0`, and verifies that the repaired public seed
 or strict unsupported refusal scores `1.0`. Use that scorecard as a local
