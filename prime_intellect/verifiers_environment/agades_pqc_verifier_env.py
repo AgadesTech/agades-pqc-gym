@@ -32,7 +32,6 @@ PRIME_REWARD_PROFILES = (
     PEDAGOGICAL_DENSE_REWARD_PROFILE,
     FORMAT_REPAIR_DENSE_REWARD_PROFILE,
 )
-FORMAT_REPAIR_REASONING_CHAR_BUDGET = 12_000
 _STRICT_RUBRIC_WEIGHTS = {
     "accepted_attack_plan": 1.0,
     "single_json_object": 0.0,
@@ -311,11 +310,6 @@ def score_attack_plan_completion_report(
             for term in REWARD_TERMS
         },
     }
-    if reward_profile == FORMAT_REPAIR_DENSE_REWARD_PROFILE:
-        rubric_scores["student_readability"] = min(
-            rubric_scores["student_readability"],
-            _completion_readability_score(completion),
-        )
     rubric_scores = _task_mismatch_capped_rubric_scores(
         rubric_scores,
         normalized_info,
@@ -1497,25 +1491,6 @@ def _format_readability_score(text: str) -> float:
     if "```" not in stripped:
         score += 0.2
     return score
-
-
-def _completion_readability_score(completion: list[dict[str, Any]]) -> float:
-    reasoning_char_count = _reasoning_char_count(completion)
-    if reasoning_char_count == 0:
-        return 1.0
-    return max(
-        0.0,
-        1.0 - (reasoning_char_count / FORMAT_REPAIR_REASONING_CHAR_BUDGET),
-    )
-
-
-def _reasoning_char_count(completion: list[dict[str, Any]]) -> int:
-    count = 0
-    for message in completion:
-        reasoning_content = message.get("reasoning_content")
-        if isinstance(reasoning_content, str):
-            count += len(reasoning_content.strip())
-    return count
 
 
 def _blocked_reward_report(

@@ -242,7 +242,7 @@ def test_prime_verifiers_environment_grades_format_repair_wrapped_json() -> None
     ]
 
 
-def test_prime_verifiers_environment_penalizes_hidden_reasoning_bloat() -> None:
+def test_prime_verifier_quarantines_hidden_reasoning_from_readability() -> None:
     module = _load_environment_module()
     raw_plan = LATTICE_PLAN.read_text(encoding="utf-8")
     task_info = _task_info_for(module, "lattice_primal_usvp_toy_v1")
@@ -267,30 +267,25 @@ def test_prime_verifiers_environment_penalizes_hidden_reasoning_bloat() -> None:
     assert concise_report["accepted"] is True
     assert verbose_report["accepted"] is True
     assert concise_report["rubric_scores"]["student_readability"] == 1.0
-    assert 0.0 < verbose_report["rubric_scores"]["student_readability"] < 1.0
-    assert verbose_report["aggregate_reward"] < concise_report["aggregate_reward"]
+    assert verbose_report["rubric_scores"]["student_readability"] == 1.0
+    assert verbose_report["aggregate_reward"] == concise_report["aggregate_reward"]
 
 
-def test_prime_verifiers_environment_zeroes_excessive_hidden_reasoning() -> None:
+def test_prime_verifiers_environment_penalizes_visible_wrapper_text() -> None:
     module = _load_environment_module()
     raw_plan = LATTICE_PLAN.read_text(encoding="utf-8")
     task_info = _task_info_for(module, "lattice_primal_usvp_toy_v1")
 
     report = module.score_attack_plan_completion_report(
-        [
-            {
-                "role": "assistant",
-                "content": raw_plan,
-                "reasoning_content": "x" * 20_000,
-            }
-        ],
+        [{"role": "assistant", "content": f"```json\n{raw_plan}\n```"}],
         info=task_info,
         reward_profile="format_repair_dense",
     )
 
-    assert report["accepted"] is True
-    assert report["rubric_scores"]["student_readability"] == 0.0
-    assert report["aggregate_reward"] == 0.85
+    assert report["accepted"] is False
+    assert report["single_json_object"] is False
+    assert report["rubric_scores"]["student_readability"] == 0.5
+    assert "wrapped_or_prefixed_json" in report["blocking_reasons"]
 
 
 def test_prime_verifiers_environment_decoy_output_is_not_accepted() -> None:

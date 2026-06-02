@@ -83,15 +83,15 @@
       "docs/huggingface_publication_handoff.json": "cdf12ac4f6801467edbb206b0476c5d091f1805712f617687fcb6161abee7789",
       "docs/lattice_estimator_baseline_contracts.json": "09100e2ba4733daffee5c82e58153ed8585210589b2112467ff29e86ba2bf2a5",
       "docs/lattice_estimator_manifest.json": "0b52a47bd0217a194d1004ce3433ea5c9e0404f85e0a05415e8c37bbe240c2cb",
-      "docs/prime_publication_handoff.json": "57997604e24971a304cad0da6faf3055d366ec9436782579cd19b47a4625c9c2",
-      "docs/prime_speedrun_handoff.json": "51d137e6d89abee762bfe3913a426558a545257fd49669d2e6c9c8c4ff849c18",
+      "docs/prime_publication_handoff.json": "fe59f6a123bf45b62a05e9ed9ad8dd4dbb7eab8383ee05a0faedae2be6c31c0c",
+      "docs/prime_speedrun_handoff.json": "2c0c31fcda063f9af1ae853fca67b777cda80e3b42eb7fedd58d573d9e5e0deb",
       "docs/public_benchmark_manifest.json": "c45741efde84f27edfd6feab0e3217f68c88a5be4d56a038b2973ea2296722f7",
       "docs/source_catalog.json": "9648bc812ae0465cf9bf28e410d3fcbdc63ec6d17060c35b4e05e98ea55dc058",
       "hf/collection_manifest.json": "e1490c5b6c991b947ac7df19ca8f6c03e7c170f386151fa71e03982952a85e91",
       "nvidia/README.md": "18568265697f8a33eef8fab9d0d1b1312d32c9d1f365eae588fbc35a1c194f62",
       "nvidia/accelerator_manifest.json": "4220fb49bd07624af90e5be1dfe2fbd8a72a7c4a968782d46e3ccc12f15b04cc",
       "prime_intellect/schemas/schema_manifest.json": "f448d41c640e6dc02a462af1bf695a93045676a191cee53403a121cab833fbeb",
-      "prime_intellect/verifiers_environment/prime_manifest.json": "fe339208251c687a2d478575a9c26a8fa09c7e7edb6cfc5ef45bc03cbb88ff85",
+      "prime_intellect/verifiers_environment/prime_manifest.json": "cbb2810b752ff3b94e1a362d33a96f81b90535620547955aa975aae42a4e8e7a",
       "public/run_export/manifest.json": "333ad57c7b04eec2e3a20c6e190fc74bdf01c4a84d9d8e57f01c5118e832dadb"
     }
   },
