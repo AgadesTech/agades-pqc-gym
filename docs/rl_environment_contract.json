@@ -61,7 +61,7 @@
     },
     "hf_space_manifest": {
       "path": "hf/space_manifest.json",
-      "sha256": "77f96f95710b07e0e284aeb80be0a500548c8d91aa0c7a3b8fe7a9389388afd1"
+      "sha256": "b7efb424e7d1d1592ea025a56dd41becd3066e12e321d2ca316f57601ac96695"
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
@@ -97,7 +97,7 @@
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "6e781451b7d509a04830f5274d420e045bbd03624f05ef86866259e370781fd8"
+      "sha256": "73a5ef65b99585edc37419365613b68e7e4775cd2eb29a6660bf3de9e5107b07"
     }
   },
   "private_track": {
@@ -207,8 +207,9 @@
       "public_visibility_allowed": true,
       "rollout_examples": "hf/dataset/rl_rollouts.jsonl",
       "sdk": "gradio",
-      "space_id_template": "agades/agades-pqc-gym-agent-env",
-      "task_dataset": "hf/dataset/task_metadata.jsonl"
+      "space_id_template": "AgadesTech/agades-pqc-gym-agent-env",
+      "task_dataset": "hf/dataset/task_metadata.jsonl",
+      "temporary_fallback_space_id": "agades/agades-pqc-gym-agent-env"
     },
     "prime_verifiers_environment": {
       "credentialed_eval_command_template": "prime eval run ${AGADES_PRIME_ENV_REF} -m ${AGADES_EVAL_MODEL} -p prime -n 32 -r 2 -t 2048 -s -A",

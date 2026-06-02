@@ -26,7 +26,8 @@ def test_rl_environment_contract_defines_public_and_private_tracks(
     assert contract["schema_version"] == "agades.pqc.rl_environment_contract.v1"
     assert contract["surfaces"] == {
         "huggingface_agent_environment": {
-            "space_id_template": "agades/agades-pqc-gym-agent-env",
+            "space_id_template": "AgadesTech/agades-pqc-gym-agent-env",
+            "temporary_fallback_space_id": "agades/agades-pqc-gym-agent-env",
             "sdk": "gradio",
             "category": "agent-environment",
             "task_dataset": "hf/dataset/task_metadata.jsonl",

@@ -8,7 +8,7 @@ HF_SPACE_REMOTE_SMOKE_SCHEMA = "agades.pqc.hf_space_remote_smoke.v1"
 HF_SPACE_REMOTE_SMOKE_VERIFICATION_SCHEMA = (
     "agades.pqc.hf_space_remote_smoke_verification.v1"
 )
-DEFAULT_REMOTE_SPACE_ID = "agades/agades-pqc-gym-agent-env"
+DEFAULT_REMOTE_SPACE_ID = "AgadesTech/agades-pqc-gym-agent-env"
 DEFAULT_REMOTE_REPORT = Path("reports/hf_space_remote_smoke.json")
 DEFAULT_LABEL = "LWE / lattice_primal_usvp_toy_v1"
 DEFAULT_UNSUPPORTED_LABEL = "NTRU / lattice_ntru_schema_placeholder_v1"

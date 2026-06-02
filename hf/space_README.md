@@ -55,13 +55,17 @@ Use a private Space first and keep public release behind review:
 
 ```bash
 hf auth login
-hf repo create agades/agades-pqc-gym-agent-env --repo-type=space --space_sdk gradio --private --exist-ok
-hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message "Sync Agades PQC Gym Agent Environment"
+hf repo create AgadesTech/agades-pqc-gym-agent-env --repo-type=space --space_sdk gradio --private --exist-ok
+hf upload AgadesTech/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message "Sync Agades PQC Gym Agent Environment"
 ```
 
 For automation, prefer `HF_TOKEN` rather than passing tokens on the command
 line. Publish publicly only after release review confirms the dataset bundle,
 Space manifest, and no-claim guardrails are current.
+
+`agades/agades-pqc-gym-agent-env` is only a temporary private fallback for demo
+replay while the `AgadesTech` namespace access is being fixed. Do not treat it
+as the target Space.
 
 ## Guardrails
 

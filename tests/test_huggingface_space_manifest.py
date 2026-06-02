@@ -34,7 +34,11 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "app_path": "hf/app.py",
     }
     assert manifest["space"] == {
-        "suggested_space_id": "agades/agades-pqc-gym-agent-env",
+        "suggested_space_id": "AgadesTech/agades-pqc-gym-agent-env",
+        "temporary_fallback_space_id": "agades/agades-pqc-gym-agent-env",
+        "temporary_fallback_status": (
+            "private_demo_only_until_target_namespace_access"
+        ),
         "sdk": "gradio",
         "category": "agent-environment",
         "app_file": "hf/app.py",
@@ -62,11 +66,11 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
         "requirements_file": "hf/requirements.txt",
         "dataset_bundle": "hf/dataset",
         "hub_create_command_template": (
-            "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space "
+            "hf repo create AgadesTech/agades-pqc-gym-agent-env --repo-type=space "
             "--space_sdk gradio --private --exist-ok"
         ),
         "hub_upload_command_template": (
-            "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space "
+            "hf upload AgadesTech/agades-pqc-gym-agent-env hf . --repo-type=space "
             '--commit-message "Sync Agades PQC Gym Agent Environment"'
         ),
         "public_push_requires_review": True,
@@ -332,8 +336,15 @@ def test_huggingface_space_manifest_describes_public_demo_contract(
 def test_huggingface_space_readme_matches_hub_workflow_contract() -> None:
     readme = Path("hf/space_README.md").read_text(encoding="utf-8")
 
-    assert "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space" in readme
-    assert "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space" in readme
+    assert (
+        "hf repo create AgadesTech/agades-pqc-gym-agent-env --repo-type=space"
+        in readme
+    )
+    assert (
+        "hf upload AgadesTech/agades-pqc-gym-agent-env hf . --repo-type=space"
+        in readme
+    )
+    assert "agades/agades-pqc-gym-agent-env" in readme
     assert "HF_TOKEN" in readme
     assert "Agent Environment" in readme
     assert "rl_rollouts.jsonl" in readme

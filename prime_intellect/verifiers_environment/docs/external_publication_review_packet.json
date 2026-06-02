@@ -289,13 +289,13 @@
     }
   },
   "input_sha256": {
-    "docs/huggingface_publication_handoff.json": "5b785ef0e2ea53e8ec9427df4588c9524de91e4d15ff83144c7afabeafc84c88",
-    "docs/nvidia_publication_handoff.json": "a6acc9cbc2f4a91b2edec49b5dba2fab1a9dfc354cee6fff02706262eb41660c",
+    "docs/huggingface_publication_handoff.json": "cdf12ac4f6801467edbb206b0476c5d091f1805712f617687fcb6161abee7789",
+    "docs/nvidia_publication_handoff.json": "a9bf3bde3e6d7d66a7cdbf8d7ee8757b899822676993ff51bab24075edbf0ad9",
     "docs/prime_publication_handoff.json": "57997604e24971a304cad0da6faf3055d366ec9436782579cd19b47a4625c9c2",
-    "docs/publication_manifest.json": "ff34f3f08f3f21aa7f8c82ff29f1ad26f06831ed95a7dd4e94dfa6d2e82eaa9b",
+    "docs/publication_manifest.json": "022a4b3ef169e2d3122647f9089f6f9bb760c355823583a461e82e4dd083e30b",
     "docs/release_status.json": "630beeb873cfd9d965dd16bfd6dcb9cc2c0abe82178948aa73e8aa0df1fd8172",
-    "hf/collection_manifest.json": "b3ddafd0f3c1b78f443851a2069f5cedddd3e0d8c97f499e6c1f7ee1000eacbe",
-    "hf/space_manifest.json": "77f96f95710b07e0e284aeb80be0a500548c8d91aa0c7a3b8fe7a9389388afd1",
+    "hf/collection_manifest.json": "e1490c5b6c991b947ac7df19ca8f6c03e7c170f386151fa71e03982952a85e91",
+    "hf/space_manifest.json": "b7efb424e7d1d1592ea025a56dd41becd3066e12e321d2ca316f57601ac96695",
     "nvidia/accelerator_manifest.json": "4220fb49bd07624af90e5be1dfe2fbd8a72a7c4a968782d46e3ccc12f15b04cc",
     "prime_intellect/verifiers_environment/prime_manifest.json": "fe339208251c687a2d478575a9c26a8fa09c7e7edb6cfc5ef45bc03cbb88ff85",
     "public/publication_preflight.json": "51b43540af1806409f6cf702b68d50440a8c54211ba696558c58b87739927d7b"
@@ -418,8 +418,8 @@
     {
       "artifact_count": 5,
       "command_templates": [
-        "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space --space_sdk gradio --private --exist-ok",
-        "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Agent Environment\""
+        "hf repo create AgadesTech/agades-pqc-gym-agent-env --repo-type=space --space_sdk gradio --private --exist-ok",
+        "hf upload AgadesTech/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Agent Environment\""
       ],
       "contains_credentials": false,
       "external_publication_performed": false,

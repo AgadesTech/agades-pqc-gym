@@ -63,7 +63,7 @@
       "requires_credentials": true,
       "review_required_before_publish": true,
       "sdk": "gradio",
-      "suggested_repo_id": "agades/agades-pqc-gym-agent-env"
+      "suggested_repo_id": "AgadesTech/agades-pqc-gym-agent-env"
     },
     {
       "id": "benchmark-card",
