@@ -111,7 +111,7 @@
       "public/run_export/MANIFEST.sha256"
     ],
     "artifact_sha256": {
-      "docs/prime_publication_handoff.json": "fe59f6a123bf45b62a05e9ed9ad8dd4dbb7eab8383ee05a0faedae2be6c31c0c",
+      "docs/prime_publication_handoff.json": "94f5896124384d9c4ea22a6f17a75505f40e0aa779f3616cdad3443a1e01c154",
       "docs/source_catalog.json": "9648bc812ae0465cf9bf28e410d3fcbdc63ec6d17060c35b4e05e98ea55dc058",
       "prime_intellect/schemas/task_metadata.schema.json": "95ee9534b21fce15122c5d65aafcaa181210a0e898c284b5b8b46a0cdcbd3e07",
       "prime_intellect/schemas/verifier_result.schema.json": "dca189a653db3cfc7b70ad099ba8a627f7940402ffc3846b10ec33989cb468a4",

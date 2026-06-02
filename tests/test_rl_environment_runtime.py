@@ -94,6 +94,82 @@ def test_pedagogical_reward_scores_all_terms_for_matching_seed() -> None:
     assert report["formal_summary"]["family_invariants"] == 2
 
 
+def test_benchmark_reward_blocks_seed_semantic_copy() -> None:
+    task_info = _task_info(LATTICE_PLAN)
+
+    report = score_attack_plan_candidate(
+        LATTICE_PLAN.read_text(encoding="utf-8"),
+        task_info=task_info,
+        require_task_match=True,
+        require_semantic_mutation=True,
+    )
+
+    assert report["reward"] == 0.0
+    assert report["accepted"] is False
+    assert report["blocked"] is True
+    assert "semantic_mutation" in report["blocking_reasons"]
+    assert report["terms"]["formal_validity"] == 1.0
+    assert report["terms"]["task_match"] == 1.0
+    assert report["benchmark_constraints"] == {
+        "semantic_mutation_required": True,
+        "semantic_mutation_present": False,
+        "seed_semantic_sha256": report["benchmark_constraints"][
+            "seed_semantic_sha256"
+        ],
+        "candidate_semantic_sha256": report["benchmark_constraints"][
+            "candidate_semantic_sha256"
+        ],
+    }
+    assert len(report["benchmark_constraints"]["seed_semantic_sha256"]) == 64
+    assert report["benchmark_constraints"]["seed_semantic_sha256"] == (
+        report["benchmark_constraints"]["candidate_semantic_sha256"]
+    )
+
+
+def test_benchmark_reward_rejects_metadata_only_seed_change() -> None:
+    task_info = _task_info(LATTICE_PLAN)
+    candidate = json.loads(LATTICE_PLAN.read_text(encoding="utf-8"))
+    candidate["attack_plan_id"] = "lattice_primal_usvp_toy_id_only_change"
+    candidate["metadata"]["notes"] = (
+        "Metadata-only edit. Not a security claim."
+    )
+
+    report = score_attack_plan_candidate(
+        json.dumps(candidate, sort_keys=True),
+        task_info=task_info,
+        require_task_match=True,
+        require_semantic_mutation=True,
+    )
+
+    assert report["reward"] == 0.0
+    assert report["accepted"] is False
+    assert "semantic_mutation" in report["blocking_reasons"]
+    assert report["benchmark_constraints"]["semantic_mutation_present"] is False
+
+
+def test_benchmark_reward_accepts_valid_operator_parameter_mutation() -> None:
+    task_info = _task_info(LATTICE_PLAN)
+    candidate = json.loads(LATTICE_PLAN.read_text(encoding="utf-8"))
+    candidate["attack_plan_id"] = "lattice_primal_usvp_toy_beta_variant"
+    candidate["operators"][0]["params"]["beta"] = 52
+
+    report = score_attack_plan_candidate(
+        json.dumps(candidate, sort_keys=True),
+        task_info=task_info,
+        require_task_match=True,
+        require_semantic_mutation=True,
+    )
+
+    assert report["reward"] == 1.0
+    assert report["accepted"] is True
+    assert report["blocked"] is False
+    assert report["benchmark_constraints"]["semantic_mutation_required"] is True
+    assert report["benchmark_constraints"]["semantic_mutation_present"] is True
+    assert report["benchmark_constraints"]["seed_semantic_sha256"] != (
+        report["benchmark_constraints"]["candidate_semantic_sha256"]
+    )
+
+
 def test_pedagogical_reward_blocks_untyped_formal_obligations(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
