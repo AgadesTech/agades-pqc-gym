@@ -152,6 +152,12 @@ def test_remote_smoke_accepts_private_running_agent_environment() -> None:
         "domain_ready": True,
         "sha": "remote-sha",
     }
+    assert report["target"] == {
+        "target_space_id": "AgadesTech/agades-pqc-gym-agent-env",
+        "temporary_fallback_space_id": "agades/agades-pqc-gym-agent-env",
+        "using_temporary_fallback": False,
+        "target_space_ready": True,
+    }
     assert report["auth"] == {"token_present": True, "token_value_recorded": False}
     assert report["api"]["agent_environment_api_names_present"] is True
     assert report["accepted_path"]["reward"] == 1.0
@@ -166,6 +172,47 @@ def test_remote_smoke_accepts_private_running_agent_environment() -> None:
         "private_fields_present": False,
     }
     assert report["failures"] == []
+
+
+def test_remote_smoke_marks_temporary_fallback_without_target_confusion() -> None:
+    report = build_huggingface_space_remote_smoke_report(
+        "agades/agades-pqc-gym-agent-env",
+        api=FakeApi(FakeSpaceInfo(id="agades/agades-pqc-gym-agent-env")),
+        client=FakeClient(),
+        token_present=True,
+    )
+
+    assert report["accepted"] is True
+    assert report["space"]["id"] == "agades/agades-pqc-gym-agent-env"
+    assert report["target"] == {
+        "target_space_id": "AgadesTech/agades-pqc-gym-agent-env",
+        "temporary_fallback_space_id": "agades/agades-pqc-gym-agent-env",
+        "using_temporary_fallback": True,
+        "target_space_ready": False,
+    }
+
+    result = verify_huggingface_space_remote_smoke_report(report)
+
+    assert result["accepted"] is True
+    assert result["summary"]["space_id"] == "agades/agades-pqc-gym-agent-env"
+    assert result["summary"]["using_temporary_fallback"] is True
+    assert result["summary"]["target_space_ready"] is False
+
+
+def test_remote_smoke_verify_rejects_unknown_non_target_space() -> None:
+    report = build_huggingface_space_remote_smoke_report(
+        "someone/random-space",
+        api=FakeApi(FakeSpaceInfo(id="someone/random-space")),
+        client=FakeClient(),
+        token_present=True,
+    )
+
+    result = verify_huggingface_space_remote_smoke_report(report)
+
+    assert result["accepted"] is False
+    assert "Remote smoke report uses neither target nor approved fallback Space." in (
+        result["failures"]
+    )
 
 
 def test_remote_smoke_rejects_invalid_status_for_unsupported_path() -> None:

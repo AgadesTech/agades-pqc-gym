@@ -9,6 +9,7 @@ HF_SPACE_REMOTE_SMOKE_VERIFICATION_SCHEMA = (
     "agades.pqc.hf_space_remote_smoke_verification.v1"
 )
 DEFAULT_REMOTE_SPACE_ID = "AgadesTech/agades-pqc-gym-agent-env"
+TEMPORARY_FALLBACK_SPACE_ID = "agades/agades-pqc-gym-agent-env"
 DEFAULT_REMOTE_REPORT = Path("reports/hf_space_remote_smoke.json")
 DEFAULT_LABEL = "LWE / lattice_primal_usvp_toy_v1"
 DEFAULT_UNSUPPORTED_LABEL = "NTRU / lattice_ntru_schema_placeholder_v1"
@@ -92,6 +93,7 @@ def build_huggingface_space_remote_smoke_report(
     report = {
         "schema_version": HF_SPACE_REMOTE_SMOKE_SCHEMA,
         "accepted": not failures,
+        "target": _target_summary(space_id),
         "space": space,
         "auth": {
             "token_present": bool(token_present),
@@ -128,7 +130,9 @@ def verify_huggingface_space_remote_smoke_report(
         failures.append("Remote smoke report schema_version is invalid.")
     if payload.get("accepted") is not True:
         failures.append("Remote smoke report is not accepted.")
+    target = _dict_or_empty(payload.get("target"))
     space = _dict_or_empty(payload.get("space"))
+    _verify_target_summary(target, space.get("id"), failures)
     if space.get("private") is not True:
         failures.append("Remote Hugging Face Space is not private.")
     if space.get("runtime_stage") != "RUNNING":
@@ -172,6 +176,8 @@ def verify_huggingface_space_remote_smoke_report(
             "space_id": space.get("id"),
             "runtime_stage": space.get("runtime_stage"),
             "domain_ready": space.get("domain_ready"),
+            "using_temporary_fallback": target.get("using_temporary_fallback"),
+            "target_space_ready": target.get("target_space_ready"),
             "failure_count": len(failures),
         },
         "failures": failures,
@@ -497,6 +503,38 @@ def _space_summary(space_id: str) -> dict[str, Any]:
         "domain_ready": None,
         "sha": None,
     }
+
+
+def _target_summary(space_id: str) -> dict[str, Any]:
+    using_temporary_fallback = space_id == TEMPORARY_FALLBACK_SPACE_ID
+    return {
+        "target_space_id": DEFAULT_REMOTE_SPACE_ID,
+        "temporary_fallback_space_id": TEMPORARY_FALLBACK_SPACE_ID,
+        "using_temporary_fallback": using_temporary_fallback,
+        "target_space_ready": space_id == DEFAULT_REMOTE_SPACE_ID
+        and not using_temporary_fallback,
+    }
+
+
+def _verify_target_summary(
+    target: dict[str, Any],
+    observed_space_id: object,
+    failures: list[str],
+) -> None:
+    if target.get("target_space_id") != DEFAULT_REMOTE_SPACE_ID:
+        failures.append("Remote smoke report target Space id is invalid.")
+    if target.get("temporary_fallback_space_id") != TEMPORARY_FALLBACK_SPACE_ID:
+        failures.append("Remote smoke report fallback Space id is invalid.")
+    target_ready = observed_space_id == DEFAULT_REMOTE_SPACE_ID
+    using_fallback = observed_space_id == TEMPORARY_FALLBACK_SPACE_ID
+    if not target_ready and not using_fallback:
+        failures.append(
+            "Remote smoke report uses neither target nor approved fallback Space."
+        )
+    if target.get("target_space_ready") is not target_ready:
+        failures.append("Remote smoke report target readiness is inconsistent.")
+    if target.get("using_temporary_fallback") is not using_fallback:
+        failures.append("Remote smoke report fallback marker is inconsistent.")
 
 
 def _empty_path_summary() -> dict[str, Any]:
