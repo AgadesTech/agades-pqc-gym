@@ -44,7 +44,11 @@ Contents:
 ## Space
 
 Suggested private-first Agent Environment Space:
-`agades/agades-pqc-gym-agent-env`
+`AgadesTech/agades-pqc-gym-agent-env`
+
+Temporary private fallback while `AgadesTech` namespace access is being fixed:
+`agades/agades-pqc-gym-agent-env`. This fallback is useful for demo replay, but
+it is not the target Space for Agades.
 
 The Space should allow users to select a toy/schema-only AttackPlan, run validation, and view mock or unsupported evaluator status. It must not execute arbitrary code.
 
@@ -74,8 +78,8 @@ Use a private Space first during release review:
 
 ```bash
 hf auth login
-hf repo create agades/agades-pqc-gym-agent-env --repo-type=space --space_sdk gradio --private --exist-ok
-hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message "Sync Agades PQC Gym Agent Environment"
+hf repo create AgadesTech/agades-pqc-gym-agent-env --repo-type=space --space_sdk gradio --private --exist-ok
+hf upload AgadesTech/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message "Sync Agades PQC Gym Agent Environment"
 ```
 
 For CI or release automation, prefer `HF_TOKEN` in the environment rather than

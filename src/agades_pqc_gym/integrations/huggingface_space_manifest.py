@@ -23,7 +23,8 @@ HF_SPACE_MANIFEST_SCHEMA = "agades.pqc.hf_space_manifest.v1"
 HF_SPACE_MANIFEST_VERIFICATION_SCHEMA = "agades.pqc.hf_space_manifest_verification.v1"
 ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_LABEL = "LWE / lattice_primal_usvp_toy_v1"
-DEFAULT_PRIVATE_SPACE_ID = "agades/agades-pqc-gym-agent-env"
+DEFAULT_PRIVATE_SPACE_ID = "AgadesTech/agades-pqc-gym-agent-env"
+TEMPORARY_FALLBACK_SPACE_ID = "agades/agades-pqc-gym-agent-env"
 HF_SPACES_INJECTED_GRADIO = "gradio[oauth,mcp]==6.14.0"
 SPACE_README_PATH = Path("hf/README.md")
 SPACE_FORMAL_DOCS_PATH = Path("hf/docs")
@@ -98,6 +99,10 @@ def build_huggingface_space_manifest(root: Path | None = None) -> dict[str, Any]
         },
         "space": {
             "suggested_space_id": DEFAULT_PRIVATE_SPACE_ID,
+            "temporary_fallback_space_id": TEMPORARY_FALLBACK_SPACE_ID,
+            "temporary_fallback_status": (
+                "private_demo_only_until_target_namespace_access"
+            ),
             "sdk": "gradio",
             "category": "agent-environment",
             "app_file": "hf/app.py",

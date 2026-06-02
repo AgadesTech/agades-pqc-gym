@@ -181,8 +181,8 @@
     "app_file": "hf/app.py",
     "category": "agent-environment",
     "dataset_bundle": "hf/dataset",
-    "hub_create_command_template": "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space --space_sdk gradio --private --exist-ok",
-    "hub_upload_command_template": "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Agent Environment\"",
+    "hub_create_command_template": "hf repo create AgadesTech/agades-pqc-gym-agent-env --repo-type=space --space_sdk gradio --private --exist-ok",
+    "hub_upload_command_template": "hf upload AgadesTech/agades-pqc-gym-agent-env hf . --repo-type=space --commit-message \"Sync Agades PQC Gym Agent Environment\"",
     "public_push_requires_review": true,
     "requirements_file": "hf/requirements.txt",
     "sdk": "gradio",
@@ -205,7 +205,9 @@
       "title": "Agades PQC Gym Agent Environment"
     },
     "space_readme_sha256": "6c354fa49a0dd0ce9bbca467b37c1f7897dd3244dd66c30d30394ca8db0baa16",
-    "suggested_space_id": "agades/agades-pqc-gym-agent-env"
+    "suggested_space_id": "AgadesTech/agades-pqc-gym-agent-env",
+    "temporary_fallback_space_id": "agades/agades-pqc-gym-agent-env",
+    "temporary_fallback_status": "private_demo_only_until_target_namespace_access"
   },
   "verifier_contract": {
     "accepts_arbitrary_code": false,

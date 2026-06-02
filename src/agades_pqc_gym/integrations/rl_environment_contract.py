@@ -7,6 +7,10 @@ from typing import Any
 
 from agades_pqc_gym.core.target import TargetFamily
 from agades_pqc_gym.formal.artifacts import MVP_VERTICAL_PROOF_ARTIFACT_PATHS
+from agades_pqc_gym.integrations.huggingface_space_manifest import (
+    DEFAULT_PRIVATE_SPACE_ID,
+    TEMPORARY_FALLBACK_SPACE_ID,
+)
 from agades_pqc_gym.integrations.pedagogical_rl_method import (
     ASSIMILATION_OBJECTIVE,
     LEARNABILITY_SCORE,
@@ -84,7 +88,8 @@ def build_rl_environment_contract(root: Path | None = None) -> dict[str, Any]:
         },
         "surfaces": {
             "huggingface_agent_environment": {
-                "space_id_template": "agades/agades-pqc-gym-agent-env",
+                "space_id_template": DEFAULT_PRIVATE_SPACE_ID,
+                "temporary_fallback_space_id": TEMPORARY_FALLBACK_SPACE_ID,
                 "sdk": "gradio",
                 "category": "agent-environment",
                 "task_dataset": "hf/dataset/task_metadata.jsonl",

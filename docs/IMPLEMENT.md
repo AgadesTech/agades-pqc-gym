@@ -43,7 +43,7 @@ uv run agades-pqc hf-space-smoke --out reports/hf_space_smoke.json
 uv run agades-pqc hf-space-smoke-verify --report reports/hf_space_smoke.json
 uv run agades-pqc hf-space-launch-smoke --out reports/hf_space_launch_smoke.json
 uv run agades-pqc hf-space-launch-smoke-verify --report reports/hf_space_launch_smoke.json
-uv run agades-pqc hf-space-remote-smoke --space-id agades/agades-pqc-gym-agent-env --out reports/hf_space_remote_smoke.json
+uv run agades-pqc hf-space-remote-smoke --space-id AgadesTech/agades-pqc-gym-agent-env --out reports/hf_space_remote_smoke.json
 uv run agades-pqc hf-space-remote-smoke-verify --report reports/hf_space_remote_smoke.json
 uv run agades-pqc hf-collection-manifest --out hf/collection_manifest.json
 uv run agades-pqc hf-collection-manifest-verify --manifest hf/collection_manifest.json

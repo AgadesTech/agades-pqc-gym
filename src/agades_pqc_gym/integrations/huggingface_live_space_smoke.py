@@ -13,8 +13,8 @@ HF_LIVE_SPACE_SMOKE_SCHEMA = "agades.pqc.hf_live_space_smoke.v1"
 HF_LIVE_SPACE_SMOKE_VERIFICATION_SCHEMA = (
     "agades.pqc.hf_live_space_smoke_verification.v1"
 )
-DEFAULT_SPACE_URL = "https://agades-agades-pqc-gym-agent-env.hf.space"
-DEFAULT_SPACE_REPO_ID = "agades/agades-pqc-gym-agent-env"
+DEFAULT_SPACE_URL = "https://agadestech-agades-pqc-gym-agent-env.hf.space"
+DEFAULT_SPACE_REPO_ID = "AgadesTech/agades-pqc-gym-agent-env"
 DEFAULT_REPORT = Path("reports/hf_live_space_smoke.json")
 DEFAULT_TOKEN_ENV = "HF_TOKEN"
 ROOT = Path(__file__).resolve().parents[3]

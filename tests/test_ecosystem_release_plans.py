@@ -101,11 +101,11 @@ def test_huggingface_release_plan_documents_space_hub_workflow() -> None:
     plan = PLAN_PATHS["huggingface"].read_text(encoding="utf-8")
 
     assert (
-        "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space"
+        "hf repo create AgadesTech/agades-pqc-gym-agent-env --repo-type=space"
         in plan
     )
     assert (
-        "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space"
+        "hf upload AgadesTech/agades-pqc-gym-agent-env hf . --repo-type=space"
         in plan
     )
     assert "HF_TOKEN" in plan

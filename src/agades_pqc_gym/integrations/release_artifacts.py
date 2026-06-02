@@ -65,6 +65,10 @@ from agades_pqc_gym.integrations.external_publication_review_packet import (
     verify_external_publication_review_packet,
     write_external_publication_review_packet,
 )
+from agades_pqc_gym.integrations.huggingface_collection_manifest import (
+    verify_huggingface_collection_manifest,
+    write_huggingface_collection_manifest,
+)
 from agades_pqc_gym.integrations.huggingface_dataset import (
     verify_huggingface_dataset_bundle,
     write_huggingface_dataset_bundle,
@@ -227,6 +231,7 @@ RELEASE_ARTIFACT_PATHS = (
     Path("docs/prime_speedrun_handoff.json"),
     Path("hf/dataset/MANIFEST.sha256"),
     Path("hf/space_manifest.json"),
+    Path("hf/collection_manifest.json"),
     HF_SPACE_SMOKE_REPORT,
     Path("docs/huggingface_publication_handoff.json"),
     Path("docs/nvidia_publication_handoff.json"),
@@ -505,6 +510,14 @@ def _release_artifact_sequence(project_root: Path) -> tuple[ReleaseArtifactStep,
             write=lambda out: write_huggingface_space_manifest(out, root=project_root),
         ),
         ReleaseArtifactStep(
+            id="hf-collection-manifest",
+            path=Path("hf/collection_manifest.json"),
+            write=lambda out: write_huggingface_collection_manifest(
+                out,
+                root=project_root,
+            ),
+        ),
+        ReleaseArtifactStep(
             id="hf-space-smoke",
             path=HF_SPACE_SMOKE_REPORT,
             write=lambda out: write_huggingface_space_smoke_report(
@@ -718,6 +731,10 @@ def _verify_release_artifacts(project_root: Path) -> dict[str, dict[str, Any]]:
         ),
         "hf-space-manifest": verify_huggingface_space_manifest(
             Path("hf/space_manifest.json"),
+            root=project_root,
+        ),
+        "hf-collection-manifest": verify_huggingface_collection_manifest(
+            Path("hf/collection_manifest.json"),
             root=project_root,
         ),
         "hf-space-smoke": verify_huggingface_space_smoke_report(

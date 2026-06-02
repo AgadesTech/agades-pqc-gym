@@ -24,7 +24,7 @@ class FakeRuntime:
 
 @dataclass
 class FakeSpaceInfo:
-    id: str = "agades/agades-pqc-gym-agent-env"
+    id: str = "AgadesTech/agades-pqc-gym-agent-env"
     private: bool = True
     runtime: FakeRuntime = field(default_factory=FakeRuntime)
     sha: str = "remote-sha"
@@ -137,7 +137,7 @@ class FakeInvalidUnsupportedClient(FakeClient):
 
 def test_remote_smoke_accepts_private_running_agent_environment() -> None:
     report = build_huggingface_space_remote_smoke_report(
-        "agades/agades-pqc-gym-agent-env",
+        "AgadesTech/agades-pqc-gym-agent-env",
         api=FakeApi(FakeSpaceInfo()),
         client=FakeClient(),
         token_present=True,
@@ -146,7 +146,7 @@ def test_remote_smoke_accepts_private_running_agent_environment() -> None:
     assert report["schema_version"] == "agades.pqc.hf_space_remote_smoke.v1"
     assert report["accepted"] is True
     assert report["space"] == {
-        "id": "agades/agades-pqc-gym-agent-env",
+        "id": "AgadesTech/agades-pqc-gym-agent-env",
         "private": True,
         "runtime_stage": "RUNNING",
         "domain_ready": True,
@@ -170,7 +170,7 @@ def test_remote_smoke_accepts_private_running_agent_environment() -> None:
 
 def test_remote_smoke_rejects_invalid_status_for_unsupported_path() -> None:
     report = build_huggingface_space_remote_smoke_report(
-        "agades/agades-pqc-gym-agent-env",
+        "AgadesTech/agades-pqc-gym-agent-env",
         api=FakeApi(FakeSpaceInfo()),
         client=FakeInvalidUnsupportedClient(),
         token_present=True,
@@ -184,7 +184,7 @@ def test_remote_smoke_rejects_invalid_status_for_unsupported_path() -> None:
 
 def test_remote_smoke_rejects_non_private_space() -> None:
     report = build_huggingface_space_remote_smoke_report(
-        "agades/agades-pqc-gym-agent-env",
+        "AgadesTech/agades-pqc-gym-agent-env",
         api=FakeApi(FakeSpaceInfo(private=False)),
         client=FakeClient(),
         token_present=True,
@@ -196,7 +196,7 @@ def test_remote_smoke_rejects_non_private_space() -> None:
 
 def test_remote_smoke_verify_rejects_missing_required_api() -> None:
     report = build_huggingface_space_remote_smoke_report(
-        "agades/agades-pqc-gym-agent-env",
+        "AgadesTech/agades-pqc-gym-agent-env",
         api=FakeApi(FakeSpaceInfo()),
         client=FakeClient(),
         token_present=True,
@@ -217,7 +217,7 @@ def test_remote_smoke_cli_writes_report(
 
     def fake_write(out_path: Path, *, space_id: str) -> dict[str, object]:
         assert out_path == out
-        assert space_id == "agades/agades-pqc-gym-agent-env"
+        assert space_id == "AgadesTech/agades-pqc-gym-agent-env"
         report = build_huggingface_space_remote_smoke_report(
             space_id,
             api=FakeApi(FakeSpaceInfo()),
@@ -237,7 +237,7 @@ def test_remote_smoke_cli_writes_report(
         [
             "hf-space-remote-smoke",
             "--space-id",
-            "agades/agades-pqc-gym-agent-env",
+            "AgadesTech/agades-pqc-gym-agent-env",
             "--out",
             str(out),
         ],

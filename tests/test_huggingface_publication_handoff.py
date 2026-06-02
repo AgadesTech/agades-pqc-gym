@@ -70,7 +70,7 @@ def test_huggingface_publication_handoff_records_review_boundaries(
         "dataset_repo_type": "dataset",
         "dataset_suggested_repo_id": "agades/pqc-gym-toy",
         "space_repo_type": "space",
-        "space_suggested_repo_id": "agades/agades-pqc-gym-agent-env",
+        "space_suggested_repo_id": "AgadesTech/agades-pqc-gym-agent-env",
         "collection_suggested_slug": "agades/pqc-gym",
         "release_plan": "docs/HUGGINGFACE_RELEASE_PLAN.md",
     }
@@ -101,12 +101,12 @@ def test_huggingface_publication_handoff_records_review_boundaries(
             '--commit-message "Sync Agades PQC Gym dataset"'
         ),
         "space_private_create": (
-            "hf repo create agades/agades-pqc-gym-agent-env --repo-type=space "
+            "hf repo create AgadesTech/agades-pqc-gym-agent-env --repo-type=space "
             "--space_sdk gradio "
             "--private --exist-ok"
         ),
         "space_upload": (
-            "hf upload agades/agades-pqc-gym-agent-env hf . --repo-type=space "
+            "hf upload AgadesTech/agades-pqc-gym-agent-env hf . --repo-type=space "
             '--commit-message "Sync Agades PQC Gym Agent Environment"'
         ),
         "collection_manual_review_required": True,
