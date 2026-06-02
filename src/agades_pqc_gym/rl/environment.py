@@ -148,6 +148,7 @@ def score_attack_plan_candidate(
     *,
     task_info: dict[str, Any] | str | None = None,
     require_task_match: bool = False,
+    require_semantic_mutation: bool = False,
     pedagogical_signals: dict[str, Any] | None = None,
     root: Path | None = None,
 ) -> dict[str, Any]:
@@ -198,6 +199,13 @@ def score_attack_plan_candidate(
         require_task_match=require_task_match,
         task_info=parsed_task,
     )
+    benchmark_constraints = _benchmark_constraints(
+        plan,
+        parsed_task,
+        require_semantic_mutation=require_semantic_mutation,
+        root=root,
+    )
+    blocking_reasons.extend(benchmark_constraints["blocking_reasons"])
     base_reward = 0.0 if blocking_reasons else _mean_reward(terms)
     pedagogical_reward = build_pedagogical_reward_report(
         base_reward,
@@ -213,6 +221,11 @@ def score_attack_plan_candidate(
         "blocked": bool(blocking_reasons),
         "blocking_reasons": blocking_reasons,
         "terms": terms,
+        "benchmark_constraints": {
+            key: value
+            for key, value in benchmark_constraints.items()
+            if key != "blocking_reasons"
+        },
         "pedagogical_reward": pedagogical_reward,
         "formal_summary": formal_summary,
         "verifier_summary": {
@@ -539,6 +552,64 @@ def _blocking_reasons(
     if terms["task_match"] != 1.0:
         reasons.append("task_match")
     return reasons
+
+
+def _benchmark_constraints(
+    plan: AttackPlan | None,
+    task_info: dict[str, Any] | None,
+    *,
+    require_semantic_mutation: bool,
+    root: Path | None,
+) -> dict[str, Any]:
+    candidate_semantic_sha256 = (
+        _semantic_attack_plan_sha256(plan) if plan is not None else None
+    )
+    seed_semantic_sha256 = _seed_semantic_sha256(task_info, root=root)
+    semantic_mutation_present = (
+        candidate_semantic_sha256 is not None
+        and seed_semantic_sha256 is not None
+        and candidate_semantic_sha256 != seed_semantic_sha256
+    )
+    blocking_reasons: list[str] = []
+    if require_semantic_mutation and not semantic_mutation_present:
+        blocking_reasons.append("semantic_mutation")
+    return {
+        "semantic_mutation_required": require_semantic_mutation,
+        "semantic_mutation_present": semantic_mutation_present,
+        "seed_semantic_sha256": seed_semantic_sha256,
+        "candidate_semantic_sha256": candidate_semantic_sha256,
+        "blocking_reasons": blocking_reasons,
+    }
+
+
+def _seed_semantic_sha256(
+    task_info: dict[str, Any] | None,
+    *,
+    root: Path | None,
+) -> str | None:
+    if task_info is None:
+        return None
+    source_path = task_info.get("source_path")
+    if not isinstance(source_path, str) or not source_path:
+        return None
+    path = Path(source_path)
+    if not path.is_absolute():
+        path = (root or ROOT) / path
+    try:
+        seed_plan = AttackPlan.model_validate_json(
+            path.read_text(encoding="utf-8")
+        )
+    except (OSError, ValueError):
+        return None
+    return _semantic_attack_plan_sha256(seed_plan)
+
+
+def _semantic_attack_plan_sha256(plan: AttackPlan) -> str:
+    payload = plan.model_dump(mode="json")
+    payload.pop("attack_plan_id", None)
+    payload.pop("metadata", None)
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
 def _rollout_trace(
