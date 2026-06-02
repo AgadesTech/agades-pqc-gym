@@ -67,7 +67,7 @@
     },
     "prime_eval_config_manifest": {
       "path": "docs/prime_eval_config_manifest.json",
-      "sha256": "eeae338907613ea35835a01599b2d4f92be3ce86697467060469116f5cac8521"
+      "sha256": "1fb0ef470a73b2d4bab0b5809e5a5b1ed6d4820c6c54475660444898fc5f1d7d"
     },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",

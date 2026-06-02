@@ -343,6 +343,26 @@ def test_prime_verifiers_environment_scores_embedded_target_match_over_decoy() -
     assert report["aggregate_reward"] < 0.455
 
 
+def test_prime_wrong_family_decoy_prompt_makes_claim_repair_explicit() -> None:
+    module = _load_environment_module()
+    row = module.build_dataset_rows(
+        attack_plan_id="lattice_bdd_toy_v1",
+        challenge_suite=True,
+        challenge_type="wrong_family_decoy_repair",
+    )[0]
+
+    prompt = row["prompt"][0]["content"]
+
+    assert "Ignore Candidate object 1 completely." in prompt
+    assert "repaired Candidate object 2 AttackPlan" in prompt
+    assert "estimated_time_bits=null" in prompt
+    assert "estimated_memory_bits=null" in prompt
+    assert "success_probability=null" in prompt
+    assert "Do not add external_claim or source." in prompt
+    assert "Keep the answer compact" in prompt
+    assert "do not add new explanatory notes" in prompt
+
+
 def test_prime_verifiers_environment_rejects_pre_evaluation_claim_estimates() -> None:
     module = _load_environment_module()
     raw_plan = LATTICE_PLAN.read_text(encoding="utf-8")

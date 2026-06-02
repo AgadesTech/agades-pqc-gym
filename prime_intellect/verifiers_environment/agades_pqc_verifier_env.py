@@ -887,6 +887,12 @@ def _challenge_question_for_seed_attack_plan(
                 f"Target task: {task_line}.",
                 "Ignore Candidate object 1 completely.",
                 *_strict_json_output_rules("repaired Candidate object 2 AttackPlan"),
+                "Repair Candidate object 2 claims by setting "
+                "estimated_time_bits=null, estimated_memory_bits=null, and "
+                "success_probability=null.",
+                "Do not add external_claim or source.",
+                "Keep the answer compact; do not add new explanatory notes, "
+                "analysis, or review prose inside the JSON.",
                 "Toy/demo verifier output only; do not claim real-world PQC breaks.",
                 "",
                 "Broken model output:",
