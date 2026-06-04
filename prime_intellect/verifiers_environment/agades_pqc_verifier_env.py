@@ -1049,8 +1049,12 @@ def _challenge_question_for_seed_attack_plan(
                 "Change at least one operator parameter when possible; if no "
                 "operator has a safe numeric attack parameter, change one "
                 "non-claim constraint budget.",
-                "Keep estimated_time_bits=null, estimated_memory_bits=null, "
-                "success_probability=null, external_claim=false, and source=null.",
+                "Keep claims.estimated_time_bits=null, "
+                "claims.estimated_memory_bits=null, and "
+                "claims.success_probability=null.",
+                "Do not add top-level external_claim or source. Omit "
+                "claims.external_claim and claims.source unless they already "
+                "exist in the Seed AttackPlan.",
                 "Toy/demo verifier output only; do not claim real-world PQC breaks.",
                 "",
                 "Seed AttackPlan JSON:",
