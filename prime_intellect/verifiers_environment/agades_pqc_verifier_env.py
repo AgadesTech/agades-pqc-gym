@@ -112,6 +112,7 @@ def build_dataset_rows(
     challenge_type: str | None = None,
     challenge_split: str | None = None,
     min_challenge_examples_per_type: int | None = None,
+    challenge_row_indices: list[int] | tuple[int, ...] | str | None = None,
 ) -> list[dict[str, Any]]:
     _validate_prompt_profile(prompt_profile)
     _validate_min_challenge_examples_per_type(min_challenge_examples_per_type)
@@ -160,8 +161,11 @@ def build_dataset_rows(
             "challenge_suite": challenge_suite,
             "challenge_type": challenge_type,
             "challenge_split": challenge_split,
+            "challenge_row_indices": challenge_row_indices,
         }
         raise ValueError(f"Prime environment task filter matched no rows: {filters}")
+    if challenge_row_indices is not None:
+        return _select_challenge_row_indices(rows, challenge_row_indices)
     if num_examples is None or num_examples < 0:
         return rows
     if (
@@ -380,6 +384,7 @@ def load_environment(
     challenge_type: str | None = None,
     challenge_split: str | None = None,
     min_challenge_examples_per_type: int | None = None,
+    challenge_row_indices: list[int] | tuple[int, ...] | str | None = None,
     reward_profile: str = STRICT_REWARD_PROFILE,
     **kwargs: Any,
 ) -> Any:
@@ -404,6 +409,7 @@ def load_environment(
             challenge_type=challenge_type,
             challenge_split=challenge_split,
             min_challenge_examples_per_type=min_challenge_examples_per_type,
+            challenge_row_indices=challenge_row_indices,
         )
     )
     rubric = vf.Rubric(
@@ -654,6 +660,76 @@ def _balanced_challenge_row_key(row: dict[str, Any]) -> str:
         )
     )
     return hashlib.sha256(key.encode()).hexdigest()
+
+
+def _select_challenge_row_indices(
+    rows: list[dict[str, Any]],
+    indices: list[int] | tuple[int, ...] | str,
+) -> list[dict[str, Any]]:
+    parsed_indices = _parse_challenge_row_indices(indices)
+    if not parsed_indices:
+        raise ValueError("challenge_row_indices must contain at least one index")
+    duplicate_indices = sorted(
+        {
+            index
+            for index in parsed_indices
+            if parsed_indices.count(index) > 1
+        }
+    )
+    if duplicate_indices:
+        raise ValueError(
+            "challenge_row_indices contains duplicate indices: "
+            f"{duplicate_indices}"
+        )
+    invalid_indices = [
+        index
+        for index in parsed_indices
+        if index < 0 or index >= len(rows)
+    ]
+    if invalid_indices:
+        raise ValueError(
+            "challenge_row_indices contains out-of-range indices: "
+            f"{invalid_indices}; available range is 0..{len(rows) - 1}"
+        )
+    return [
+        _row_with_challenge_row_index(rows[index], challenge_row_index=index)
+        for index in parsed_indices
+    ]
+
+
+def _parse_challenge_row_indices(
+    indices: list[int] | tuple[int, ...] | str,
+) -> list[int]:
+    if isinstance(indices, str):
+        parts = [part.strip() for part in indices.split(",") if part.strip()]
+        try:
+            return [int(part) for part in parts]
+        except ValueError as exc:
+            raise ValueError(
+                "challenge_row_indices string must contain comma-separated integers"
+            ) from exc
+    if isinstance(indices, (list, tuple)):
+        parsed: list[int] = []
+        for index in indices:
+            if isinstance(index, bool) or not isinstance(index, int):
+                raise ValueError("challenge_row_indices must contain integers")
+            parsed.append(index)
+        return parsed
+    raise ValueError("challenge_row_indices must be a list or comma-separated string")
+
+
+def _row_with_challenge_row_index(
+    row: dict[str, Any],
+    *,
+    challenge_row_index: int,
+) -> dict[str, Any]:
+    return {
+        **row,
+        "info": {
+            **row["info"],
+            "challenge_row_index": challenge_row_index,
+        },
+    }
 
 
 def _challenge_type_applies_to_task(

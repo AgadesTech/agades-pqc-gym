@@ -846,6 +846,43 @@ def test_prime_verifiers_environment_rejects_too_small_balanced_num_examples() -
         )
 
 
+def test_prime_verifiers_environment_selects_challenge_row_indices_for_reruns() -> None:
+    module = _load_environment_module()
+
+    full_rows = module.build_dataset_rows(
+        challenge_suite=True,
+        challenge_split="heldout",
+        min_challenge_examples_per_type=8,
+    )
+    selected_rows = module.build_dataset_rows(
+        challenge_suite=True,
+        challenge_split="heldout",
+        min_challenge_examples_per_type=8,
+        challenge_row_indices=[5, 24],
+    )
+
+    assert len(selected_rows) == 2
+    assert [row["info"]["challenge_row_index"] for row in selected_rows] == [5, 24]
+    assert selected_rows[0]["info"]["task_metadata"] == full_rows[5]["info"][
+        "task_metadata"
+    ]
+    assert selected_rows[1]["info"]["task_metadata"] == full_rows[24]["info"][
+        "task_metadata"
+    ]
+
+
+def test_prime_verifiers_environment_rejects_out_of_range_challenge_row_indices() -> None:
+    module = _load_environment_module()
+
+    with pytest.raises(ValueError, match="challenge_row_indices contains out-of-range"):
+        module.build_dataset_rows(
+            challenge_suite=True,
+            challenge_split="heldout",
+            min_challenge_examples_per_type=8,
+            challenge_row_indices=[999],
+        )
+
+
 def test_prime_verifiers_environment_builds_balanced_heldout_scorecard() -> None:
     module = _load_environment_module()
 
