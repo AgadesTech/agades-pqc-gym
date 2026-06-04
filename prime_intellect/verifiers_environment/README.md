@@ -94,6 +94,11 @@ balanced held-out suite with the same minimum count for
 `wrong_family_decoy_repair`, `operator_mismatch_repair`, and
 `unsupported_refusal`; it fails instead of duplicating prompts if the public
 corpus cannot satisfy the requested minimum.
+For failed-row diagnosis, pass `challenge_row_indices=[...]` after the same
+challenge filters. This rebuilds the stable ordered suite and returns only the
+requested row indices, adding `info["challenge_row_index"]` to each selected
+row. Use this for targeted reruns of known failed examples only; it does not
+replace the full held-out eval and must not relax reward metrics.
 `build_challenge_scorecard()` summarizes these rows by challenge type, verifies
 that broken submissions score `0.0`, and verifies that the repaired public seed
 or strict unsupported refusal scores `1.0`. Use that scorecard as a local
