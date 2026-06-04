@@ -241,6 +241,7 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
         "challenge_suite_contract": {
             "challenge_types": [
                 "claims_guard_repair",
+                "semantic_mutation_repair",
                 "wrong_family_decoy_repair",
                 "operator_mismatch_repair",
                 "unsupported_refusal",
@@ -281,6 +282,14 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
                     "repair invalid pre-evaluation claim estimates by "
                     "restoring unknown null claims without adding external "
                     "claim evidence"
+                ),
+            },
+            "semantic_mutation_repair": {
+                "intended_use": "private_semantic_mutation_curriculum",
+                "contract": (
+                    "mutate a valid seed AttackPlan semantically while "
+                    "preserving target metadata, operator family, unknown "
+                    "claim fields, and no-claim boundaries"
                 ),
             },
             "claims_guard_format_repair": {

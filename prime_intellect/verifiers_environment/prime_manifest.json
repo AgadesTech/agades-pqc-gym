@@ -142,6 +142,7 @@
       "balanced_heldout_policy": "balanced_min_per_type_v1",
       "challenge_types": [
         "claims_guard_repair",
+        "semantic_mutation_repair",
         "wrong_family_decoy_repair",
         "operator_mismatch_repair",
         "unsupported_refusal"
@@ -176,6 +177,10 @@
       "format_repair_extract_seed": {
         "contract": "extract the public seed AttackPlan from wrapped prose and markdown",
         "intended_use": "private_format_curriculum"
+      },
+      "semantic_mutation_repair": {
+        "contract": "mutate a valid seed AttackPlan semantically while preserving target metadata, operator family, unknown claim fields, and no-claim boundaries",
+        "intended_use": "private_semantic_mutation_curriculum"
       }
     },
     "requires_single_json_object": true,

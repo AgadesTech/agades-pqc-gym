@@ -620,6 +620,10 @@ def test_prime_verifiers_environment_scores_semantic_mutation_challenge() -> Non
     assert row["answer"] == "mutate_attackplan"
     assert row["info"]["expected_behavior"] == "mutate_attackplan"
     assert "Do not copy the Seed AttackPlan" in row["prompt"][0]["content"]
+    assert "claims.estimated_time_bits=null" in row["prompt"][0]["content"]
+    assert "Do not add top-level external_claim or source" in (
+        row["prompt"][0]["content"]
+    )
     assert copied_report["accepted"] is False
     assert copied_report["aggregate_reward"] == 0.0
     assert "semantic_mutation" in copied_report["blocking_reasons"]
@@ -871,7 +875,7 @@ def test_prime_verifiers_environment_selects_challenge_row_indices_for_reruns() 
     ]
 
 
-def test_prime_verifiers_environment_rejects_out_of_range_challenge_row_indices() -> None:
+def test_prime_verifiers_environment_rejects_bad_challenge_row_index() -> None:
     module = _load_environment_module()
 
     with pytest.raises(ValueError, match="challenge_row_indices contains out-of-range"):
