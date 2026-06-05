@@ -494,9 +494,9 @@
         "docs/huggingface_publication_handoff.json": "fc217e21569b8e0998f5d130905121d5f611e1032d1314e6c1f5651c5cd29800",
         "docs/lattice_estimator_baseline_contracts.json": "09100e2ba4733daffee5c82e58153ed8585210589b2112467ff29e86ba2bf2a5",
         "docs/lattice_estimator_manifest.json": "0b52a47bd0217a194d1004ce3433ea5c9e0404f85e0a05415e8c37bbe240c2cb",
-        "docs/nvidia_publication_handoff.json": "8b16fa5198012a21f6a3ccf11628e51db3ea554945638aa18b78fc4f89074572",
-        "docs/prime_publication_handoff.json": "05b71786f59ac90b2fecb20cd5928c4518af9afc4254b5a74dc5760ab9d8be74",
-        "docs/prime_speedrun_handoff.json": "3cf67959002e8f11d7817cd55c1dca8659385b95fb77edbb03541805c573048b",
+        "docs/nvidia_publication_handoff.json": "fdf11aac3ff249321873845c8eb5859cb2371d52a5227b58bbf23a5952767566",
+        "docs/prime_publication_handoff.json": "fd28fa793be31e82b56121ff0bb727da421d2726421910cb9c239d696c1284ad",
+        "docs/prime_speedrun_handoff.json": "a6b76cc4e23e469316fc76b9d604d42574de2960c6dd96b56f36670dcc9214af",
         "docs/private_run_policy.json": "1a4982fbe9428d3dcda52637bff9f47fb49f43df99ca4a46091e650bfde0b0b4",
         "docs/public_benchmark_manifest.json": "c45741efde84f27edfd6feab0e3217f68c88a5be4d56a038b2973ea2296722f7",
         "docs/runbook_input_manifest.json": "c5b8adbb47849f7684ede4a52113902f2f60f205b74893b9170a60093904d6fe",
@@ -636,17 +636,17 @@
         "docs/prime_speedrun_handoff.json"
       ],
       "artifact_sha256": {
-        "docs/prime_speedrun_handoff.json": "3cf67959002e8f11d7817cd55c1dca8659385b95fb77edbb03541805c573048b",
+        "docs/prime_speedrun_handoff.json": "a6b76cc4e23e469316fc76b9d604d42574de2960c6dd96b56f36670dcc9214af",
         "prime_intellect/environment_card.md": "e557b9acc53bb23f180f9effb764bb07ba8c9da8c0be21423ce3f82983f9803a",
         "prime_intellect/schemas/attack_plan.schema.json": "4d8a4e49974d6c0df0d466f5ee3b488e54893af4ef23e61e00af4a0cbb7ea592",
         "prime_intellect/schemas/schema_manifest.json": "abdcbd82e48d6f8c7e9a0f6164fec5fe14741c838c1d0799987c8b933575c54a",
         "prime_intellect/schemas/task_metadata.schema.json": "a6b6a303aeb2944282b0786aeec8ce81b7b85397370cdf3642f5d7ac29a9feef",
         "prime_intellect/schemas/verifier_result.schema.json": "dca189a653db3cfc7b70ad099ba8a627f7940402ffc3846b10ec33989cb468a4",
         "prime_intellect/verifier_spec.md": "7c830c7d14f16a235660e8f654486dc84d1d045925c6495ae8f89d0b838684be",
-        "prime_intellect/verifiers_environment/README.md": "a21f1389c050bfab1b56e7df0fd7502ff1c116ac405d58081b8bc19cb9e9fce7",
-        "prime_intellect/verifiers_environment/agades_pqc_verifier_env.py": "cde84ac24cca81a4914ed7121f7aecda75907fba61953e137fbcd1bd36ae3c11",
-        "prime_intellect/verifiers_environment/prime_manifest.json": "8d614538b3ff5fcffaaff936042e3c5b916af6096f7ac5c99b3a57934a1a3c0e",
-        "prime_intellect/verifiers_environment/pyproject.toml": "d1c76de01bfae440b7b950cf1ea3f337770032023dae7f8dda40f2d56ee83118"
+        "prime_intellect/verifiers_environment/README.md": "a0c2aedf97e584d601aa0fd43b31f318388e6740580a985477b47c52dbe69fa4",
+        "prime_intellect/verifiers_environment/agades_pqc_verifier_env.py": "efb3df44214a92d8ed711411d6897701d2e02061ea412f5d30935163ababaf28",
+        "prime_intellect/verifiers_environment/prime_manifest.json": "90dac43f2f58ec387d90bc0d2bb03b6d5fc33872931a35078f1f0c88b2635a23",
+        "prime_intellect/verifiers_environment/pyproject.toml": "8732cf8f57c5ff30a68ae5f3258d94fe34f589db99698a2ebc1945ca7caa7a4f"
       },
       "id": "prime-verifiers-environment",
       "platform": "prime_intellect",
@@ -671,7 +671,7 @@
       ],
       "artifact_sha256": {
         "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md": "2c7ac9e3d7d2144f01524501c46162a0649fcdd035cc4973be682d8c87224e99",
-        "docs/nvidia_publication_handoff.json": "8b16fa5198012a21f6a3ccf11628e51db3ea554945638aa18b78fc4f89074572",
+        "docs/nvidia_publication_handoff.json": "fdf11aac3ff249321873845c8eb5859cb2371d52a5227b58bbf23a5952767566",
         "nvidia/README.md": "18568265697f8a33eef8fab9d0d1b1312d32c9d1f365eae588fbc35a1c194f62",
         "nvidia/accelerator_manifest.json": "4220fb49bd07624af90e5be1dfe2fbd8a72a7c4a968782d46e3ccc12f15b04cc"
       },

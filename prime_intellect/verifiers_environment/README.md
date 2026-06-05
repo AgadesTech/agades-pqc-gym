@@ -75,14 +75,19 @@ For stricter private evals, call `load_environment(..., challenge_suite=True)`.
 This does not add private data. It rewrites public seed rows into task-aware
 repair challenges and stores the real scoring target under
 `info["task_metadata"]`. The current challenge types are
-`claims_guard_repair`, `semantic_mutation_repair`,
-`wrong_family_decoy_repair`, `multi_trap_repair`, `operator_mismatch_repair`,
+`claims_guard_repair`, `contextual_claims_guard_decoy_repair`,
+`semantic_mutation_repair`, `wrong_family_decoy_repair`, `multi_trap_repair`,
+`contextual_multi_trap_repair`, `operator_mismatch_repair`,
 `operator_param_mismatch_repair`, `missing_hypothesis_repair`, and
 `invented_complexity_repair` for supported AttackPlans, plus
 `unsupported_refusal` for schema-only or unsupported targets. Copying the broken
 or decoy object from the prompt does not score; the submitted AttackPlan must
 satisfy the nested target metadata, the verifier, the formal bindings, and the
-no-claim gate. For `semantic_mutation_repair`, copying the seed or changing only
+no-claim gate. For `contextual_claims_guard_decoy_repair`, the prompt does not
+spell out the exact claim-field edit. The model must use the visible target
+metadata, ignore the clean-looking wrong-task decoy, and repair the right-task
+AttackPlan back to Agades' conservative no-claim boundary. For
+`semantic_mutation_repair`, copying the seed or changing only
 metadata does not score; the submitted AttackPlan must make a valid semantic
 change while preserving the target and conservative claim boundary. For
 `missing_hypothesis_repair`, dropping the seed operator assumptions does not
@@ -104,8 +109,9 @@ For a broad eval that cannot pass by overfitting one trap type, use
 `min_challenge_examples_per_type=8` together with
 `challenge_suite=True` and `challenge_split="heldout"`. This builds a stable
 balanced held-out suite with the same minimum count for
-`claims_guard_repair`, `semantic_mutation_repair`,
-`wrong_family_decoy_repair`, `multi_trap_repair`, `operator_mismatch_repair`,
+`claims_guard_repair`, `contextual_claims_guard_decoy_repair`,
+`semantic_mutation_repair`, `wrong_family_decoy_repair`, `multi_trap_repair`,
+`contextual_multi_trap_repair`, `operator_mismatch_repair`,
 `operator_param_mismatch_repair`, `missing_hypothesis_repair`,
 `invented_complexity_repair`, and `unsupported_refusal`; it fails instead of
 duplicating prompts if the public corpus cannot satisfy the requested minimum.
