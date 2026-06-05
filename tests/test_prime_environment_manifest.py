@@ -243,6 +243,7 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
         "challenge_suite_contract": {
             "challenge_types": [
                 "claims_guard_repair",
+                "contextual_claims_guard_decoy_repair",
                 "semantic_mutation_repair",
                 "wrong_family_decoy_repair",
                 "multi_trap_repair",

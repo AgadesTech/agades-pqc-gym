@@ -39,6 +39,7 @@ _REQUIRED_OPTIONAL_PACKAGES = ("datasets", "verifiers")
 _DEFAULT_ATTACK_PLAN_ID = "lattice_primal_usvp_toy_v1"
 _EXPECTED_SMOKE_CHALLENGE_TYPES = [
     "claims_guard_repair",
+    "contextual_claims_guard_decoy_repair",
     "semantic_mutation_repair",
     "wrong_family_decoy_repair",
     "multi_trap_repair",

@@ -92,6 +92,7 @@ PROMPT_PROFILES = (
 )
 CHALLENGE_TYPES = (
     "claims_guard_repair",
+    "contextual_claims_guard_decoy_repair",
     "semantic_mutation_repair",
     "wrong_family_decoy_repair",
     "multi_trap_repair",
@@ -500,6 +501,8 @@ def _broken_submission_for_challenge(raw_json: str, info: dict[str, Any]) -> str
     challenge_type = info["challenge_type"]
     if challenge_type == "claims_guard_repair":
         return _claims_guard_invalid_output(raw_json)
+    if challenge_type == "contextual_claims_guard_decoy_repair":
+        return _claims_guard_decoy_wrapped_invalid_output(raw_json)
     if challenge_type == "semantic_mutation_repair":
         return raw_json
     if challenge_type == "wrong_family_decoy_repair":
@@ -547,6 +550,9 @@ def _correct_submission_for_challenge(raw_json: str, info: dict[str, Any]) -> st
 def _broken_failure_mode(challenge_type: str) -> str:
     return {
         "claims_guard_repair": "unreviewed_pre_evaluation_claims",
+        "contextual_claims_guard_decoy_repair": (
+            "wrong_task_decoy_plus_unreviewed_claims"
+        ),
         "semantic_mutation_repair": "seed_semantic_copy",
         "wrong_family_decoy_repair": "task_mismatch_decoy",
         "multi_trap_repair": "wrong_family_decoy_plus_operator_hypothesis_claims",
@@ -826,7 +832,11 @@ def _challenge_info_for_task(
         "difficulty": (
             "hard"
             if challenge_type
-            in {"multi_trap_repair", "contextual_multi_trap_repair"}
+            in {
+                "contextual_claims_guard_decoy_repair",
+                "multi_trap_repair",
+                "contextual_multi_trap_repair",
+            }
             else "standard"
         ),
         "task_metadata": task_info,
@@ -1115,6 +1125,36 @@ def _challenge_question_for_seed_attack_plan(
                 "",
                 "Broken AttackPlan JSON:",
                 _claims_guard_invalid_output(raw_json),
+            ]
+        )
+    if challenge_type == "contextual_claims_guard_decoy_repair":
+        return "\n".join(
+            [
+                "Repair this hard Agades PQC Gym challenge.",
+                "The prompt contains two AttackPlan-like objects. Exactly one "
+                "belongs to the Target task.",
+                "Candidate object 1 is a clean-looking decoy from a different "
+                "target. Candidate object 2 matches the Target task but "
+                "violates the no-claim boundary.",
+                "The scorer compares your answer to Target task metadata, not "
+                "to the cleanest JSON object in the prompt.",
+                f"Target task: {task_line}.",
+                "Use the Target task line as the repair authority for target, "
+                "operator types, operator params, operator assumptions, "
+                "constraints, and support level.",
+                *_strict_json_output_rules("repaired Candidate object 2 AttackPlan"),
+                "Repair only what is needed for the no-claim boundary. Claims "
+                "without reviewed external evidence must remain unknown; do "
+                "not preserve numeric estimates or invent sources.",
+                "Preserve Candidate object 2 target, operators, constraints, "
+                "metadata, and attack_plan_id unless they conflict with the "
+                "Target task line.",
+                "Do not include external evidence, source text, review prose, "
+                "explanations, or security claims.",
+                "Toy/demo verifier output only; do not claim real-world PQC breaks.",
+                "",
+                "Broken model output:",
+                _claims_guard_decoy_wrapped_invalid_output(raw_json),
             ]
         )
     if challenge_type == "semantic_mutation_repair":

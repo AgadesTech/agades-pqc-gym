@@ -168,6 +168,7 @@ def build_prime_environment_manifest(root: Path | None = None) -> dict[str, Any]
             "challenge_suite_contract": {
                 "challenge_types": [
                     "claims_guard_repair",
+                    "contextual_claims_guard_decoy_repair",
                     "semantic_mutation_repair",
                     "wrong_family_decoy_repair",
                     "multi_trap_repair",

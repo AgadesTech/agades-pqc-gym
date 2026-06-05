@@ -142,6 +142,7 @@
       "balanced_heldout_policy": "balanced_min_per_type_v1",
       "challenge_types": [
         "claims_guard_repair",
+        "contextual_claims_guard_decoy_repair",
         "semantic_mutation_repair",
         "wrong_family_decoy_repair",
         "multi_trap_repair",
