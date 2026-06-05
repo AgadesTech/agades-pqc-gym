@@ -171,6 +171,7 @@ def build_prime_environment_manifest(root: Path | None = None) -> dict[str, Any]
                     "semantic_mutation_repair",
                     "wrong_family_decoy_repair",
                     "multi_trap_repair",
+                    "contextual_multi_trap_repair",
                     "operator_mismatch_repair",
                     "operator_param_mismatch_repair",
                     "missing_hypothesis_repair",

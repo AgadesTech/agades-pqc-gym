@@ -95,6 +95,7 @@ CHALLENGE_TYPES = (
     "semantic_mutation_repair",
     "wrong_family_decoy_repair",
     "multi_trap_repair",
+    "contextual_multi_trap_repair",
     "operator_mismatch_repair",
     "operator_param_mismatch_repair",
     "missing_hypothesis_repair",
@@ -508,6 +509,11 @@ def _broken_submission_for_challenge(raw_json: str, info: dict[str, Any]) -> str
             raw_json,
             task_info=info["task_metadata"],
         )
+    if challenge_type == "contextual_multi_trap_repair":
+        return _multi_trap_invalid_output(
+            raw_json,
+            task_info=info["task_metadata"],
+        )
     if challenge_type == "operator_mismatch_repair":
         return _operator_mismatch_invalid_output(
             raw_json,
@@ -544,6 +550,9 @@ def _broken_failure_mode(challenge_type: str) -> str:
         "semantic_mutation_repair": "seed_semantic_copy",
         "wrong_family_decoy_repair": "task_mismatch_decoy",
         "multi_trap_repair": "wrong_family_decoy_plus_operator_hypothesis_claims",
+        "contextual_multi_trap_repair": (
+            "contextual_wrong_family_decoy_plus_operator_hypothesis_claims"
+        ),
         "operator_mismatch_repair": "operator_sequence_mismatch",
         "operator_param_mismatch_repair": "operator_parameter_mismatch",
         "missing_hypothesis_repair": "missing_operator_hypothesis",
@@ -776,6 +785,12 @@ def _challenge_type_applies_to_task(
             isinstance(operator_assumptions, list)
             and any(bool(assumptions) for assumptions in operator_assumptions)
         )
+    if challenge_type == "contextual_multi_trap_repair":
+        operator_assumptions = task_info.get("operator_assumptions")
+        return (
+            isinstance(operator_assumptions, list)
+            and any(bool(assumptions) for assumptions in operator_assumptions)
+        )
     if challenge_type == "operator_param_mismatch_repair":
         operator_params = task_info.get("operator_params")
         return (
@@ -809,7 +824,10 @@ def _challenge_info_for_task(
         or _heldout_split(task_info["attack_plan_id"], challenge_type),
         "split_policy": split_policy,
         "difficulty": (
-            "hard" if challenge_type == "multi_trap_repair" else "standard"
+            "hard"
+            if challenge_type
+            in {"multi_trap_repair", "contextual_multi_trap_repair"}
+            else "standard"
         ),
         "task_metadata": task_info,
         "scoring_rule": (
@@ -1167,6 +1185,38 @@ def _challenge_question_for_seed_attack_plan(
                 "success_probability=null, external_claim=false, and source=null.",
                 "Do not add external_claim evidence, source text, explanatory "
                 "notes, analysis, or review prose.",
+                "Toy/demo verifier output only; do not claim real-world PQC breaks.",
+                "",
+                "Broken model output:",
+                _multi_trap_wrapped_invalid_output(raw_json, task_info=task_info),
+            ]
+        )
+    if challenge_type == "contextual_multi_trap_repair":
+        return "\n".join(
+            [
+                "Repair this hard Agades PQC Gym challenge.",
+                "Candidate object 1 is a wrong-family decoy. Ignore it.",
+                "Candidate object 2 targets the right public toy task, but it "
+                "has several reviewer-blocking defects: the attack operator is "
+                "not applicable to the target family, a required operator "
+                "hypothesis was removed, and the claims section invents "
+                "unreviewed complexity evidence.",
+                "The scorer will compare your JSON against hidden task metadata "
+                "for the original public seed. It will not give credit for a "
+                "JSON object that merely looks clean.",
+                f"Target family: {task_info['target_family']}.",
+                f"Target name: {task_info['target_name']}.",
+                f"Support level: {task_info['support_level']}.",
+                *_strict_json_output_rules("repaired Candidate object 2 AttackPlan"),
+                "Repair Candidate object 2 by choosing an operator compatible "
+                "with the target family and existing operator parameters, "
+                "restoring the missing family-specific hypothesis, preserving "
+                "the target and reproducibility constraints, and removing all "
+                "invented claim evidence.",
+                "Set estimated_time_bits=null, estimated_memory_bits=null, "
+                "success_probability=null, external_claim=false, and source=null.",
+                "Do not include review prose, explanations, external evidence, "
+                "or security claims.",
                 "Toy/demo verifier output only; do not claim real-world PQC breaks.",
                 "",
                 "Broken model output:",

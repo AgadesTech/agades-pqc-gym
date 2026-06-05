@@ -642,7 +642,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
         "accepted_score": 1.0,
         "challenge_broken_score": 0.0,
         "challenge_repaired_score": 1.0,
-        "challenge_rows": 8,
+        "challenge_rows": 9,
         "dataset_rows": 79,
         "imports_without_verifiers": True,
         "optional_dependency_boundary": True,
