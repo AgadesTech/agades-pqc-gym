@@ -87,6 +87,7 @@ def test_prime_verifier_schemas_describe_submission_and_result_contracts(
         "Schema Version"
     )
     assert "operator_types" in task_metadata_schema["required"]
+    assert "operator_assumptions" in task_metadata_schema["required"]
     assert "seed_attack_plan_sha256" in task_metadata_schema["required"]
     assert "seed_accepted" in task_metadata_schema["required"]
     assert "seed_evaluation_status" in task_metadata_schema["required"]
@@ -111,6 +112,7 @@ def test_prime_verifier_schemas_describe_submission_and_result_contracts(
         "target_name": "toy_lwe_n64_q257",
         "support_level": "implemented",
         "operator_types": ["primal_usvp"],
+        "operator_assumptions": [["lattice_estimator_default_cost_model"]],
         "requires_reproducibility": False,
         "public": True,
         "seed_accepted": True,
@@ -172,6 +174,7 @@ def test_prime_schemas_verify_accepts_committed_schema_bundle() -> None:
                 "target",
             ],
             "task_metadata_required_fields": [
+                "operator_assumptions",
                 "operator_types",
                 "seed_attack_plan_sha256",
                 "seed_accepted",

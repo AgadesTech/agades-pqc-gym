@@ -135,6 +135,9 @@ def test_huggingface_dataset_bundle_contains_public_examples_and_outputs(
     )
     assert lattice_metadata["target_name"] == "toy_lwe_n64_q257"
     assert lattice_metadata["operator_types"] == ["primal_usvp"]
+    assert lattice_metadata["operator_assumptions"] == [
+        ["lattice_estimator_default_cost_model"]
+    ]
     assert lattice_metadata["seed_accepted"] is True
     assert lattice_metadata["seed_evaluation_status"] == "ok"
     assert lattice_metadata["seed_reward"] == 1.0

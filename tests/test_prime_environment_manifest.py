@@ -236,7 +236,7 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
         "task_match_rule": (
             "accepted candidates must match the current task info for "
             "target_family, target_name, support_level, and ordered "
-            "operator_types; attack_plan_id may change"
+            "operator_types/operator_assumptions; attack_plan_id may change"
         ),
         "challenge_suite_contract": {
             "challenge_types": [
@@ -244,6 +244,8 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
                 "semantic_mutation_repair",
                 "wrong_family_decoy_repair",
                 "operator_mismatch_repair",
+                "missing_hypothesis_repair",
+                "invented_complexity_repair",
                 "unsupported_refusal",
             ],
             "balanced_heldout_parameter": "min_challenge_examples_per_type",
@@ -374,11 +376,13 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
         "task_info_fields": [
             "schema_version",
             "source_path",
+            "seed_attack_plan_sha256",
             "attack_plan_id",
             "target_family",
             "target_name",
             "support_level",
             "operator_types",
+            "operator_assumptions",
             "requires_reproducibility",
             "public",
             "seed_accepted",

@@ -60,6 +60,7 @@ _REQUIRED_RESULT_FIELDS = (
     "schema_version",
 )
 _REQUIRED_TASK_METADATA_FIELDS = (
+    "operator_assumptions",
     "operator_types",
     "seed_attack_plan_sha256",
     "seed_accepted",
