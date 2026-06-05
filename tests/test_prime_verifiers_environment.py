@@ -897,7 +897,10 @@ def test_prime_verifiers_environment_builds_multi_trap_repair_challenge() -> Non
     prompt = row["prompt"][0]["content"]
     task_metadata = info["task_metadata"]
     raw_json = module._raw_json_for_task_info(task_metadata)
-    seed_constraints = json.loads(raw_json)["constraints"]
+    seed_payload = json.loads(raw_json)
+    seed_constraints = seed_payload["constraints"]
+    seed_target = seed_payload["target"]
+    seed_operator = seed_payload["operators"][0]
     broken_report = module.score_attack_plan_completion_report(
         _assistant_completion(
             module._broken_submission_for_challenge(raw_json, info)
@@ -926,6 +929,8 @@ def test_prime_verifiers_environment_builds_multi_trap_repair_challenge() -> Non
         "constraints.downscaled_reproduction_fixture="
         f"{seed_constraints['downscaled_reproduction_fixture']}"
     ) in prompt
+    assert f"target_fields={module._compact_json(seed_target)}" in prompt
+    assert f"operator_params={module._compact_json([seed_operator['params']])}" in prompt
     assert broken_report["accepted"] is False
     assert broken_report["aggregate_reward"] == 0.0
     assert repaired_report["accepted"] is True
