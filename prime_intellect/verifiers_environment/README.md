@@ -101,6 +101,10 @@ balanced held-out suite with the same minimum count for
 `missing_hypothesis_repair`, `invented_complexity_repair`, and
 `unsupported_refusal`; it fails instead of duplicating prompts if the public
 corpus cannot satisfy the requested minimum.
+Challenge prompts expose the task metadata required by the verifier. In
+particular, `missing_hypothesis_repair` includes the ordered
+`operator_assumptions` in the visible target line so the task measures repair
+quality instead of guessing hidden hypotheses.
 For failed-row diagnosis, pass `challenge_row_indices=[...]` after the same
 challenge filters. This rebuilds the stable ordered suite and returns only the
 requested row indices, adding `info["challenge_row_index"]` to each selected
