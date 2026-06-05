@@ -897,6 +897,7 @@ def test_prime_verifiers_environment_builds_multi_trap_repair_challenge() -> Non
     prompt = row["prompt"][0]["content"]
     task_metadata = info["task_metadata"]
     raw_json = module._raw_json_for_task_info(task_metadata)
+    seed_constraints = json.loads(raw_json)["constraints"]
     broken_report = module.score_attack_plan_completion_report(
         _assistant_completion(
             module._broken_submission_for_challenge(raw_json, info)
@@ -920,6 +921,11 @@ def test_prime_verifiers_environment_builds_multi_trap_repair_challenge() -> Non
     assert "wrong operator" in prompt
     assert "missing operator hypothesis" in prompt
     assert "invented complexity claim" in prompt
+    assert "constraints.require_reproducibility_on_downscaled_instances=true" in prompt
+    assert (
+        "constraints.downscaled_reproduction_fixture="
+        f"{seed_constraints['downscaled_reproduction_fixture']}"
+    ) in prompt
     assert broken_report["accepted"] is False
     assert broken_report["aggregate_reward"] == 0.0
     assert repaired_report["accepted"] is True
