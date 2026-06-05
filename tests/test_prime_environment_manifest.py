@@ -243,6 +243,7 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
                 "claims_guard_repair",
                 "semantic_mutation_repair",
                 "wrong_family_decoy_repair",
+                "multi_trap_repair",
                 "operator_mismatch_repair",
                 "missing_hypothesis_repair",
                 "invented_complexity_repair",
