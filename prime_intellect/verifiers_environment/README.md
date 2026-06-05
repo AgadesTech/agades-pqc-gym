@@ -114,6 +114,10 @@ particular, `missing_hypothesis_repair` includes the ordered
 `operator_assumptions` in the visible target line so the task measures repair
 quality instead of guessing hidden hypotheses. `operator_param_mismatch_repair`
 includes the ordered `operator_params` for the same reason.
+`contextual_multi_trap_repair` also exposes ordered `operator_types`,
+`operator_params`, and `operator_assumptions`; its difficulty comes from using
+the visible context correctly while ignoring decoys and claims, not from
+guessing hidden fields.
 For failed-row diagnosis, pass `challenge_row_indices=[...]` after the same
 challenge filters. This rebuilds the stable ordered suite and returns only the
 requested row indices, adding `info["challenge_row_index"]` to each selected

@@ -513,14 +513,19 @@ def test_prime_verifiers_environment_builds_contextual_multi_trap_challenge() ->
     assert info["expected_behavior"] == "repair_attackplan"
     assert "hidden task metadata" in prompt
     assert "merely looks clean" in prompt
-    assert f"Target family: {task_metadata['target_family']}." in prompt
-    assert f"Target name: {task_metadata['target_name']}." in prompt
-    assert "operator_types=" not in prompt
-    assert "operator_params=" not in prompt
-    assert "operator_assumptions=" not in prompt
-    assert module._compact_json(task_metadata["operator_types"]) not in prompt
-    assert module._compact_json(task_metadata["operator_params"]) not in prompt
-    assert module._compact_json(task_metadata["operator_assumptions"]) not in prompt
+    assert "The Target task line is the repair authority" in prompt
+    assert f"target_family={task_metadata['target_family']}" in prompt
+    assert f"target_name={task_metadata['target_name']}" in prompt
+    assert "operator_types=" in prompt
+    assert "operator_params=" in prompt
+    assert "operator_assumptions=" in prompt
+    assert module._compact_json(task_metadata["operator_types"]) in prompt
+    assert module._compact_json(task_metadata["operator_params"]) in prompt
+    assert json.dumps(
+        task_metadata["operator_assumptions"],
+        sort_keys=True,
+        separators=(",", ":"),
+    ) in prompt
     assert broken_report["accepted"] is False
     assert broken_report["aggregate_reward"] == 0.0
     assert repaired_report["accepted"] is True
