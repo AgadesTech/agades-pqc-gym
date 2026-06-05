@@ -77,7 +77,8 @@ repair challenges and stores the real scoring target under
 `info["task_metadata"]`. The current challenge types are
 `claims_guard_repair`, `contextual_claims_guard_decoy_repair`,
 `semantic_mutation_repair`, `wrong_family_decoy_repair`, `multi_trap_repair`,
-`contextual_multi_trap_repair`, `operator_mismatch_repair`,
+`contextual_multi_trap_repair`, `implicit_operator_semantics_repair`,
+`operator_mismatch_repair`,
 `operator_param_mismatch_repair`, `missing_hypothesis_repair`, and
 `invented_complexity_repair` for supported AttackPlans, plus
 `unsupported_refusal` for schema-only or unsupported targets. Copying the broken
@@ -112,7 +113,8 @@ balanced held-out suite with the same minimum count for
 `claims_guard_repair`, `contextual_claims_guard_decoy_repair`,
 `semantic_mutation_repair`, `wrong_family_decoy_repair`, `multi_trap_repair`,
 `contextual_multi_trap_repair`, `operator_mismatch_repair`,
-`operator_param_mismatch_repair`, `missing_hypothesis_repair`,
+`implicit_operator_semantics_repair`, `operator_param_mismatch_repair`,
+`missing_hypothesis_repair`,
 `invented_complexity_repair`, and `unsupported_refusal`; it fails instead of
 duplicating prompts if the public corpus cannot satisfy the requested minimum.
 Challenge prompts expose the task metadata required by the verifier. In
@@ -124,6 +126,11 @@ includes the ordered `operator_params` for the same reason.
 `operator_params`, and `operator_assumptions`; its difficulty comes from using
 the visible context correctly while ignoring decoys and claims, not from
 guessing hidden fields.
+`implicit_operator_semantics_repair` is stricter: it does not expose those
+ordered operator fields as a visible answer line. The model must infer the
+compatible operator and missing hypothesis from the target family, parameter
+shape, reproducibility fixture, and public Agades operator semantics, while the
+scorer still checks the hidden public seed metadata.
 For failed-row diagnosis, pass `challenge_row_indices=[...]` after the same
 challenge filters. This rebuilds the stable ordered suite and returns only the
 requested row indices, adding `info["challenge_row_index"]` to each selected

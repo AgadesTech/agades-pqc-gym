@@ -63,7 +63,7 @@
     "accepted_score": 1.0,
     "challenge_broken_score": 0.0,
     "challenge_repaired_score": 1.0,
-    "challenge_rows": 10,
+    "challenge_rows": 11,
     "challenge_schema": "agades.pqc.prime.challenge_scorecard.v1",
     "challenge_types": [
       "claims_guard_repair",
@@ -72,6 +72,7 @@
       "wrong_family_decoy_repair",
       "multi_trap_repair",
       "contextual_multi_trap_repair",
+      "implicit_operator_semantics_repair",
       "operator_mismatch_repair",
       "operator_param_mismatch_repair",
       "missing_hypothesis_repair",

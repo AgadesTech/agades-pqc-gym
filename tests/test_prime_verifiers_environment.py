@@ -458,6 +458,7 @@ def test_prime_verifiers_environment_builds_discriminating_challenge_rows() -> N
         "wrong_family_decoy_repair",
         "multi_trap_repair",
         "contextual_multi_trap_repair",
+        "implicit_operator_semantics_repair",
         "operator_mismatch_repair",
         "operator_param_mismatch_repair",
         "missing_hypothesis_repair",
@@ -590,6 +591,53 @@ def test_prime_verifiers_environment_builds_contextual_multi_trap_challenge() ->
         sort_keys=True,
         separators=(",", ":"),
     ) in prompt
+    assert broken_report["accepted"] is False
+    assert broken_report["aggregate_reward"] == 0.0
+    assert repaired_report["accepted"] is True
+    assert repaired_report["aggregate_reward"] == 1.0
+
+
+def test_prime_verifiers_environment_builds_implicit_operator_semantics_challenge() -> None:
+    module = _load_environment_module()
+
+    row = module.build_dataset_rows(
+        challenge_suite=True,
+        challenge_type="implicit_operator_semantics_repair",
+        challenge_split="heldout",
+    )[0]
+
+    info = row["info"]
+    prompt = row["prompt"][0]["content"]
+    task_metadata = info["task_metadata"]
+    raw_json = module._raw_json_for_task_info(task_metadata)
+    broken_report = module.score_attack_plan_completion_report(
+        _assistant_completion(
+            module._broken_submission_for_challenge(raw_json, info)
+        ),
+        info=info,
+        require_info=True,
+    )
+    repaired_report = module.score_attack_plan_completion_report(
+        _assistant_completion(
+            module._correct_submission_for_challenge(raw_json, info)
+        ),
+        info=info,
+        require_info=True,
+    )
+
+    assert info["challenge_type"] == "implicit_operator_semantics_repair"
+    assert info["difficulty"] == "hard"
+    assert info["expected_behavior"] == "repair_attackplan"
+    assert "does not expose the ordered operator" in prompt
+    assert "hidden public seed metadata" in prompt
+    assert "Infer the compatible operator" in prompt
+    assert f"target_family={task_metadata['target_family']}" in prompt
+    assert f"target_name={task_metadata['target_name']}" in prompt
+    assert "operator_types=" not in prompt
+    assert "operator_params=" not in prompt
+    assert "operator_assumptions=" not in prompt
+    assert module._compact_json(task_metadata["operator_types"]) not in prompt
+    assert module._compact_json(task_metadata["operator_assumptions"]) not in prompt
     assert broken_report["accepted"] is False
     assert broken_report["aggregate_reward"] == 0.0
     assert repaired_report["accepted"] is True
@@ -999,11 +1047,12 @@ def test_prime_verifiers_environment_builds_challenge_scorecard() -> None:
         "private_data_allowed": False,
         "security_claims_allowed": False,
     }
-    assert scorecard["summary"]["challenge_rows"] == 10
+    assert scorecard["summary"]["challenge_rows"] == 11
     assert scorecard["summary"]["challenge_type_counts"] == {
         "claims_guard_repair": 1,
         "contextual_claims_guard_decoy_repair": 1,
         "contextual_multi_trap_repair": 1,
+        "implicit_operator_semantics_repair": 1,
         "invented_complexity_repair": 1,
         "missing_hypothesis_repair": 1,
         "multi_trap_repair": 1,
@@ -1013,7 +1062,7 @@ def test_prime_verifiers_environment_builds_challenge_scorecard() -> None:
         "wrong_family_decoy_repair": 1,
     }
     assert scorecard["summary"]["broken_accept_count"] == 0
-    assert scorecard["summary"]["repaired_accept_count"] == 10
+    assert scorecard["summary"]["repaired_accept_count"] == 11
     assert scorecard["summary"]["broken_score_max"] == 0.0
     assert scorecard["summary"]["repaired_score_min"] == 1.0
     assert {
@@ -1028,6 +1077,7 @@ def test_prime_verifiers_environment_builds_challenge_scorecard() -> None:
         "operator_parameter_mismatch",
         "seed_semantic_copy",
         "contextual_wrong_family_decoy_plus_operator_hypothesis_claims",
+        "implicit_operator_semantics_without_visible_answer_line",
         "wrong_family_decoy_plus_operator_hypothesis_claims",
     }
 
@@ -1065,7 +1115,7 @@ def test_prime_verifiers_environment_builds_heldout_challenge_scorecard() -> Non
 
     assert scorecard["accepted"] is True
     assert scorecard["scope"]["challenge_split"] == "heldout"
-    assert scorecard["summary"]["heldout_split_counts"] == {"heldout": 19}
+    assert scorecard["summary"]["heldout_split_counts"] == {"heldout": 22}
     assert {result["heldout_split"] for result in scorecard["results"]} == {"heldout"}
 
 
@@ -1156,11 +1206,12 @@ def test_prime_verifiers_environment_builds_balanced_heldout_challenge_rows() ->
     )
 
     challenge_counts = Counter(row["info"]["challenge_type"] for row in rows)
-    assert len(rows) == 88
+    assert len(rows) == 96
     assert challenge_counts == {
         "claims_guard_repair": 8,
         "contextual_claims_guard_decoy_repair": 8,
         "contextual_multi_trap_repair": 8,
+        "implicit_operator_semantics_repair": 8,
         "invented_complexity_repair": 8,
         "missing_hypothesis_repair": 8,
         "multi_trap_repair": 8,
@@ -1256,11 +1307,12 @@ def test_prime_verifiers_environment_builds_balanced_heldout_scorecard() -> None
 
     assert scorecard["accepted"] is True
     assert scorecard["scope"]["min_challenge_examples_per_type"] == 8
-    assert scorecard["summary"]["challenge_rows"] == 88
+    assert scorecard["summary"]["challenge_rows"] == 96
     assert scorecard["summary"]["challenge_type_counts"] == {
         "claims_guard_repair": 8,
         "contextual_claims_guard_decoy_repair": 8,
         "contextual_multi_trap_repair": 8,
+        "implicit_operator_semantics_repair": 8,
         "invented_complexity_repair": 8,
         "missing_hypothesis_repair": 8,
         "multi_trap_repair": 8,

@@ -97,6 +97,7 @@ CHALLENGE_TYPES = (
     "wrong_family_decoy_repair",
     "multi_trap_repair",
     "contextual_multi_trap_repair",
+    "implicit_operator_semantics_repair",
     "operator_mismatch_repair",
     "operator_param_mismatch_repair",
     "missing_hypothesis_repair",
@@ -517,6 +518,11 @@ def _broken_submission_for_challenge(raw_json: str, info: dict[str, Any]) -> str
             raw_json,
             task_info=info["task_metadata"],
         )
+    if challenge_type == "implicit_operator_semantics_repair":
+        return _implicit_operator_semantics_invalid_output(
+            raw_json,
+            task_info=info["task_metadata"],
+        )
     if challenge_type == "operator_mismatch_repair":
         return _operator_mismatch_invalid_output(
             raw_json,
@@ -558,6 +564,9 @@ def _broken_failure_mode(challenge_type: str) -> str:
         "multi_trap_repair": "wrong_family_decoy_plus_operator_hypothesis_claims",
         "contextual_multi_trap_repair": (
             "contextual_wrong_family_decoy_plus_operator_hypothesis_claims"
+        ),
+        "implicit_operator_semantics_repair": (
+            "implicit_operator_semantics_without_visible_answer_line"
         ),
         "operator_mismatch_repair": "operator_sequence_mismatch",
         "operator_param_mismatch_repair": "operator_parameter_mismatch",
@@ -797,6 +806,18 @@ def _challenge_type_applies_to_task(
             isinstance(operator_assumptions, list)
             and any(bool(assumptions) for assumptions in operator_assumptions)
         )
+    if challenge_type == "implicit_operator_semantics_repair":
+        operator_params = task_info.get("operator_params")
+        operator_assumptions = task_info.get("operator_assumptions")
+        return (
+            isinstance(operator_params, list)
+            and any(
+                isinstance(params, dict) and bool(params)
+                for params in operator_params
+            )
+            and isinstance(operator_assumptions, list)
+            and any(bool(assumptions) for assumptions in operator_assumptions)
+        )
     if challenge_type == "operator_param_mismatch_repair":
         operator_params = task_info.get("operator_params")
         return (
@@ -836,6 +857,7 @@ def _challenge_info_for_task(
                 "contextual_claims_guard_decoy_repair",
                 "multi_trap_repair",
                 "contextual_multi_trap_repair",
+                "implicit_operator_semantics_repair",
             }
             else "standard"
         ),
@@ -1265,6 +1287,42 @@ def _challenge_question_for_seed_attack_plan(
                 _multi_trap_wrapped_invalid_output(raw_json, task_info=task_info),
             ]
         )
+    if challenge_type == "implicit_operator_semantics_repair":
+        return "\n".join(
+            [
+                "Repair this hard Agades PQC Gym challenge.",
+                "This task intentionally does not expose the ordered operator "
+                "types, operator params, or operator assumptions as a visible "
+                "answer line.",
+                "Candidate object 1 is a wrong-family decoy. Ignore it.",
+                "Candidate object 2 targets the right public toy task, but it "
+                "uses an operator that is semantically incompatible with the "
+                "target family, drops a required operator hypothesis, and "
+                "invents unreviewed complexity evidence.",
+                "The scorer compares your JSON against hidden public seed "
+                "metadata. It will reject a clean-looking object that does not "
+                "match the family/operator semantics of the original seed.",
+                f"Task card: {_implicit_task_card(raw_json, task_info=task_info)}.",
+                *_strict_json_output_rules("repaired Candidate object 2 AttackPlan"),
+                "Infer the compatible operator from the target family, target "
+                "name, Candidate object 2 parameter shape, reproducibility "
+                "fixture, and public Agades operator semantics.",
+                "Preserve Candidate object 2 target identity, restore the "
+                "family-specific operator hypothesis required by the seed "
+                "semantics, and remove all invented claim evidence.",
+                "Set estimated_time_bits=null, estimated_memory_bits=null, "
+                "success_probability=null, external_claim=false, and source=null.",
+                "Do not include review prose, explanations, external evidence, "
+                "or security claims.",
+                "Toy/demo verifier output only; do not claim real-world PQC breaks.",
+                "",
+                "Broken model output:",
+                _implicit_operator_semantics_wrapped_invalid_output(
+                    raw_json,
+                    task_info=task_info,
+                ),
+            ]
+        )
     if challenge_type == "operator_mismatch_repair":
         return "\n".join(
             [
@@ -1388,6 +1446,19 @@ def _constraint_requirements_for_prompt(
         "constraints.require_reproducibility_on_downscaled_instances="
         f"{requires_reproducibility}, "
         f"constraints.downscaled_reproduction_fixture={fixture_value}"
+    )
+
+
+def _implicit_task_card(raw_json: str, *, task_info: dict[str, Any]) -> str:
+    payload = json.loads(raw_json)
+    target = payload.get("target") if isinstance(payload, dict) else None
+    target_fields = target if isinstance(target, dict) else {}
+    return (
+        f"target_family={task_info['target_family']}, "
+        f"target_name={task_info['target_name']}, "
+        f"support_level={task_info['support_level']}, "
+        f"target_fields={_compact_json(target_fields)}, "
+        f"{_constraint_requirements_for_prompt(raw_json, task_info=task_info)}"
     )
 
 
@@ -1999,6 +2070,29 @@ def _multi_trap_wrapped_invalid_output(
     )
 
 
+def _implicit_operator_semantics_wrapped_invalid_output(
+    raw_json: str,
+    *,
+    task_info: dict[str, Any],
+) -> str:
+    decoy = _task_mismatch_decoy_attack_plan(raw_json)
+    return "\n".join(
+        [
+            "Candidate object 1:",
+            json.dumps(decoy, indent=2),
+            "",
+            "Candidate object 2:",
+            "```json",
+            _implicit_operator_semantics_invalid_output(
+                raw_json,
+                task_info=task_info,
+            ),
+            "```",
+            "Only Candidate object 2 is the toy/demo AttackPlan to repair.",
+        ]
+    )
+
+
 def _multi_trap_invalid_output(
     raw_json: str,
     *,
@@ -2007,6 +2101,14 @@ def _multi_trap_invalid_output(
     payload = _operator_mismatch_invalid_output(raw_json, task_info=task_info)
     payload = _missing_hypothesis_invalid_output(payload)
     return _invented_complexity_invalid_output(payload)
+
+
+def _implicit_operator_semantics_invalid_output(
+    raw_json: str,
+    *,
+    task_info: dict[str, Any],
+) -> str:
+    return _multi_trap_invalid_output(raw_json, task_info=task_info)
 
 
 def _task_mismatch_decoy_attack_plan(raw_json: str) -> dict[str, Any]:
