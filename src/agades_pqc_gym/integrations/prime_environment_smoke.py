@@ -42,6 +42,7 @@ _EXPECTED_SMOKE_CHALLENGE_TYPES = [
     "semantic_mutation_repair",
     "wrong_family_decoy_repair",
     "multi_trap_repair",
+    "contextual_multi_trap_repair",
     "operator_mismatch_repair",
     "operator_param_mismatch_repair",
     "missing_hypothesis_repair",

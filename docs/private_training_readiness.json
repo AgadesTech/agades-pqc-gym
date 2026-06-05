@@ -57,15 +57,15 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "59aa9d058b1e6a1cea104c372f55c91d2a5e98499b2fc804567cd5d840612cbc"
+      "sha256": "53ee00697dfb4e84835beaab05fc3b0cc5317551df9dea65cce87fb62dc26efd"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
-      "sha256": "3a5d0bca7b2eb10f64ee5850745560267ea27c5c640badf8c15767b7b75c87d6"
+      "sha256": "8d614538b3ff5fcffaaff936042e3c5b916af6096f7ac5c99b3a57934a1a3c0e"
     },
     "prime_eval_config_manifest": {
       "path": "docs/prime_eval_config_manifest.json",
-      "sha256": "d26a649a88490687f63a0e6bd334f5d53dba5378a96309afe46588f1285a8f1c"
+      "sha256": "e6aea7448300ab707c32318758855cd5d45e527777c6aa9954154f9dcffe0f83"
     },
     "prime_training_template": {
       "path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
@@ -85,15 +85,15 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "efed8fbc8b0005fabba13d9fbed236f7f90dfe7ec27f49f40e80a891dd09c81c"
+      "sha256": "75cbfd95207399d2566f3f928c9852b161d1d28e90f593dc399c3ee54be5140b"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "4037f586a529adde8ce33b927519eb077490e4fe69b0269c20a56f025d243406"
+      "sha256": "a8b32b0d7da995969efc524f41cdd4c94216a4076f3d55972f71ad585f12b869"
     },
     "rl_environment_contract": {
       "path": "docs/rl_environment_contract.json",
-      "sha256": "367104798299249295105df3422f18f65b9b06928bcaeea411c27d703b49d8ca"
+      "sha256": "be9385b201dcca41427e5a1face1fc1c71568fd478569c6070d81015a440cab9"
     }
   },
   "project": {
