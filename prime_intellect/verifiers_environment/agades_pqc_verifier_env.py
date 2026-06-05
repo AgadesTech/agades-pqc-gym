@@ -1040,6 +1040,10 @@ def _challenge_question_for_seed_attack_plan(
     task_info: dict[str, Any],
     challenge_type: str,
 ) -> str:
+    constraint_requirements = _constraint_requirements_for_prompt(
+        raw_json,
+        task_info=task_info,
+    )
     operator_assumptions = json.dumps(
         task_info["operator_assumptions"],
         sort_keys=True,
@@ -1050,7 +1054,8 @@ def _challenge_question_for_seed_attack_plan(
         f"target_name={task_info['target_name']}, "
         f"support_level={task_info['support_level']}, "
         f"operator_types={task_info['operator_types']}, "
-        f"operator_assumptions={operator_assumptions}"
+        f"operator_assumptions={operator_assumptions}, "
+        f"{constraint_requirements}"
     )
     if challenge_type == "claims_guard_repair":
         return "\n".join(
@@ -1223,6 +1228,29 @@ def _challenge_question_for_seed_attack_plan(
             ]
         )
     raise ValueError(f"unsupported Prime challenge_type: {challenge_type}")
+
+
+def _constraint_requirements_for_prompt(
+    raw_json: str,
+    *,
+    task_info: dict[str, Any],
+) -> str:
+    payload = json.loads(raw_json)
+    constraints = (
+        payload.get("constraints") if isinstance(payload, dict) else None
+    )
+    if not isinstance(constraints, dict):
+        constraints = {}
+    fixture = constraints.get("downscaled_reproduction_fixture")
+    fixture_value = fixture if isinstance(fixture, str) else "null"
+    requires_reproducibility = (
+        "true" if task_info.get("requires_reproducibility") is True else "false"
+    )
+    return (
+        "constraints.require_reproducibility_on_downscaled_instances="
+        f"{requires_reproducibility}, "
+        f"constraints.downscaled_reproduction_fixture={fixture_value}"
+    )
 
 
 def _strict_json_output_rules(object_name: str) -> list[str]:
