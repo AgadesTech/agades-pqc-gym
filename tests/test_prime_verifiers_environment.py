@@ -624,6 +624,12 @@ def test_prime_verifiers_environment_scores_missing_hypothesis_challenge() -> No
     assert broken_operator["assumptions"] == []
     assert original_operator["assumptions"]
     assert "Restore the missing operator assumptions" in row["prompt"][0]["content"]
+    assert "operator_assumptions=" in row["prompt"][0]["content"]
+    assert json.dumps(
+        [original_operator["assumptions"]],
+        sort_keys=True,
+        separators=(",", ":"),
+    ) in row["prompt"][0]["content"]
     assert broken_report["accepted"] is False
     assert broken_report["aggregate_reward"] == 0.0
     assert "task_match" in broken_report["blocking_reasons"]

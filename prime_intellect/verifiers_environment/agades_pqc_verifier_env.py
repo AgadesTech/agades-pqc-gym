@@ -1024,11 +1024,17 @@ def _challenge_question_for_seed_attack_plan(
     task_info: dict[str, Any],
     challenge_type: str,
 ) -> str:
+    operator_assumptions = json.dumps(
+        task_info["operator_assumptions"],
+        sort_keys=True,
+        separators=(",", ":"),
+    )
     task_line = (
         f"target_family={task_info['target_family']}, "
         f"target_name={task_info['target_name']}, "
         f"support_level={task_info['support_level']}, "
-        f"operator_types={task_info['operator_types']}"
+        f"operator_types={task_info['operator_types']}, "
+        f"operator_assumptions={operator_assumptions}"
     )
     if challenge_type == "claims_guard_repair":
         return "\n".join(
