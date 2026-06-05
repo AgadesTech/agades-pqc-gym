@@ -1040,6 +1040,17 @@ def _challenge_question_for_seed_attack_plan(
     task_info: dict[str, Any],
     challenge_type: str,
 ) -> str:
+    payload = json.loads(raw_json)
+    if not isinstance(payload, dict):
+        raise ValueError("AttackPlan challenge seed must be a JSON object.")
+    target_fields = _compact_json(payload.get("target", {}))
+    operator_params = _compact_json(
+        [
+            operator.get("params", {})
+            for operator in payload.get("operators", [])
+            if isinstance(operator, dict)
+        ]
+    )
     constraint_requirements = _constraint_requirements_for_prompt(
         raw_json,
         task_info=task_info,
@@ -1053,7 +1064,9 @@ def _challenge_question_for_seed_attack_plan(
         f"target_family={task_info['target_family']}, "
         f"target_name={task_info['target_name']}, "
         f"support_level={task_info['support_level']}, "
+        f"target_fields={target_fields}, "
         f"operator_types={task_info['operator_types']}, "
+        f"operator_params={operator_params}, "
         f"operator_assumptions={operator_assumptions}, "
         f"{constraint_requirements}"
     )
@@ -1251,6 +1264,10 @@ def _constraint_requirements_for_prompt(
         f"{requires_reproducibility}, "
         f"constraints.downscaled_reproduction_fixture={fixture_value}"
     )
+
+
+def _compact_json(value: Any) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"))
 
 
 def _strict_json_output_rules(object_name: str) -> list[str]:
