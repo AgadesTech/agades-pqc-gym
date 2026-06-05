@@ -65,15 +65,15 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "70668547d5e40e8fff0d15f8b9907f5a03a5cc110242c8f974c699ef1a20d78d"
+      "sha256": "59aa9d058b1e6a1cea104c372f55c91d2a5e98499b2fc804567cd5d840612cbc"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
-      "sha256": "30051a62da9214d8d317fd42f906d725a27901d5253c9ddc157fc301cfd22311"
+      "sha256": "3a5d0bca7b2eb10f64ee5850745560267ea27c5c640badf8c15767b7b75c87d6"
     },
     "prime_eval_config_manifest": {
       "path": "docs/prime_eval_config_manifest.json",
-      "sha256": "95e255fdd12ee557bd4e942538eee521a9e1da4e794e4d8c2b428eb04167bffd"
+      "sha256": "d26a649a88490687f63a0e6bd334f5d53dba5378a96309afe46588f1285a8f1c"
     },
     "prime_eval_template": {
       "path": "prime_intellect/evals/agades_pqc_eval.template.toml",
@@ -97,7 +97,7 @@
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "270f8186b8688c845c6fd328e48c298415cc349a0d29c600869c01963d32d180"
+      "sha256": "4037f586a529adde8ce33b927519eb077490e4fe69b0269c20a56f025d243406"
     }
   },
   "private_track": {

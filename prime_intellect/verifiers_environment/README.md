@@ -77,8 +77,8 @@ repair challenges and stores the real scoring target under
 `info["task_metadata"]`. The current challenge types are
 `claims_guard_repair`, `semantic_mutation_repair`,
 `wrong_family_decoy_repair`, `multi_trap_repair`, `operator_mismatch_repair`,
-`missing_hypothesis_repair`, and `invented_complexity_repair` for supported
-AttackPlans, plus
+`operator_param_mismatch_repair`, `missing_hypothesis_repair`, and
+`invented_complexity_repair` for supported AttackPlans, plus
 `unsupported_refusal` for schema-only or unsupported targets. Copying the broken
 or decoy object from the prompt does not score; the submitted AttackPlan must
 satisfy the nested target metadata, the verifier, the formal bindings, and the
@@ -86,8 +86,10 @@ no-claim gate. For `semantic_mutation_repair`, copying the seed or changing only
 metadata does not score; the submitted AttackPlan must make a valid semantic
 change while preserving the target and conservative claim boundary. For
 `missing_hypothesis_repair`, dropping the seed operator assumptions does not
-score. For `invented_complexity_repair`, a schema-valid but unreviewed
-complexity claim does not score.
+score. For `operator_param_mismatch_repair`, changing attack parameters instead
+of restoring the target task parameters does not score. For
+`invented_complexity_repair`, a schema-valid but unreviewed complexity claim
+does not score.
 For `multi_trap_repair`, the prompt combines a wrong-family decoy with a right-task
 AttackPlan that has a wrong operator, missing operator hypothesis, and invented
 complexity evidence; all defects must be repaired before the answer can score.
@@ -104,13 +106,14 @@ For a broad eval that cannot pass by overfitting one trap type, use
 balanced held-out suite with the same minimum count for
 `claims_guard_repair`, `semantic_mutation_repair`,
 `wrong_family_decoy_repair`, `multi_trap_repair`, `operator_mismatch_repair`,
-`missing_hypothesis_repair`, `invented_complexity_repair`, and
-`unsupported_refusal`; it fails instead of duplicating prompts if the public
-corpus cannot satisfy the requested minimum.
+`operator_param_mismatch_repair`, `missing_hypothesis_repair`,
+`invented_complexity_repair`, and `unsupported_refusal`; it fails instead of
+duplicating prompts if the public corpus cannot satisfy the requested minimum.
 Challenge prompts expose the task metadata required by the verifier. In
 particular, `missing_hypothesis_repair` includes the ordered
 `operator_assumptions` in the visible target line so the task measures repair
-quality instead of guessing hidden hypotheses.
+quality instead of guessing hidden hypotheses. `operator_param_mismatch_repair`
+includes the ordered `operator_params` for the same reason.
 For failed-row diagnosis, pass `challenge_row_indices=[...]` after the same
 challenge filters. This rebuilds the stable ordered suite and returns only the
 requested row indices, adding `info["challenge_row_index"]` to each selected

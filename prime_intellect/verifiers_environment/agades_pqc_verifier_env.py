@@ -96,6 +96,7 @@ CHALLENGE_TYPES = (
     "wrong_family_decoy_repair",
     "multi_trap_repair",
     "operator_mismatch_repair",
+    "operator_param_mismatch_repair",
     "missing_hypothesis_repair",
     "invented_complexity_repair",
     "unsupported_refusal",
@@ -512,6 +513,11 @@ def _broken_submission_for_challenge(raw_json: str, info: dict[str, Any]) -> str
             raw_json,
             task_info=info["task_metadata"],
         )
+    if challenge_type == "operator_param_mismatch_repair":
+        return _operator_param_mismatch_invalid_output(
+            raw_json,
+            task_info=info["task_metadata"],
+        )
     if challenge_type == "missing_hypothesis_repair":
         return _missing_hypothesis_invalid_output(raw_json)
     if challenge_type == "invented_complexity_repair":
@@ -539,6 +545,7 @@ def _broken_failure_mode(challenge_type: str) -> str:
         "wrong_family_decoy_repair": "task_mismatch_decoy",
         "multi_trap_repair": "wrong_family_decoy_plus_operator_hypothesis_claims",
         "operator_mismatch_repair": "operator_sequence_mismatch",
+        "operator_param_mismatch_repair": "operator_parameter_mismatch",
         "missing_hypothesis_repair": "missing_operator_hypothesis",
         "invented_complexity_repair": "invented_complexity_claim",
         "unsupported_refusal": "unsupported_attackplan_submitted",
@@ -768,6 +775,15 @@ def _challenge_type_applies_to_task(
         return (
             isinstance(operator_assumptions, list)
             and any(bool(assumptions) for assumptions in operator_assumptions)
+        )
+    if challenge_type == "operator_param_mismatch_repair":
+        operator_params = task_info.get("operator_params")
+        return (
+            isinstance(operator_params, list)
+            and any(
+                isinstance(params, dict) and bool(params)
+                for params in operator_params
+            )
         )
     return True
 
@@ -1174,6 +1190,29 @@ def _challenge_question_for_seed_attack_plan(
                 "",
                 "Broken AttackPlan JSON:",
                 _operator_mismatch_invalid_output(raw_json, task_info=task_info),
+            ]
+        )
+    if challenge_type == "operator_param_mismatch_repair":
+        return "\n".join(
+            [
+                "Repair this Agades PQC Gym challenge.",
+                "The AttackPlan below targets the right family, target name, "
+                "and operator sequence, but at least one operator parameter is "
+                "inconsistent with the target task.",
+                f"Target task: {task_line}.",
+                *_strict_json_output_rules("valid AttackPlan"),
+                "The returned operators array must match the target task "
+                "operator_params exactly.",
+                "Repair only the wrong operator params. Preserve the operator "
+                "types, operator assumptions, target, constraints, claims, "
+                "metadata, and conservative claim boundary.",
+                "Toy/demo verifier output only; do not claim real-world PQC breaks.",
+                "",
+                "Broken AttackPlan JSON:",
+                _operator_param_mismatch_invalid_output(
+                    raw_json,
+                    task_info=task_info,
+                ),
             ]
         )
     if challenge_type == "missing_hypothesis_repair":
@@ -1738,6 +1777,57 @@ def _operator_mismatch_invalid_output(
     )
     operators[0]["type"] = replacement
     return json.dumps(payload, indent=2)
+
+
+def _operator_param_mismatch_invalid_output(
+    raw_json: str,
+    *,
+    task_info: dict[str, Any],
+) -> str:
+    payload = json.loads(raw_json)
+    operators = payload.get("operators")
+    if not isinstance(operators, list) or not operators:
+        raise ValueError("AttackPlan challenge seed lacks operators.")
+    expected_params = task_info.get("operator_params")
+    if not isinstance(expected_params, list):
+        raise ValueError("AttackPlan challenge task lacks operator_params.")
+    for index, operator in enumerate(operators):
+        if not isinstance(operator, dict):
+            continue
+        params = operator.get("params")
+        if not isinstance(params, dict) or not params:
+            continue
+        expected = (
+            expected_params[index]
+            if (
+                index < len(expected_params)
+                and isinstance(expected_params[index], dict)
+            )
+            else params
+        )
+        param_name = sorted(params)[0]
+        original_value = expected.get(param_name, params[param_name])
+        params[param_name] = _mismatched_operator_param_value(original_value)
+        if params[param_name] == original_value:
+            params[param_name] = "__agades_param_mismatch__"
+        return json.dumps(payload, indent=2)
+    raise ValueError("AttackPlan challenge seed lacks operator params.")
+
+
+def _mismatched_operator_param_value(value: Any) -> Any:
+    if isinstance(value, bool):
+        return not value
+    if isinstance(value, int):
+        return value + 1 if value >= 0 else value - 1
+    if isinstance(value, float):
+        return value + 1.0
+    if isinstance(value, str):
+        return f"{value}_mismatch"
+    if isinstance(value, list):
+        return [*value, "__agades_param_mismatch__"]
+    if isinstance(value, dict):
+        return {**value, "__agades_param_mismatch__": True}
+    return "__agades_param_mismatch__"
 
 
 def _missing_hypothesis_invalid_output(raw_json: str) -> str:
