@@ -73,7 +73,7 @@ This does not add private data. It rewrites public seed rows into task-aware
 repair challenges and stores the real scoring target under
 `info["task_metadata"]`. The current challenge types are
 `claims_guard_repair`, `semantic_mutation_repair`,
-`wrong_family_decoy_repair`, `operator_mismatch_repair`,
+`wrong_family_decoy_repair`, `multi_trap_repair`, `operator_mismatch_repair`,
 `missing_hypothesis_repair`, and `invented_complexity_repair` for supported
 AttackPlans, plus
 `unsupported_refusal` for schema-only or unsupported targets. Copying the broken
@@ -85,6 +85,9 @@ change while preserving the target and conservative claim boundary. For
 `missing_hypothesis_repair`, dropping the seed operator assumptions does not
 score. For `invented_complexity_repair`, a schema-valid but unreviewed
 complexity claim does not score.
+For `multi_trap_repair`, the prompt combines a wrong-family decoy with a right-task
+AttackPlan that has a wrong operator, missing operator hypothesis, and invented
+complexity evidence; all defects must be repaired before the answer can score.
 For
 `unsupported_refusal`, the correct output is not an
 AttackPlan: it is a conservative JSON refusal that names the unsupported target,
@@ -97,7 +100,7 @@ For a broad eval that cannot pass by overfitting one trap type, use
 `challenge_suite=True` and `challenge_split="heldout"`. This builds a stable
 balanced held-out suite with the same minimum count for
 `claims_guard_repair`, `semantic_mutation_repair`,
-`wrong_family_decoy_repair`, `operator_mismatch_repair`,
+`wrong_family_decoy_repair`, `multi_trap_repair`, `operator_mismatch_repair`,
 `missing_hypothesis_repair`, `invented_complexity_repair`, and
 `unsupported_refusal`; it fails instead of duplicating prompts if the public
 corpus cannot satisfy the requested minimum.

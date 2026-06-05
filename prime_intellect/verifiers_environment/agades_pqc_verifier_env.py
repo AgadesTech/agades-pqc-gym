@@ -94,6 +94,7 @@ CHALLENGE_TYPES = (
     "claims_guard_repair",
     "semantic_mutation_repair",
     "wrong_family_decoy_repair",
+    "multi_trap_repair",
     "operator_mismatch_repair",
     "missing_hypothesis_repair",
     "invented_complexity_repair",
@@ -501,6 +502,11 @@ def _broken_submission_for_challenge(raw_json: str, info: dict[str, Any]) -> str
         return raw_json
     if challenge_type == "wrong_family_decoy_repair":
         return json.dumps(_task_mismatch_decoy_attack_plan(raw_json), indent=2)
+    if challenge_type == "multi_trap_repair":
+        return _multi_trap_invalid_output(
+            raw_json,
+            task_info=info["task_metadata"],
+        )
     if challenge_type == "operator_mismatch_repair":
         return _operator_mismatch_invalid_output(
             raw_json,
@@ -531,6 +537,7 @@ def _broken_failure_mode(challenge_type: str) -> str:
         "claims_guard_repair": "unreviewed_pre_evaluation_claims",
         "semantic_mutation_repair": "seed_semantic_copy",
         "wrong_family_decoy_repair": "task_mismatch_decoy",
+        "multi_trap_repair": "wrong_family_decoy_plus_operator_hypothesis_claims",
         "operator_mismatch_repair": "operator_sequence_mismatch",
         "missing_hypothesis_repair": "missing_operator_hypothesis",
         "invented_complexity_repair": "invented_complexity_claim",
@@ -756,6 +763,12 @@ def _challenge_type_applies_to_task(
             isinstance(operator_assumptions, list)
             and any(bool(assumptions) for assumptions in operator_assumptions)
         )
+    if challenge_type == "multi_trap_repair":
+        operator_assumptions = task_info.get("operator_assumptions")
+        return (
+            isinstance(operator_assumptions, list)
+            and any(bool(assumptions) for assumptions in operator_assumptions)
+        )
     return True
 
 
@@ -779,6 +792,9 @@ def _challenge_info_for_task(
         "heldout_split": heldout_split
         or _heldout_split(task_info["attack_plan_id"], challenge_type),
         "split_policy": split_policy,
+        "difficulty": (
+            "hard" if challenge_type == "multi_trap_repair" else "standard"
+        ),
         "task_metadata": task_info,
         "scoring_rule": (
             "score the submitted AttackPlan against task_metadata; the broken "
@@ -1102,6 +1118,31 @@ def _challenge_question_for_seed_attack_plan(
                 "",
                 "Broken model output:",
                 _claims_guard_decoy_wrapped_invalid_output(raw_json),
+            ]
+        )
+    if challenge_type == "multi_trap_repair":
+        return "\n".join(
+            [
+                "Repair this hard Agades PQC Gym challenge.",
+                "Candidate object 1 is a wrong-family decoy. It may look valid, "
+                "but it must not be submitted for this target.",
+                "Candidate object 2 combines multiple defects from the right "
+                "public toy task: wrong operator, missing operator hypothesis, "
+                "and invented complexity claim evidence.",
+                f"Target task: {task_line}.",
+                "Ignore Candidate object 1 completely.",
+                *_strict_json_output_rules("repaired Candidate object 2 AttackPlan"),
+                "Repair Candidate object 2 so that target, operator types, "
+                "operator assumptions, constraints, metadata, and conservative "
+                "claim boundary all match the target task.",
+                "Set estimated_time_bits=null, estimated_memory_bits=null, "
+                "success_probability=null, external_claim=false, and source=null.",
+                "Do not add external_claim evidence, source text, explanatory "
+                "notes, analysis, or review prose.",
+                "Toy/demo verifier output only; do not claim real-world PQC breaks.",
+                "",
+                "Broken model output:",
+                _multi_trap_wrapped_invalid_output(raw_json, task_info=task_info),
             ]
         )
     if challenge_type == "operator_mismatch_repair":
@@ -1715,6 +1756,36 @@ def _claims_guard_decoy_wrapped_invalid_output(raw_json: str) -> str:
             "Only Candidate object 2 is the toy/demo AttackPlan to repair.",
         ]
     )
+
+
+def _multi_trap_wrapped_invalid_output(
+    raw_json: str,
+    *,
+    task_info: dict[str, Any],
+) -> str:
+    decoy = _task_mismatch_decoy_attack_plan(raw_json)
+    return "\n".join(
+        [
+            "Candidate object 1:",
+            json.dumps(decoy, indent=2),
+            "",
+            "Candidate object 2:",
+            "```json",
+            _multi_trap_invalid_output(raw_json, task_info=task_info),
+            "```",
+            "Only Candidate object 2 is the toy/demo AttackPlan to repair.",
+        ]
+    )
+
+
+def _multi_trap_invalid_output(
+    raw_json: str,
+    *,
+    task_info: dict[str, Any],
+) -> str:
+    payload = _operator_mismatch_invalid_output(raw_json, task_info=task_info)
+    payload = _missing_hypothesis_invalid_output(payload)
+    return _invented_complexity_invalid_output(payload)
 
 
 def _task_mismatch_decoy_attack_plan(raw_json: str) -> dict[str, Any]:

@@ -455,6 +455,7 @@ def test_prime_verifiers_environment_builds_discriminating_challenge_rows() -> N
         "claims_guard_repair",
         "semantic_mutation_repair",
         "wrong_family_decoy_repair",
+        "multi_trap_repair",
         "operator_mismatch_repair",
         "missing_hypothesis_repair",
         "invented_complexity_repair",
@@ -795,17 +796,18 @@ def test_prime_verifiers_environment_builds_challenge_scorecard() -> None:
         "private_data_allowed": False,
         "security_claims_allowed": False,
     }
-    assert scorecard["summary"]["challenge_rows"] == 6
+    assert scorecard["summary"]["challenge_rows"] == 7
     assert scorecard["summary"]["challenge_type_counts"] == {
         "claims_guard_repair": 1,
         "invented_complexity_repair": 1,
         "missing_hypothesis_repair": 1,
+        "multi_trap_repair": 1,
         "operator_mismatch_repair": 1,
         "semantic_mutation_repair": 1,
         "wrong_family_decoy_repair": 1,
     }
     assert scorecard["summary"]["broken_accept_count"] == 0
-    assert scorecard["summary"]["repaired_accept_count"] == 6
+    assert scorecard["summary"]["repaired_accept_count"] == 7
     assert scorecard["summary"]["broken_score_max"] == 0.0
     assert scorecard["summary"]["repaired_score_min"] == 1.0
     assert {
@@ -817,6 +819,7 @@ def test_prime_verifiers_environment_builds_challenge_scorecard() -> None:
         "unreviewed_pre_evaluation_claims",
         "operator_sequence_mismatch",
         "seed_semantic_copy",
+        "wrong_family_decoy_plus_operator_hypothesis_claims",
     }
 
 
@@ -853,7 +856,7 @@ def test_prime_verifiers_environment_builds_heldout_challenge_scorecard() -> Non
 
     assert scorecard["accepted"] is True
     assert scorecard["scope"]["challenge_split"] == "heldout"
-    assert scorecard["summary"]["heldout_split_counts"] == {"heldout": 8}
+    assert scorecard["summary"]["heldout_split_counts"] == {"heldout": 11}
     assert {result["heldout_split"] for result in scorecard["results"]} == {"heldout"}
 
 
@@ -881,6 +884,48 @@ def test_prime_scorecard_global_heldout_covers_unsupported_refusal() -> None:
     )
 
 
+def test_prime_verifiers_environment_builds_multi_trap_repair_challenge() -> None:
+    module = _load_environment_module()
+
+    row = module.build_dataset_rows(
+        challenge_suite=True,
+        challenge_type="multi_trap_repair",
+        challenge_split="heldout",
+    )[0]
+
+    info = row["info"]
+    prompt = row["prompt"][0]["content"]
+    task_metadata = info["task_metadata"]
+    raw_json = module._raw_json_for_task_info(task_metadata)
+    broken_report = module.score_attack_plan_completion_report(
+        _assistant_completion(
+            module._broken_submission_for_challenge(raw_json, info)
+        ),
+        info=info,
+        require_info=True,
+    )
+    repaired_report = module.score_attack_plan_completion_report(
+        _assistant_completion(
+            module._correct_submission_for_challenge(raw_json, info)
+        ),
+        info=info,
+        require_info=True,
+    )
+
+    assert info["challenge_type"] == "multi_trap_repair"
+    assert info["difficulty"] == "hard"
+    assert info["expected_behavior"] == "repair_attackplan"
+    assert "Candidate object 1 is a wrong-family decoy" in prompt
+    assert "Candidate object 2 combines multiple defects" in prompt
+    assert "wrong operator" in prompt
+    assert "missing operator hypothesis" in prompt
+    assert "invented complexity claim" in prompt
+    assert broken_report["accepted"] is False
+    assert broken_report["aggregate_reward"] == 0.0
+    assert repaired_report["accepted"] is True
+    assert repaired_report["aggregate_reward"] == 1.0
+
+
 def test_prime_verifiers_environment_builds_balanced_heldout_challenge_rows() -> None:
     module = _load_environment_module()
 
@@ -891,11 +936,12 @@ def test_prime_verifiers_environment_builds_balanced_heldout_challenge_rows() ->
     )
 
     challenge_counts = Counter(row["info"]["challenge_type"] for row in rows)
-    assert len(rows) == 56
+    assert len(rows) == 64
     assert challenge_counts == {
         "claims_guard_repair": 8,
         "invented_complexity_repair": 8,
         "missing_hypothesis_repair": 8,
+        "multi_trap_repair": 8,
         "operator_mismatch_repair": 8,
         "semantic_mutation_repair": 8,
         "unsupported_refusal": 8,
@@ -987,11 +1033,12 @@ def test_prime_verifiers_environment_builds_balanced_heldout_scorecard() -> None
 
     assert scorecard["accepted"] is True
     assert scorecard["scope"]["min_challenge_examples_per_type"] == 8
-    assert scorecard["summary"]["challenge_rows"] == 56
+    assert scorecard["summary"]["challenge_rows"] == 64
     assert scorecard["summary"]["challenge_type_counts"] == {
         "claims_guard_repair": 8,
         "invented_complexity_repair": 8,
         "missing_hypothesis_repair": 8,
+        "multi_trap_repair": 8,
         "operator_mismatch_repair": 8,
         "semantic_mutation_repair": 8,
         "unsupported_refusal": 8,
