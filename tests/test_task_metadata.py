@@ -71,6 +71,42 @@ def test_task_metadata_records_schema_only_seed_reward_boundary() -> None:
     assert metadata["seed_reward"] == 0.0
 
 
+def test_task_metadata_compacts_null_operator_param_fields() -> None:
+    plan = AttackPlan.model_validate_json(
+        Path("examples/attack_plans/code_based_bjmm_toy.json").read_text()
+    )
+    metadata = task_metadata_for_plan(plan)
+
+    legacy_metadata = dict(metadata)
+    legacy_metadata["operator_params"] = [
+        {
+            **metadata["operator_params"][0],
+            "block_size": None,
+            "max_error_weight": None,
+            "support_size": None,
+        }
+    ]
+    non_null_extra_metadata = dict(legacy_metadata)
+    non_null_extra_metadata["operator_params"] = [
+        {
+            **legacy_metadata["operator_params"][0],
+            "block_size": 8,
+        }
+    ]
+
+    assert metadata["operator_params"] == [
+        {
+            "variant": "bjmm_toy",
+            "p": 1,
+            "ell": 2,
+            "representation_count": 4,
+        }
+    ]
+    assert normalize_task_metadata(legacy_metadata) == metadata
+    assert attack_plan_matches_task_metadata(plan, legacy_metadata)
+    assert not attack_plan_matches_task_metadata(plan, non_null_extra_metadata)
+
+
 def test_task_metadata_records_seed_reproduction_status_for_fixture_tasks() -> None:
     plan = AttackPlan.model_validate_json(
         Path(

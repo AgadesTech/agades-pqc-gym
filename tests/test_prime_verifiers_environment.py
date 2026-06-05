@@ -641,6 +641,48 @@ def test_prime_verifiers_environment_scores_operator_param_challenge() -> None:
     )
 
 
+def test_prime_verifiers_environment_scores_operator_param_challenge_with_legacy_null_params() -> None:
+    module = _load_environment_module()
+    raw_plan = Path(
+        "prime_intellect/verifiers_environment/data/code_based_bjmm_toy.json"
+    ).read_text(encoding="utf-8")
+    row = module.build_dataset_rows(
+        attack_plan_id="code_based_bjmm_toy_v1",
+        challenge_suite=True,
+        challenge_type="operator_param_mismatch_repair",
+    )[0]
+    task_metadata = row["info"]["task_metadata"]
+    legacy_task_metadata = {
+        **task_metadata,
+        "operator_params": [
+            {
+                **task_metadata["operator_params"][0],
+                "block_size": None,
+                "first_block_erasure_count": None,
+                "max_error_weight": None,
+                "repetition_factor": None,
+                "second_block_erasure_count": None,
+                "support_size": None,
+            }
+        ],
+    }
+    legacy_info = {
+        **row["info"],
+        "task_metadata": legacy_task_metadata,
+    }
+
+    report = module.score_attack_plan_completion_report(
+        _assistant_completion(raw_plan),
+        info=legacy_info,
+        require_info=True,
+    )
+
+    assert "block_size" not in row["prompt"][0]["content"]
+    assert report["accepted"] is True
+    assert report["aggregate_reward"] == 1.0
+    assert report["rubric_scores"]["task_match"] == 1.0
+
+
 def test_prime_verifiers_environment_scores_missing_hypothesis_challenge() -> None:
     module = _load_environment_module()
     raw_plan = Path(

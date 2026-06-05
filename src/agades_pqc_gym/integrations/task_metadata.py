@@ -59,7 +59,9 @@ def task_metadata_for_plan(
         target_name=plan.target.name,
         support_level=plan.target.support_level.value,
         operator_types=[operator.type for operator in plan.operators],
-        operator_params=[dict(operator.params) for operator in plan.operators],
+        operator_params=[
+            _compact_operator_params(operator.params) for operator in plan.operators
+        ],
         operator_assumptions=[
             list(operator.assumptions) for operator in plan.operators
         ],
@@ -162,7 +164,9 @@ def attack_plan_matches_task_metadata(
     expected_operator_params = normalized.get("operator_params")
     expected_operator_assumptions = normalized.get("operator_assumptions")
     candidate_operator_types = [operator.type for operator in plan.operators]
-    candidate_operator_params = [dict(operator.params) for operator in plan.operators]
+    candidate_operator_params = [
+        _compact_operator_params(operator.params) for operator in plan.operators
+    ]
     candidate_operator_assumptions = [
         list(operator.assumptions) for operator in plan.operators
     ]
@@ -190,7 +194,28 @@ def _validate_task_metadata(value: dict[str, Any]) -> dict[str, Any] | None:
         return None
     if metadata.schema_version != TASK_METADATA_SCHEMA:
         return None
-    return metadata.model_dump(mode="json")
+    return _compact_task_metadata_operator_params(metadata.model_dump(mode="json"))
+
+
+def _compact_task_metadata_operator_params(
+    metadata: dict[str, Any],
+) -> dict[str, Any]:
+    operator_params = metadata.get("operator_params")
+    if not isinstance(operator_params, list):
+        return metadata
+    return {
+        **metadata,
+        "operator_params": [
+            _compact_operator_params(params)
+            if isinstance(params, Mapping)
+            else params
+            for params in operator_params
+        ],
+    }
+
+
+def _compact_operator_params(params: Mapping[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in dict(params).items() if value is not None}
 
 
 def _validate_task_metadata_for_summary(row: Mapping[str, Any]) -> TaskMetadata:
