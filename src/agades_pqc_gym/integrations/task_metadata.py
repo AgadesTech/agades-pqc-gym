@@ -10,7 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from agades_pqc_gym.core.attack_plan import AttackPlan
 
-TASK_METADATA_SCHEMA = "agades.pqc.task_metadata.v5"
+TASK_METADATA_SCHEMA = "agades.pqc.task_metadata.v6"
 
 
 class TaskMetadata(BaseModel):
@@ -24,6 +24,7 @@ class TaskMetadata(BaseModel):
     target_name: str
     support_level: str
     operator_types: list[str]
+    operator_params: list[dict[str, Any]]
     operator_assumptions: list[list[str]]
     requires_reproducibility: bool
     public: bool
@@ -58,6 +59,7 @@ def task_metadata_for_plan(
         target_name=plan.target.name,
         support_level=plan.target.support_level.value,
         operator_types=[operator.type for operator in plan.operators],
+        operator_params=[dict(operator.params) for operator in plan.operators],
         operator_assumptions=[
             list(operator.assumptions) for operator in plan.operators
         ],
@@ -149,14 +151,18 @@ def summarize_task_metadata_rows(
 def attack_plan_matches_task_metadata(
     plan: AttackPlan,
     metadata: Mapping[str, Any] | str | None,
+    *,
+    allow_operator_param_variants: bool = False,
 ) -> bool:
     normalized = normalize_task_metadata(metadata)
     if normalized is None:
         return False
 
     expected_operator_types = normalized.get("operator_types")
+    expected_operator_params = normalized.get("operator_params")
     expected_operator_assumptions = normalized.get("operator_assumptions")
     candidate_operator_types = [operator.type for operator in plan.operators]
+    candidate_operator_params = [dict(operator.params) for operator in plan.operators]
     candidate_operator_assumptions = [
         list(operator.assumptions) for operator in plan.operators
     ]
@@ -167,6 +173,11 @@ def attack_plan_matches_task_metadata(
         and normalized.get("support_level") == plan.target.support_level.value
         and isinstance(expected_operator_types, list)
         and expected_operator_types == candidate_operator_types
+        and isinstance(expected_operator_params, list)
+        and (
+            allow_operator_param_variants
+            or expected_operator_params == candidate_operator_params
+        )
         and isinstance(expected_operator_assumptions, list)
         and expected_operator_assumptions == candidate_operator_assumptions
     )

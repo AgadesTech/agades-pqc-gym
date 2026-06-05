@@ -9,7 +9,7 @@
     "result_schema_version": "agades.pqc.verifier.v1",
     "reward_surface": "Prime scoring uses schema_valid, accepted, and task metadata matching fields.",
     "submission_shape": "single_attack_plan_json_object",
-    "task_metadata_schema_version": "agades.pqc.task_metadata.v5"
+    "task_metadata_schema_version": "agades.pqc.task_metadata.v6"
   },
   "project": {
     "cli": "agades-pqc",

@@ -289,15 +289,15 @@
     }
   },
   "input_sha256": {
-    "docs/huggingface_publication_handoff.json": "2db78b37623a018457c8ee90ae8b3386ed368ba800597bed38309bcd233ce629",
-    "docs/nvidia_publication_handoff.json": "b722a2ffa2c6cc31daa5ba3e93ddebdbac59a1ae9497ba4ec72e1f8e220d3d94",
-    "docs/prime_publication_handoff.json": "f1b91225c941b090b14eeb6249d2e0dfbba9c7487921796be66e40bc0e554b09",
-    "docs/publication_manifest.json": "a9f38925b15b51854f0d10b87b491038843fa8fd7e7c37d1013ca02dd6e562cc",
+    "docs/huggingface_publication_handoff.json": "fc217e21569b8e0998f5d130905121d5f611e1032d1314e6c1f5651c5cd29800",
+    "docs/nvidia_publication_handoff.json": "7485777cda758d47902e66ce5bc25ae259940be6680ccb00a0d6c86deec3a71f",
+    "docs/prime_publication_handoff.json": "3f921cd27843e96fd81f85d3e0c9073d8e6aad9391b6b873b76e3fe5b4fe5933",
+    "docs/publication_manifest.json": "e7ee9f8a388f8333c62c1d76462da41923c9bf0b799facca34accf7bde50dae4",
     "docs/release_status.json": "630beeb873cfd9d965dd16bfd6dcb9cc2c0abe82178948aa73e8aa0df1fd8172",
     "hf/collection_manifest.json": "e1490c5b6c991b947ac7df19ca8f6c03e7c170f386151fa71e03982952a85e91",
     "hf/space_manifest.json": "b7efb424e7d1d1592ea025a56dd41becd3066e12e321d2ca316f57601ac96695",
     "nvidia/accelerator_manifest.json": "4220fb49bd07624af90e5be1dfe2fbd8a72a7c4a968782d46e3ccc12f15b04cc",
-    "prime_intellect/verifiers_environment/prime_manifest.json": "133f6439505bd3e411fa3ca9b8df3fedb3bf297a6b080ca3b9140f45d6a7ef31",
+    "prime_intellect/verifiers_environment/prime_manifest.json": "30051a62da9214d8d317fd42f906d725a27901d5253c9ddc157fc301cfd22311",
     "public/publication_preflight.json": "51b43540af1806409f6cf702b68d50440a8c54211ba696558c58b87739927d7b"
   },
   "inputs": {

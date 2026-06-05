@@ -13,10 +13,10 @@
     ],
     "family_count": 9,
     "manifest_path": "prime_intellect/verifiers_environment/prime_manifest.json",
-    "manifest_sha256": "133f6439505bd3e411fa3ca9b8df3fedb3bf297a6b080ca3b9140f45d6a7ef31",
+    "manifest_sha256": "30051a62da9214d8d317fd42f906d725a27901d5253c9ddc157fc301cfd22311",
     "public_examples_only": true,
     "schema_manifest_path": "prime_intellect/schemas/schema_manifest.json",
-    "schema_manifest_sha256": "68ad9491f8ecc9afa74e77e43138a9aafb2daee291916d103f69957fee1a93a0",
+    "schema_manifest_sha256": "abdcbd82e48d6f8c7e9a0f6164fec5fe14741c838c1d0799987c8b933575c54a",
     "support_levels": [
       "implemented",
       "schema_only"

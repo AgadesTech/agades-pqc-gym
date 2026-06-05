@@ -63,16 +63,17 @@ single-turn tasks, not just the lattice MVP seed. Bounded toy evaluator
 families receive normal verifier scores when their applicability rules pass.
 Unsupported schema-only tasks remain useful as routing/safety checks and
 receive zero reward instead of fabricated cryptanalytic estimates.
-Rewards are task-aware through `agades.pqc.task_metadata.v5`: each task records
+Rewards are task-aware through `agades.pqc.task_metadata.v6`: each task records
 the seed AttackPlan SHA-256 digest, and a candidate must still match the current
-task's target family, target name, support level, ordered operator types, and
-ordered operator assumptions.
+task's target family, target name, support level, ordered operator types,
+ordered operator params, and ordered operator assumptions.
 Rows also expose seed verifier status, seed reward, seed estimator, and seed
 reproduction status, so unsupported schema-only seeds are explicit `0.0`-reward
 tasks and fixture-backed seeds are inspectable rather than ambiguous accepted
-examples. This allows renaming or parameter edits inside the same task while
-preventing a rollout from scoring by pasting an unrelated valid public
-AttackPlan.
+examples. This allows renaming inside the same task while preventing a rollout
+from scoring by pasting an unrelated valid public AttackPlan or changing attack
+parameters in repair tasks. Semantic-mutation tasks may change operator params
+only when the challenge explicitly requires a semantic variant.
 The generated Prime manifest includes the same deterministic task summary by
 family, support level, seed verifier status/reward, seed estimator, and
 reproduction status that the Hugging Face dataset publishes, making packaged

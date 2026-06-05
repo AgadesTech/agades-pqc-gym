@@ -161,7 +161,9 @@ def build_prime_environment_manifest(root: Path | None = None) -> dict[str, Any]
             "task_match_rule": (
                 "accepted candidates must match the current task info for "
                 "target_family, target_name, support_level, and ordered "
-                "operator_types/operator_assumptions; attack_plan_id may change"
+                "operator_types/operator_params/operator_assumptions; "
+                "attack_plan_id may change; semantic-mutation tasks may change "
+                "operator_params only when explicitly required"
             ),
             "challenge_suite_contract": {
                 "challenge_types": [
@@ -308,6 +310,7 @@ def build_prime_environment_manifest(root: Path | None = None) -> dict[str, Any]
                 "target_name",
                 "support_level",
                 "operator_types",
+                "operator_params",
                 "operator_assumptions",
                 "requires_reproducibility",
                 "public",

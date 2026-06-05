@@ -1044,13 +1044,7 @@ def _challenge_question_for_seed_attack_plan(
     if not isinstance(payload, dict):
         raise ValueError("AttackPlan challenge seed must be a JSON object.")
     target_fields = _compact_json(payload.get("target", {}))
-    operator_params = _compact_json(
-        [
-            operator.get("params", {})
-            for operator in payload.get("operators", [])
-            if isinstance(operator, dict)
-        ]
-    )
+    operator_params = _compact_json(task_info["operator_params"])
     constraint_requirements = _constraint_requirements_for_prompt(
         raw_json,
         task_info=task_info,

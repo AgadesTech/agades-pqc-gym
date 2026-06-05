@@ -61,6 +61,7 @@ _REQUIRED_RESULT_FIELDS = (
 )
 _REQUIRED_TASK_METADATA_FIELDS = (
     "operator_assumptions",
+    "operator_params",
     "operator_types",
     "seed_attack_plan_sha256",
     "seed_accepted",
@@ -101,8 +102,9 @@ def build_prime_verifier_schemas() -> dict[str, dict[str, Any]]:
             "Versioned task constraints shared by Prime Verifiers and Hugging "
             "Face dataset rows. Reward environments use these fields to keep "
             "candidate AttackPlan mutations on the intended family, target, "
-            "support level, and operator sequence without requiring an exact "
-            "attack_plan_id copy. Seed AttackPlan digest, estimator, "
+            "support level, operator sequence, operator params, and operator "
+            "assumptions without requiring an exact attack_plan_id copy. Seed "
+            "AttackPlan digest, estimator, "
             "reproduction, status, and reward fields make unsupported "
             "schema-only tasks explicit zero-reward safety checks while "
             "keeping reproducible fixture tasks inspectable."
