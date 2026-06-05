@@ -39,19 +39,19 @@
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",
-      "sha256": "871456f845c7a41c406d09c7a4126befd832872a5584381d2b584dae67a10f5b"
+      "sha256": "8e7379ba5769e491c6709e1101de35b6bde2735e3d38a4f964196f9cca6028cc"
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "f7dc534c6ef421428c4b7e4cc1525d14a2334e40d6cc33ec123e32342e12e389"
+      "sha256": "70668547d5e40e8fff0d15f8b9907f5a03a5cc110242c8f974c699ef1a20d78d"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
-      "sha256": "cbb2810b752ff3b94e1a362d33a96f81b90535620547955aa975aae42a4e8e7a"
+      "sha256": "30051a62da9214d8d317fd42f906d725a27901d5253c9ddc157fc301cfd22311"
     },
     "prime_eval_config_manifest": {
       "path": "docs/prime_eval_config_manifest.json",
-      "sha256": "aba1ecacf47c0d2a2f95d7a479d6f38c0574ce500dda573cf817cc5b593bfd8a"
+      "sha256": "95e255fdd12ee557bd4e942538eee521a9e1da4e794e4d8c2b428eb04167bffd"
     },
     "prime_eval_template": {
       "path": "prime_intellect/evals/agades_pqc_eval.template.toml",

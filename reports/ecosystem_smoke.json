@@ -130,7 +130,7 @@
           "task_metadata.schema.json",
           "verifier_result.schema.json"
         ],
-        "task_metadata_schema_version": "agades.pqc.task_metadata.v5"
+        "task_metadata_schema_version": "agades.pqc.task_metadata.v6"
       }
     },
     "publication": {

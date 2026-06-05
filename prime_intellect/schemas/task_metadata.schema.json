@@ -2,7 +2,7 @@
   "$id": "https://agades.tech/schemas/agades-pqc-gym/task_metadata.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
-  "description": "Versioned task constraints shared by Prime Verifiers and Hugging Face dataset rows. Reward environments use these fields to keep candidate AttackPlan mutations on the intended family, target, support level, and operator sequence without requiring an exact attack_plan_id copy. Seed AttackPlan digest, estimator, reproduction, status, and reward fields make unsupported schema-only tasks explicit zero-reward safety checks while keeping reproducible fixture tasks inspectable.",
+  "description": "Versioned task constraints shared by Prime Verifiers and Hugging Face dataset rows. Reward environments use these fields to keep candidate AttackPlan mutations on the intended family, target, support level, operator sequence, operator params, and operator assumptions without requiring an exact attack_plan_id copy. Seed AttackPlan digest, estimator, reproduction, status, and reward fields make unsupported schema-only tasks explicit zero-reward safety checks while keeping reproducible fixture tasks inspectable.",
   "properties": {
     "attack_plan_id": {
       "title": "Attack Plan Id",
@@ -16,6 +16,14 @@
         "type": "array"
       },
       "title": "Operator Assumptions",
+      "type": "array"
+    },
+    "operator_params": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Operator Params",
       "type": "array"
     },
     "operator_types": {
@@ -117,6 +125,7 @@
     "target_name",
     "support_level",
     "operator_types",
+    "operator_params",
     "operator_assumptions",
     "requires_reproducibility",
     "public",

@@ -125,7 +125,7 @@
   },
   "schema_version": "agades.pqc.hf_dataset.v1",
   "task_metadata_count": 79,
-  "task_metadata_schema": "agades.pqc.task_metadata.v5",
+  "task_metadata_schema": "agades.pqc.task_metadata.v6",
   "task_metadata_summary": {
     "family_counts": {
       "CODE_BASED": 21,

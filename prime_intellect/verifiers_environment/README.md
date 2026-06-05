@@ -6,11 +6,14 @@ This is a single-turn environment: each rollout asks a model to submit one JSON
 `AttackPlan`. The reward function runs the shared public verifier and returns
 `1.0` only when the candidate is schema-valid, routed to an implemented family,
 accepted by the evaluator, and still matches the current task's
-`agades.pqc.task_metadata.v5` identity fields: `target_family`, `target_name`,
-`support_level`, ordered `operator_types`, and ordered
+`agades.pqc.task_metadata.v6` identity fields: `target_family`, `target_name`,
+`support_level`, ordered `operator_types`, ordered `operator_params`, and ordered
 `operator_assumptions`. The candidate may change `attack_plan_id`; it cannot
-score by submitting an unrelated valid public plan or by dropping required
-operator hypotheses. Rows also expose the seed AttackPlan SHA-256 digest, seed
+score by submitting an unrelated valid public plan, by changing attack
+parameters in repair tasks, or by dropping required operator hypotheses.
+Semantic-mutation tasks are the only exception: they may change operator params
+when the challenge explicitly asks for a semantic variant. Rows also expose the
+seed AttackPlan SHA-256 digest, seed
 verifier status/reward, seed estimator, and seed reproduction status, so
 unsupported schema-only tasks are labeled `unsupported`, fixture-backed seeds
 are inspectable, and no arbitrary code is executed.

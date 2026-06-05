@@ -63,11 +63,11 @@
     },
     "hf_rl_rollout_examples": {
       "path": "hf/dataset/rl_rollouts.jsonl",
-      "sha256": "7cc704c8abbb5e125cc16f6622e7bb9ea2c8fd74050df5de2cb50834bc740610"
+      "sha256": "8e7379ba5769e491c6709e1101de35b6bde2735e3d38a4f964196f9cca6028cc"
     },
     "prime_eval_config_manifest": {
       "path": "docs/prime_eval_config_manifest.json",
-      "sha256": "1e0966cabf2d33fea1b6dd0b5e030b3600ca06656ead3babe14a56e36941a82a"
+      "sha256": "95e255fdd12ee557bd4e942538eee521a9e1da4e794e4d8c2b428eb04167bffd"
     },
     "private_run_policy": {
       "path": "docs/private_run_policy.json",

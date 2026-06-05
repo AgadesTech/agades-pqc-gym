@@ -165,7 +165,11 @@ def score_attack_plan_candidate(
     verifier_result = verify_attack_plan_json(candidate_json)
     formal_summary = _formal_summary(candidate_json, plan, root=root)
     task_match = (
-        _task_match(plan, parsed_task)
+        _task_match(
+            plan,
+            parsed_task,
+            allow_operator_param_variants=require_semantic_mutation,
+        )
         if parsed_task is not None
         else (not require_task_match)
     )
@@ -413,10 +417,16 @@ def _formal_summary(
 def _task_match(
     plan: AttackPlan | None,
     task_info: dict[str, Any] | None,
+    *,
+    allow_operator_param_variants: bool = False,
 ) -> bool:
     if plan is None or task_info is None:
         return False
-    return attack_plan_matches_task_metadata(plan, task_info)
+    return attack_plan_matches_task_metadata(
+        plan,
+        task_info,
+        allow_operator_param_variants=allow_operator_param_variants,
+    )
 
 
 def _no_security_overclaim(
