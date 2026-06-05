@@ -1078,6 +1078,7 @@ def _challenge_question_for_seed_attack_plan(
     if not isinstance(payload, dict):
         raise ValueError("AttackPlan challenge seed must be a JSON object.")
     target_fields = _compact_json(payload.get("target", {}))
+    operator_types = _compact_json(task_info["operator_types"])
     operator_params = _compact_json(task_info["operator_params"])
     constraint_requirements = _constraint_requirements_for_prompt(
         raw_json,
@@ -1093,7 +1094,7 @@ def _challenge_question_for_seed_attack_plan(
         f"target_name={task_info['target_name']}, "
         f"support_level={task_info['support_level']}, "
         f"target_fields={target_fields}, "
-        f"operator_types={task_info['operator_types']}, "
+        f"operator_types={operator_types}, "
         f"operator_params={operator_params}, "
         f"operator_assumptions={operator_assumptions}, "
         f"{constraint_requirements}"
@@ -1204,9 +1205,10 @@ def _challenge_question_for_seed_attack_plan(
                 "The scorer will compare your JSON against hidden task metadata "
                 "for the original public seed. It will not give credit for a "
                 "JSON object that merely looks clean.",
-                f"Target family: {task_info['target_family']}.",
-                f"Target name: {task_info['target_name']}.",
-                f"Support level: {task_info['support_level']}.",
+                f"Target task: {task_line}.",
+                "The Target task line is the repair authority for target, "
+                "operator types, operator params, operator assumptions, "
+                "constraints, and support level.",
                 *_strict_json_output_rules("repaired Candidate object 2 AttackPlan"),
                 "Repair Candidate object 2 by choosing an operator compatible "
                 "with the target family and existing operator parameters, "
