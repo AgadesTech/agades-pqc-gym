@@ -65,7 +65,7 @@ def test_prime_environment_smoke_report_exercises_packaged_verifier(
         },
         "challenge_broken_score": 0.0,
         "challenge_repaired_score": 1.0,
-        "challenge_rows": 7,
+        "challenge_rows": 8,
         "challenge_schema": "agades.pqc.prime.challenge_scorecard.v1",
         "challenge_types": [
             "claims_guard_repair",
@@ -73,6 +73,7 @@ def test_prime_environment_smoke_report_exercises_packaged_verifier(
             "wrong_family_decoy_repair",
             "multi_trap_repair",
             "operator_mismatch_repair",
+            "operator_param_mismatch_repair",
             "missing_hypothesis_repair",
             "invented_complexity_repair",
         ],
@@ -150,11 +151,11 @@ def test_prime_environment_smoke_verify_accepts_committed_report() -> None:
         "report_path": "reports/prime_environment_smoke.json",
         "accepted": True,
         "summary": {
-            "accepted_score": 1.0,
-            "challenge_broken_score": 0.0,
-            "challenge_repaired_score": 1.0,
-                "challenge_rows": 7,
-            "dataset_rows": 79,
+                "accepted_score": 1.0,
+                "challenge_broken_score": 0.0,
+                "challenge_repaired_score": 1.0,
+                "challenge_rows": 8,
+                "dataset_rows": 79,
             "failure_count": 0,
             "formal_artifact_binding_schema": (
                 "agades.pqc.rl.formal_artifact_binding.v1"
