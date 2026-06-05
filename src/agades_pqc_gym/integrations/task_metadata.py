@@ -10,7 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from agades_pqc_gym.core.attack_plan import AttackPlan
 
-TASK_METADATA_SCHEMA = "agades.pqc.task_metadata.v4"
+TASK_METADATA_SCHEMA = "agades.pqc.task_metadata.v5"
 
 
 class TaskMetadata(BaseModel):
@@ -24,6 +24,7 @@ class TaskMetadata(BaseModel):
     target_name: str
     support_level: str
     operator_types: list[str]
+    operator_assumptions: list[list[str]]
     requires_reproducibility: bool
     public: bool
     seed_accepted: bool
@@ -57,6 +58,9 @@ def task_metadata_for_plan(
         target_name=plan.target.name,
         support_level=plan.target.support_level.value,
         operator_types=[operator.type for operator in plan.operators],
+        operator_assumptions=[
+            list(operator.assumptions) for operator in plan.operators
+        ],
         requires_reproducibility=(
             plan.constraints.require_reproducibility_on_downscaled_instances
         ),
@@ -151,7 +155,11 @@ def attack_plan_matches_task_metadata(
         return False
 
     expected_operator_types = normalized.get("operator_types")
+    expected_operator_assumptions = normalized.get("operator_assumptions")
     candidate_operator_types = [operator.type for operator in plan.operators]
+    candidate_operator_assumptions = [
+        list(operator.assumptions) for operator in plan.operators
+    ]
 
     return (
         normalized.get("target_family") == plan.target.family.value
@@ -159,6 +167,8 @@ def attack_plan_matches_task_metadata(
         and normalized.get("support_level") == plan.target.support_level.value
         and isinstance(expected_operator_types, list)
         and expected_operator_types == candidate_operator_types
+        and isinstance(expected_operator_assumptions, list)
+        and expected_operator_assumptions == candidate_operator_assumptions
     )
 
 

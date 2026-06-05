@@ -145,6 +145,8 @@
         "semantic_mutation_repair",
         "wrong_family_decoy_repair",
         "operator_mismatch_repair",
+        "missing_hypothesis_repair",
+        "invented_complexity_repair",
         "unsupported_refusal"
       ],
       "claim_boundary": "adapter-improvement claims require a held-out broad challenge suite with sufficient examples for every required challenge type",
@@ -245,11 +247,13 @@
     "task_info_fields": [
       "schema_version",
       "source_path",
+      "seed_attack_plan_sha256",
       "attack_plan_id",
       "target_family",
       "target_name",
       "support_level",
       "operator_types",
+      "operator_assumptions",
       "requires_reproducibility",
       "public",
       "seed_accepted",
@@ -260,7 +264,7 @@
       "seed_reproduction_success",
       "seed_reward"
     ],
-    "task_match_rule": "accepted candidates must match the current task info for target_family, target_name, support_level, and ordered operator_types; attack_plan_id may change",
+    "task_match_rule": "accepted candidates must match the current task info for target_family, target_name, support_level, and ordered operator_types/operator_assumptions; attack_plan_id may change",
     "unsupported_reward": 0.0
   },
   "source_catalog_scope": {
@@ -624,7 +628,7 @@
       "schema_only"
     ],
     "task_count": 79,
-    "task_metadata_schema": "agades.pqc.task_metadata.v4",
+    "task_metadata_schema": "agades.pqc.task_metadata.v5",
     "task_summary": {
       "family_counts": {
         "CODE_BASED": 21,

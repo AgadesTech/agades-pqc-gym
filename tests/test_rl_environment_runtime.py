@@ -411,6 +411,23 @@ def test_pedagogical_reward_blocks_task_mismatch_but_keeps_term_diagnostics() ->
     assert "task_match" in report["blocking_reasons"]
 
 
+def test_pedagogical_reward_blocks_missing_operator_hypotheses() -> None:
+    task_info = _task_info(LATTICE_PLAN)
+    candidate = json.loads(LATTICE_PLAN.read_text(encoding="utf-8"))
+    candidate["operators"][0]["assumptions"] = []
+
+    report = score_attack_plan_candidate(
+        json.dumps(candidate, sort_keys=True),
+        task_info=task_info,
+        require_task_match=True,
+    )
+
+    assert report["reward"] == 0.0
+    assert report["blocked"] is True
+    assert report["terms"]["task_match"] == 0.0
+    assert "task_match" in report["blocking_reasons"]
+
+
 def test_gym_environment_reset_step_emits_public_safe_rollout_trace() -> None:
     env = AgadesPQCGymEnvironment.from_attack_plan_paths([LATTICE_PLAN])
 

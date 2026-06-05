@@ -95,6 +95,8 @@ CHALLENGE_TYPES = (
     "semantic_mutation_repair",
     "wrong_family_decoy_repair",
     "operator_mismatch_repair",
+    "missing_hypothesis_repair",
+    "invented_complexity_repair",
     "unsupported_refusal",
 )
 CHALLENGE_SPLITS = ("train", "heldout")
@@ -504,6 +506,10 @@ def _broken_submission_for_challenge(raw_json: str, info: dict[str, Any]) -> str
             raw_json,
             task_info=info["task_metadata"],
         )
+    if challenge_type == "missing_hypothesis_repair":
+        return _missing_hypothesis_invalid_output(raw_json)
+    if challenge_type == "invented_complexity_repair":
+        return _invented_complexity_invalid_output(raw_json)
     if challenge_type == "unsupported_refusal":
         return raw_json
     raise ValueError(f"unsupported Prime challenge_type: {challenge_type}")
@@ -526,6 +532,8 @@ def _broken_failure_mode(challenge_type: str) -> str:
         "semantic_mutation_repair": "seed_semantic_copy",
         "wrong_family_decoy_repair": "task_mismatch_decoy",
         "operator_mismatch_repair": "operator_sequence_mismatch",
+        "missing_hypothesis_repair": "missing_operator_hypothesis",
+        "invented_complexity_repair": "invented_complexity_claim",
         "unsupported_refusal": "unsupported_attackplan_submitted",
     }[challenge_type]
 
@@ -742,6 +750,12 @@ def _challenge_type_applies_to_task(
         return False
     if challenge_type == "semantic_mutation_repair":
         return task_info.get("requires_reproducibility") is not True
+    if challenge_type == "missing_hypothesis_repair":
+        operator_assumptions = task_info.get("operator_assumptions")
+        return (
+            isinstance(operator_assumptions, list)
+            and any(bool(assumptions) for assumptions in operator_assumptions)
+        )
     return True
 
 
@@ -1101,6 +1115,42 @@ def _challenge_question_for_seed_attack_plan(
                 "",
                 "Broken AttackPlan JSON:",
                 _operator_mismatch_invalid_output(raw_json, task_info=task_info),
+            ]
+        )
+    if challenge_type == "missing_hypothesis_repair":
+        return "\n".join(
+            [
+                "Repair this Agades PQC Gym challenge.",
+                "The AttackPlan below targets the right task and uses the "
+                "right operators, but it dropped an operator hypothesis.",
+                f"Target task: {task_line}.",
+                *_strict_json_output_rules("valid AttackPlan"),
+                "Restore the missing operator assumptions from the target task.",
+                "Preserve the target, operator types, operator params, "
+                "constraints, claims, metadata, and conservative claim boundary.",
+                "Toy/demo verifier output only; do not claim real-world PQC breaks.",
+                "",
+                "Broken AttackPlan JSON:",
+                _missing_hypothesis_invalid_output(raw_json),
+            ]
+        )
+    if challenge_type == "invented_complexity_repair":
+        return "\n".join(
+            [
+                "Repair this Agades PQC Gym challenge.",
+                "The AttackPlan below targets the right task, but it invents "
+                "a complexity estimate and fake external claim evidence.",
+                f"Target task: {task_line}.",
+                *_strict_json_output_rules("valid AttackPlan"),
+                "Remove the invented complexity claim by setting "
+                "estimated_time_bits=null, estimated_memory_bits=null, "
+                "success_probability=null, external_claim=false, and source=null.",
+                "Preserve target, operators, operator assumptions, constraints, "
+                "metadata, and conservative claim boundary.",
+                "Toy/demo verifier output only; do not claim real-world PQC breaks.",
+                "",
+                "Broken AttackPlan JSON:",
+                _invented_complexity_invalid_output(raw_json),
             ]
         )
     if challenge_type == "unsupported_refusal":
@@ -1601,6 +1651,35 @@ def _operator_mismatch_invalid_output(
         else "primal_usvp"
     )
     operators[0]["type"] = replacement
+    return json.dumps(payload, indent=2)
+
+
+def _missing_hypothesis_invalid_output(raw_json: str) -> str:
+    payload = json.loads(raw_json)
+    operators = payload.get("operators")
+    if not isinstance(operators, list) or not operators:
+        raise ValueError("AttackPlan challenge seed lacks operators.")
+    for operator in operators:
+        if not isinstance(operator, dict):
+            continue
+        assumptions = operator.get("assumptions")
+        if isinstance(assumptions, list) and assumptions:
+            operator["assumptions"] = []
+            return json.dumps(payload, indent=2)
+    raise ValueError("AttackPlan challenge seed lacks operator assumptions.")
+
+
+def _invented_complexity_invalid_output(raw_json: str) -> str:
+    payload = json.loads(raw_json)
+    claims = payload.get("claims")
+    if not isinstance(claims, dict):
+        claims = {}
+        payload["claims"] = claims
+    claims["estimated_time_bits"] = 41.0
+    claims["estimated_memory_bits"] = 29.0
+    claims["success_probability"] = 0.99
+    claims["external_claim"] = True
+    claims["source"] = "invented-by-model-without-review"
     return json.dumps(payload, indent=2)
 
 

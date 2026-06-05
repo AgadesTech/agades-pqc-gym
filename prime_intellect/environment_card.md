@@ -63,9 +63,10 @@ single-turn tasks, not just the lattice MVP seed. Bounded toy evaluator
 families receive normal verifier scores when their applicability rules pass.
 Unsupported schema-only tasks remain useful as routing/safety checks and
 receive zero reward instead of fabricated cryptanalytic estimates.
-Rewards are task-aware through `agades.pqc.task_metadata.v4`: each task records
+Rewards are task-aware through `agades.pqc.task_metadata.v5`: each task records
 the seed AttackPlan SHA-256 digest, and a candidate must still match the current
-task's target family, target name, support level, and ordered operator types.
+task's target family, target name, support level, ordered operator types, and
+ordered operator assumptions.
 Rows also expose seed verifier status, seed reward, seed estimator, and seed
 reproduction status, so unsupported schema-only seeds are explicit `0.0`-reward
 tasks and fixture-backed seeds are inspectable rather than ambiguous accepted

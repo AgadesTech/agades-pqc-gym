@@ -18,12 +18,14 @@ python prime_intellect/verifier.py examples/attack_plans/lattice_primal_usvp_toy
 cd prime_intellect/verifiers_environment && prime eval run agades-pqc-verifier-env
 ```
 
-Prime task rows provide `agades.pqc.task_metadata.v4` `info` metadata with
+Prime task rows provide `agades.pqc.task_metadata.v5` `info` metadata with
 `target_family`, `target_name`, `support_level`, ordered `operator_types`,
-the seed AttackPlan SHA-256 digest, seed verifier status/reward, seed estimator,
-and seed reproduction status. The environment reward uses the task identity
-fields to reject unrelated valid AttackPlans; changing `attack_plan_id` alone is
-allowed so candidates can be treated as variants instead of exact copies.
+ordered `operator_assumptions`, the seed AttackPlan SHA-256 digest, seed
+verifier status/reward, seed estimator, and seed reproduction status. The
+environment reward uses the task identity fields to reject unrelated valid
+AttackPlans or candidates that drop required hypotheses; changing
+`attack_plan_id` alone is allowed so candidates can be treated as variants
+instead of exact copies.
 
 ## Output
 

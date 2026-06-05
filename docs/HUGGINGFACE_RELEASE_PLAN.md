@@ -100,10 +100,10 @@ uv run agades-pqc hf-publication-handoff-verify --handoff docs/huggingface_publi
 ```
 
 It contains deterministic JSONL rows for public AttackPlans, shared
-`agades.pqc.task_metadata.v4` task constraints, seed AttackPlan SHA-256
-digests, seed verifier status/reward, seed estimator, seed reproduction status,
-matching verifier outputs, all current public run bundles, and a root checksum
-manifest.
+`agades.pqc.task_metadata.v5` task constraints, ordered operator assumptions,
+seed AttackPlan SHA-256 digests, seed verifier status/reward, seed estimator,
+seed reproduction status, matching verifier outputs, all current public run
+bundles, and a root checksum manifest.
 
 `docs/source_catalog.json`, `docs/benchmark_source_contracts.json`,
 `docs/public_benchmark_manifest.json`, and `public/run_export/manifest.json`

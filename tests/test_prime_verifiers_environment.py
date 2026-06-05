@@ -456,6 +456,8 @@ def test_prime_verifiers_environment_builds_discriminating_challenge_rows() -> N
         "semantic_mutation_repair",
         "wrong_family_decoy_repair",
         "operator_mismatch_repair",
+        "missing_hypothesis_repair",
+        "invented_complexity_repair",
     ]
     for row in rows:
         info = row["info"]
@@ -594,6 +596,81 @@ def test_prime_verifiers_environment_scores_challenge_against_target_metadata() 
     )
 
 
+def test_prime_verifiers_environment_scores_missing_hypothesis_challenge() -> None:
+    module = _load_environment_module()
+    raw_plan = Path(
+        "prime_intellect/verifiers_environment/data/lattice_bdd_toy.json"
+    ).read_text(encoding="utf-8")
+    row = module.build_dataset_rows(
+        attack_plan_id="lattice_bdd_toy_v1",
+        challenge_suite=True,
+        challenge_type="missing_hypothesis_repair",
+    )[0]
+    broken_plan = module._missing_hypothesis_invalid_output(raw_plan)
+    original_operator = json.loads(raw_plan)["operators"][0]
+    broken_operator = json.loads(broken_plan)["operators"][0]
+
+    broken_report = module.score_attack_plan_completion_report(
+        _assistant_completion(broken_plan),
+        info=row["info"],
+        require_info=True,
+    )
+    repaired_report = module.score_attack_plan_completion_report(
+        _assistant_completion(raw_plan),
+        info=row["info"],
+        require_info=True,
+    )
+
+    assert broken_operator["assumptions"] == []
+    assert original_operator["assumptions"]
+    assert "Restore the missing operator assumptions" in row["prompt"][0]["content"]
+    assert broken_report["accepted"] is False
+    assert broken_report["aggregate_reward"] == 0.0
+    assert "task_match" in broken_report["blocking_reasons"]
+    assert repaired_report["accepted"] is True
+    assert repaired_report["aggregate_reward"] == 1.0
+    assert repaired_report["challenge"]["challenge_type"] == (
+        "missing_hypothesis_repair"
+    )
+
+
+def test_prime_verifiers_environment_scores_invented_complexity_challenge() -> None:
+    module = _load_environment_module()
+    raw_plan = Path(
+        "prime_intellect/verifiers_environment/data/lattice_bdd_toy.json"
+    ).read_text(encoding="utf-8")
+    row = module.build_dataset_rows(
+        attack_plan_id="lattice_bdd_toy_v1",
+        challenge_suite=True,
+        challenge_type="invented_complexity_repair",
+    )[0]
+    broken_plan = module._invented_complexity_invalid_output(raw_plan)
+    broken_claims = json.loads(broken_plan)["claims"]
+
+    broken_report = module.score_attack_plan_completion_report(
+        _assistant_completion(broken_plan),
+        info=row["info"],
+        require_info=True,
+    )
+    repaired_report = module.score_attack_plan_completion_report(
+        _assistant_completion(raw_plan),
+        info=row["info"],
+        require_info=True,
+    )
+
+    assert broken_claims["estimated_time_bits"] == 41.0
+    assert broken_claims["external_claim"] is True
+    assert "Remove the invented complexity claim" in row["prompt"][0]["content"]
+    assert broken_report["accepted"] is False
+    assert broken_report["aggregate_reward"] == 0.0
+    assert "no_security_overclaim" in broken_report["blocking_reasons"]
+    assert repaired_report["accepted"] is True
+    assert repaired_report["aggregate_reward"] == 1.0
+    assert repaired_report["challenge"]["challenge_type"] == (
+        "invented_complexity_repair"
+    )
+
+
 def test_prime_verifiers_environment_scores_semantic_mutation_challenge() -> None:
     module = _load_environment_module()
     raw_plan = Path(
@@ -712,21 +789,25 @@ def test_prime_verifiers_environment_builds_challenge_scorecard() -> None:
         "private_data_allowed": False,
         "security_claims_allowed": False,
     }
-    assert scorecard["summary"]["challenge_rows"] == 4
+    assert scorecard["summary"]["challenge_rows"] == 6
     assert scorecard["summary"]["challenge_type_counts"] == {
         "claims_guard_repair": 1,
+        "invented_complexity_repair": 1,
+        "missing_hypothesis_repair": 1,
         "operator_mismatch_repair": 1,
         "semantic_mutation_repair": 1,
         "wrong_family_decoy_repair": 1,
     }
     assert scorecard["summary"]["broken_accept_count"] == 0
-    assert scorecard["summary"]["repaired_accept_count"] == 4
+    assert scorecard["summary"]["repaired_accept_count"] == 6
     assert scorecard["summary"]["broken_score_max"] == 0.0
     assert scorecard["summary"]["repaired_score_min"] == 1.0
     assert {
         result["broken_failure_mode"] for result in scorecard["results"]
     } == {
         "task_mismatch_decoy",
+        "invented_complexity_claim",
+        "missing_operator_hypothesis",
         "unreviewed_pre_evaluation_claims",
         "operator_sequence_mismatch",
         "seed_semantic_copy",
@@ -766,7 +847,7 @@ def test_prime_verifiers_environment_builds_heldout_challenge_scorecard() -> Non
 
     assert scorecard["accepted"] is True
     assert scorecard["scope"]["challenge_split"] == "heldout"
-    assert scorecard["summary"]["heldout_split_counts"] == {"heldout": 7}
+    assert scorecard["summary"]["heldout_split_counts"] == {"heldout": 8}
     assert {result["heldout_split"] for result in scorecard["results"]} == {"heldout"}
 
 
@@ -804,9 +885,11 @@ def test_prime_verifiers_environment_builds_balanced_heldout_challenge_rows() ->
     )
 
     challenge_counts = Counter(row["info"]["challenge_type"] for row in rows)
-    assert len(rows) == 40
+    assert len(rows) == 56
     assert challenge_counts == {
         "claims_guard_repair": 8,
+        "invented_complexity_repair": 8,
+        "missing_hypothesis_repair": 8,
         "operator_mismatch_repair": 8,
         "semantic_mutation_repair": 8,
         "unsupported_refusal": 8,
@@ -898,9 +981,11 @@ def test_prime_verifiers_environment_builds_balanced_heldout_scorecard() -> None
 
     assert scorecard["accepted"] is True
     assert scorecard["scope"]["min_challenge_examples_per_type"] == 8
-    assert scorecard["summary"]["challenge_rows"] == 40
+    assert scorecard["summary"]["challenge_rows"] == 56
     assert scorecard["summary"]["challenge_type_counts"] == {
         "claims_guard_repair": 8,
+        "invented_complexity_repair": 8,
+        "missing_hypothesis_repair": 8,
         "operator_mismatch_repair": 8,
         "semantic_mutation_repair": 8,
         "unsupported_refusal": 8,

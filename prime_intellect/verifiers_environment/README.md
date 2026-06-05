@@ -6,13 +6,14 @@ This is a single-turn environment: each rollout asks a model to submit one JSON
 `AttackPlan`. The reward function runs the shared public verifier and returns
 `1.0` only when the candidate is schema-valid, routed to an implemented family,
 accepted by the evaluator, and still matches the current task's
-`agades.pqc.task_metadata.v4` identity fields: `target_family`, `target_name`,
-`support_level`, and ordered `operator_types`. The candidate may change
-`attack_plan_id`; it cannot score by submitting an unrelated valid public plan.
-Rows also expose the seed AttackPlan SHA-256 digest, seed verifier
-status/reward, seed estimator, and seed reproduction status, so unsupported
-schema-only tasks are labeled `unsupported`, fixture-backed seeds are
-inspectable, and no arbitrary code is executed.
+`agades.pqc.task_metadata.v5` identity fields: `target_family`, `target_name`,
+`support_level`, ordered `operator_types`, and ordered
+`operator_assumptions`. The candidate may change `attack_plan_id`; it cannot
+score by submitting an unrelated valid public plan or by dropping required
+operator hypotheses. Rows also expose the seed AttackPlan SHA-256 digest, seed
+verifier status/reward, seed estimator, and seed reproduction status, so
+unsupported schema-only tasks are labeled `unsupported`, fixture-backed seeds
+are inspectable, and no arbitrary code is executed.
 
 The package embeds every valid public AttackPlan example from the repository,
 covering the lattice MVP, bounded toy evaluator examples for code-based,
@@ -72,7 +73,8 @@ This does not add private data. It rewrites public seed rows into task-aware
 repair challenges and stores the real scoring target under
 `info["task_metadata"]`. The current challenge types are
 `claims_guard_repair`, `semantic_mutation_repair`,
-`wrong_family_decoy_repair`, and `operator_mismatch_repair` for supported
+`wrong_family_decoy_repair`, `operator_mismatch_repair`,
+`missing_hypothesis_repair`, and `invented_complexity_repair` for supported
 AttackPlans, plus
 `unsupported_refusal` for schema-only or unsupported targets. Copying the broken
 or decoy object from the prompt does not score; the submitted AttackPlan must
@@ -80,6 +82,10 @@ satisfy the nested target metadata, the verifier, the formal bindings, and the
 no-claim gate. For `semantic_mutation_repair`, copying the seed or changing only
 metadata does not score; the submitted AttackPlan must make a valid semantic
 change while preserving the target and conservative claim boundary. For
+`missing_hypothesis_repair`, dropping the seed operator assumptions does not
+score. For `invented_complexity_repair`, a schema-valid but unreviewed
+complexity claim does not score.
+For
 `unsupported_refusal`, the correct output is not an
 AttackPlan: it is a conservative JSON refusal that names the unsupported target,
 sets `claims_pqc_break=false`, and requires human review.
@@ -91,7 +97,8 @@ For a broad eval that cannot pass by overfitting one trap type, use
 `challenge_suite=True` and `challenge_split="heldout"`. This builds a stable
 balanced held-out suite with the same minimum count for
 `claims_guard_repair`, `semantic_mutation_repair`,
-`wrong_family_decoy_repair`, `operator_mismatch_repair`, and
+`wrong_family_decoy_repair`, `operator_mismatch_repair`,
+`missing_hypothesis_repair`, `invented_complexity_repair`, and
 `unsupported_refusal`; it fails instead of duplicating prompts if the public
 corpus cannot satisfy the requested minimum.
 For failed-row diagnosis, pass `challenge_row_indices=[...]` after the same
