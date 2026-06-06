@@ -250,6 +250,7 @@ def test_prime_environment_manifest_describes_packaged_verifier_tasks(
                 "contextual_multi_trap_repair",
                 "implicit_operator_semantics_repair",
                 "reviewer_decision",
+                "reviewer_decision_hard",
                 "operator_mismatch_repair",
                 "operator_param_mismatch_repair",
                 "missing_hypothesis_repair",

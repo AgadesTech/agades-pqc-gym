@@ -45,7 +45,7 @@
     },
     "gitignore": {
       "path": ".gitignore",
-      "sha256": "36bb2197d73685d5af2e44b9379089aa3c8ebbee6b69977a318417ac67c721c3"
+      "sha256": "3eb27555e3ebf0308e8d0240e892d894a4adf33301dd54e1d2b15b9d118422a4"
     },
     "openevolve_config": {
       "path": "examples/openevolve/config.yaml",
@@ -57,15 +57,15 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "9c01c79125798299705a6f936bd4d823e829044403a1099837b45c4f3ff9189a"
+      "sha256": "411bba3d6fbf8cc0a4a39ab9312392ccadb25448b7cdf9ab03c41c1e0fef5e13"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
-      "sha256": "e389bc6a76f2018207d441ce3ea988ef6cc2c47bddca8fe0e96fceddf281cb2a"
+      "sha256": "3de6f8c3ad7cd3f5b2af31335a718c4631bd3fc93cbb247297231cbf490e9b73"
     },
     "prime_eval_config_manifest": {
       "path": "docs/prime_eval_config_manifest.json",
-      "sha256": "911aa7d09ef73d009bc3e5da264a5deb6f435722cb260ddda63b5be57f9ad308"
+      "sha256": "aaba42af1472ae758c9a555cb19611e1f939d653864337dbe16864c3716822de"
     },
     "prime_training_template": {
       "path": "prime_intellect/training/private_qwen_prime_rl.template.toml",
@@ -85,15 +85,15 @@
     },
     "private_training_manifest": {
       "path": "docs/private_training_config_manifest.json",
-      "sha256": "1b8fc8aecc8611316d9bb13cc2b9feda57f0ef2fbb5d1b59a9f50912ec3c6865"
+      "sha256": "e7a6eb055b32aadc3c9a57a8c26ed13baef13811c3efdf47f41a84487169ca32"
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "cda06563d0015d0dfecd1841bacf31f0eee9c31669c0ac2c446d361dedbf341b"
+      "sha256": "464f4a9963b33644d9628176d668d3e441a2bc5a586a36c20005d2ede888980e"
     },
     "rl_environment_contract": {
       "path": "docs/rl_environment_contract.json",
-      "sha256": "5e3ffe7aef33d3348e0d49041f94fe318f928a143b74ac5b44f887e27fd8cbae"
+      "sha256": "c416baf394e573350cec11eec91adc48e5eae6e8316b8b769b2cc5ce326c1b50"
     }
   },
   "project": {
