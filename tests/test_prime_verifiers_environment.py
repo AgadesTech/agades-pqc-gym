@@ -633,8 +633,19 @@ def test_prime_verifiers_environment_builds_implicit_operator_semantics_challeng
     assert "does not expose the ordered operator" in prompt
     assert "public operator-semantics hint" in prompt
     assert "hidden public seed metadata" in prompt
-    assert "compatible_operator_ids" in prompt
+    assert "compatible_operator_ids" not in prompt
+    assert "compatible_operator_types" in prompt
+    assert "relevant_operator_cards" in prompt
+    assert "schema_required_operator_key" in prompt
+    assert "schema_forbidden_operator_keys" in prompt
+    assert '"operator_id"' in prompt
+    assert "do not add an operator_id key" in prompt
+    assert '"operator_type"' in prompt
     assert "required_hypothesis_terms" in prompt
+    assert (
+        "Preserve Candidate object 2 target identity and operator params exactly"
+        in prompt
+    )
     assert f"target_family={task_metadata['target_family']}" in prompt
     assert f"target_name={task_metadata['target_name']}" in prompt
     assert "operator_types=" not in prompt
