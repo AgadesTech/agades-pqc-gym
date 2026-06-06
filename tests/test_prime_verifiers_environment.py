@@ -638,6 +638,7 @@ def test_prime_verifiers_environment_builds_implicit_operator_semantics_challeng
     assert "relevant_operator_cards" in prompt
     assert "schema_required_operator_key" in prompt
     assert "schema_forbidden_operator_keys" in prompt
+    assert "candidate_operator_param_null_paths" in prompt
     assert '"operator_id"' in prompt
     assert "do not add an operator_id key" in prompt
     assert '"operator_type"' in prompt
@@ -657,6 +658,72 @@ def test_prime_verifiers_environment_builds_implicit_operator_semantics_challeng
     assert broken_report["aggregate_reward"] == 0.0
     assert repaired_report["accepted"] is True
     assert repaired_report["aggregate_reward"] == 1.0
+
+
+def test_prime_verifiers_environment_reports_param_null_paths_when_present() -> None:
+    module = _load_environment_module()
+
+    raw_json = json.dumps(
+        {
+            "operators": [
+                {
+                    "params": {
+                        "vector_set": {
+                            "testGroups": [
+                                {
+                                    "tests": [
+                                        {
+                                            "ciphertext": None,
+                                            "seed": "00010203",
+                                            "sharedSecret": None,
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    )
+    task_info = {
+        "target_family": "IMPLEMENTATION_SECURITY",
+        "operator_assumptions": [["toy_acvp_json_vector_set_model"]],
+    }
+
+    hint = module._implicit_operator_semantics_hint(raw_json, task_info=task_info)
+
+    assert "candidate_operator_param_null_paths" in hint
+    assert "vector_set.testGroups[0].tests[0].ciphertext" in hint
+    assert "vector_set.testGroups[0].tests[0].sharedSecret" in hint
+
+
+def test_prime_verifiers_environment_current_acvp_rows_have_no_hidden_null_paths(
+) -> None:
+    module = _load_environment_module()
+
+    row = module.build_dataset_rows(
+        attack_plan_id="implementation_security_mldsa_acvp_toy_v1",
+        challenge_suite=True,
+        challenge_type="implicit_operator_semantics_repair",
+        challenge_split="heldout",
+    )[0]
+
+    prompt = row["prompt"][0]["content"]
+    info = row["info"]
+    task_metadata = info["task_metadata"]
+    raw_json = module._raw_json_for_task_info(task_metadata)
+    repaired = json.loads(module._correct_submission_for_challenge(raw_json, info))
+    repaired_report = module.score_attack_plan_completion_report(
+        _assistant_completion(json.dumps(repaired, sort_keys=True)),
+        info=info,
+        require_info=True,
+    )
+
+    assert "Preserve nested null-valued fields inside operator params exactly" in prompt
+    assert "candidate_operator_param_null_paths" in prompt
+    assert '"candidate_operator_param_null_paths":[[]]' in prompt
+    assert repaired_report["accepted"] is True
 
 
 def test_prime_verifiers_environment_builds_unsupported_refusal_rows() -> None:
