@@ -788,6 +788,9 @@ def test_prime_verifiers_environment_builds_reviewer_decision_repair_row() -> No
     assert "Decide whether Candidate object 2 is repairable" in prompt
     assert "Do not choose the output type by format" in prompt
     assert "unsupported_refusal" in prompt
+    assert "preserve Candidate object 2 attack_plan_id" in prompt
+    assert "Restore operator assumptions required by the public hint" in prompt
+    assert "Do not omit attack_plan_id" in prompt
     assert "operator_types=" not in prompt
     assert "operator_params=" not in prompt
     assert module._compact_json(task_metadata["operator_types"]) not in prompt
@@ -811,6 +814,7 @@ def test_prime_verifiers_environment_builds_reviewer_decision_refusal_row() -> N
     prompt = row["prompt"][0]["content"]
     task_metadata = info["task_metadata"]
     raw_json = module._raw_json_for_task_info(task_metadata)
+    expected_refusal = module._unsupported_refusal_for_task(task_metadata)
     copied_attackplan_report = module.score_attack_plan_completion_report(
         _assistant_completion(raw_json),
         info=info,
@@ -818,6 +822,15 @@ def test_prime_verifiers_environment_builds_reviewer_decision_refusal_row() -> N
     )
     refusal_report = module.score_attack_plan_completion_report(
         _assistant_completion(module._correct_submission_for_challenge(raw_json, info)),
+        info=info,
+        require_info=True,
+    )
+    free_form_reason_refusal = {
+        **expected_refusal,
+        "reason": "Schema-only support level with no reviewed estimator path.",
+    }
+    free_form_reason_report = module.score_attack_plan_completion_report(
+        _assistant_completion(json.dumps(free_form_reason_refusal)),
         info=info,
         require_info=True,
     )
@@ -829,6 +842,9 @@ def test_prime_verifiers_environment_builds_reviewer_decision_refusal_row() -> N
     assert task_metadata["seed_accepted"] is False
     assert "must refuse" not in prompt
     assert "unsupported_refusal" in prompt
+    assert json.dumps(expected_refusal, indent=2) in prompt
+    assert 'stable enum "unsupported_or_schema_only"' in prompt
+    assert "no alternate reason or message" in prompt
     assert "Candidate object 1 is a valid-looking AttackPlan decoy" in prompt
     assert copied_attackplan_report["accepted"] is False
     assert "unsupported_refusal_includes_attackplan_fields" in (
@@ -836,6 +852,10 @@ def test_prime_verifiers_environment_builds_reviewer_decision_refusal_row() -> N
     )
     assert refusal_report["accepted"] is True
     assert refusal_report["aggregate_reward"] == 1.0
+    assert free_form_reason_report["accepted"] is False
+    assert "unsupported_refusal_reason" in free_form_reason_report[
+        "blocking_reasons"
+    ]
 
 
 def test_prime_verifiers_environment_filters_challenge_rows_by_split() -> None:

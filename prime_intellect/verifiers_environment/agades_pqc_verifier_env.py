@@ -1380,9 +1380,17 @@ def _challenge_question_for_seed_attack_plan(
                     "repaired using the public hint, return the repaired "
                     "AttackPlan. If the task is unsupported or schema-only, "
                     "return unsupported_refusal instead.",
+                    "For a repaired AttackPlan, preserve Candidate object 2 "
+                    "attack_plan_id, target, constraints, metadata, operator "
+                    "params, and task identity. Restore operator assumptions "
+                    "required by the public hint or task card when Candidate "
+                    "object 2 dropped them. Repair only the invalid operator "
+                    "representation, missing required assumptions, and "
+                    "unreviewed claim values.",
                     "For a repaired AttackPlan, set estimated_time_bits=null, "
                     "estimated_memory_bits=null, success_probability=null, "
                     "external_claim=false, and source=null.",
+                    "Do not omit attack_plan_id from a repaired AttackPlan.",
                     "Do not include review prose, explanations, external "
                     "evidence, or security claims.",
                     "Toy/demo verifier output only; do not claim real-world "
@@ -1422,9 +1430,11 @@ def _challenge_question_for_seed_attack_plan(
                 "repaired using the public hint, return the repaired AttackPlan. "
                 "If the task is unsupported or schema-only, return "
                 "unsupported_refusal instead.",
-                "For unsupported_refusal, include response_type, target_family, "
-                "target_name, support_level, reason, message, "
-                "claims_pqc_break=false, and needs_human_review=true.",
+                "If returning unsupported_refusal for this task card, return "
+                "exactly this JSON object with no alternate reason or message:",
+                json.dumps(_unsupported_refusal_for_task(task_info), indent=2),
+                'The reason value is the stable enum "unsupported_or_schema_only"; '
+                "do not replace it with free-form prose.",
                 "Do not include attack_plan_id, operators, claims, or "
                 "AttackPlan-only fields in unsupported_refusal.",
                 "Toy/demo verifier output only; do not claim real-world PQC breaks.",
