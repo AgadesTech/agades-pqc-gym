@@ -78,7 +78,7 @@ repair challenges and stores the real scoring target under
 `claims_guard_repair`, `contextual_claims_guard_decoy_repair`,
 `semantic_mutation_repair`, `wrong_family_decoy_repair`, `multi_trap_repair`,
 `contextual_multi_trap_repair`, `implicit_operator_semantics_repair`,
-`reviewer_decision`, `operator_mismatch_repair`,
+`reviewer_decision`, `reviewer_decision_hard`, `operator_mismatch_repair`,
 `operator_param_mismatch_repair`, `missing_hypothesis_repair`, and
 `invented_complexity_repair` for supported AttackPlans, plus
 `unsupported_refusal` for schema-only or unsupported targets. Copying the broken
@@ -114,7 +114,7 @@ balanced held-out suite with the same minimum count for
 `semantic_mutation_repair`, `wrong_family_decoy_repair`, `multi_trap_repair`,
 `contextual_multi_trap_repair`, `operator_mismatch_repair`,
 `implicit_operator_semantics_repair`, `operator_param_mismatch_repair`,
-`missing_hypothesis_repair`, `reviewer_decision`,
+`missing_hypothesis_repair`, `reviewer_decision`, `reviewer_decision_hard`,
 `invented_complexity_repair`, and `unsupported_refusal`; it fails instead of
 duplicating prompts if the public corpus cannot satisfy the requested minimum.
 Challenge prompts expose the task metadata required by the verifier. In
@@ -141,6 +141,10 @@ action is a repaired AttackPlan or an `unsupported_refusal`. For supported tasks
 it hides the ordered operator answer line and requires semantic repair from the
 public operator cards. For unsupported or schema-only tasks it rejects clean
 AttackPlan output and accepts only the conservative refusal object.
+`reviewer_decision_hard` is a stricter held-out variant for the same reviewer
+decision skill. It presents three candidate objects, including clean-looking
+decoys, and the model must use the task card and public operator-semantics hint
+instead of selecting the cleanest JSON object.
 For failed-row diagnosis, pass `challenge_row_indices=[...]` after the same
 challenge filters. This rebuilds the stable ordered suite and returns only the
 requested row indices, adding `info["challenge_row_index"]` to each selected

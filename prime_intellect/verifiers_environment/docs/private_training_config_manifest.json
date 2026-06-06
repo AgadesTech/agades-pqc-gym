@@ -43,15 +43,15 @@
     },
     "pedagogical_rl_method": {
       "path": "docs/pedagogical_rl_method.json",
-      "sha256": "9c01c79125798299705a6f936bd4d823e829044403a1099837b45c4f3ff9189a"
+      "sha256": "411bba3d6fbf8cc0a4a39ab9312392ccadb25448b7cdf9ab03c41c1e0fef5e13"
     },
     "prime_environment_manifest": {
       "path": "prime_intellect/verifiers_environment/prime_manifest.json",
-      "sha256": "e389bc6a76f2018207d441ce3ea988ef6cc2c47bddca8fe0e96fceddf281cb2a"
+      "sha256": "3de6f8c3ad7cd3f5b2af31335a718c4631bd3fc93cbb247297231cbf490e9b73"
     },
     "prime_eval_config_manifest": {
       "path": "docs/prime_eval_config_manifest.json",
-      "sha256": "911aa7d09ef73d009bc3e5da264a5deb6f435722cb260ddda63b5be57f9ad308"
+      "sha256": "aaba42af1472ae758c9a555cb19611e1f939d653864337dbe16864c3716822de"
     },
     "prime_eval_template": {
       "path": "prime_intellect/evals/agades_pqc_eval.template.toml",

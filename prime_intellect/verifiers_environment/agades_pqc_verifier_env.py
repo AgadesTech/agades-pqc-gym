@@ -99,6 +99,7 @@ CHALLENGE_TYPES = (
     "contextual_multi_trap_repair",
     "implicit_operator_semantics_repair",
     "reviewer_decision",
+    "reviewer_decision_hard",
     "operator_mismatch_repair",
     "operator_param_mismatch_repair",
     "missing_hypothesis_repair",
@@ -524,7 +525,7 @@ def _broken_submission_for_challenge(raw_json: str, info: dict[str, Any]) -> str
             raw_json,
             task_info=info["task_metadata"],
         )
-    if challenge_type == "reviewer_decision":
+    if challenge_type in {"reviewer_decision", "reviewer_decision_hard"}:
         if info["expected_behavior"] == "refuse_unsupported":
             return raw_json
         return _implicit_operator_semantics_invalid_output(
@@ -577,6 +578,7 @@ def _broken_failure_mode(challenge_type: str) -> str:
             "implicit_operator_semantics_without_visible_answer_line"
         ),
         "reviewer_decision": "reviewer_decision_repair_or_refusal",
+        "reviewer_decision_hard": "hard_reviewer_decision_repair_or_refusal",
         "operator_mismatch_repair": "operator_sequence_mismatch",
         "operator_param_mismatch_repair": "operator_parameter_mismatch",
         "missing_hypothesis_repair": "missing_operator_hypothesis",
@@ -793,7 +795,7 @@ def _challenge_type_applies_to_task(
 ) -> bool:
     if challenge_type == "unsupported_refusal":
         return task_info["seed_accepted"] is False
-    if challenge_type == "reviewer_decision":
+    if challenge_type in {"reviewer_decision", "reviewer_decision_hard"}:
         return True
     if task_info["seed_accepted"] is not True:
         return False
@@ -850,7 +852,7 @@ def _challenge_info_for_task(
 ) -> dict[str, Any]:
     if challenge_type == "unsupported_refusal":
         expected_behavior = "refuse_unsupported"
-    elif challenge_type == "reviewer_decision":
+    elif challenge_type in {"reviewer_decision", "reviewer_decision_hard"}:
         expected_behavior = (
             "repair_attackplan"
             if task_info["seed_accepted"] is True
@@ -876,6 +878,7 @@ def _challenge_info_for_task(
                 "contextual_multi_trap_repair",
                 "implicit_operator_semantics_repair",
                 "reviewer_decision",
+                "reviewer_decision_hard",
             }
             else "standard"
         ),
@@ -1443,6 +1446,107 @@ def _challenge_question_for_seed_attack_plan(
                 json.dumps(_task_mismatch_decoy_attack_plan(raw_json), indent=2),
                 "",
                 "Candidate object 2:",
+                "```json",
+                raw_json,
+                "```",
+            ]
+        )
+    if challenge_type == "reviewer_decision_hard":
+        operator_semantics_hint = _implicit_operator_semantics_hint(
+            raw_json,
+            task_info=task_info,
+        )
+        if task_info["seed_accepted"] is True:
+            return "\n".join(
+                [
+                    "Reviewer decision hard mode.",
+                    "Decide whether Candidate object 3 is repairable as an "
+                    "AttackPlan or whether the correct response is an "
+                    "unsupported_refusal object.",
+                    "Do not solve this by choosing the cleanest JSON object. "
+                    "Candidate object 1 is a clean-looking "
+                    "unsupported_refusal decoy. Candidate object 2 is a "
+                    "wrong-family AttackPlan decoy. Candidate object 3 is the "
+                    "only object tied to the task card.",
+                    "A valid answer must be exactly one JSON object. The "
+                    "scorer compares it against the task card and public "
+                    "operator-semantics hint, not against candidate formatting.",
+                    f"Task card: {_implicit_task_card(raw_json, task_info=task_info)}.",
+                    f"Public operator semantics hint: {operator_semantics_hint}.",
+                    *_strict_json_output_rules(
+                        "repaired Candidate object 3 AttackPlan or unsupported_refusal"
+                    ),
+                    "If Candidate object 3 is supported and repairable using "
+                    "the public hint, return the repaired AttackPlan. If the "
+                    "task is unsupported or schema-only, return "
+                    "unsupported_refusal instead.",
+                    "For a repaired AttackPlan, preserve Candidate object 3 "
+                    "attack_plan_id, target, constraints, metadata, operator "
+                    "params, and task identity. Restore required operator "
+                    "assumptions and remove unreviewed claim values.",
+                    "Set estimated_time_bits=null, estimated_memory_bits=null, "
+                    "success_probability=null, external_claim=false, and "
+                    "source=null.",
+                    "Do not include review prose, explanations, external "
+                    "evidence, or security claims.",
+                    "Toy/demo verifier output only; do not claim real-world "
+                    "PQC breaks.",
+                    "",
+                    "Candidate object 1:",
+                    json.dumps(_unsupported_refusal_for_task(task_info), indent=2),
+                    "",
+                    "Candidate object 2:",
+                    json.dumps(_task_mismatch_decoy_attack_plan(raw_json), indent=2),
+                    "",
+                    "Candidate object 3:",
+                    "```json",
+                    _implicit_operator_semantics_invalid_output(
+                        raw_json,
+                        task_info=task_info,
+                    ),
+                    "```",
+                ]
+            )
+        wrong_reason_refusal = {
+            **_unsupported_refusal_for_task(task_info),
+            "reason": "Schema-only support level with no reviewed estimator path.",
+        }
+        return "\n".join(
+            [
+                "Reviewer decision hard mode.",
+                "Decide whether Candidate object 3 is repairable as an "
+                "AttackPlan or whether the correct response is an "
+                "unsupported_refusal object.",
+                "Do not solve this by choosing the cleanest JSON object. "
+                "Candidate object 1 is a valid-looking supported AttackPlan "
+                "decoy. Candidate object 2 is an unsupported_refusal-shaped "
+                "decoy with the wrong reason format. Candidate object 3 is "
+                "unsupported for this task card.",
+                "A valid repair requires a reviewed estimator, invariant set, "
+                "and proof-obligation path for the target. When that reviewed "
+                "path is missing, the only acceptable output is "
+                "unsupported_refusal.",
+                f"Task card: {_implicit_task_card(raw_json, task_info=task_info)}.",
+                f"Public operator semantics hint: {operator_semantics_hint}.",
+                *_strict_json_output_rules(
+                    "repaired Candidate object 3 AttackPlan or unsupported_refusal"
+                ),
+                "If returning unsupported_refusal for this task card, return "
+                "exactly this JSON object with no alternate reason or message:",
+                json.dumps(_unsupported_refusal_for_task(task_info), indent=2),
+                'The reason value is the stable enum "unsupported_or_schema_only"; '
+                "do not replace it with free-form prose.",
+                "Do not include attack_plan_id, operators, claims, or "
+                "AttackPlan-only fields in unsupported_refusal.",
+                "Toy/demo verifier output only; do not claim real-world PQC breaks.",
+                "",
+                "Candidate object 1 is a valid-looking supported AttackPlan decoy:",
+                json.dumps(_task_mismatch_decoy_attack_plan(raw_json), indent=2),
+                "",
+                "Candidate object 2 is a clean-looking refusal decoy:",
+                json.dumps(wrong_reason_refusal, indent=2),
+                "",
+                "Candidate object 3:",
                 "```json",
                 raw_json,
                 "```",
@@ -2195,7 +2299,7 @@ def _is_unsupported_refusal_challenge(
         isinstance(challenge_info, dict)
         and challenge_info.get("expected_behavior") == "refuse_unsupported"
         and challenge_info.get("challenge_type")
-        in {"unsupported_refusal", "reviewer_decision"}
+        in {"unsupported_refusal", "reviewer_decision", "reviewer_decision_hard"}
     )
 
 
