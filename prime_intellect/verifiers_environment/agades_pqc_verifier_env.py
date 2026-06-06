@@ -1321,6 +1321,10 @@ def _challenge_question_for_seed_attack_plan(
                 "params exactly. Repair only the incompatible operator type, "
                 "the missing family-specific operator hypothesis, and the "
                 "invented claim evidence.",
+                "Preserve nested null-valued fields inside operator params "
+                "exactly. Omitting nulls from nested fixtures such as ACVP "
+                "vector sets changes the task identity and will score as a "
+                "task mismatch.",
                 "Set estimated_time_bits=null, estimated_memory_bits=null, "
                 "success_probability=null, external_claim=false, and source=null.",
                 "Do not include review prose, explanations, external evidence, "
@@ -1490,6 +1494,9 @@ def _implicit_operator_semantics_hint(
         "family": family,
         "compatible_operator_types": compatible_operator_ids,
         "candidate_operator_param_keys": operator_param_keys,
+        "candidate_operator_param_null_paths": _candidate_operator_param_null_paths(
+            operators
+        ),
         "relevant_operator_cards": _relevant_public_operator_cards(
             family=family,
             operators=operators,
@@ -1516,6 +1523,39 @@ def _candidate_operator_param_keys(operators: object) -> list[list[str]]:
             continue
         result.append(sorted(str(key) for key in params))
     return result
+
+
+def _candidate_operator_param_null_paths(operators: object) -> list[list[str]]:
+    if not isinstance(operators, list):
+        return []
+    result: list[list[str]] = []
+    for operator in operators:
+        if not isinstance(operator, dict):
+            continue
+        params = operator.get("params")
+        if not isinstance(params, dict):
+            result.append([])
+            continue
+        result.append(_null_value_paths(params))
+    return result
+
+
+def _null_value_paths(value: object, *, prefix: str = "") -> list[str]:
+    paths: list[str] = []
+    if value is None:
+        if prefix:
+            paths.append(prefix)
+        return paths
+    if isinstance(value, dict):
+        for key in sorted(value):
+            child_prefix = f"{prefix}.{key}" if prefix else str(key)
+            paths.extend(_null_value_paths(value[key], prefix=child_prefix))
+        return paths
+    if isinstance(value, list):
+        for index, item in enumerate(value):
+            child_prefix = f"{prefix}[{index}]" if prefix else f"[{index}]"
+            paths.extend(_null_value_paths(item, prefix=child_prefix))
+    return paths
 
 
 def _flatten_operator_assumption_terms(value: object) -> list[str]:
