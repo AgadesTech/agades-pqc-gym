@@ -128,10 +128,13 @@ the visible context correctly while ignoring decoys and claims, not from
 guessing hidden fields.
 `implicit_operator_semantics_repair` is stricter: it does not expose those
 ordered operator fields as a visible answer line. It does expose a public
-operator-semantics hint with compatible operator ids, candidate parameter keys,
-required hypothesis terms, and the no-claim boundary. The model must use that
-semantic context to repair the plan, while the scorer still checks the hidden
-public seed metadata.
+operator-semantics hint with compatible operator types, candidate parameter
+keys, relevant public operator cards, required hypothesis terms, the required
+AttackPlan operator key `type`, the forbidden key `operator_id`, and the
+no-claim boundary. Candidate object 2 already contains the public parameter
+values to preserve; the model must use the semantic context to repair the
+operator type, missing hypothesis, and claim boundary, while the scorer still
+checks the hidden public seed metadata.
 For failed-row diagnosis, pass `challenge_row_indices=[...]` after the same
 challenge filters. This rebuilds the stable ordered suite and returns only the
 requested row indices, adding `info["challenge_row_index"]` to each selected

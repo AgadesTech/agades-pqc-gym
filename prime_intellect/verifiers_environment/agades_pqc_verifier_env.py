@@ -1311,12 +1311,16 @@ def _challenge_question_for_seed_attack_plan(
                 f"Task card: {_implicit_task_card(raw_json, task_info=task_info)}.",
                 f"Public operator semantics hint: {operator_semantics_hint}.",
                 *_strict_json_output_rules("repaired Candidate object 2 AttackPlan"),
-                "Use an operator id from the public operator-semantics hint; "
-                "do not invent aliases such as isd_bjmm or use lattice "
-                "operators for code-based targets.",
-                "Preserve Candidate object 2 target identity, restore the "
-                "family-specific operator hypothesis required by the seed "
-                "semantics, and remove all invented claim evidence.",
+                "Use an operator type string from the public "
+                "operator-semantics hint as operators[0].type; do not add an "
+                "operator_id key. AttackPlan operator objects accept type, "
+                "params, and assumptions only.",
+                "Do not invent aliases such as isd_bjmm or use lattice "
+                "operators for code-based or hash-based targets.",
+                "Preserve Candidate object 2 target identity and operator "
+                "params exactly. Repair only the incompatible operator type, "
+                "the missing family-specific operator hypothesis, and the "
+                "invented claim evidence.",
                 "Set estimated_time_bits=null, estimated_memory_bits=null, "
                 "success_probability=null, external_claim=false, and source=null.",
                 "Do not include review prose, explanations, external evidence, "
@@ -1484,8 +1488,15 @@ def _implicit_operator_semantics_hint(
     )
     hint = {
         "family": family,
-        "compatible_operator_ids": compatible_operator_ids,
+        "compatible_operator_types": compatible_operator_ids,
         "candidate_operator_param_keys": operator_param_keys,
+        "relevant_operator_cards": _relevant_public_operator_cards(
+            family=family,
+            operators=operators,
+            hypothesis_terms=hypothesis_terms,
+        ),
+        "schema_required_operator_key": "type",
+        "schema_forbidden_operator_keys": ["operator_id"],
         "required_hypothesis_terms": hypothesis_terms,
         "claim_boundary": "no unreviewed security or complexity claim",
     }
@@ -1524,13 +1535,9 @@ def _flatten_operator_assumption_terms(value: object) -> list[str]:
 
 
 def _public_operator_ids_for_family(family: str) -> list[str]:
-    semantics_path = PACKAGE_DIR / "docs" / "formal_operator_semantics.json"
-    if not semantics_path.is_file():
-        return []
-    try:
-        semantics = json.loads(semantics_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
-        return []
+    semantics = _read_packaged_json(
+        PACKAGE_DIR / "docs" / "formal_operator_semantics.json"
+    )
     operators = semantics.get("operators")
     if not isinstance(operators, list):
         return []
@@ -1549,12 +1556,114 @@ def _public_operator_ids_for_family(family: str) -> list[str]:
     return sorted(dict.fromkeys(ids))
 
 
+def _relevant_public_operator_cards(
+    *,
+    family: str,
+    operators: object,
+    hypothesis_terms: list[str],
+) -> list[dict[str, Any]]:
+    candidate_params = _candidate_operator_params(operators)
+    candidate_param_keys = {
+        key
+        for params in candidate_params
+        for key in params
+    }
+    candidate_param_values = {
+        value
+        for params in candidate_params
+        for value in params.values()
+        if isinstance(value, str)
+    }
+    cards: list[tuple[int, dict[str, Any]]] = []
+    for entry in _family_operator_catalog_entries(family):
+        required_params = _string_list(entry.get("required_parameters"))
+        required_assumptions = _string_list(entry.get("required_assumptions"))
+        variant = entry.get("variant")
+        relevance = 0
+        if isinstance(variant, str) and variant in candidate_param_values:
+            relevance += 4
+        if set(required_assumptions).intersection(hypothesis_terms):
+            relevance += 4
+        if set(required_params).issubset(candidate_param_keys):
+            relevance += 2
+        if not relevance:
+            continue
+        cards.append(
+            (
+                -relevance,
+                {
+                    "operator_type": entry.get("operator_type"),
+                    "variant": variant,
+                    "required_parameters": required_params,
+                    "required_assumptions": required_assumptions,
+                    "target_constraints": _string_list(
+                        entry.get("target_constraints")
+                    ),
+                    "security_claim": bool(entry.get("security_claim")),
+                },
+            )
+        )
+    return [
+        card
+        for _rank, card in sorted(
+            cards,
+            key=lambda item: (item[0], _compact_json(item[1])),
+        )[:6]
+    ]
+
+
+def _candidate_operator_params(operators: object) -> list[dict[str, Any]]:
+    if not isinstance(operators, list):
+        return []
+    result: list[dict[str, Any]] = []
+    for operator in operators:
+        if not isinstance(operator, dict):
+            continue
+        params = operator.get("params")
+        if isinstance(params, dict):
+            result.append(params)
+    return result
+
+
+def _family_operator_catalog_entries(family: str) -> list[dict[str, Any]]:
+    catalog = _read_packaged_json(
+        PACKAGE_DIR / "docs" / "family_operator_catalog.json"
+    )
+    families = catalog.get("families")
+    if not isinstance(families, list):
+        return []
+    for item in families:
+        if not isinstance(item, dict) or item.get("family") != family:
+            continue
+        operators = item.get("operators")
+        if not isinstance(operators, list):
+            return []
+        return [operator for operator in operators if isinstance(operator, dict)]
+    return []
+
+
+def _read_packaged_json(path: Path) -> dict[str, Any]:
+    if not path.is_file():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def _string_list(value: object) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [item for item in value if isinstance(item, str)]
+
+
 def _compact_json(value: Any) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"))
 
 
 def _strict_json_output_rules(object_name: str) -> list[str]:
-    return [
+    rules = [
         f"Return exactly one {object_name} JSON object.",
         "Your entire answer must be parseable as that one JSON object.",
         "Do not include reasoning, analysis, markdown, prose outside JSON, "
@@ -1562,6 +1671,12 @@ def _strict_json_output_rules(object_name: str) -> list[str]:
         "The first non-whitespace character must be { and the final "
         "non-whitespace character must be }.",
     ]
+    if object_name != "unsupported_refusal":
+        rules.append(
+            "For each AttackPlan operator object, use the required key "
+            '"type"; do not use "operator_id" or any extra operator keys.'
+        )
+    return rules
 
 
 def _validate_prompt_profile(prompt_profile: str) -> None:
