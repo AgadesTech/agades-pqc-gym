@@ -482,7 +482,8 @@ def test_prime_verifiers_environment_builds_discriminating_challenge_rows() -> N
         assert "Toy/demo verifier output only" in prompt
 
 
-def test_prime_verifiers_environment_builds_contextual_claims_guard_decoy_challenge() -> None:
+def test_prime_verifiers_environment_builds_contextual_claims_guard_decoy_challenge(
+) -> None:
     module = _load_environment_module()
 
     row = module.build_dataset_rows(
@@ -597,7 +598,8 @@ def test_prime_verifiers_environment_builds_contextual_multi_trap_challenge() ->
     assert repaired_report["aggregate_reward"] == 1.0
 
 
-def test_prime_verifiers_environment_builds_implicit_operator_semantics_challenge() -> None:
+def test_prime_verifiers_environment_builds_implicit_operator_semantics_challenge(
+) -> None:
     module = _load_environment_module()
 
     row = module.build_dataset_rows(
@@ -629,8 +631,10 @@ def test_prime_verifiers_environment_builds_implicit_operator_semantics_challeng
     assert info["difficulty"] == "hard"
     assert info["expected_behavior"] == "repair_attackplan"
     assert "does not expose the ordered operator" in prompt
+    assert "public operator-semantics hint" in prompt
     assert "hidden public seed metadata" in prompt
-    assert "Infer the compatible operator" in prompt
+    assert "compatible_operator_ids" in prompt
+    assert "required_hypothesis_terms" in prompt
     assert f"target_family={task_metadata['target_family']}" in prompt
     assert f"target_name={task_metadata['target_name']}" in prompt
     assert "operator_types=" not in prompt
@@ -806,7 +810,8 @@ def test_prime_verifiers_environment_scores_operator_param_challenge() -> None:
     )
 
 
-def test_prime_verifiers_environment_scores_operator_param_challenge_with_legacy_null_params() -> None:
+def test_prime_verifiers_environment_scores_legacy_null_operator_params(
+) -> None:
     module = _load_environment_module()
     raw_plan = Path(
         "prime_intellect/verifiers_environment/data/code_based_bjmm_toy.json"
@@ -1189,7 +1194,9 @@ def test_prime_verifiers_environment_builds_multi_trap_repair_challenge() -> Non
         f"{seed_constraints['downscaled_reproduction_fixture']}"
     ) in prompt
     assert f"target_fields={module._compact_json(seed_target)}" in prompt
-    assert f"operator_params={module._compact_json([seed_operator['params']])}" in prompt
+    assert (
+        f"operator_params={module._compact_json([seed_operator['params']])}" in prompt
+    )
     assert broken_report["accepted"] is False
     assert broken_report["aggregate_reward"] == 0.0
     assert repaired_report["accepted"] is True

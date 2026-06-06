@@ -1288,12 +1288,18 @@ def _challenge_question_for_seed_attack_plan(
             ]
         )
     if challenge_type == "implicit_operator_semantics_repair":
+        operator_semantics_hint = _implicit_operator_semantics_hint(
+            raw_json,
+            task_info=task_info,
+        )
         return "\n".join(
             [
                 "Repair this hard Agades PQC Gym challenge.",
                 "This task intentionally does not expose the ordered operator "
                 "types, operator params, or operator assumptions as a visible "
                 "answer line.",
+                "It does expose a public operator-semantics hint so the task "
+                "measures semantic repair, not hidden-vocabulary guessing.",
                 "Candidate object 1 is a wrong-family decoy. Ignore it.",
                 "Candidate object 2 targets the right public toy task, but it "
                 "uses an operator that is semantically incompatible with the "
@@ -1303,10 +1309,11 @@ def _challenge_question_for_seed_attack_plan(
                 "metadata. It will reject a clean-looking object that does not "
                 "match the family/operator semantics of the original seed.",
                 f"Task card: {_implicit_task_card(raw_json, task_info=task_info)}.",
+                f"Public operator semantics hint: {operator_semantics_hint}.",
                 *_strict_json_output_rules("repaired Candidate object 2 AttackPlan"),
-                "Infer the compatible operator from the target family, target "
-                "name, Candidate object 2 parameter shape, reproducibility "
-                "fixture, and public Agades operator semantics.",
+                "Use an operator id from the public operator-semantics hint; "
+                "do not invent aliases such as isd_bjmm or use lattice "
+                "operators for code-based targets.",
                 "Preserve Candidate object 2 target identity, restore the "
                 "family-specific operator hypothesis required by the seed "
                 "semantics, and remove all invented claim evidence.",
@@ -1460,6 +1467,86 @@ def _implicit_task_card(raw_json: str, *, task_info: dict[str, Any]) -> str:
         f"target_fields={_compact_json(target_fields)}, "
         f"{_constraint_requirements_for_prompt(raw_json, task_info=task_info)}"
     )
+
+
+def _implicit_operator_semantics_hint(
+    raw_json: str,
+    *,
+    task_info: dict[str, Any],
+) -> str:
+    family = str(task_info["target_family"])
+    payload = json.loads(raw_json)
+    operators = payload.get("operators") if isinstance(payload, dict) else None
+    operator_param_keys = _candidate_operator_param_keys(operators)
+    compatible_operator_ids = _public_operator_ids_for_family(family)
+    hypothesis_terms = _flatten_operator_assumption_terms(
+        task_info.get("operator_assumptions")
+    )
+    hint = {
+        "family": family,
+        "compatible_operator_ids": compatible_operator_ids,
+        "candidate_operator_param_keys": operator_param_keys,
+        "required_hypothesis_terms": hypothesis_terms,
+        "claim_boundary": "no unreviewed security or complexity claim",
+    }
+    return _compact_json(hint)
+
+
+def _candidate_operator_param_keys(operators: object) -> list[list[str]]:
+    if not isinstance(operators, list):
+        return []
+    result: list[list[str]] = []
+    for operator in operators:
+        if not isinstance(operator, dict):
+            continue
+        params = operator.get("params")
+        if not isinstance(params, dict):
+            result.append([])
+            continue
+        result.append(sorted(str(key) for key in params))
+    return result
+
+
+def _flatten_operator_assumption_terms(value: object) -> list[str]:
+    terms: list[str] = []
+    if not isinstance(value, list):
+        return terms
+    for item in value:
+        if isinstance(item, str):
+            terms.append(item)
+            continue
+        if not isinstance(item, list):
+            continue
+        for nested in item:
+            if isinstance(nested, str):
+                terms.append(nested)
+    return sorted(dict.fromkeys(terms))
+
+
+def _public_operator_ids_for_family(family: str) -> list[str]:
+    semantics_path = PACKAGE_DIR / "docs" / "formal_operator_semantics.json"
+    if not semantics_path.is_file():
+        return []
+    try:
+        semantics = json.loads(semantics_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return []
+    operators = semantics.get("operators")
+    if not isinstance(operators, list):
+        return []
+    ids: list[str] = []
+    for operator in operators:
+        if not isinstance(operator, dict):
+            continue
+        families = operator.get("attackplan_families")
+        operator_id = operator.get("operator")
+        if (
+            isinstance(operator_id, str)
+            and isinstance(families, list)
+            and family in families
+        ):
+            ids.append(operator_id)
+    return sorted(dict.fromkeys(ids))
 
 
 def _compact_json(value: Any) -> str:

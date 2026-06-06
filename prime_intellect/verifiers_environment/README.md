@@ -127,10 +127,11 @@ includes the ordered `operator_params` for the same reason.
 the visible context correctly while ignoring decoys and claims, not from
 guessing hidden fields.
 `implicit_operator_semantics_repair` is stricter: it does not expose those
-ordered operator fields as a visible answer line. The model must infer the
-compatible operator and missing hypothesis from the target family, parameter
-shape, reproducibility fixture, and public Agades operator semantics, while the
-scorer still checks the hidden public seed metadata.
+ordered operator fields as a visible answer line. It does expose a public
+operator-semantics hint with compatible operator ids, candidate parameter keys,
+required hypothesis terms, and the no-claim boundary. The model must use that
+semantic context to repair the plan, while the scorer still checks the hidden
+public seed metadata.
 For failed-row diagnosis, pass `challenge_row_indices=[...]` after the same
 challenge filters. This rebuilds the stable ordered suite and returns only the
 requested row indices, adding `info["challenge_row_index"]` to each selected
