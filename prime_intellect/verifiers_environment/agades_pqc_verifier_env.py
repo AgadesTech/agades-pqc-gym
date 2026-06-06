@@ -98,6 +98,7 @@ CHALLENGE_TYPES = (
     "multi_trap_repair",
     "contextual_multi_trap_repair",
     "implicit_operator_semantics_repair",
+    "reviewer_decision",
     "operator_mismatch_repair",
     "operator_param_mismatch_repair",
     "missing_hypothesis_repair",
@@ -523,6 +524,13 @@ def _broken_submission_for_challenge(raw_json: str, info: dict[str, Any]) -> str
             raw_json,
             task_info=info["task_metadata"],
         )
+    if challenge_type == "reviewer_decision":
+        if info["expected_behavior"] == "refuse_unsupported":
+            return raw_json
+        return _implicit_operator_semantics_invalid_output(
+            raw_json,
+            task_info=info["task_metadata"],
+        )
     if challenge_type == "operator_mismatch_repair":
         return _operator_mismatch_invalid_output(
             raw_json,
@@ -543,7 +551,7 @@ def _broken_submission_for_challenge(raw_json: str, info: dict[str, Any]) -> str
 
 
 def _correct_submission_for_challenge(raw_json: str, info: dict[str, Any]) -> str:
-    if info["challenge_type"] == "unsupported_refusal":
+    if info["expected_behavior"] == "refuse_unsupported":
         return json.dumps(
             _unsupported_refusal_for_task(info["task_metadata"]),
             indent=2,
@@ -568,6 +576,7 @@ def _broken_failure_mode(challenge_type: str) -> str:
         "implicit_operator_semantics_repair": (
             "implicit_operator_semantics_without_visible_answer_line"
         ),
+        "reviewer_decision": "reviewer_decision_repair_or_refusal",
         "operator_mismatch_repair": "operator_sequence_mismatch",
         "operator_param_mismatch_repair": "operator_parameter_mismatch",
         "missing_hypothesis_repair": "missing_operator_hypothesis",
@@ -784,6 +793,8 @@ def _challenge_type_applies_to_task(
 ) -> bool:
     if challenge_type == "unsupported_refusal":
         return task_info["seed_accepted"] is False
+    if challenge_type == "reviewer_decision":
+        return True
     if task_info["seed_accepted"] is not True:
         return False
     if challenge_type == "semantic_mutation_repair":
@@ -839,6 +850,12 @@ def _challenge_info_for_task(
 ) -> dict[str, Any]:
     if challenge_type == "unsupported_refusal":
         expected_behavior = "refuse_unsupported"
+    elif challenge_type == "reviewer_decision":
+        expected_behavior = (
+            "repair_attackplan"
+            if task_info["seed_accepted"] is True
+            else "refuse_unsupported"
+        )
     elif challenge_type == "semantic_mutation_repair":
         expected_behavior = "mutate_attackplan"
     else:
@@ -858,6 +875,7 @@ def _challenge_info_for_task(
                 "multi_trap_repair",
                 "contextual_multi_trap_repair",
                 "implicit_operator_semantics_repair",
+                "reviewer_decision",
             }
             else "standard"
         ),
@@ -1332,6 +1350,92 @@ def _challenge_question_for_seed_attack_plan(
                     raw_json,
                     task_info=task_info,
                 ),
+            ]
+        )
+    if challenge_type == "reviewer_decision":
+        operator_semantics_hint = _implicit_operator_semantics_hint(
+            raw_json,
+            task_info=task_info,
+        )
+        if task_info["seed_accepted"] is True:
+            return "\n".join(
+                [
+                    "Review this Agades PQC Gym candidate.",
+                    "Decide whether Candidate object 2 is repairable as an "
+                    "AttackPlan or whether the correct response is an "
+                    "unsupported_refusal object.",
+                    "Do not choose the output type by format. Candidate object "
+                    "1 is a clean-looking refusal decoy; Candidate object 2 is "
+                    "the only candidate tied to the task card.",
+                    "A valid repair must preserve the task identity and use an "
+                    "operator justified by the public operator-semantics hint. "
+                    "A refusal is valid only when Agades lacks a reviewed path "
+                    "for the target.",
+                    f"Task card: {_implicit_task_card(raw_json, task_info=task_info)}.",
+                    f"Public operator semantics hint: {operator_semantics_hint}.",
+                    *_strict_json_output_rules(
+                        "repaired Candidate object 2 AttackPlan or unsupported_refusal"
+                    ),
+                    "If the task is supported and Candidate object 2 can be "
+                    "repaired using the public hint, return the repaired "
+                    "AttackPlan. If the task is unsupported or schema-only, "
+                    "return unsupported_refusal instead.",
+                    "For a repaired AttackPlan, set estimated_time_bits=null, "
+                    "estimated_memory_bits=null, success_probability=null, "
+                    "external_claim=false, and source=null.",
+                    "Do not include review prose, explanations, external "
+                    "evidence, or security claims.",
+                    "Toy/demo verifier output only; do not claim real-world "
+                    "PQC breaks.",
+                    "",
+                    "Candidate object 1:",
+                    json.dumps(_unsupported_refusal_for_task(task_info), indent=2),
+                    "",
+                    "Candidate object 2:",
+                    "```json",
+                    _implicit_operator_semantics_invalid_output(
+                        raw_json,
+                        task_info=task_info,
+                    ),
+                    "```",
+                ]
+            )
+        return "\n".join(
+            [
+                "Review this Agades PQC Gym candidate.",
+                "Decide whether Candidate object 2 is repairable as an "
+                "AttackPlan or whether the correct response is an "
+                "unsupported_refusal object.",
+                "Do not choose the output type by format. Candidate object 1 "
+                "is a valid-looking AttackPlan decoy from a different supported "
+                "task. Candidate object 2 is tied to the task card.",
+                "A valid repair requires a reviewed estimator, invariant set, "
+                "and proof-obligation path for the target. When that reviewed "
+                "path is missing, the only acceptable output is "
+                "unsupported_refusal.",
+                f"Task card: {_implicit_task_card(raw_json, task_info=task_info)}.",
+                f"Public operator semantics hint: {operator_semantics_hint}.",
+                *_strict_json_output_rules(
+                    "repaired Candidate object 2 AttackPlan or unsupported_refusal"
+                ),
+                "If the task is supported and Candidate object 2 can be "
+                "repaired using the public hint, return the repaired AttackPlan. "
+                "If the task is unsupported or schema-only, return "
+                "unsupported_refusal instead.",
+                "For unsupported_refusal, include response_type, target_family, "
+                "target_name, support_level, reason, message, "
+                "claims_pqc_break=false, and needs_human_review=true.",
+                "Do not include attack_plan_id, operators, claims, or "
+                "AttackPlan-only fields in unsupported_refusal.",
+                "Toy/demo verifier output only; do not claim real-world PQC breaks.",
+                "",
+                "Candidate object 1 is a valid-looking AttackPlan decoy:",
+                json.dumps(_task_mismatch_decoy_attack_plan(raw_json), indent=2),
+                "",
+                "Candidate object 2:",
+                "```json",
+                raw_json,
+                "```",
             ]
         )
     if challenge_type == "operator_mismatch_repair":
@@ -2079,8 +2183,9 @@ def _is_unsupported_refusal_challenge(
 ) -> bool:
     return (
         isinstance(challenge_info, dict)
-        and challenge_info.get("challenge_type") == "unsupported_refusal"
         and challenge_info.get("expected_behavior") == "refuse_unsupported"
+        and challenge_info.get("challenge_type")
+        in {"unsupported_refusal", "reviewer_decision"}
     )
 
 
