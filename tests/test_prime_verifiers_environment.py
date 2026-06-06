@@ -459,6 +459,7 @@ def test_prime_verifiers_environment_builds_discriminating_challenge_rows() -> N
         "multi_trap_repair",
         "contextual_multi_trap_repair",
         "implicit_operator_semantics_repair",
+        "reviewer_decision",
         "operator_mismatch_repair",
         "operator_param_mismatch_repair",
         "missing_hypothesis_repair",
@@ -748,6 +749,93 @@ def test_prime_verifiers_environment_builds_unsupported_refusal_rows() -> None:
     assert '"unsupported_refusal"' in prompt
     assert 'reason="unsupported_or_schema_only"' in prompt
     assert "Do not include attack_plan_id" in prompt
+
+
+def test_prime_verifiers_environment_builds_reviewer_decision_repair_row() -> None:
+    module = _load_environment_module()
+
+    row = module.build_dataset_rows(
+        attack_plan_id="lattice_bdd_toy_v1",
+        challenge_suite=True,
+        challenge_type="reviewer_decision",
+    )[0]
+
+    info = row["info"]
+    prompt = row["prompt"][0]["content"]
+    task_metadata = info["task_metadata"]
+    raw_json = module._raw_json_for_task_info(task_metadata)
+    refusal = module._unsupported_refusal_for_task(task_metadata)
+    broken_report = module.score_attack_plan_completion_report(
+        _assistant_completion(module._broken_submission_for_challenge(raw_json, info)),
+        info=info,
+        require_info=True,
+    )
+    refusal_report = module.score_attack_plan_completion_report(
+        _assistant_completion(json.dumps(refusal)),
+        info=info,
+        require_info=True,
+    )
+    repaired_report = module.score_attack_plan_completion_report(
+        _assistant_completion(module._correct_submission_for_challenge(raw_json, info)),
+        info=info,
+        require_info=True,
+    )
+
+    assert info["challenge_type"] == "reviewer_decision"
+    assert info["difficulty"] == "hard"
+    assert info["expected_behavior"] == "repair_attackplan"
+    assert row["answer"] == "repair_attackplan"
+    assert "Decide whether Candidate object 2 is repairable" in prompt
+    assert "Do not choose the output type by format" in prompt
+    assert "unsupported_refusal" in prompt
+    assert "operator_types=" not in prompt
+    assert "operator_params=" not in prompt
+    assert module._compact_json(task_metadata["operator_types"]) not in prompt
+    assert broken_report["accepted"] is False
+    assert broken_report["aggregate_reward"] == 0.0
+    assert refusal_report["accepted"] is False
+    assert repaired_report["accepted"] is True
+    assert repaired_report["aggregate_reward"] == 1.0
+
+
+def test_prime_verifiers_environment_builds_reviewer_decision_refusal_row() -> None:
+    module = _load_environment_module()
+
+    row = module.build_dataset_rows(
+        attack_plan_id="lattice_lwe_modulus_switching_primary_v1",
+        challenge_suite=True,
+        challenge_type="reviewer_decision",
+    )[0]
+
+    info = row["info"]
+    prompt = row["prompt"][0]["content"]
+    task_metadata = info["task_metadata"]
+    raw_json = module._raw_json_for_task_info(task_metadata)
+    copied_attackplan_report = module.score_attack_plan_completion_report(
+        _assistant_completion(raw_json),
+        info=info,
+        require_info=True,
+    )
+    refusal_report = module.score_attack_plan_completion_report(
+        _assistant_completion(module._correct_submission_for_challenge(raw_json, info)),
+        info=info,
+        require_info=True,
+    )
+
+    assert info["challenge_type"] == "reviewer_decision"
+    assert info["difficulty"] == "hard"
+    assert info["expected_behavior"] == "refuse_unsupported"
+    assert row["answer"] == "refuse_unsupported"
+    assert task_metadata["seed_accepted"] is False
+    assert "must refuse" not in prompt
+    assert "unsupported_refusal" in prompt
+    assert "Candidate object 1 is a valid-looking AttackPlan decoy" in prompt
+    assert copied_attackplan_report["accepted"] is False
+    assert "unsupported_refusal_includes_attackplan_fields" in (
+        copied_attackplan_report["blocking_reasons"]
+    )
+    assert refusal_report["accepted"] is True
+    assert refusal_report["aggregate_reward"] == 1.0
 
 
 def test_prime_verifiers_environment_filters_challenge_rows_by_split() -> None:
@@ -1158,7 +1246,7 @@ def test_prime_verifiers_environment_builds_challenge_scorecard() -> None:
         "private_data_allowed": False,
         "security_claims_allowed": False,
     }
-    assert scorecard["summary"]["challenge_rows"] == 11
+    assert scorecard["summary"]["challenge_rows"] == 12
     assert scorecard["summary"]["challenge_type_counts"] == {
         "claims_guard_repair": 1,
         "contextual_claims_guard_decoy_repair": 1,
@@ -1169,11 +1257,12 @@ def test_prime_verifiers_environment_builds_challenge_scorecard() -> None:
         "multi_trap_repair": 1,
         "operator_mismatch_repair": 1,
         "operator_param_mismatch_repair": 1,
+        "reviewer_decision": 1,
         "semantic_mutation_repair": 1,
         "wrong_family_decoy_repair": 1,
     }
     assert scorecard["summary"]["broken_accept_count"] == 0
-    assert scorecard["summary"]["repaired_accept_count"] == 11
+    assert scorecard["summary"]["repaired_accept_count"] == 12
     assert scorecard["summary"]["broken_score_max"] == 0.0
     assert scorecard["summary"]["repaired_score_min"] == 1.0
     assert {
@@ -1189,6 +1278,7 @@ def test_prime_verifiers_environment_builds_challenge_scorecard() -> None:
         "seed_semantic_copy",
         "contextual_wrong_family_decoy_plus_operator_hypothesis_claims",
         "implicit_operator_semantics_without_visible_answer_line",
+        "reviewer_decision_repair_or_refusal",
         "wrong_family_decoy_plus_operator_hypothesis_claims",
     }
 
@@ -1226,7 +1316,7 @@ def test_prime_verifiers_environment_builds_heldout_challenge_scorecard() -> Non
 
     assert scorecard["accepted"] is True
     assert scorecard["scope"]["challenge_split"] == "heldout"
-    assert scorecard["summary"]["heldout_split_counts"] == {"heldout": 22}
+    assert scorecard["summary"]["heldout_split_counts"] == {"heldout": 23}
     assert {result["heldout_split"] for result in scorecard["results"]} == {"heldout"}
 
 
@@ -1319,7 +1409,7 @@ def test_prime_verifiers_environment_builds_balanced_heldout_challenge_rows() ->
     )
 
     challenge_counts = Counter(row["info"]["challenge_type"] for row in rows)
-    assert len(rows) == 96
+    assert len(rows) == 104
     assert challenge_counts == {
         "claims_guard_repair": 8,
         "contextual_claims_guard_decoy_repair": 8,
@@ -1330,6 +1420,7 @@ def test_prime_verifiers_environment_builds_balanced_heldout_challenge_rows() ->
         "multi_trap_repair": 8,
         "operator_mismatch_repair": 8,
         "operator_param_mismatch_repair": 8,
+        "reviewer_decision": 8,
         "semantic_mutation_repair": 8,
         "unsupported_refusal": 8,
         "wrong_family_decoy_repair": 8,
@@ -1420,7 +1511,7 @@ def test_prime_verifiers_environment_builds_balanced_heldout_scorecard() -> None
 
     assert scorecard["accepted"] is True
     assert scorecard["scope"]["min_challenge_examples_per_type"] == 8
-    assert scorecard["summary"]["challenge_rows"] == 96
+    assert scorecard["summary"]["challenge_rows"] == 104
     assert scorecard["summary"]["challenge_type_counts"] == {
         "claims_guard_repair": 8,
         "contextual_claims_guard_decoy_repair": 8,
@@ -1431,6 +1522,7 @@ def test_prime_verifiers_environment_builds_balanced_heldout_scorecard() -> None
         "multi_trap_repair": 8,
         "operator_mismatch_repair": 8,
         "operator_param_mismatch_repair": 8,
+        "reviewer_decision": 8,
         "semantic_mutation_repair": 8,
         "unsupported_refusal": 8,
         "wrong_family_decoy_repair": 8,
