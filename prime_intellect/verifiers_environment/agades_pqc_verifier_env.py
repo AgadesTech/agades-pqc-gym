@@ -1321,10 +1321,6 @@ def _challenge_question_for_seed_attack_plan(
                 "params exactly. Repair only the incompatible operator type, "
                 "the missing family-specific operator hypothesis, and the "
                 "invented claim evidence.",
-                "Preserve nested null-valued fields inside operator params "
-                "exactly. Omitting nulls from nested fixtures such as ACVP "
-                "vector sets changes the task identity and will score as a "
-                "task mismatch.",
                 "Set estimated_time_bits=null, estimated_memory_bits=null, "
                 "success_probability=null, external_claim=false, and source=null.",
                 "Do not include review prose, explanations, external evidence, "
