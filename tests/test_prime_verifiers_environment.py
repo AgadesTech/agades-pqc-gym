@@ -720,7 +720,6 @@ def test_prime_verifiers_environment_current_acvp_rows_have_no_hidden_null_paths
         require_info=True,
     )
 
-    assert "Preserve nested null-valued fields inside operator params exactly" in prompt
     assert "candidate_operator_param_null_paths" in prompt
     assert '"candidate_operator_param_null_paths":[[]]' in prompt
     assert repaired_report["accepted"] is True
@@ -926,6 +925,35 @@ def test_prime_verifiers_environment_scores_legacy_null_operator_params(
     )
 
     assert "block_size" not in row["prompt"][0]["content"]
+    assert report["accepted"] is True
+    assert report["aggregate_reward"] == 1.0
+    assert report["rubric_scores"]["task_match"] == 1.0
+
+
+def test_prime_verifiers_environment_scores_arrow_polluted_acvp_operator_params(
+) -> None:
+    module = _load_environment_module()
+    row = module.build_dataset_rows(
+        attack_plan_id="implementation_security_mldsa_acvp_toy_v1",
+        challenge_suite=True,
+        challenge_type="implicit_operator_semantics_repair",
+        challenge_split="heldout",
+    )[0]
+    raw_json = module._raw_json_for_task_info(row["info"]["task_metadata"])
+    repaired = module._correct_submission_for_challenge(raw_json, row["info"])
+    polluted_info = json.loads(json.dumps(row["info"]))
+    polluted_test = polluted_info["task_metadata"]["operator_params"][0][
+        "vector_set"
+    ]["testGroups"][0]["tests"][0]
+    polluted_test["ciphertext"] = None
+    polluted_test["sharedSecret"] = None
+
+    report = module.score_attack_plan_completion_report(
+        _assistant_completion(repaired),
+        info=polluted_info,
+        require_info=True,
+    )
+
     assert report["accepted"] is True
     assert report["aggregate_reward"] == 1.0
     assert report["rubric_scores"]["task_match"] == 1.0

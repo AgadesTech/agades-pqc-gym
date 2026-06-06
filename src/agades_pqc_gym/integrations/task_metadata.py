@@ -215,7 +215,20 @@ def _compact_task_metadata_operator_params(
 
 
 def _compact_operator_params(params: Mapping[str, Any]) -> dict[str, Any]:
-    return {key: value for key, value in dict(params).items() if value is not None}
+    compacted = _compact_null_values(dict(params))
+    return compacted if isinstance(compacted, dict) else {}
+
+
+def _compact_null_values(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {
+            key: compacted
+            for key, item in value.items()
+            if (compacted := _compact_null_values(item)) is not None
+        }
+    if isinstance(value, list):
+        return [_compact_null_values(item) for item in value]
+    return value
 
 
 def _validate_task_metadata_for_summary(row: Mapping[str, Any]) -> TaskMetadata:

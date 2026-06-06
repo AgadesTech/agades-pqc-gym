@@ -107,6 +107,32 @@ def test_task_metadata_compacts_null_operator_param_fields() -> None:
     assert not attack_plan_matches_task_metadata(plan, non_null_extra_metadata)
 
 
+def test_task_metadata_compacts_nested_null_operator_param_fields() -> None:
+    plan = AttackPlan.model_validate_json(
+        Path(
+            "prime_intellect/verifiers_environment/data/"
+            "implementation_security_mldsa_acvp_toy.json"
+        ).read_text()
+    )
+    metadata = task_metadata_for_plan(plan)
+    polluted_metadata = json.loads(json.dumps(metadata))
+    acvp_test = polluted_metadata["operator_params"][0]["vector_set"]["testGroups"][
+        0
+    ]["tests"][0]
+    acvp_test["ciphertext"] = None
+    acvp_test["sharedSecret"] = None
+
+    normalized = normalize_task_metadata(polluted_metadata)
+    normalized_test = normalized["operator_params"][0]["vector_set"]["testGroups"][0][
+        "tests"
+    ][0]
+
+    assert normalized == metadata
+    assert "ciphertext" not in normalized_test
+    assert "sharedSecret" not in normalized_test
+    assert attack_plan_matches_task_metadata(plan, polluted_metadata)
+
+
 def test_task_metadata_records_seed_reproduction_status_for_fixture_tasks() -> None:
     plan = AttackPlan.model_validate_json(
         Path(
