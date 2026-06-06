@@ -84,7 +84,7 @@
       "prime_intellect/verifiers_environment/README.md": "1addcac177709849fcd27f4901b4daa860663c497a5e1b4fee8b1ec984011e7d",
       "prime_intellect/verifiers_environment/agades_pqc_verifier_env.py": "141054b386f0e3a00ce1395acdaee90d9b6e47db313f86a0845b6d6d49ccc77c",
       "prime_intellect/verifiers_environment/prime_manifest.json": "3de6f8c3ad7cd3f5b2af31335a718c4631bd3fc93cbb247297231cbf490e9b73",
-      "prime_intellect/verifiers_environment/pyproject.toml": "3a994b0665dc5518a810a411f24848544bfe307b7a1e4a52d0e4c8103e044a8e"
+      "prime_intellect/verifiers_environment/pyproject.toml": "6b588e953f0e6085b69ec63253d1573bcae98364a70fbc767637cf8b97991ddc"
     },
     "build_command": "uv build prime_intellect/verifiers_environment",
     "eval_config_verify_command": "uv run agades-pqc prime-eval-config-verify --config prime_intellect/evals/agades_pqc_eval.template.toml --manifest docs/prime_eval_config_manifest.json",
