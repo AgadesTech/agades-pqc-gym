@@ -26,3 +26,20 @@ public/*
 !public/publication_preflight.json
 !public/release_audit.json
 private/
+
+# Internal working material: keep out of the public repository.
+# scripts/check_public_tree.py enforces the same rules in pre-commit and CI.
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+.codex/
+.claude/
+.cursor/
+notes/
+scratchpad/
+docs/internal/
+docs/superpowers/
+docs/*BRIEF*
+docs/*STRATEGY*
+*.private.*
+.public-denylist
