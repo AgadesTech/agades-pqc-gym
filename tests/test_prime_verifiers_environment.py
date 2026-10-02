@@ -182,7 +182,7 @@ def test_prime_verifiers_environment_dense_profile_is_training_only_signal() -> 
     assert dense_report["accepted"] is False
     assert dense_report["single_json_object"] is True
     assert dense_report["rubric_scores"]["single_json_object"] == 1.0
-    assert sum(module.build_rubric_weights("pedagogical_dense")) == 1.0
+    assert sum(module.build_rubric_weights("pedagogical_dense")) == pytest.approx(1.0)
     assert module.build_rubric_weights("pedagogical_dense") == [
         0.30,
         0.10,
@@ -227,7 +227,7 @@ def test_prime_verifiers_environment_grades_format_repair_wrapped_json() -> None
     assert repair_report["rubric_scores"]["accepted_attack_plan"] == 0.5
     assert repair_report["rubric_scores"]["formal_validity"] == 1.0
     assert exact_report["aggregate_reward"] == 1.0
-    assert sum(module.build_rubric_weights("format_repair_dense")) == 1.0
+    assert sum(module.build_rubric_weights("format_repair_dense")) == pytest.approx(1.0)
     assert module.build_rubric_weights("format_repair_dense") == [
         0.22,
         0.16,

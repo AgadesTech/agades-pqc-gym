@@ -2110,9 +2110,11 @@ def _weighted_reward(
     rubric_scores: dict[str, float],
     weights: dict[str, float],
 ) -> float:
-    return float(
-        sum(float(rubric_scores[term]) * weight for term, weight in weights.items())
+    total = sum(
+        float(rubric_scores[term]) * weight for term, weight in weights.items()
     )
+    # Weights sum to 1.0 up to float rounding; keep rewards inside [0, 1].
+    return round(min(max(float(total), 0.0), 1.0), 12)
 
 
 def _task_mismatch_capped_rubric_scores(

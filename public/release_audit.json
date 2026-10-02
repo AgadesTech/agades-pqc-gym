@@ -6,7 +6,7 @@
       "blocking": true,
       "detail": "Runbook-required architecture docs, collaboration briefs, HF/Prime/NVIDIA surfaces, machine-readable manifests, naming boundaries, and open-core safety boundaries are present and synchronized.",
       "evidence": {
-        "artifact_count": 47,
+        "artifact_count": 41,
         "hf_attack_plan_rows": 80,
         "hf_invalid_attack_plan_rows": 1,
         "hf_task_metadata_rows": 79,
@@ -30,7 +30,7 @@
         "runbook_family_registry_plugin_manifest_module_digest_count": 55,
         "runbook_family_registry_plugin_manifest_synced": true,
         "runbook_family_registry_runtime_adapter_entries_match_plugin_manifest": true,
-        "runbook_milestone_count": 9,
+        "runbook_milestone_count": 8,
         "runbook_milestone_ids": [
           "milestone-0-repo-scaffold-and-runbook",
           "milestone-1-dsl-and-validators",
@@ -39,10 +39,9 @@
           "milestone-4-openevolve-adapter",
           "milestone-5-report-generator",
           "milestone-6-community-release-artifacts",
-          "milestone-7-collaboration-briefs",
           "milestone-8-end-to-end-smoke-run"
         ],
-        "runbook_passed_milestones": 9,
+        "runbook_passed_milestones": 8,
         "runbook_project_context_sha256": "bc5cdbb52c44a248564c2f75096706aaa740886b47a13dfd468bcf7acd870e9d",
         "runbook_source_brief_sha256": "9d8b5652e4a9d7e554748175a6ea9d78830f2e4ca9bb2f0bfde9a82adcd3ffa3",
         "runbook_source_input_count": 2,
@@ -1473,22 +1472,22 @@
       "status": "passed"
     },
     {
-      "artifact": "docs/*_RELEASE_PLAN.md + docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md",
+      "artifact": "docs/*_RELEASE_PLAN.md + docs/ACCELERATOR_RELEASE_PLAN.md",
       "blocking": true,
       "detail": "Hugging Face, Prime, and NVIDIA planning docs are synchronized with current public run bundles, Prime/HF schema artifacts, and safety/review boundaries.",
       "evidence": {
         "plans": [
+          "docs/ACCELERATOR_RELEASE_PLAN.md",
           "docs/HUGGINGFACE_RELEASE_PLAN.md",
-          "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md",
           "docs/PRIME_INTELLECT_RELEASE_PLAN.md"
         ],
         "prime_ecosystem_anchor_plan_coverage": {
-          "docs/HUGGINGFACE_RELEASE_PLAN.md": [
+          "docs/ACCELERATOR_RELEASE_PLAN.md": [
             "prime-autonanogpt-speedrun",
             "prime-autonomous-speedrunning-experiments",
             "prime-quickstart"
           ],
-          "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md": [
+          "docs/HUGGINGFACE_RELEASE_PLAN.md": [
             "prime-autonanogpt-speedrun",
             "prime-autonomous-speedrunning-experiments",
             "prime-quickstart"
@@ -1506,13 +1505,13 @@
         ],
         "public_run_bundles": 18,
         "schema_artifact_plan_coverage": {
-          "docs/HUGGINGFACE_RELEASE_PLAN.md": [
+          "docs/ACCELERATOR_RELEASE_PLAN.md": [
             "prime_intellect/schemas/attack_plan.schema.json",
             "prime_intellect/schemas/schema_manifest.json",
             "prime_intellect/schemas/task_metadata.schema.json",
             "prime_intellect/schemas/verifier_result.schema.json"
           ],
-          "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md": [
+          "docs/HUGGINGFACE_RELEASE_PLAN.md": [
             "prime_intellect/schemas/attack_plan.schema.json",
             "prime_intellect/schemas/schema_manifest.json",
             "prime_intellect/schemas/task_metadata.schema.json",

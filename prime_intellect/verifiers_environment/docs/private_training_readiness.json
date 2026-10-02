@@ -45,7 +45,7 @@
     },
     "gitignore": {
       "path": ".gitignore",
-      "sha256": "3eb27555e3ebf0308e8d0240e892d894a4adf33301dd54e1d2b15b9d118422a4"
+      "sha256": "e1c923b6eb5e99d56c76922b5eade9d2465df39fa38722cc2016870fe96b996d"
     },
     "openevolve_config": {
       "path": "examples/openevolve/config.yaml",
@@ -89,11 +89,11 @@
     },
     "reviewer_governance": {
       "path": "docs/reviewer_governance.json",
-      "sha256": "cd29dabb2781a3371e9feebfec8a382b923131c73bd29f2efa06a70521ba62d6"
+      "sha256": "514f894aebb3e5bb1c421c428ff6859366dba71420b9c8b56992d39a84548f65"
     },
     "rl_environment_contract": {
       "path": "docs/rl_environment_contract.json",
-      "sha256": "ea649bc23b7409cb4d15653bc51e19d9ffd7e980b5f346e5d0936466cc407cd3"
+      "sha256": "57bad4ea56868b83039369b0c8ee63788c643e3d0d47e8b5cd589d691bd5993f"
     }
   },
   "project": {

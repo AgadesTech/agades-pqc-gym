@@ -311,17 +311,17 @@
     },
     "release_plans": {
       "plans": [
+        "docs/ACCELERATOR_RELEASE_PLAN.md",
         "docs/HUGGINGFACE_RELEASE_PLAN.md",
-        "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md",
         "docs/PRIME_INTELLECT_RELEASE_PLAN.md"
       ],
       "prime_ecosystem_anchor_plan_coverage": {
-        "docs/HUGGINGFACE_RELEASE_PLAN.md": [
+        "docs/ACCELERATOR_RELEASE_PLAN.md": [
           "prime-autonanogpt-speedrun",
           "prime-autonomous-speedrunning-experiments",
           "prime-quickstart"
         ],
-        "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md": [
+        "docs/HUGGINGFACE_RELEASE_PLAN.md": [
           "prime-autonanogpt-speedrun",
           "prime-autonomous-speedrunning-experiments",
           "prime-quickstart"
@@ -534,7 +534,7 @@
     "uv run agades-pqc ecosystem-smoke-verify --report reports/ecosystem_smoke.json"
   ],
   "runbook": {
-    "artifact_count": 47,
+    "artifact_count": 41,
     "core_symbol_count": 14,
     "core_symbol_import_count": 14,
     "family_plugin_count": 6,

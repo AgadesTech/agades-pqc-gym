@@ -3,12 +3,11 @@
   "checks": [
     {
       "artifact": "runbook deliverables",
-      "detail": "Runbook-required docs, collaboration briefs, ecosystem cards, machine-readable manifests, and MVP reports are checked in.",
+      "detail": "Runbook-required docs, ecosystem cards, machine-readable manifests, and MVP reports are checked in.",
       "evidence": {
-        "artifact_count": 47,
+        "artifact_count": 41,
         "groups": {
-          "architecture_docs": 7,
-          "collaboration_briefs": 3,
+          "architecture_docs": 4,
           "community_and_ecosystem": 9,
           "github_oss_onboarding": 4,
           "machine_readable_artifacts": 20,
@@ -350,10 +349,10 @@
     },
     {
       "artifact": "runbook milestone acceptance matrix",
-      "detail": "Runbook milestones 0-8 are mapped to committed implementation, evaluation, trace, reporting, ecosystem, collaboration, and smoke evidence so completion is auditable milestone by milestone.",
+      "detail": "Runbook milestones are mapped to committed implementation, evaluation, trace, reporting, ecosystem, and smoke evidence so completion is auditable milestone by milestone.",
       "evidence": {
         "failed_milestones": 0,
-        "milestone_count": 9,
+        "milestone_count": 8,
         "milestone_ids": [
           "milestone-0-repo-scaffold-and-runbook",
           "milestone-1-dsl-and-validators",
@@ -362,24 +361,20 @@
           "milestone-4-openevolve-adapter",
           "milestone-5-report-generator",
           "milestone-6-community-release-artifacts",
-          "milestone-7-collaboration-briefs",
           "milestone-8-end-to-end-smoke-run"
         ],
         "milestones": [
           {
-            "artifact_count": 7,
+            "artifact_count": 4,
             "artifacts": [
               "pyproject.toml",
               "README.md",
-              "docs/PLAN.md",
               "docs/IMPLEMENT.md",
-              "docs/STATUS.md",
-              "docs/EVAL_LOG.md",
               ".github/workflows/ci.yml"
             ],
             "id": "milestone-0-repo-scaffold-and-runbook",
             "status": "passed",
-            "title": "Repo scaffold and Codex runbook"
+            "title": "Repo scaffold and runbook"
           },
           {
             "artifact_count": 7,
@@ -473,17 +468,6 @@
             "title": "Community release artifacts"
           },
           {
-            "artifact_count": 3,
-            "artifacts": [
-              "docs/REVIEWER_BRIEF_A.md",
-              "docs/REVIEWER_BRIEF_B.md",
-              "docs/REVIEWER_BRIEF_C.md"
-            ],
-            "id": "milestone-7-collaboration-briefs",
-            "status": "passed",
-            "title": "Collaboration briefs"
-          },
-          {
             "artifact_count": 9,
             "artifacts": [
               "docs/public_benchmark_manifest.json",
@@ -501,7 +485,7 @@
             "title": "End-to-end smoke run"
           }
         ],
-        "passed_milestones": 9
+        "passed_milestones": 8
       },
       "failures": [],
       "id": "runbook-milestone-coverage",
@@ -520,7 +504,7 @@
   },
   "schema_version": "agades.pqc.runbook_audit.v1",
   "summary": {
-    "artifact_count": 47,
+    "artifact_count": 41,
     "failed": 0,
     "passed": 7,
     "total": 7

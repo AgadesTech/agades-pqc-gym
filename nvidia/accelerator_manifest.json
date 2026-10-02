@@ -79,7 +79,7 @@
     "repository": "https://github.com/AgadesTech/agades-pqc-gym"
   },
   "public_artifacts": {
-    "accelerator_strategy": "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md",
+    "accelerator_strategy": "docs/ACCELERATOR_RELEASE_PLAN.md",
     "benchmark_source_contracts": "docs/benchmark_source_contracts.json",
     "family_support_matrix": "docs/family_support_matrix.json",
     "huggingface_collection_manifest": "hf/collection_manifest.json",
