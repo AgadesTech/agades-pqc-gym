@@ -1,5 +1,48 @@
 # Agades PQC Gym
 
+Open-source reinforcement-learning environment and evaluation workbench for
+post-quantum cryptanalysis research.
+
+A model receives a cryptanalysis task, answers with a typed `AttackPlan` (a
+JSON object, never executable code), and a deterministic verifier scores the
+answer. The same environment serves three uses:
+
+- **RL training** of open-weight models on post-quantum cryptanalysis
+  reasoning, through the Prime Intellect Verifiers package in
+  `prime_intellect/verifiers_environment`.
+- **Evaluation** of frontier and open-weight models on a balanced held-out
+  challenge suite.
+- **Evolutionary search** over attack strategies, with the verifier as the
+  fitness function.
+
+![How a rollout is scored](docs/assets/rl-rollout.svg)
+
+![What the model is trained and evaluated on](docs/assets/rl-task-suite.svg)
+
+| | |
+|---|---|
+| Tasks | 79 public seed AttackPlans across 9 target families |
+| Challenges | 14 repair and decision rewrites, deterministic train / held-out split |
+| Reward | `strict` (1 or 0) for evaluation; dense profiles with 8 sub-scores for training |
+| Evaluators | Lattice Estimator adapter for LWE/MLWE (deterministic mock in CI); bounded toy evaluators for the other families |
+| Boundaries | no executable candidates; no security claim without expert review |
+| License | Apache-2.0 |
+
+```bash
+uv sync --extra dev
+uv run agades-pqc quickstart
+
+# Prime Verifiers environment
+cd prime_intellect/verifiers_environment
+uv pip install -e .
+prime eval run agades-pqc-verifier-env
+```
+
+See `docs/OPEN_SOURCE_BOUNDARY.md` for what is public in this repository and
+`CONTRIBUTING.md` to add a family adapter or an evaluator.
+
+## Reference
+
 Agades PQC Gym is a family-agnostic, evaluator-driven workbench for
 post-quantum cryptanalysis research workflows.
 
@@ -47,8 +90,7 @@ constant-time, side-channel, or security claim.
 Real PQClean, liboqs, pqm4, PQ Code Package, dudect, ctgrind,
 TIMECOP/SUPERCOP, and `nist_acvp_pqc_vectors_schema` workflows are schema-only
 or future reviewed-adapter work. They make no ACVP, conformance, side-channel,
-or security claim, no constant-time, side-channel, or security claim, and no
-ACVP server interaction.
+or security claim, and no ACVP server interaction.
 
 The router never uses a lattice evaluator for non-lattice families.
 Unsupported routes return structured `unsupported` results rather than fake
