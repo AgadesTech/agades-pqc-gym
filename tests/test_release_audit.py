@@ -63,7 +63,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert checks["runbook-deliverables"]["status"] == "passed"
     assert checks["runbook-deliverables"]["blocking"] is True
     assert checks["runbook-deliverables"]["evidence"] == {
-        "artifact_count": 47,
+        "artifact_count": 41,
         "hf_attack_plan_rows": 80,
         "hf_invalid_attack_plan_rows": 1,
         "hf_task_metadata_rows": 79,
@@ -95,11 +95,10 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
             "milestone-4-openevolve-adapter",
             "milestone-5-report-generator",
             "milestone-6-community-release-artifacts",
-            "milestone-7-collaboration-briefs",
             "milestone-8-end-to-end-smoke-run",
         ],
-        "runbook_milestone_count": 9,
-        "runbook_passed_milestones": 9,
+        "runbook_milestone_count": 8,
+        "runbook_passed_milestones": 8,
         "runbook_project_context_sha256": EXPECTED_RUNBOOK_INPUT_DIGESTS[
             "project_context"
         ],
@@ -152,8 +151,8 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
     assert checks["ecosystem-release-plans"]["blocking"] is True
     assert checks["ecosystem-release-plans"]["evidence"] == {
         "plans": [
+            "docs/ACCELERATOR_RELEASE_PLAN.md",
             "docs/HUGGINGFACE_RELEASE_PLAN.md",
-            "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md",
             "docs/PRIME_INTELLECT_RELEASE_PLAN.md",
         ],
         "prime_ecosystem_anchor_plan_coverage": {
@@ -162,7 +161,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
                 "prime-autonomous-speedrunning-experiments",
                 "prime-quickstart",
             ],
-            "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md": [
+            "docs/ACCELERATOR_RELEASE_PLAN.md": [
                 "prime-autonanogpt-speedrun",
                 "prime-autonomous-speedrunning-experiments",
                 "prime-quickstart",
@@ -192,7 +191,7 @@ def test_release_audit_accepts_current_public_artifacts(tmp_path: Path) -> None:
                 "prime_intellect/schemas/task_metadata.schema.json",
                 "prime_intellect/schemas/verifier_result.schema.json",
             ],
-            "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md": [
+            "docs/ACCELERATOR_RELEASE_PLAN.md": [
                 "prime_intellect/schemas/attack_plan.schema.json",
                 "prime_intellect/schemas/schema_manifest.json",
                 "prime_intellect/schemas/task_metadata.schema.json",

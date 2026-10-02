@@ -6,7 +6,7 @@ from pathlib import Path
 PLAN_PATHS = {
     "huggingface": Path("docs/HUGGINGFACE_RELEASE_PLAN.md"),
     "prime": Path("docs/PRIME_INTELLECT_RELEASE_PLAN.md"),
-    "nvidia": Path("docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md"),
+    "nvidia": Path("docs/ACCELERATOR_RELEASE_PLAN.md"),
 }
 
 SCHEMA_ARTIFACTS = (
@@ -47,9 +47,7 @@ PRIME_QUICKSTART_COMMANDS = (
 )
 PRIME_AUTONOMY_HARNESS_TERMS = (
     "AGENTS.md",
-    "docs/PLAN.md",
     "docs/IMPLEMENT.md",
-    "docs/STATUS.md",
     "public/run_export/manifest.json",
     "docs/private_run_policy.json",
     "scratchpad/THREAD.md",

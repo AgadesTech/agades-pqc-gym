@@ -14,7 +14,7 @@ from agades_pqc_gym.integrations.nvidia_publication_handoff import (
 )
 
 EXPECTED_NVIDIA_ARTIFACT_PATHS = [
-    "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md",
+    "docs/ACCELERATOR_RELEASE_PLAN.md",
     "nvidia/README.md",
     "nvidia/accelerator_manifest.json",
     "docs/source_catalog.json",
@@ -66,7 +66,7 @@ def test_nvidia_publication_handoff_records_review_boundaries(
         "ecosystem": "nvidia",
         "handoff_status": "strategy_ready_external_submission_blocked",
         "accelerator_manifest": "nvidia/accelerator_manifest.json",
-        "accelerator_strategy": "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md",
+        "accelerator_strategy": "docs/ACCELERATOR_RELEASE_PLAN.md",
         "suggested_programs": [
             "nvidia_inception",
             "nvidia_accelerated_research_review",

@@ -155,7 +155,7 @@ def _surfaces(root: Path) -> list[dict[str, Any]]:
                 "public/run_export/runs.jsonl",
                 "public/run_export/runs.csv",
                 "public/run_export/MANIFEST.sha256",
-                "docs/MOAT_AND_OPEN_SOURCE_STRATEGY.md",
+                "docs/OPEN_SOURCE_BOUNDARY.md",
                 *_paper_card_artifact_paths(root),
                 "docs/private_run_policy.json",
                 "docs/external_publication_review_packet.json",
@@ -285,7 +285,7 @@ def _surfaces(root: Path) -> list[dict[str, Any]]:
             "publishes_private_candidates": False,
             "security_claim": False,
             "artifact_paths": [
-                "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md",
+                "docs/ACCELERATOR_RELEASE_PLAN.md",
                 "nvidia/README.md",
                 "nvidia/accelerator_manifest.json",
                 "docs/nvidia_publication_handoff.json",

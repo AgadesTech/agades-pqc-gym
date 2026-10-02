@@ -117,18 +117,12 @@ def test_prime_speedrun_handoff_records_public_speedrun_contract(
             ],
         },
         "agades_public_harness_paths": [
-            "AGENTS.md",
-            "docs/PLAN.md",
             "docs/IMPLEMENT.md",
-            "docs/STATUS.md",
             "public/run_export/manifest.json",
             "docs/private_run_policy.json",
         ],
         "agades_public_harness_roles": {
-            "AGENTS.md": "repository-level safety and code-quality rules",
-            "docs/PLAN.md": "stable milestone plan",
             "docs/IMPLEMENT.md": "reproducible command runbook",
-            "docs/STATUS.md": "durable long-running implementation log",
             "public/run_export/manifest.json": "public run observability export",
             "docs/private_run_policy.json": "private moat and release boundary",
         },

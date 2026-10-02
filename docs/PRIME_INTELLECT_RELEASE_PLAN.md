@@ -128,10 +128,7 @@ research harness with `AGENTS.md`, `goal.md`, `plan.md`,
 to public, reviewable repository artifacts instead of publishing private
 scratchpads:
 
-- `AGENTS.md`: repository-level safety and code-quality rules.
-- `docs/PLAN.md`: stable milestone plan.
 - `docs/IMPLEMENT.md`: reproducible command runbook.
-- `docs/STATUS.md`: durable long-running implementation log.
 - `public/run_export/manifest.json`: public run observability export.
 - `docs/private_run_policy.json`: private moat and release boundary.
 

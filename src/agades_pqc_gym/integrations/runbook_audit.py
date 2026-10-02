@@ -43,13 +43,10 @@ RUNBOOK_ARTIFACT_GROUPS = {
         "README.md",
         "docs/ARCHITECTURE.md",
         "docs/FAMILY_ADAPTERS.md",
-        "docs/PLAN.md",
         "docs/IMPLEMENT.md",
-        "docs/STATUS.md",
-        "docs/EVAL_LOG.md",
     ),
     "safety_and_moat": (
-        "docs/MOAT_AND_OPEN_SOURCE_STRATEGY.md",
+        "docs/OPEN_SOURCE_BOUNDARY.md",
         "docs/RESPONSIBLE_RESEARCH.md",
         "SECURITY.md",
     ),
@@ -62,18 +59,13 @@ RUNBOOK_ARTIFACT_GROUPS = {
         "nvidia/README.md",
         "docs/HUGGINGFACE_RELEASE_PLAN.md",
         "docs/PRIME_INTELLECT_RELEASE_PLAN.md",
-        "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md",
+        "docs/ACCELERATOR_RELEASE_PLAN.md",
     ),
     "github_oss_onboarding": (
         "CONTRIBUTING.md",
         ".github/ISSUE_TEMPLATE/evaluator_bug.yml",
         ".github/ISSUE_TEMPLATE/estimator_integration.yml",
         ".github/ISSUE_TEMPLATE/family_adapter.yml",
-    ),
-    "collaboration_briefs": (
-        "docs/REVIEWER_BRIEF_A.md",
-        "docs/REVIEWER_BRIEF_B.md",
-        "docs/REVIEWER_BRIEF_C.md",
     ),
     "machine_readable_artifacts": (
         "docs/source_catalog.json",
@@ -111,7 +103,7 @@ CURRENT_NAME_PATHS = (
 )
 PUBLIC_BOUNDARY_DOCS = (
     "README.md",
-    "docs/MOAT_AND_OPEN_SOURCE_STRATEGY.md",
+    "docs/OPEN_SOURCE_BOUNDARY.md",
     "docs/RESPONSIBLE_RESEARCH.md",
     "hf/dataset_card.md",
     "hf/space_README.md",
@@ -239,15 +231,12 @@ raise SystemExit(1 if failures else 0)
 RUNBOOK_MILESTONES = (
     {
         "id": "milestone-0-repo-scaffold-and-runbook",
-        "title": "Repo scaffold and Codex runbook",
+        "title": "Repo scaffold and runbook",
         "artifacts": (
             "pyproject.toml",
             "README.md",
-            "docs/PLAN.md",
-            "docs/IMPLEMENT.md",
-            "docs/STATUS.md",
-            "docs/EVAL_LOG.md",
-            ".github/workflows/ci.yml",
+                "docs/IMPLEMENT.md",
+                    ".github/workflows/ci.yml",
         ),
     },
     {
@@ -327,15 +316,6 @@ RUNBOOK_MILESTONES = (
             "nvidia/accelerator_manifest.json",
             "reports/nvidia_manifest_safety.json",
             "docs/publication_manifest.json",
-        ),
-    },
-    {
-        "id": "milestone-7-collaboration-briefs",
-        "title": "Collaboration briefs",
-        "artifacts": (
-            "docs/REVIEWER_BRIEF_A.md",
-            "docs/REVIEWER_BRIEF_B.md",
-            "docs/REVIEWER_BRIEF_C.md",
         ),
     },
     {
@@ -651,7 +631,7 @@ def _deliverable_artifacts(root: Path) -> dict[str, Any]:
         status="failed" if failures else "passed",
         artifact="runbook deliverables",
         detail=(
-            "Runbook-required docs, collaboration briefs, ecosystem cards, "
+            "Runbook-required docs, ecosystem cards, "
             "machine-readable manifests, and MVP reports are checked in."
         ),
         evidence={
@@ -1303,8 +1283,8 @@ def _milestone_coverage(root: Path) -> dict[str, Any]:
         status="failed" if failures else "passed",
         artifact="runbook milestone acceptance matrix",
         detail=(
-            "Runbook milestones 0-8 are mapped to committed implementation, "
-            "evaluation, trace, reporting, ecosystem, collaboration, and smoke "
+            "Runbook milestones are mapped to committed implementation, "
+            "evaluation, trace, reporting, ecosystem, and smoke "
             "evidence so completion is auditable milestone by milestone."
         ),
         evidence={

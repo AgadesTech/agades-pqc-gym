@@ -125,7 +125,7 @@ def build_nvidia_accelerator_manifest(root: Path | None = None) -> dict[str, Any
             ),
             "prime_verifier_schemas": "prime_intellect/schemas/schema_manifest.json",
             "public_run_bundles": public_run_bundles,
-            "accelerator_strategy": "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md",
+            "accelerator_strategy": "docs/ACCELERATOR_RELEASE_PLAN.md",
         },
         "family_support": summarize_family_support_matrix(family_support_matrix),
         "source_catalog_scope": summarize_source_catalog_scope(source_catalog),

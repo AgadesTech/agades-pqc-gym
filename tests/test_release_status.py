@@ -275,7 +275,7 @@ def test_release_status_summarizes_current_public_evidence(tmp_path: Path) -> No
         "total": 61,
     }
     assert status["runbook"] == {
-        "artifact_count": 47,
+        "artifact_count": 41,
         "core_symbol_count": 14,
         "core_symbol_import_count": 14,
         "family_plugin_count": 6,
@@ -475,8 +475,8 @@ def test_release_status_summarizes_current_public_evidence(tmp_path: Path) -> No
         },
         "release_plans": {
             "plans": [
+                "docs/ACCELERATOR_RELEASE_PLAN.md",
                 "docs/HUGGINGFACE_RELEASE_PLAN.md",
-                "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md",
                 "docs/PRIME_INTELLECT_RELEASE_PLAN.md",
             ],
             "prime_ecosystem_anchors": [
@@ -490,7 +490,7 @@ def test_release_status_summarizes_current_public_evidence(tmp_path: Path) -> No
                     "prime-autonomous-speedrunning-experiments",
                     "prime-quickstart",
                 ],
-                "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md": [
+                "docs/ACCELERATOR_RELEASE_PLAN.md": [
                     "prime-autonanogpt-speedrun",
                     "prime-autonomous-speedrunning-experiments",
                     "prime-quickstart",

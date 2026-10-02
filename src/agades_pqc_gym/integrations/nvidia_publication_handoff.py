@@ -29,7 +29,7 @@ PROJECT = {
     "repository": "https://github.com/AgadesTech/agades-pqc-gym",
 }
 ACCELERATOR_MANIFEST_PATH = Path("nvidia/accelerator_manifest.json")
-ACCELERATOR_STRATEGY_PATH = Path("docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md")
+ACCELERATOR_STRATEGY_PATH = Path("docs/ACCELERATOR_RELEASE_PLAN.md")
 LOCAL_ARTIFACT_PATHS = [
     ACCELERATOR_STRATEGY_PATH.as_posix(),
     "nvidia/README.md",

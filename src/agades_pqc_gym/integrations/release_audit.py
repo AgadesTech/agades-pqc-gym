@@ -222,7 +222,7 @@ COMMUNITY_CARD_PATHS = {
 }
 ECOSYSTEM_RELEASE_PLAN_PATHS = (
     "docs/HUGGINGFACE_RELEASE_PLAN.md",
-    "docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md",
+    "docs/ACCELERATOR_RELEASE_PLAN.md",
     "docs/PRIME_INTELLECT_RELEASE_PLAN.md",
 )
 ECOSYSTEM_RELEASE_PLAN_SCHEMA_ARTIFACTS = (
@@ -4784,7 +4784,7 @@ def _ecosystem_release_plans(root: Path) -> dict[str, Any]:
         check_id="ecosystem-release-plans",
         status="failed" if failures else "passed",
         blocking=True,
-        artifact="docs/*_RELEASE_PLAN.md + docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md",
+        artifact="docs/*_RELEASE_PLAN.md + docs/ACCELERATOR_RELEASE_PLAN.md",
         detail=(
             "Hugging Face, Prime, and NVIDIA planning docs are synchronized "
             "with current public run bundles, Prime/HF schema artifacts, and "

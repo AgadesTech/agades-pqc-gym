@@ -23,7 +23,6 @@ EXPECTED_MILESTONE_IDS = [
     "milestone-4-openevolve-adapter",
     "milestone-5-report-generator",
     "milestone-6-community-release-artifacts",
-    "milestone-7-collaboration-briefs",
     "milestone-8-end-to-end-smoke-run",
 ]
 EXPECTED_CORE_SYMBOLS = {
@@ -161,7 +160,7 @@ def test_runbook_audit_accepts_current_deliverables(tmp_path: Path) -> None:
     assert audit["schema_version"] == "agades.pqc.runbook_audit.v1"
     assert audit["accepted"] is True
     assert audit["summary"] == {
-        "artifact_count": 47,
+        "artifact_count": 41,
         "failed": 0,
         "passed": 7,
         "total": 7,
@@ -170,10 +169,9 @@ def test_runbook_audit_accepts_current_deliverables(tmp_path: Path) -> None:
     checks = {check["id"]: check for check in audit["checks"]}
     assert checks["runbook-deliverable-artifacts"]["status"] == "passed"
     assert checks["runbook-deliverable-artifacts"]["evidence"] == {
-        "artifact_count": 47,
+        "artifact_count": 41,
         "groups": {
-            "architecture_docs": 7,
-            "collaboration_briefs": 3,
+            "architecture_docs": 4,
             "community_and_ecosystem": 9,
             "github_oss_onboarding": 4,
             "machine_readable_artifacts": 20,
@@ -253,23 +251,20 @@ def test_runbook_audit_accepts_current_deliverables(tmp_path: Path) -> None:
     assert checks["runbook-milestone-coverage"]["status"] == "passed"
     assert checks["runbook-milestone-coverage"]["evidence"] == {
         "failed_milestones": 0,
-        "milestone_count": 9,
+        "milestone_count": 8,
         "milestone_ids": EXPECTED_MILESTONE_IDS,
         "milestones": [
             {
-                "artifact_count": 7,
+                "artifact_count": 4,
                 "artifacts": [
                     "pyproject.toml",
                     "README.md",
-                    "docs/PLAN.md",
                     "docs/IMPLEMENT.md",
-                    "docs/STATUS.md",
-                    "docs/EVAL_LOG.md",
                     ".github/workflows/ci.yml",
                 ],
                 "id": "milestone-0-repo-scaffold-and-runbook",
                 "status": "passed",
-                "title": "Repo scaffold and Codex runbook",
+                "title": "Repo scaffold and runbook",
             },
             {
                 "artifact_count": 7,
@@ -363,17 +358,6 @@ def test_runbook_audit_accepts_current_deliverables(tmp_path: Path) -> None:
                 "title": "Community release artifacts",
             },
             {
-                "artifact_count": 3,
-                "artifacts": [
-                    "docs/REVIEWER_BRIEF_A.md",
-                    "docs/REVIEWER_BRIEF_B.md",
-                    "docs/REVIEWER_BRIEF_C.md",
-                ],
-                "id": "milestone-7-collaboration-briefs",
-                "status": "passed",
-                "title": "Collaboration briefs",
-            },
-            {
                 "artifact_count": 9,
                 "artifacts": [
                     "docs/public_benchmark_manifest.json",
@@ -391,7 +375,7 @@ def test_runbook_audit_accepts_current_deliverables(tmp_path: Path) -> None:
                 "title": "End-to-end smoke run",
             },
         ],
-        "passed_milestones": 9,
+        "passed_milestones": 8,
     }
 
 
@@ -886,37 +870,6 @@ def test_runbook_input_manifest_verify_rejects_source_text_leak(
     ]
 
 
-def test_runbook_audit_rejects_missing_collaboration_brief(
-    tmp_path: Path,
-) -> None:
-    copied_root = tmp_path / "repo"
-    shutil.copytree(
-        Path.cwd(),
-        copied_root,
-        ignore=shutil.ignore_patterns(
-            ".git",
-            ".venv",
-            ".pytest_cache",
-            ".ruff_cache",
-            "build",
-            "dist",
-            "*.egg-info",
-            "__pycache__",
-        ),
-    )
-    (copied_root / "docs" / "REVIEWER_BRIEF_B.md").unlink()
-
-    audit = build_runbook_audit(copied_root)
-
-    checks = {check["id"]: check for check in audit["checks"]}
-    assert audit["accepted"] is False
-    assert checks["runbook-deliverable-artifacts"]["status"] == "failed"
-    assert any(
-        "docs/REVIEWER_BRIEF_B.md" in failure
-        for failure in checks["runbook-deliverable-artifacts"]["failures"]
-    )
-
-
 def test_runbook_audit_rejects_missing_estimator_integration_template(
     tmp_path: Path,
 ) -> None:
@@ -1008,7 +961,7 @@ def test_runbook_audit_accepts_source_brief_anchor(tmp_path: Path) -> None:
     checks = {check["id"]: check for check in audit["checks"]}
     assert audit["accepted"] is True
     assert audit["summary"] == {
-        "artifact_count": 47,
+        "artifact_count": 41,
         "failed": 0,
         "passed": 8,
         "total": 8,
@@ -1066,7 +1019,7 @@ def test_runbook_audit_accepts_project_context_anchor(tmp_path: Path) -> None:
     checks = {check["id"]: check for check in audit["checks"]}
     assert audit["accepted"] is True
     assert audit["summary"] == {
-        "artifact_count": 47,
+        "artifact_count": 41,
         "failed": 0,
         "passed": 8,
         "total": 8,

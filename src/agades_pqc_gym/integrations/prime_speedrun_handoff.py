@@ -60,18 +60,12 @@ SPEEDRUN_ARTIFACT_PATHS = [
     "public/run_export/MANIFEST.sha256",
 ]
 AUTONOMY_HARNESS_PATHS = [
-    "AGENTS.md",
-    "docs/PLAN.md",
     "docs/IMPLEMENT.md",
-    "docs/STATUS.md",
     "public/run_export/manifest.json",
     "docs/private_run_policy.json",
 ]
 AUTONOMY_HARNESS_ROLES = {
-    "AGENTS.md": "repository-level safety and code-quality rules",
-    "docs/PLAN.md": "stable milestone plan",
     "docs/IMPLEMENT.md": "reproducible command runbook",
-    "docs/STATUS.md": "durable long-running implementation log",
     "public/run_export/manifest.json": "public run observability export",
     "docs/private_run_policy.json": "private moat and release boundary",
 }

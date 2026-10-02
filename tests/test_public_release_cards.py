@@ -67,7 +67,7 @@ CODE_BASED_HQC_CIRCULANT_ERASURE_DOC_PATHS = {
     "benchmark_card": Path("hf/benchmark_card.md"),
     "prime_environment_card": Path("prime_intellect/environment_card.md"),
     "mvp_report": Path("reports/AGADES_PQC_GYM_MVP_REPORT.md"),
-    "nvidia_strategy": Path("docs/NVIDIA_AND_ACCELERATOR_STRATEGY.md"),
+    "nvidia_strategy": Path("docs/ACCELERATOR_RELEASE_PLAN.md"),
     "nvidia_readme": Path("nvidia/README.md"),
 }
 
@@ -308,7 +308,6 @@ def test_public_docs_describe_current_lwe_downscaled_fixture_count() -> None:
     )
     docs = {
         "mvp_report": CARD_PATHS["mvp_report"].read_text(encoding="utf-8"),
-        "status": Path("docs/STATUS.md").read_text(encoding="utf-8"),
     }
 
     assert bundle["record_count"] == 3
@@ -389,7 +388,6 @@ def test_public_docs_describe_lattice_estimator_baseline_contract_boundary() -> 
     docs = {
         "readme": Path("README.md").read_text(encoding="utf-8"),
         "roadmap": Path("docs/ROADMAP.md").read_text(encoding="utf-8"),
-        "status": Path("docs/STATUS.md").read_text(encoding="utf-8"),
     }
     for name, content in docs.items():
         assert "docs/lattice_estimator_baseline_contracts.json" in content, name
